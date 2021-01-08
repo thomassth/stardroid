@@ -40,86 +40,89 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Brent Bryan
  */
 public class SkyGradientLayer implements Layer {
-  private static final String TAG = MiscUtil.getTag(SkyGradientLayer.class);
-  private static final long UPDATE_FREQUENCY_MS = 5L * TimeConstants.MILLISECONDS_PER_MINUTE;
+    private static final String TAG = MiscUtil.getTag(SkyGradientLayer.class);
+    private static final long UPDATE_FREQUENCY_MS = 5L * TimeConstants.MILLISECONDS_PER_MINUTE;
 
-  private final ReentrantLock rendererLock = new ReentrantLock();
-  private final AstronomerModel model;
-  private final Resources resources;
+    private final ReentrantLock rendererLock = new ReentrantLock();
+    private final AstronomerModel model;
+    private final Resources resources;
 
-  private RendererController renderer;
-  private long lastUpdateTimeMs = 0L;
+    private RendererController renderer;
+    private long lastUpdateTimeMs = 0L;
 
-  public SkyGradientLayer(AstronomerModel model, Resources resources) {
-    this.model = model;
-    this.resources = resources;
-  }
-
-  @Override
-  public void initialize() {}
-
-  @Override
-  public void registerWithRenderer(RendererController controller) {
-    this.renderer = controller;
-    redraw();
-  }
-
-  @Override
-  public void setVisible(boolean visible) {
-    Log.d(TAG, "Setting showSkyGradient " + visible);
-    if (visible) {
-      redraw();
-    } else {
-      rendererLock.lock();
-      try {
-        renderer.queueDisableSkyGradient();
-      } finally {
-        rendererLock.unlock();
-      }
+    public SkyGradientLayer(AstronomerModel model, Resources resources) {
+        this.model = model;
+        this.resources = resources;
     }
-  }
 
-  /** Redraws the sky shading gradient using the model's current time. */
-  protected void redraw() {
-    Date modelTime = model.getTime();
-    if (Math.abs(modelTime.getTime() - lastUpdateTimeMs) > UPDATE_FREQUENCY_MS) {
-      lastUpdateTimeMs = modelTime.getTime();
-
-      RaDec sunPosition = SolarPositionCalculator.getSolarPosition(modelTime);
-      // Log.d(TAG, "Enabling sky gradient with sun position " + sunPosition);
-      rendererLock.lock();
-      try {
-        renderer.queueEnableSkyGradient(GeocentricCoordinates.getInstance(sunPosition));
-      } finally {
-        rendererLock.unlock();
-      }
+    @Override
+    public void initialize() {
     }
-  }
 
-  @Override
-  public int getLayerDepthOrder() {
-    return -10;
-  }
+    @Override
+    public void registerWithRenderer(RendererController controller) {
+        this.renderer = controller;
+        redraw();
+    }
 
-  public String getPreferenceId() {
-    return "source_provider." + getLayerNameId();
-  }
+    @Override
+    public void setVisible(boolean visible) {
+        Log.d(TAG, "Setting showSkyGradient " + visible);
+        if (visible) {
+            redraw();
+        } else {
+            rendererLock.lock();
+            try {
+                renderer.queueDisableSkyGradient();
+            } finally {
+                rendererLock.unlock();
+            }
+        }
+    }
 
-  public String getLayerName() {
-    return resources.getString(getLayerNameId());
-  }
+    /**
+     * Redraws the sky shading gradient using the model's current time.
+     */
+    protected void redraw() {
+        Date modelTime = model.getTime();
+        if (Math.abs(modelTime.getTime() - lastUpdateTimeMs) > UPDATE_FREQUENCY_MS) {
+            lastUpdateTimeMs = modelTime.getTime();
 
-  private int getLayerNameId() {
-    return R.string.show_sky_gradient;
-  }
+            RaDec sunPosition = SolarPositionCalculator.getSolarPosition(modelTime);
+            // Log.d(TAG, "Enabling sky gradient with sun position " + sunPosition);
+            rendererLock.lock();
+            try {
+                renderer.queueEnableSkyGradient(GeocentricCoordinates.getInstance(sunPosition));
+            } finally {
+                rendererLock.unlock();
+            }
+        }
+    }
 
-  @Override
-  public List<SearchResult> searchByObjectName(String name) {
-    return Collections.emptyList();
-  }
+    @Override
+    public int getLayerDepthOrder() {
+        return -10;
+    }
 
-  @Override
-  public Set<String> getObjectNamesMatchingPrefix(String prefix) {
-    return Collections.emptySet();
-  }
+    public String getPreferenceId() {
+        return "source_provider." + getLayerNameId();
+    }
+
+    public String getLayerName() {
+        return resources.getString(getLayerNameId());
+    }
+
+    private int getLayerNameId() {
+        return R.string.show_sky_gradient;
+    }
+
+    @Override
+    public List<SearchResult> searchByObjectName(String name) {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public Set<String> getObjectNamesMatchingPrefix(String prefix) {
+        return Collections.emptySet();
+    }
 }

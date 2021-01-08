@@ -44,56 +44,56 @@ import java.util.concurrent.Executors;
  */
 
 public abstract class AbstractFileBasedLayer extends AbstractSourceLayer {
-  private static final String TAG = MiscUtil.getTag(AbstractFileBasedLayer.class);
-  private static final Executor BACKGROUND_EXECUTOR = Executors.newFixedThreadPool(1);
+    private static final String TAG = MiscUtil.getTag(AbstractFileBasedLayer.class);
+    private static final Executor BACKGROUND_EXECUTOR = Executors.newFixedThreadPool(1);
 
-  private final AssetManager assetManager;
-  private final String fileName;
-  private final List<AstronomicalSource> fileSources = new ArrayList<>();
+    private final AssetManager assetManager;
+    private final String fileName;
+    private final List<AstronomicalSource> fileSources = new ArrayList<>();
 
-  public AbstractFileBasedLayer(AssetManager assetManager, Resources resources, String fileName) {
-    super(resources, false);
-    this.assetManager = assetManager;
-    this.fileName = fileName;
-  }
-
-  @Override
-  public synchronized void initialize() {
-    BACKGROUND_EXECUTOR.execute(new Runnable() {
-      public void run() {
-        readSourceFile(fileName);
-        AbstractFileBasedLayer.super.initialize();
-      }
-    });
-  }
-
-  @Override
-  protected void initializeAstroSources(ArrayList<AstronomicalSource> sources) {
-    sources.addAll(fileSources);
-  }
-
-  private void readSourceFile(String sourceFilename) {
-    Log.d(TAG, "Loading Proto File: " + sourceFilename + "...");
-    InputStream in = null;
-    try {
-      in = assetManager.open(sourceFilename, AssetManager.ACCESS_BUFFER);
-      Parser<AstronomicalSourcesProto> parser = AstronomicalSourcesProto.parser();
-      AstronomicalSourcesProto sources = parser.parseFrom(in);
-
-      for (AstronomicalSourceProto proto : sources.getSourceList()) {
-        fileSources.add(new ProtobufAstronomicalSource(proto, getResources()));
-      }
-      Log.d(TAG, "Found: " + fileSources.size() + " sources");
-      String s = String.format("Finished Loading: %s | Found %s sourcs.\n",
-          sourceFilename, fileSources.size());
-       Log.d(TAG, s);
-
-       refreshSources(EnumSet.of(UpdateType.Reset));
-    } catch (IOException e) {
-      Log.e(TAG, "Unable to open " + sourceFilename);
-    } finally {
-      Closeables.closeQuietly(in);
+    public AbstractFileBasedLayer(AssetManager assetManager, Resources resources, String fileName) {
+        super(resources, false);
+        this.assetManager = assetManager;
+        this.fileName = fileName;
     }
 
-  }
+    @Override
+    public synchronized void initialize() {
+        BACKGROUND_EXECUTOR.execute(new Runnable() {
+            public void run() {
+                readSourceFile(fileName);
+                AbstractFileBasedLayer.super.initialize();
+            }
+        });
+    }
+
+    @Override
+    protected void initializeAstroSources(ArrayList<AstronomicalSource> sources) {
+        sources.addAll(fileSources);
+    }
+
+    private void readSourceFile(String sourceFilename) {
+        Log.d(TAG, "Loading Proto File: " + sourceFilename + "...");
+        InputStream in = null;
+        try {
+            in = assetManager.open(sourceFilename, AssetManager.ACCESS_BUFFER);
+            Parser<AstronomicalSourcesProto> parser = AstronomicalSourcesProto.parser();
+            AstronomicalSourcesProto sources = parser.parseFrom(in);
+
+            for (AstronomicalSourceProto proto : sources.getSourceList()) {
+                fileSources.add(new ProtobufAstronomicalSource(proto, getResources()));
+            }
+            Log.d(TAG, "Found: " + fileSources.size() + " sources");
+            String s = String.format("Finished Loading: %s | Found %s sourcs.\n",
+                    sourceFilename, fileSources.size());
+            Log.d(TAG, s);
+
+            refreshSources(EnumSet.of(UpdateType.Reset));
+        } catch (IOException e) {
+            Log.e(TAG, "Unable to open " + sourceFilename);
+        } finally {
+            Closeables.closeQuietly(in);
+        }
+
+    }
 }

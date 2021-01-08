@@ -28,53 +28,52 @@ import com.google.android.stardroid.util.MiscUtil;
  * @author John Taylor
  */
 public class GestureInterpreter extends GestureDetector.SimpleOnGestureListener {
-  private static final String TAG = MiscUtil.getTag(GestureInterpreter.class);
-  private FullscreenControlsManager fullscreenControlsManager;
-  private MapMover mapMover;
+    private static final String TAG = MiscUtil.getTag(GestureInterpreter.class);
+    private final FullscreenControlsManager fullscreenControlsManager;
+    private final MapMover mapMover;
+    private final Flinger flinger = new Flinger(new FlingListener() {
+        public void fling(float distanceX, float distanceY) {
+            mapMover.onDrag(distanceX, distanceY);
+        }
+    });
 
-  public GestureInterpreter(
-      FullscreenControlsManager fullscreenControlsManager,
-      MapMover mapMover) {
-    this.fullscreenControlsManager = fullscreenControlsManager;
-    this.mapMover = mapMover;
-  }
-
-  private final Flinger flinger = new Flinger(new FlingListener() {
-    public void fling(float distanceX, float distanceY) {
-      mapMover.onDrag(distanceX, distanceY);
+    public GestureInterpreter(
+            FullscreenControlsManager fullscreenControlsManager,
+            MapMover mapMover) {
+        this.fullscreenControlsManager = fullscreenControlsManager;
+        this.mapMover = mapMover;
     }
-  });
 
-  @Override
-  public boolean onDown(MotionEvent e) {
-    Log.d(TAG, "Tap down");
-    flinger.stop();
-    return true;
-  }
+    @Override
+    public boolean onDown(MotionEvent e) {
+        Log.d(TAG, "Tap down");
+        flinger.stop();
+        return true;
+    }
 
-  @Override
-  public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-    Log.d(TAG, "Flinging " + velocityX + ", " + velocityY);
-    flinger.fling(velocityX, velocityY);
-    return true;
-  }
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        Log.d(TAG, "Flinging " + velocityX + ", " + velocityY);
+        flinger.fling(velocityX, velocityY);
+        return true;
+    }
 
-  @Override
-  public boolean onSingleTapUp(MotionEvent e) {
-    Log.d(TAG, "Tap up");
-    fullscreenControlsManager.toggleControls();
-    return true;
-  }
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        Log.d(TAG, "Tap up");
+        fullscreenControlsManager.toggleControls();
+        return true;
+    }
 
-  @Override
-  public boolean onDoubleTap(MotionEvent e) {
-    Log.d(TAG, "Double tap");
-    return false;
-  }
+    @Override
+    public boolean onDoubleTap(MotionEvent e) {
+        Log.d(TAG, "Double tap");
+        return false;
+    }
 
-  @Override
-  public boolean onSingleTapConfirmed(MotionEvent e) {
-    Log.d(TAG, "Confirmed single tap");
-    return false;
-  }
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent e) {
+        Log.d(TAG, "Confirmed single tap");
+        return false;
+    }
 }

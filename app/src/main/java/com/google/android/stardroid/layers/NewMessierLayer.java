@@ -27,24 +27,24 @@ import com.google.android.stardroid.R;
  * @author Brent Bryan
  */
 public class NewMessierLayer extends AbstractFileBasedLayer {
-  public NewMessierLayer(AssetManager assetManager, Resources resources) {
-    super(assetManager, resources, "messier.binary");
-  }
+    public NewMessierLayer(AssetManager assetManager, Resources resources) {
+        super(assetManager, resources, "messier.binary");
+    }
 
-  @Override
-  public int getLayerDepthOrder() {
-    return 20;
-  }
+    @Override
+    public int getLayerDepthOrder() {
+        return 20;
+    }
 
-  @Override
-  protected int getLayerNameId() {
-    // TODO(johntaylor): rename this string id
-    return R.string.show_messier_objects_pref;
-  }
-  
-  // TODO(brent): Remove this.
-  @Override
-  public String getPreferenceId() {
-    return "source_provider.2";
-  }
+    @Override
+    protected int getLayerNameId() {
+        // TODO(johntaylor): rename this string id
+        return R.string.show_messier_objects_pref;
+    }
+
+    // TODO(brent): Remove this.
+    @Override
+    public String getPreferenceId() {
+        return "source_provider.2";
+    }
 }

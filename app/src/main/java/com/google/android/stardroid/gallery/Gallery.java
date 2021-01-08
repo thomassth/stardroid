@@ -22,5 +22,5 @@ import java.util.List;
  * @author John Taylor
  */
 public interface Gallery {
-  List<GalleryImage> getGalleryImages();
+    List<GalleryImage> getGalleryImages();
 }

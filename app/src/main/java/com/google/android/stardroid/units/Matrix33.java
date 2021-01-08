@@ -22,125 +22,127 @@ package com.google.android.stardroid.units;
  */
 public class Matrix33 implements Cloneable {
 
-  public float xx;
-  public float xy;
-  public float xz;
-  public float yx;
-  public float yy;
-  public float yz;
-  public float zx;
-  public float zy;
-  public float zz;
+    public float xx;
+    public float xy;
+    public float xz;
+    public float yx;
+    public float yy;
+    public float yz;
+    public float zx;
+    public float zy;
+    public float zz;
 
-  /**
-   * Construct a new matrix.
-   * @param xx row 1, col 1
-   * @param xy row 1, col 2
-   * @param xz row 1, col 3
-   * @param yx row 2, col 1
-   * @param yy row 2, col 2
-   * @param yz row 2, col 3
-   * @param zx row 3, col 1
-   * @param zy row 3, col 2
-   * @param zz row 3, col 3
-   */
-  public Matrix33(float xx, float xy, float xz,
-                  float yx, float yy, float yz,
-                  float zx, float zy, float zz) {
-    this.xx = xx;
-    this.xy = xy;
-    this.xz = xz;
-    this.yx = yx;
-    this.yy = yy;
-    this.yz = yz;
-    this.zx = zx;
-    this.zy = zy;
-    this.zz = zz;
-  }
-
-  /**
-   * Construct a matrix from three column vectors.
-   */
-  public Matrix33(Vector3 v1, Vector3 v2, Vector3 v3) {
-    this(v1, v2, v3, true);
-  }
-
-  /**
-   * Construct a matrix from three vectors.
-   * @param columnVectors true if the vectors are column vectors, otherwise
-   * they're row vectors.
-   */
-  public Matrix33(Vector3 v1, Vector3 v2, Vector3 v3, boolean columnVectors) {
-    if (columnVectors) {
-      this.xx = v1.x;
-      this.yx = v1.y;
-      this.zx = v1.z;
-      this.xy = v2.x;
-      this.yy = v2.y;
-      this.zy = v2.z;
-      this.xz = v3.x;
-      this.yz = v3.y;
-      this.zz = v3.z;
-    } else {
-      this.xx = v1.x;
-      this.xy = v1.y;
-      this.xz = v1.z;
-      this.yx = v2.x;
-      this.yy = v2.y;
-      this.yz = v2.z;
-      this.zx = v3.x;
-      this.zy = v3.y;
-      this.zz = v3.z;
+    /**
+     * Construct a new matrix.
+     *
+     * @param xx row 1, col 1
+     * @param xy row 1, col 2
+     * @param xz row 1, col 3
+     * @param yx row 2, col 1
+     * @param yy row 2, col 2
+     * @param yz row 2, col 3
+     * @param zx row 3, col 1
+     * @param zy row 3, col 2
+     * @param zz row 3, col 3
+     */
+    public Matrix33(float xx, float xy, float xz,
+                    float yx, float yy, float yz,
+                    float zx, float zy, float zz) {
+        this.xx = xx;
+        this.xy = xy;
+        this.xz = xz;
+        this.yx = yx;
+        this.yy = yy;
+        this.yz = yz;
+        this.zx = zx;
+        this.zy = zy;
+        this.zz = zz;
     }
-  }
 
-  // TODO(widdows): rename this to something like copyOf().
-  @Override
-  public Matrix33 clone() {
-    return new Matrix33(xx, xy, xz,
-                        yx, yy, yz,
-                        zx, zy, zz);
-  }
+    /**
+     * Construct a matrix from three column vectors.
+     */
+    public Matrix33(Vector3 v1, Vector3 v2, Vector3 v3) {
+        this(v1, v2, v3, true);
+    }
 
-  public static Matrix33 getIdMatrix() {
-    return new Matrix33(1, 0, 0, 0, 1, 0, 0, 0, 1);
-  }
+    /**
+     * Construct a matrix from three vectors.
+     *
+     * @param columnVectors true if the vectors are column vectors, otherwise
+     *                      they're row vectors.
+     */
+    public Matrix33(Vector3 v1, Vector3 v2, Vector3 v3, boolean columnVectors) {
+        if (columnVectors) {
+            this.xx = v1.x;
+            this.yx = v1.y;
+            this.zx = v1.z;
+            this.xy = v2.x;
+            this.yy = v2.y;
+            this.zy = v2.z;
+            this.xz = v3.x;
+            this.yz = v3.y;
+            this.zz = v3.z;
+        } else {
+            this.xx = v1.x;
+            this.xy = v1.y;
+            this.xz = v1.z;
+            this.yx = v2.x;
+            this.yy = v2.y;
+            this.yz = v2.z;
+            this.zx = v3.x;
+            this.zy = v3.y;
+            this.zz = v3.z;
+        }
+    }
 
-  /**
-   * Create a zero matrix.
-   */
-  public Matrix33() {
-    new Matrix33(0, 0, 0, 0, 0, 0, 0, 0, 0);
-  }
+    /**
+     * Create a zero matrix.
+     */
+    public Matrix33() {
+        new Matrix33(0, 0, 0, 0, 0, 0, 0, 0, 0);
+    }
 
-  public float getDeterminant() {
-    return xx*yy*zz + xy*yz*zx + xz*yx*zy - xx*yz*zy - yy*zx*xz - zz*xy*yx;
-  }
+    public static Matrix33 getIdMatrix() {
+        return new Matrix33(1, 0, 0, 0, 1, 0, 0, 0, 1);
+    }
 
-  public Matrix33 getInverse() {
-    float det = getDeterminant();
-    if (det == 0.0) return null;
-    return new Matrix33(
-        (yy*zz - yz*zy) / det, (xz*zy - xy*zz) / det, (xy*yz - xz*yy) / det,
-        (yz*zx - yx*zz) / det, (xx*zz - xz*zx) / det, (xz*yx - xx*yz) / det,
-        (yx*zy - yy*zx) / det, (xy*zx - xx*zy) / det, (xx*yy - xy*yx) / det);
-  }
+    // TODO(widdows): rename this to something like copyOf().
+    @Override
+    public Matrix33 clone() {
+        return new Matrix33(xx, xy, xz,
+                yx, yy, yz,
+                zx, zy, zz);
+    }
 
-  /**
-   * Transpose the matrix, in place.
-   */
-  public void transpose() {
-    float tmp;
-    tmp = xy;
-    xy = yx;
-    yx = tmp;
+    public float getDeterminant() {
+        return xx * yy * zz + xy * yz * zx + xz * yx * zy - xx * yz * zy - yy * zx * xz - zz * xy * yx;
+    }
 
-    tmp = xz;
-    xz = zx;
-    zx = tmp;
+    public Matrix33 getInverse() {
+        float det = getDeterminant();
+        if (det == 0.0) return null;
+        return new Matrix33(
+                (yy * zz - yz * zy) / det, (xz * zy - xy * zz) / det, (xy * yz - xz * yy) / det,
+                (yz * zx - yx * zz) / det, (xx * zz - xz * zx) / det, (xz * yx - xx * yz) / det,
+                (yx * zy - yy * zx) / det, (xy * zx - xx * zy) / det, (xx * yy - xy * yx) / det);
+    }
 
-    tmp = yz;
-    yz = zy;
-    zy = tmp;
-  }
+    /**
+     * Transpose the matrix, in place.
+     */
+    public void transpose() {
+        float tmp;
+        tmp = xy;
+        xy = yx;
+        yx = tmp;
+
+        tmp = xz;
+        xz = zx;
+        zx = tmp;
+
+        tmp = yz;
+        yz = zy;
+        zy = tmp;
+    }
 }

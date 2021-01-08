@@ -26,46 +26,46 @@ import com.google.common.base.Preconditions;
  * @author Brent Bryan
  */
 public class TextSourceImpl extends AbstractSource implements TextSource {
-  public String label;
-  public final float offset;
-  public final int fontSize;
+    public final float offset;
+    public final int fontSize;
+    public String label;
 
-  public TextSourceImpl(float ra, float dec, String label, int color) {
-    this(GeocentricCoordinates.getInstance(ra, dec), label, color);
-  }
+    public TextSourceImpl(float ra, float dec, String label, int color) {
+        this(GeocentricCoordinates.getInstance(ra, dec), label, color);
+    }
 
-  public TextSourceImpl(GeocentricCoordinates coords, String label, int color) {
-    this(coords, label, color, 0.02f, 15);
-  }
+    public TextSourceImpl(GeocentricCoordinates coords, String label, int color) {
+        this(coords, label, color, 0.02f, 15);
+    }
 
-  public TextSourceImpl(GeocentricCoordinates coords, String label, int color, float offset,
-      int fontSize) {
+    public TextSourceImpl(GeocentricCoordinates coords, String label, int color, float offset,
+                          int fontSize) {
 
-    super(coords, color);
-    this.label = Preconditions.checkNotNull(label);
-    Preconditions.checkArgument(!label.trim().isEmpty());
+        super(coords, color);
+        this.label = Preconditions.checkNotNull(label);
+        Preconditions.checkArgument(!label.trim().isEmpty());
 
-    this.offset = offset;
-    this.fontSize = fontSize;
-  }
+        this.offset = offset;
+        this.fontSize = fontSize;
+    }
 
-  @Override
-  public String getText() {
-    return label;
-  }
+    @Override
+    public String getText() {
+        return label;
+    }
 
-  @Override
-  public int getFontSize() {
-    return fontSize;
-  }
+    @Override
+    public void setText(String newText) {
+        label = newText;
+    }
 
-  @Override
-  public float getOffset() {
-    return offset;
-  }
+    @Override
+    public int getFontSize() {
+        return fontSize;
+    }
 
-  @Override
-  public void setText(String newText) {
-    label = newText;
-  }
+    @Override
+    public float getOffset() {
+        return offset;
+    }
 }

@@ -20,13 +20,13 @@ package com.google.android.stardroid.gallery;
  * @author John Taylor
  */
 public class GalleryImage {
-  public int imageId;
-  public String name;
-  public String searchTerm;
+    public int imageId;
+    public String name;
+    public String searchTerm;
 
-  public GalleryImage(int imageId, String name, String searchTerm) {
-    this.imageId = imageId;
-    this.name = name;
-    this.searchTerm = searchTerm;
-  }
+    public GalleryImage(int imageId, String name, String searchTerm) {
+        this.imageId = imageId;
+        this.name = name;
+        this.searchTerm = searchTerm;
+    }
 }

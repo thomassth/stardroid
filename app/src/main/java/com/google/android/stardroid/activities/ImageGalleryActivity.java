@@ -17,34 +17,24 @@ package com.google.android.stardroid.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;=
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.preference.PreferenceManager;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.stardroid.R;
 import com.google.android.stardroid.activities.util.ActivityLightLevelChanger;
 import com.google.android.stardroid.activities.util.ActivityLightLevelManager;
-import com.google.android.stardroid.gallery.Gallery;
 import com.google.android.stardroid.gallery.GalleryFactory;
 import com.google.android.stardroid.gallery.GalleryImage;
-import com.google.android.stardroid.util.Analytics;
-import com.google.android.stardroid.util.MiscUtil;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Inject;
 
 /**
  * Displays a series of images to the user.  Selecting an image
@@ -53,111 +43,101 @@ import javax.inject.Inject;
  * @author John Taylor
  */
 public class ImageGalleryActivity extends InjectableActivity {
-  /** The index of the image id Intent extra.*/
-  public static final String IMAGE_ID = "image_id";
+    /**
+     * The index of the image id Intent extra.
+     */
+    public static final String IMAGE_ID = "image_id";
 
-  private static final String TAG = MiscUtil.getTag(ImageGalleryActivity.class);
-  private List<GalleryImage> galleryImages;
+    private List<GalleryImage> galleryImages;
+    private ActivityLightLevelManager activityLightLevelManager;
 
-  private ActivityLightLevelManager activityLightLevelManager;
-  @Inject
-  Analytics analytics;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getApplicationComponent().inject(this);
+        setContentView(R.layout.imagegallery);
+        activityLightLevelManager = new ActivityLightLevelManager(
+                new ActivityLightLevelChanger(this, null),
+                PreferenceManager.getDefaultSharedPreferences(this));
+        this.galleryImages = GalleryFactory.getGallery(getResources()).getGalleryImages();
+        addImagesToGallery();
 
-  private class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder> {
-
-
-    class MyViewHolder extends RecyclerView.ViewHolder {
-
-      ImageView galleryImage;
-      TextView galleryTitle;
-      LinearLayout galleryItemLayout;
-      MyViewHolder(View v) {
-        super(v);
-
-        this.galleryImage = v.findViewById(R.id.image_gallery_image);
-        this.galleryTitle = v.findViewById(R.id.image_gallery_title);
-        this.galleryItemLayout = v.findViewById(R.id.galleryItemLayout);
-      }
     }
 
     @Override
-    public ImageAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-      View view = LayoutInflater.from(parent.getContext())
-              .inflate(R.layout.imagedisplaypanel, parent, false);
-      return new MyViewHolder(view);
+    public void onStart() {
+        super.onStart();
     }
 
     @Override
-    public void onBindViewHolder(ImageAdapter.MyViewHolder holder, final int position) {
+    public void onResume() {
+        super.onResume();
+        activityLightLevelManager.onResume();
+    }
 
-      holder.galleryImage.setImageResource(galleryImages.get(position).imageId);
-      holder.galleryTitle.setText(galleryImages.get(position).name);
+    @Override
+    public void onPause() {
+        super.onPause();
+        activityLightLevelManager.onPause();
+    }
 
-      holder.galleryItemLayout.setOnClickListener(new View.OnClickListener() {
+    private void addImagesToGallery() {
+
+        RecyclerView mRecyclerView = findViewById(R.id.gallery_list);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        ImageAdapter imageAdapter = new ImageAdapter();
+        mRecyclerView.setAdapter(imageAdapter);
+    }
+
+    /**
+     * Starts the display image activity, and overrides the transition animation.
+     */
+    private void showImage(int position) {
+        Intent intent = new Intent(ImageGalleryActivity.this, ImageDisplayActivity.class);
+        intent.putExtra(ImageGalleryActivity.IMAGE_ID, position);
+        startActivity(intent);
+        overridePendingTransition(R.anim.fadein, R.anim.fastzoom);
+    }
+
+    private class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder> {
+
+        @NonNull
         @Override
-        public void onClick(View v) {
-          showImage(position);
+        public ImageAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.imagedisplaypanel, parent, false);
+            return new MyViewHolder(view);
         }
-      });
+
+        @Override
+        public void onBindViewHolder(ImageAdapter.MyViewHolder holder, final int position) {
+            holder.galleryImage.setImageResource(galleryImages.get(position).imageId);
+            holder.galleryTitle.setText(galleryImages.get(position).name);
+            holder.galleryItemLayout.setOnClickListener(v -> showImage(position));
+        }
+
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public int getItemCount() {
+            return galleryImages.size();
+        }
+
+        class MyViewHolder extends RecyclerView.ViewHolder {
+
+            ImageView galleryImage;
+            TextView galleryTitle;
+            LinearLayout galleryItemLayout;
+
+            MyViewHolder(View v) {
+                super(v);
+                this.galleryImage = v.findViewById(R.id.image_gallery_image);
+                this.galleryTitle = v.findViewById(R.id.image_gallery_title);
+                this.galleryItemLayout = v.findViewById(R.id.galleryItemLayout);
+            }
+        }
     }
-
-    public long getItemId(int position) {
-      return position;
-    }
-
-    @Override
-    public int getItemCount() {
-      return galleryImages.size();
-    }
-
-  }
-
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    getApplicationComponent().inject(this);
-    setContentView(R.layout.imagegallery);
-    activityLightLevelManager = new ActivityLightLevelManager(
-        new ActivityLightLevelChanger(this, null),
-        PreferenceManager.getDefaultSharedPreferences(this));
-    this.galleryImages = GalleryFactory.getGallery(getResources()).getGalleryImages();
-    addImagesToGallery();
-
-  }
-
-  @Override
-  public void onStart() {
-    super.onStart();
-  }
-
-  @Override
-  public void onResume() {
-    super.onResume();
-    activityLightLevelManager.onResume();
-  }
-
-  @Override
-  public void onPause() {
-    super.onPause();
-    activityLightLevelManager.onPause();
-  }
-
-  private void addImagesToGallery() {
-
-    RecyclerView mRecyclerView = findViewById(R.id.gallery_list);
-    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-    mRecyclerView.setLayoutManager(mLayoutManager);
-    ImageAdapter imageAdapter = new ImageAdapter();
-    mRecyclerView.setAdapter(imageAdapter);
-  }
-
-  /**
-   * Starts the display image activity, and overrides the transition animation.
-   */
-  private void showImage(int position) {
-    Intent intent = new Intent(ImageGalleryActivity.this, ImageDisplayActivity.class);
-    intent.putExtra(ImageGalleryActivity.IMAGE_ID, position);
-    startActivity(intent);
-    overridePendingTransition(R.anim.fadein, R.anim.fastzoom);
-  }
 }

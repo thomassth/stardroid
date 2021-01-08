@@ -24,30 +24,30 @@ import com.google.android.stardroid.units.GeocentricCoordinates;
  */
 
 public class PointSourceImpl extends AbstractSource implements PointSource {
-  public final int size;
-  private final Shape pointShape;
+    public final int size;
+    private final Shape pointShape;
 
-  public PointSourceImpl(float ra, float dec, int color, int size) {
-    this(GeocentricCoordinates.getInstance(ra, dec), color, size);
-  }
+    public PointSourceImpl(float ra, float dec, int color, int size) {
+        this(GeocentricCoordinates.getInstance(ra, dec), color, size);
+    }
 
-  public PointSourceImpl(GeocentricCoordinates coords, int color, int size) {
-    this(coords, color, size, Shape.CIRCLE);
-  }
+    public PointSourceImpl(GeocentricCoordinates coords, int color, int size) {
+        this(coords, color, size, Shape.CIRCLE);
+    }
 
-  public PointSourceImpl(GeocentricCoordinates coords, int color, int size, Shape pointShape) {
-    super(coords, color);
-    this.size = size;
-    this.pointShape = pointShape;
-  }
+    public PointSourceImpl(GeocentricCoordinates coords, int color, int size, Shape pointShape) {
+        super(coords, color);
+        this.size = size;
+        this.pointShape = pointShape;
+    }
 
-  @Override
-  public int getSize() {
-    return size;
-  }
+    @Override
+    public int getSize() {
+        return size;
+    }
 
-  @Override
-  public Shape getPointShape() {
-    return pointShape;
-  }
+    @Override
+    public Shape getPointShape() {
+        return pointShape;
+    }
 }

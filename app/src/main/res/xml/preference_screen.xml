@@ -48,12 +48,6 @@
         android:defaultValue="true"
         android:title="@string/use_sound_effects"
         android:key="sound_effects"/>
-    <!-- Keep in sync with value in utils.Analytics -->
-    <CheckBoxPreference
-        android:defaultValue="@string/analytics_enabled"
-        android:title="@string/enable_analytics"
-        android:summary="@string/enable_analytics_desc"
-        android:key="enable_analytics"/>
   </PreferenceCategory>
   <PreferenceScreen android:key="sensor_prefs" android:title="@string/sensor_prefs">
     <PreferenceCategory>

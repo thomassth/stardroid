@@ -30,40 +30,40 @@ import com.google.android.stardroid.util.MiscUtil;
  * @author John Taylor
  */
 public class MapMover implements
-    DragRotateZoomGestureDetector.DragRotateZoomGestureDetectorListener {
+        DragRotateZoomGestureDetector.DragRotateZoomGestureDetectorListener {
 
-  private static final String TAG = MiscUtil.getTag(MapMover.class);
-  private AstronomerModel model;
-  private ControllerGroup controllerGroup;
-  private float sizeTimesRadiansToDegrees;
+    private static final String TAG = MiscUtil.getTag(MapMover.class);
+    private final AstronomerModel model;
+    private final ControllerGroup controllerGroup;
+    private final float sizeTimesRadiansToDegrees;
 
-  public MapMover(AstronomerModel model, ControllerGroup controllerGroup, Context context) {
-    this.model = model;
-    this.controllerGroup = controllerGroup;
-    DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-    int screenLongSize = metrics.heightPixels;
-    Log.i(TAG, "Screen height is " + screenLongSize + " pixels.");
-    sizeTimesRadiansToDegrees = screenLongSize * Geometry.RADIANS_TO_DEGREES;
-  }
+    public MapMover(AstronomerModel model, ControllerGroup controllerGroup, Context context) {
+        this.model = model;
+        this.controllerGroup = controllerGroup;
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        int screenLongSize = metrics.heightPixels;
+        Log.i(TAG, "Screen height is " + screenLongSize + " pixels.");
+        sizeTimesRadiansToDegrees = screenLongSize * Geometry.RADIANS_TO_DEGREES;
+    }
 
-  @Override
-  public boolean onDrag(float xPixels, float yPixels) {
-    // Log.d(TAG, "Dragging by " + xPixels + ", " + yPixels);
-    final float pixelsToRadians = model.getFieldOfView() / sizeTimesRadiansToDegrees;
-    controllerGroup.changeUpDown(-yPixels * pixelsToRadians);
-    controllerGroup.changeRightLeft(-xPixels * pixelsToRadians);
-    return true;
-  }
+    @Override
+    public boolean onDrag(float xPixels, float yPixels) {
+        // Log.d(TAG, "Dragging by " + xPixels + ", " + yPixels);
+        final float pixelsToRadians = model.getFieldOfView() / sizeTimesRadiansToDegrees;
+        controllerGroup.changeUpDown(-yPixels * pixelsToRadians);
+        controllerGroup.changeRightLeft(-xPixels * pixelsToRadians);
+        return true;
+    }
 
-  @Override
-  public boolean onRotate(float degrees) {
-    controllerGroup.rotate(-degrees);
-    return true;
-  }
+    @Override
+    public boolean onRotate(float degrees) {
+        controllerGroup.rotate(-degrees);
+        return true;
+    }
 
-  @Override
-  public boolean onStretch(float ratio) {
-    controllerGroup.zoomBy(1.0f / ratio);
-    return true;
-  }
+    @Override
+    public boolean onStretch(float ratio) {
+        controllerGroup.zoomBy(1.0f / ratio);
+        return true;
+    }
 }

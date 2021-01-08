@@ -29,44 +29,46 @@ import java.util.List;
  */
 public abstract class AbstractAstronomicalSource implements AstronomicalSource, Sources {
 
-  @Override
-  public Sources initialize() {
-    return this;
-  }
+    @Override
+    public Sources initialize() {
+        return this;
+    }
 
-  @Override
-  public EnumSet<UpdateType> update() {
-    return EnumSet.noneOf(UpdateType.class);
-  }
+    @Override
+    public EnumSet<UpdateType> update() {
+        return EnumSet.noneOf(UpdateType.class);
+    }
 
-  /** Implementors of this method must implement {@link #getSearchLocation}. */
-  @Override
-  public List<String> getNames() {
-    return Collections.emptyList();
-  }
+    /**
+     * Implementors of this method must implement {@link #getSearchLocation}.
+     */
+    @Override
+    public List<String> getNames() {
+        return Collections.emptyList();
+    }
 
-  @Override
-  public GeocentricCoordinates getSearchLocation() {
-    throw new UnsupportedOperationException("Should not be called");
-  }
+    @Override
+    public GeocentricCoordinates getSearchLocation() {
+        throw new UnsupportedOperationException("Should not be called");
+    }
 
-  @Override
-  public List<? extends ImageSource> getImages() {
-    return Collections.emptyList();
-  }
+    @Override
+    public List<? extends ImageSource> getImages() {
+        return Collections.emptyList();
+    }
 
-  @Override
-  public List<? extends TextSource> getLabels() {
-    return Collections.emptyList();
-  }
+    @Override
+    public List<? extends TextSource> getLabels() {
+        return Collections.emptyList();
+    }
 
-  @Override
-  public List<? extends LineSource> getLines() {
-    return Collections.emptyList();
-  }
+    @Override
+    public List<? extends LineSource> getLines() {
+        return Collections.emptyList();
+    }
 
-  @Override
-  public List<? extends PointSource> getPoints() {
-    return Collections.emptyList();
-  }
+    @Override
+    public List<? extends PointSource> getPoints() {
+        return Collections.emptyList();
+    }
 }

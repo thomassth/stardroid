@@ -22,7 +22,8 @@ import com.google.android.stardroid.units.GeocentricCoordinates;
 
 import java.util.List;
 
-/** This class represents the base of an astronomical object to be
+/**
+ * This class represents the base of an astronomical object to be
  * displayed by the UI.  These object need not be only stars and
  * galaxies but also include labels (such as the name of major stars)
  * and constellation depictions.
@@ -30,48 +31,47 @@ import java.util.List;
  * @author Brent Bryan
  */
 public abstract class AbstractSource implements Colorable, PositionSource {
-  /** Each source has an update granularity associated with it, which
-   *  defines how often it's provider expects its value to change.
-   */
-  public enum UpdateGranularity {
-    Second, Minute, Hour, Day, Year
-  }
+    private final int color;
+    private final GeocentricCoordinates xyz;
+    public UpdateGranularity granularity;
+    private List<String> names;
+    @Deprecated
+    AbstractSource() {
+        this(GeocentricCoordinates.getInstance(0.0f, 0.0f), Color.BLACK);
+    }
 
-  public UpdateGranularity granularity;
+    protected AbstractSource(int color) {
+        this(GeocentricCoordinates.getInstance(0.0f, 0.0f), color);
+    }
 
-  private final int color;
-  private final GeocentricCoordinates xyz;
-  private List<String> names;
+    protected AbstractSource(GeocentricCoordinates coords, int color) {
+        this.xyz = coords;
+        this.color = color;
+    }
 
-  @Deprecated
-  AbstractSource() {
-    this(GeocentricCoordinates.getInstance(0.0f, 0.0f), Color.BLACK);
-  }
+    public List<String> getNames() {
+        return names;
+    }
 
-  protected AbstractSource(int color) {
-    this(GeocentricCoordinates.getInstance(0.0f, 0.0f), color);
-  }
+    public void setNames(List<String> names) {
+        this.names = names;
+    }
 
-  protected AbstractSource(GeocentricCoordinates coords, int color) {
-    this.xyz = coords;
-    this.color = color;
-  }
+    @Override
+    public int getColor() {
+        return color;
+    }
 
-  public List<String> getNames() {
-    return names;
-  }
+    @Override
+    public GeocentricCoordinates getLocation() {
+        return xyz;
+    }
 
-  public void setNames(List<String> names) {
-    this.names = names;
-  }
-
-  @Override
-  public int getColor() {
-    return color;
-  }
-
-  @Override
-  public GeocentricCoordinates getLocation() {
-    return xyz;
-  }
+    /**
+     * Each source has an update granularity associated with it, which
+     * defines how often it's provider expects its value to change.
+     */
+    public enum UpdateGranularity {
+        Second, Minute, Hour, Day, Year
+    }
 }

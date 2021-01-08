@@ -15,11 +15,13 @@
 package com.google.android.stardroid.util;
 
 public final class FixedPoint {
-    private FixedPoint() {}
     public static final int ONE = 0x00010000;
-    
+
+    private FixedPoint() {
+    }
+
     /// Converts a float to a 16.16 fixed point number 
     public final static int floatToFixedPoint(float f) {
-        return (int)(65536F*f);
+        return (int) (65536F * f);
     }
 }

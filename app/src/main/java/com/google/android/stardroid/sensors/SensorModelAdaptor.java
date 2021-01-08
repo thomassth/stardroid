@@ -12,20 +12,20 @@ import javax.inject.Inject;
  * Connects the rotation vector to the model code.
  */
 public class SensorModelAdaptor implements SensorEventListener {
-  private AstronomerModel model;
+    private final AstronomerModel model;
 
-  @Inject
-  SensorModelAdaptor(AstronomerModel model) {
-    this.model = model;
-  }
+    @Inject
+    SensorModelAdaptor(AstronomerModel model) {
+        this.model = model;
+    }
 
-  @Override
-  public void onSensorChanged(SensorEvent event) {
-    // do something with the model
-  }
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        // do something with the model
+    }
 
-  @Override
-  public void onAccuracyChanged(Sensor sensor, int accuracy) {
-    // Do nothing.
-  }
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        // Do nothing.
+    }
 }
