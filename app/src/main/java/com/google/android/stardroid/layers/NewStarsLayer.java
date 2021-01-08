@@ -27,23 +27,23 @@ import com.google.android.stardroid.R;
  * @author Brent Bryan
  */
 public class NewStarsLayer extends AbstractFileBasedLayer {
-  public NewStarsLayer(AssetManager assetManager, Resources resources) {
-    super(assetManager, resources, "stars.binary");
-  }
+    public NewStarsLayer(AssetManager assetManager, Resources resources) {
+        super(assetManager, resources, "stars.binary");
+    }
 
-  @Override
-  public int getLayerDepthOrder() {
-    return 30;
-  }
+    @Override
+    public int getLayerDepthOrder() {
+        return 30;
+    }
 
-  @Override
-  protected int getLayerNameId() {
-    return R.string.show_stars_pref;  // TODO(johntaylor): rename this Id
-  }
-  
-  // TODO(brent): Remove this.
-  @Override
-  public String getPreferenceId() {
-    return "source_provider.0";
-  }
+    @Override
+    protected int getLayerNameId() {
+        return R.string.show_stars_pref;  // TODO(johntaylor): rename this Id
+    }
+
+    // TODO(brent): Remove this.
+    @Override
+    public String getPreferenceId() {
+        return "source_provider.0";
+    }
 }

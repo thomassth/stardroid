@@ -15,5 +15,5 @@
 package com.google.android.stardroid.renderer.util;
 
 public interface UpdateClosure extends Comparable<UpdateClosure> {
-  void run();
+    void run();
 }

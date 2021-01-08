@@ -22,18 +22,18 @@ import android.content.res.Resources;
  * @author John Taylor
  */
 public class GalleryFactory {
-  private static Gallery gallery;
+    private static Gallery gallery;
 
-  private GalleryFactory() {
-  }
-
-  /**
-   * Returns the gallery.  This will usually be a singleton.
-   */
-  public static synchronized Gallery getGallery(Resources resources) {
-    if (gallery == null) {
-      gallery = new HardcodedGallery(resources);
+    private GalleryFactory() {
     }
-    return gallery;
-  }
+
+    /**
+     * Returns the gallery.  This will usually be a singleton.
+     */
+    public static synchronized Gallery getGallery(Resources resources) {
+        if (gallery == null) {
+            gallery = new HardcodedGallery(resources);
+        }
+        return gallery;
+    }
 }

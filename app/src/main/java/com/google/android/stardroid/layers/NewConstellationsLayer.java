@@ -27,24 +27,24 @@ import com.google.android.stardroid.R;
  * @author Brent Bryan
  */
 public class NewConstellationsLayer extends AbstractFileBasedLayer {
-  public NewConstellationsLayer(AssetManager assetManager, Resources resources) {
-    super(assetManager, resources, "constellations.binary");
-  }
+    public NewConstellationsLayer(AssetManager assetManager, Resources resources) {
+        super(assetManager, resources, "constellations.binary");
+    }
 
-  @Override
-  public int getLayerDepthOrder() {
-    return 10;
-  }
+    @Override
+    public int getLayerDepthOrder() {
+        return 10;
+    }
 
-  @Override
-  public int getLayerNameId() {
-    // TODO(johntaylor): rename this string id.
-    return R.string.show_constellations_pref;
-  }
-  
-  // TODO(brent): Remove this.
-  @Override
-  public String getPreferenceId() {
-    return "source_provider.1";
-  }
+    @Override
+    public int getLayerNameId() {
+        // TODO(johntaylor): rename this string id.
+        return R.string.show_constellations_pref;
+    }
+
+    // TODO(brent): Remove this.
+    @Override
+    public String getPreferenceId() {
+        return "source_provider.1";
+    }
 }

@@ -21,15 +21,14 @@ import java.util.Date;
 
 /**
  * Calculate the position of the Sun in RA and Dec
- * 
+ * <p>
  * TODO(johntaylor): get rid of this class once the provider
  * framework is refactored.  This duplicates functionality from elsewhere,
  * but the current ephemeris/provider code is a bit too tangled up for easy reuse.
- *
  */
 public class SolarPositionCalculator {
-  public static RaDec getSolarPosition(Date time) {
-    HeliocentricCoordinates sunCoordinates = HeliocentricCoordinates.getInstance(Planet.Sun, time);
-    return RaDec.getInstance(Planet.Sun, time, sunCoordinates);
-  }
+    public static RaDec getSolarPosition(Date time) {
+        HeliocentricCoordinates sunCoordinates = HeliocentricCoordinates.getInstance(Planet.Sun, time);
+        return RaDec.getInstance(Planet.Sun, time, sunCoordinates);
+    }
 }

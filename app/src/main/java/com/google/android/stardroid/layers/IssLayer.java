@@ -52,195 +52,200 @@ import java.util.concurrent.TimeUnit;
  * @author Brent Bryan
  */
 public class IssLayer extends AbstractSourceLayer {
-  private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-  private final AstronomerModel model;
-
-  private IssSource issSource;
-
-  public IssLayer(Resources resources, AstronomerModel model) {
-    super(resources, true);
-    this.model = model;
-  }
-
-  @Override
-  protected void initializeAstroSources(ArrayList<AstronomicalSource> sources) {
-    this.issSource = new IssSource(model, getResources());
-    sources.add(issSource);
-
-    scheduler.scheduleAtFixedRate(
-        new OrbitalElementsGrabber(issSource), 0, 60, TimeUnit.SECONDS);
-  }
-
-  @Override
-  public int getLayerDepthOrder() {
-    return 70;
-  }
-
-  @Override
-  protected int getLayerNameId() {
-    return R.string.show_satellite_layer_pref;
-  }
-
-  /** Thread Runnable which parses the orbital elements out of the Url. */
-  static class OrbitalElementsGrabber implements Runnable {
-    private static final long UPDATE_FREQ_MS = TimeConstants.MILLISECONDS_PER_HOUR;
-    private static final String TAG = MiscUtil.getTag(OrbitalElementsGrabber.class);
-    private static final String URL_STRING = "http://spaceflight.nasa.gov/realdata/" +
-        "sightings/SSapplications/Post/JavaSSOP/orbit/ISS/SVPOST.html";
-
-    private final IssSource source;
-    private long lastSuccessfulUpdateMs = -1L;
-
-    public OrbitalElementsGrabber(IssSource source) {
-      this.source = source;
-    }
-
-    /**
-     * Parses the OrbitalElements from the given BufferedReader.  Factored out
-     * of {@link #getOrbitalElements} to simplify testing.
-     */
-    OrbitalElements parseOrbitalElements(BufferedReader in) throws IOException {
-      String s;
-      while ((s = in.readLine()) != null && !s.contains("M50 Keplerian")) {}
-
-      // Skip the dashed line
-      in.readLine();
-
-      float[] params = new float[9];
-      int i = 0;
-      for (; i < params.length && (s = in.readLine()) != null; i++) {
-        s = s.substring(46).trim();
-        String[] tokens = s.split("\\s+");
-        params[i] = Float.parseFloat(tokens[2]);
-      }
-
-
-      if (i == params.length) {  // we read all the data.
-        // TODO(serafini): Add magic here to create orbital elements or whatever.
-        StringBuilder sb = new StringBuilder();
-        for (float param : params) {
-          sb.append(" ").append(param);
-        }
-        //Blog.d(this, "Params: " + sb);
-      }
-      return null;
-    }
-
-    /**
-     * Reads the given URL and returns the OrbitalElements associated with the object
-     * described therein.
-     */
-    OrbitalElements getOrbitalElements(String urlString) {
-      BufferedReader in = null;
-      try {
-        URLConnection connection = new URL(urlString).openConnection();
-        in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        return parseOrbitalElements(in);
-      } catch (IOException e) {
-        Log.e(TAG, "Error reading Orbital Elements");
-      } finally {
-        Closeables.closeQuietly(in);
-      }
-      return null;
-    }
-
-    @Override
-    public void run() {
-      long currentTimeMs = System.currentTimeMillis();
-      if ((currentTimeMs - lastSuccessfulUpdateMs) > UPDATE_FREQ_MS) {
-        //Blog.d(this, "Fetching ISS data...");
-        OrbitalElements elements = getOrbitalElements(URL_STRING);
-        if (elements == null) {
-          Log.d(TAG, "Error downloading ISS orbital data");
-        } else {
-          lastSuccessfulUpdateMs = currentTimeMs;
-          source.setOrbitalElements(elements);
-        }
-      }
-    }
-  }
-
-  /** AstronomicalSource corresponding to the International Space Station. */
-  static class IssSource extends AbstractAstronomicalSource {
-    private static final long UPDATE_FREQ_MS = 1L * TimeConstants.MILLISECONDS_PER_SECOND;
-    private static final int ISS_COLOR = Color.YELLOW;
-
-    private final GeocentricCoordinates coords = new GeocentricCoordinates(1f, 0f, 0f);
-    private final ArrayList<PointSource> pointSources = new ArrayList<PointSource>();
-    private final ArrayList<TextSource> textSources = new ArrayList<TextSource>();
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private final AstronomerModel model;
-    private final String name;
 
-    private OrbitalElements orbitalElements = null;
-    private boolean orbitalElementsChanged;
-    private long lastUpdateTimeMs = 0L;
+    private IssSource issSource;
 
-    public IssSource(AstronomerModel model, Resources resources) {
-      this.model = model;
-      this.name = resources.getString(R.string.space_station);
-
-      pointSources.add(new PointSourceImpl(coords, ISS_COLOR, 5));
-      textSources.add(new TextSourceImpl(coords, name, ISS_COLOR));
-    }
-
-    public synchronized void setOrbitalElements(OrbitalElements elements) {
-      this.orbitalElements = elements;
-      orbitalElementsChanged = true;
+    public IssLayer(Resources resources, AstronomerModel model) {
+        super(resources, true);
+        this.model = model;
     }
 
     @Override
-    public List<String> getNames() {
-      return Lists.asList(name);
+    protected void initializeAstroSources(ArrayList<AstronomicalSource> sources) {
+        this.issSource = new IssSource(model, getResources());
+        sources.add(issSource);
+
+        scheduler.scheduleAtFixedRate(
+                new OrbitalElementsGrabber(issSource), 0, 60, TimeUnit.SECONDS);
     }
 
     @Override
-    public GeocentricCoordinates getSearchLocation() {
-      return coords;
-    }
-
-    private void updateCoords(Date time) {
-      lastUpdateTimeMs = time.getTime();
-      orbitalElementsChanged = false;
-
-      if (orbitalElements == null) {
-        return;
-      }
-      // TODO(serafini): Update coords of Iss from OrbitalElements.
-      // issCoords.assign(...);
+    public int getLayerDepthOrder() {
+        return 70;
     }
 
     @Override
-    public Sources initialize() {
-      updateCoords(model.getTime());
-      return this;
+    protected int getLayerNameId() {
+        return R.string.show_satellite_layer_pref;
     }
 
-    @Override
-    public synchronized EnumSet<UpdateType> update() {
-      EnumSet<UpdateType> updateTypes = EnumSet.noneOf(UpdateType.class);
+    /**
+     * Thread Runnable which parses the orbital elements out of the Url.
+     */
+    static class OrbitalElementsGrabber implements Runnable {
+        private static final long UPDATE_FREQ_MS = TimeConstants.MILLISECONDS_PER_HOUR;
+        private static final String TAG = MiscUtil.getTag(OrbitalElementsGrabber.class);
+        private static final String URL_STRING = "http://spaceflight.nasa.gov/realdata/" +
+                "sightings/SSapplications/Post/JavaSSOP/orbit/ISS/SVPOST.html";
 
-      Date modelTime = model.getTime();
-      if (orbitalElementsChanged ||
-          Math.abs(modelTime.getTime() - lastUpdateTimeMs) > UPDATE_FREQ_MS) {
+        private final IssSource source;
+        private long lastSuccessfulUpdateMs = -1L;
 
-        updateCoords(modelTime);
-        if (orbitalElements != null) {
-          updateTypes.add(UpdateType.UpdatePositions);
+        public OrbitalElementsGrabber(IssSource source) {
+            this.source = source;
         }
-      }
-      return updateTypes;
+
+        /**
+         * Parses the OrbitalElements from the given BufferedReader.  Factored out
+         * of {@link #getOrbitalElements} to simplify testing.
+         */
+        OrbitalElements parseOrbitalElements(BufferedReader in) throws IOException {
+            String s;
+            while ((s = in.readLine()) != null && !s.contains("M50 Keplerian")) {
+            }
+
+            // Skip the dashed line
+            in.readLine();
+
+            float[] params = new float[9];
+            int i = 0;
+            for (; i < params.length && (s = in.readLine()) != null; i++) {
+                s = s.substring(46).trim();
+                String[] tokens = s.split("\\s+");
+                params[i] = Float.parseFloat(tokens[2]);
+            }
+
+
+            if (i == params.length) {  // we read all the data.
+                // TODO(serafini): Add magic here to create orbital elements or whatever.
+                StringBuilder sb = new StringBuilder();
+                for (float param : params) {
+                    sb.append(" ").append(param);
+                }
+                //Blog.d(this, "Params: " + sb);
+            }
+            return null;
+        }
+
+        /**
+         * Reads the given URL and returns the OrbitalElements associated with the object
+         * described therein.
+         */
+        OrbitalElements getOrbitalElements(String urlString) {
+            BufferedReader in = null;
+            try {
+                URLConnection connection = new URL(urlString).openConnection();
+                in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                return parseOrbitalElements(in);
+            } catch (IOException e) {
+                Log.e(TAG, "Error reading Orbital Elements");
+            } finally {
+                Closeables.closeQuietly(in);
+            }
+            return null;
+        }
+
+        @Override
+        public void run() {
+            long currentTimeMs = System.currentTimeMillis();
+            if ((currentTimeMs - lastSuccessfulUpdateMs) > UPDATE_FREQ_MS) {
+                //Blog.d(this, "Fetching ISS data...");
+                OrbitalElements elements = getOrbitalElements(URL_STRING);
+                if (elements == null) {
+                    Log.d(TAG, "Error downloading ISS orbital data");
+                } else {
+                    lastSuccessfulUpdateMs = currentTimeMs;
+                    source.setOrbitalElements(elements);
+                }
+            }
+        }
     }
 
-    @Override
-    public List<? extends TextSource> getLabels() {
-      return textSources;
-    }
+    /**
+     * AstronomicalSource corresponding to the International Space Station.
+     */
+    static class IssSource extends AbstractAstronomicalSource {
+        private static final long UPDATE_FREQ_MS = 1L * TimeConstants.MILLISECONDS_PER_SECOND;
+        private static final int ISS_COLOR = Color.YELLOW;
 
-    @Override
-    public List<? extends PointSource> getPoints() {
-      return pointSources;
+        private final GeocentricCoordinates coords = new GeocentricCoordinates(1f, 0f, 0f);
+        private final ArrayList<PointSource> pointSources = new ArrayList<PointSource>();
+        private final ArrayList<TextSource> textSources = new ArrayList<TextSource>();
+        private final AstronomerModel model;
+        private final String name;
+
+        private OrbitalElements orbitalElements = null;
+        private boolean orbitalElementsChanged;
+        private long lastUpdateTimeMs = 0L;
+
+        public IssSource(AstronomerModel model, Resources resources) {
+            this.model = model;
+            this.name = resources.getString(R.string.space_station);
+
+            pointSources.add(new PointSourceImpl(coords, ISS_COLOR, 5));
+            textSources.add(new TextSourceImpl(coords, name, ISS_COLOR));
+        }
+
+        public synchronized void setOrbitalElements(OrbitalElements elements) {
+            this.orbitalElements = elements;
+            orbitalElementsChanged = true;
+        }
+
+        @Override
+        public List<String> getNames() {
+            return Lists.asList(name);
+        }
+
+        @Override
+        public GeocentricCoordinates getSearchLocation() {
+            return coords;
+        }
+
+        private void updateCoords(Date time) {
+            lastUpdateTimeMs = time.getTime();
+            orbitalElementsChanged = false;
+
+            if (orbitalElements == null) {
+                return;
+            }
+            // TODO(serafini): Update coords of Iss from OrbitalElements.
+            // issCoords.assign(...);
+        }
+
+        @Override
+        public Sources initialize() {
+            updateCoords(model.getTime());
+            return this;
+        }
+
+        @Override
+        public synchronized EnumSet<UpdateType> update() {
+            EnumSet<UpdateType> updateTypes = EnumSet.noneOf(UpdateType.class);
+
+            Date modelTime = model.getTime();
+            if (orbitalElementsChanged ||
+                    Math.abs(modelTime.getTime() - lastUpdateTimeMs) > UPDATE_FREQ_MS) {
+
+                updateCoords(modelTime);
+                if (orbitalElements != null) {
+                    updateTypes.add(UpdateType.UpdatePositions);
+                }
+            }
+            return updateTypes;
+        }
+
+        @Override
+        public List<? extends TextSource> getLabels() {
+            return textSources;
+        }
+
+        @Override
+        public List<? extends PointSource> getPoints() {
+            return pointSources;
+        }
     }
-  }
 
 
 }

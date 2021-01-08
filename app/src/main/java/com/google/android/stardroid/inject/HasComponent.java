@@ -5,5 +5,5 @@ package com.google.android.stardroid.inject;
  * Created by johntaylor on 4/9/16.
  */
 public interface HasComponent<C> {
-  C getComponent();
+    C getComponent();
 }
