@@ -27,6 +27,6 @@
     android:includeInGlobalSearch="true"
     android:queryAfterZeroResults="false"
     android:searchSuggestThreshold="1"
-    android:searchSuggestAuthority="com.google.android.stardroid.searchterms"
+    android:searchSuggestAuthority="io.github.marcocipriani01.telescopetouch.searchterms"
     android:searchSuggestIntentAction="android.intent.action.SEARCH"
 />
