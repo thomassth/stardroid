@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translation_description="Application Title">Sky Map</string>
     <string name="menu_settings">Налаштування</string>
     <string name="menu_search">Пошук</string>
     <string name="cancel">Відміна</string>
@@ -24,15 +23,14 @@
     <string name="location_unable_to_geocode">Неможливо визначити місце розташування – ймовірно, недоступна мережа.</string>
     <string name="location_not_found_title" translation_description="dialog box title when location not found">Вибачте</string>
     <string name="location_not_found" translation_description="dialog message when placename not found">Не знайдено: %s.</string>
-    <string name="location_long_lat">Довгота:%1$s, широта:%2$s</string>
+    <string name="location_long_lat">Довгота:%1$f, широта:%2$f</string>
     <string name="location_place_found">Місце знайдене. Встан. широта %1$f і довгота %2$f</string>
     <string name="use_magnetic_correction">Викор. магнітну корекцію</string>
     <string name="use_magnetic_correction_hint">Використовуйте інформацію про своє місце розташування, щоб змінити орієнтацію з магнітного на справжній географічний Північний полюс</string>
-    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">Показати...</string>
+    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">Показати…</string>
     <string name="show_stars_pref">Зірки</string>
     <string name="show_constellations_pref">Сузір\'я</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Об\'єкти Мессьє</string>
-    <string name="show_planets_pref">Планети</string>
     <string name="show_grid_pref">RA/Dec сітка</string>
     <string name="show_horizon_pref">Горизонт</string>
     <string name="show_sky_gradient">Градієнт неба</string>
@@ -64,14 +62,14 @@
     <string name="no_search_results_text">Нічого не знайдено.</string>
     <string name="many_search_results_title">Можливо, ви мали на увазі:</string>
     <string name="many_search_results_text">Виберіть результат</string>
-    <string name="searching_for_text">Пошук %s...</string>
+    <string name="searching_for_text">Пошук %s…</string>
     <string name="found_target_text">Знайдено: %s.</string>
     <string name="other">Інше</string>
     <string name="planetary_images">Показувати зображення планет</string>
     <string name="menu_time">Подорож у часі</string>
-    <string name="time_travel_start_message">Подорож крізь час...</string>
-    <string name="time_travel_start_message_alt">Подорож у часі до об\'єкта %s...</string>
-    <string name="time_travel_close_message">Назад в сьогодення...</string>
+    <string name="time_travel_start_message">Подорож крізь час…</string>
+    <string name="time_travel_start_message_alt">Подорож у часі до об\'єкта %s…</string>
+    <string name="time_travel_close_message">Назад в сьогодення…</string>
     <string name="popular_dates_prompt" translation_description="label for a list of dates the user can choose from">Популярні дати</string>
     <string name="custom_date_prompt" translation_description="label telling the user to manually specify a data">Або виберіть іншу дату</string>
     <string name="change_date_prompt">Змінити дату</string>

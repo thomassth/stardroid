@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Please add  translation_description="" attributes to Strings to assist the translators. -->
 <resources>
-    <string name="app_name" translation_description="Application Title">Sky Map</string>
     <string name="menu_settings">Gosodiadau</string>
     <string name="menu_search">Chwilio</string>
     <string name="cancel">Diddymu</string>
@@ -25,16 +24,15 @@
     <string name="location_unable_to_geocode">Methu ag adnabod dy leoliad. Efallai nad yw dy rwydwaith ar gael?</string>
     <string name="location_not_found_title" translation_description="dialog box title when location not found">Ymddiheuriadau</string>
     <string name="location_not_found" translation_description="dialog message when placename not found">%s heb ei ganfod.</string>
-    <string name="location_long_lat">Hydred:%1$s, Ledred:%2$s</string>
+    <string name="location_long_lat">Hydred:%1$f, Ledred:%2$f</string>
     <string name="location_place_found">Wedi canfod lleoliad. Yn gosod lledred %1$f a hydred %2$f</string>
     <string name="use_magnetic_correction">Defnyddio cywiriad magnetig</string>
     <string name="use_magnetic_correction_hint">Defnyddia dy wybodaeth am dy leoliad i gywiro\'r cyfeiriad o\'r gogledd magnetig i\'r gwir ogledd.</string>
     <!-- This string is too long and currently unused -->
-    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">Dangos...</string>
+    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">Dangos…</string>
     <string name="show_stars_pref">Sêr</string>
     <string name="show_constellations_pref">Cytser</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Gwrthrychau Messier</string>
-    <string name="show_planets_pref">Cysawd yr Haul</string>
     <string name="show_grid_pref">Grid RA/Dec</string>
     <string name="show_horizon_pref">Gorwel</string>
     <string name="show_sky_gradient" translation_description="This is a shading of the color of the sky used for effect">Graddfa Awyr</string>
@@ -69,14 +67,14 @@
     <string name="no_search_results_text">Ni chanfuwyd unrhyw ganlyniadau.</string>
     <string name="many_search_results_title">A oeddet yn meddwl?</string>
     <string name="many_search_results_text">Dewisa un</string>
-    <string name="searching_for_text">Yn chwilio am %s...</string>
+    <string name="searching_for_text">Yn chwilio am %s…</string>
     <string name="found_target_text">Wedi canfod %s.</string>
     <string name="other" translation_description="A preference category (ie preferences that don't belong in any other category)">Arall</string>
     <string name="planetary_images">Dangos Delweddau Planedau</string>
     <string name="menu_time">Teithio mewn Amser</string>
-    <string name="time_travel_start_message">Yn teithio trwy amser ...</string>
-    <string name="time_travel_start_message_alt">Yn teithio trwy amser i %s ...</string>
-    <string name="time_travel_close_message">Nôl i\'r presennol ...</string>
+    <string name="time_travel_start_message">Yn teithio trwy amser …</string>
+    <string name="time_travel_start_message_alt">Yn teithio trwy amser i %s …</string>
+    <string name="time_travel_close_message">Nôl i\'r presennol …</string>
     <!--  -->
     <string name="popular_dates_prompt" translation_description="Label for a list of dates the user can choose from">Dyddiadau poblogaidd</string>
     <string name="custom_date_prompt" translation_description="Label telling the user to manually specify a date">Neu ddewis dy ddyddiad dy hun:</string>

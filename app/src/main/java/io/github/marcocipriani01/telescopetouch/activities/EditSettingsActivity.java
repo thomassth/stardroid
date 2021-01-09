@@ -1,19 +1,18 @@
 package io.github.marcocipriani01.telescopetouch.activities;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.EditTextPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,7 +29,8 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 /**
  * Edit the user's preferences.
  */
-public class EditSettingsActivity extends PreferenceActivity {
+public class EditSettingsActivity extends AppCompatActivity {
+
     /**
      * These must match the keys in the preference_screen.xml file.
      */
@@ -53,7 +53,7 @@ public class EditSettingsActivity extends PreferenceActivity {
                 PreferenceManager.getDefaultSharedPreferences(this));
         geocoder = new Geocoder(this);
         preferenceFragment = new MyPreferenceFragment();
-        getFragmentManager().beginTransaction().replace(android.R.id.content,
+        getSupportFragmentManager().beginTransaction().replace(android.R.id.content,
                 preferenceFragment).commit();
 
     }
@@ -64,20 +64,14 @@ public class EditSettingsActivity extends PreferenceActivity {
         final Preference locationPreference = preferenceFragment.findPreference(LOCATION);
         Preference latitudePreference = preferenceFragment.findPreference(LATITUDE);
         Preference longitudePreference = preferenceFragment.findPreference(LONGITUDE);
-        locationPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                Log.d(TAG, "Place to be updated to " + newValue);
-                return setLatLongFromPlace(newValue.toString());
-            }
+        locationPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+            Log.d(TAG, "Place to be updated to " + newValue);
+            return setLatLongFromPlace(newValue.toString());
         });
 
-        latitudePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                ((EditTextPreference) locationPreference).setText("");
-                return true;
-            }
+        latitudePreference.setOnPreferenceChangeListener((preference, newValue) -> {
+            ((EditTextPreference) locationPreference).setText("");
+            return true;
         });
 
         longitudePreference.setOnPreferenceChangeListener((preference, newValue) -> {
@@ -112,11 +106,6 @@ public class EditSettingsActivity extends PreferenceActivity {
     }
 
     private void enableNonGyroSensorPrefs(boolean enabled) {
-        // These settings aren't compatible with the gyro.
-        preferenceFragment.findPreference(
-                ApplicationConstants.SENSOR_SPEED_PREF_KEY).setEnabled(enabled);
-        preferenceFragment.findPreference(
-                ApplicationConstants.SENSOR_DAMPING_PREF_KEY).setEnabled(enabled);
         preferenceFragment.findPreference(
                 ApplicationConstants.REVERSE_MAGNETIC_Z_PREFKEY).setEnabled(enabled);
     }
@@ -148,8 +137,8 @@ public class EditSettingsActivity extends PreferenceActivity {
     }
 
     private void setLatLong(double latitude, double longitude) {
-        EditTextPreference latPreference = (EditTextPreference) preferenceFragment.findPreference(LATITUDE);
-        EditTextPreference longPreference = (EditTextPreference) preferenceFragment.findPreference(LONGITUDE);
+        EditTextPreference latPreference = preferenceFragment.findPreference(LATITUDE);
+        EditTextPreference longPreference = preferenceFragment.findPreference(LONGITUDE);
         latPreference.setText(Double.toString(latitude));
         longPreference.setText(Double.toString(longitude));
         String message = String.format(getString(R.string.location_place_found), latitude, longitude);
@@ -162,18 +151,13 @@ public class EditSettingsActivity extends PreferenceActivity {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.location_not_found_title)
                 .setMessage(message)
-                .setPositiveButton(android.R.string.ok, new OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+                .setPositiveButton(android.R.string.ok, (dialog1, which) -> dialog1.dismiss());
         dialog.show();
     }
 
-    public static class MyPreferenceFragment extends PreferenceFragment {
+    public static class MyPreferenceFragment extends PreferenceFragmentCompat {
         @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
+        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             addPreferencesFromResource(R.xml.preference_screen);
         }
     }

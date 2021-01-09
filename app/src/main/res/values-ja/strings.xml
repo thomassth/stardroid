@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translation_description="Application Title">Skyマップ</string>
     <string name="menu_settings">設定</string>
     <string name="menu_search">検索</string>
     <string name="cancel">キャンセル</string>
@@ -24,15 +23,14 @@
     <string name="location_unable_to_geocode">現在地がわかりません。ネットワークが利用できない可能性があります。</string>
     <string name="location_not_found_title" translation_description="dialog box title when location not found">検索結果</string>
     <string name="location_not_found" translation_description="dialog message when placename not found">%sが見つかりません</string>
-    <string name="location_long_lat">経度: %1$s、緯度: %2$s</string>
+    <string name="location_long_lat">経度: %1$f、緯度: %2$f</string>
     <string name="location_place_found">場所が見つかりました。緯度: %1$f、経度: %2$f</string>
     <string name="use_magnetic_correction">磁気補正機能を使用</string>
     <string name="use_magnetic_correction_hint">現在地情報を使って向きを磁北ではなく真北に修正します</string>
-    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">表示...</string>
+    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">表示…</string>
     <string name="show_stars_pref">恒星</string>
     <string name="show_constellations_pref">星座</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">メシエ天体</string>
-    <string name="show_planets_pref">惑星</string>
     <string name="show_grid_pref">赤経/赤緯グリッド</string>
     <string name="show_horizon_pref">地平線</string>
     <string name="show_sky_gradient">空のグラデーション</string>
@@ -64,14 +62,14 @@
     <string name="no_search_results_text">検索結果は0件です。</string>
     <string name="many_search_results_title">もしかして</string>
     <string name="many_search_results_text">1つ選択してください</string>
-    <string name="searching_for_text">%sを検索中...</string>
+    <string name="searching_for_text">%sを検索中…</string>
     <string name="found_target_text">%sが見つかりました</string>
     <string name="other">その他</string>
     <string name="planetary_images">惑星の画像を表示</string>
     <string name="menu_time">タイムトラベル</string>
-    <string name="time_travel_start_message">タイムトラベル中...</string>
-    <string name="time_travel_start_message_alt">%sにタイムトラベル中...</string>
-    <string name="time_travel_close_message">現在へ...</string>
+    <string name="time_travel_start_message">タイムトラベル中…</string>
+    <string name="time_travel_start_message_alt">%sにタイムトラベル中…</string>
+    <string name="time_travel_close_message">現在へ…</string>
     <string name="popular_dates_prompt" translation_description="label for a list of dates the user can choose from">人気の日付</string>
     <string name="custom_date_prompt" translation_description="label telling the user to manually specify a data">または表示する日付を手動で選択</string>
     <string name="change_date_prompt">日付の変更</string>

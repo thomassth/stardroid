@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translation_description="Application Title">Sky Map</string>
     <string name="menu_settings">Ustawienia</string>
     <string name="menu_search">Szukaj</string>
     <string name="cancel">Anuluj</string>
@@ -24,15 +23,14 @@
     <string name="location_unable_to_geocode">Nie można rozpoznać Twojej lokalizacji – być może Twoja sieć jest niedostępna.</string>
     <string name="location_not_found_title" translation_description="dialog box title when location not found">Niestety</string>
     <string name="location_not_found" translation_description="dialog message when placename not found">Nie znaleziono: %s.</string>
-    <string name="location_long_lat">Długość geograficzna:%1$s, szerokość geograficzna:%2$s</string>
+    <string name="location_long_lat">Długość geograficzna:%1$f, szerokość geograficzna:%2$f</string>
     <string name="location_place_found">Znaleziono miejsce. Ustawianie szerokości %1$f i długości %2$f geograficznych</string>
     <string name="use_magnetic_correction">Użyj poprawki magnetycznej</string>
     <string name="use_magnetic_correction_hint">Użyj informacji o lokalizacji do poprawienia orientacji z północy magnetycznej na rzeczywistą</string>
-    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">Pokaż...</string>
+    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">Pokaż…</string>
     <string name="show_stars_pref">Gwiazdy</string>
     <string name="show_constellations_pref">Gwiazdozbiory</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Katalog Messiera</string>
-    <string name="show_planets_pref">Planety</string>
     <string name="show_grid_pref">Siatka RA/Dec</string>
     <string name="show_horizon_pref">Horyzont</string>
     <string name="show_sky_gradient">Gradient nieba</string>
@@ -64,14 +62,14 @@
     <string name="no_search_results_text">Nie znaleziono żadnych wyników.</string>
     <string name="many_search_results_title">Czy chodziło Ci o?</string>
     <string name="many_search_results_text">Wybierz jeden</string>
-    <string name="searching_for_text">Wyszukiwanie %s...</string>
+    <string name="searching_for_text">Wyszukiwanie %s…</string>
     <string name="found_target_text">Znaleziono %s.</string>
     <string name="other">Pozostałe</string>
     <string name="planetary_images">Pokaż zdjęcia planet</string>
     <string name="menu_time">Podróż w czasie</string>
-    <string name="time_travel_start_message">Podróżowanie w czasie...</string>
-    <string name="time_travel_start_message_alt">Podróż w czasie do %s...</string>
-    <string name="time_travel_close_message">Powrót do teraźniejszości...</string>
+    <string name="time_travel_start_message">Podróżowanie w czasie…</string>
+    <string name="time_travel_start_message_alt">Podróż w czasie do %s…</string>
+    <string name="time_travel_close_message">Powrót do teraźniejszości…</string>
     <string name="popular_dates_prompt" translation_description="label for a list of dates the user can choose from">Popularne daty</string>
     <string name="custom_date_prompt" translation_description="label telling the user to manually specify a data">Lub wybierz żądaną datę</string>
     <string name="change_date_prompt">Zmień datę</string>

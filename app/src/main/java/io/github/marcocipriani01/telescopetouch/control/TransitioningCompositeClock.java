@@ -14,6 +14,7 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
  * @author John Taylor
  */
 public class TransitioningCompositeClock implements Clock {
+
     public static final long TRANSITION_TIME_MILLIS = 2500L;
     private static final String TAG = MiscUtil.getTag(TransitioningCompositeClock.class);
     private final Clock realClock;

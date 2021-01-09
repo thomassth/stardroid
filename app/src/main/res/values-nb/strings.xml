@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Please add  translation_description="" attributes to Strings to assist the translators. -->
 <resources>
-    <string name="app_name" translation_description="Application Title">Sky Map</string>
     <string name="menu_settings">Innstillinger</string>
     <string name="menu_search">Søk</string>
     <string name="cancel">Avbryt</string>
@@ -25,16 +24,15 @@
     <string name="location_unable_to_geocode">Kan ikke bestemme posisjonen din - kanskje er ikke nettverket ditt tilgjengelig?</string>
     <string name="location_not_found_title" translation_description="dialog box title when location not found">Beklager</string>
     <string name="location_not_found" translation_description="dialog message when placename not found">%s ikke funnet.</string>
-    <string name="location_long_lat">Lengdegrad:%1$s, breddegrad:%2$s</string>
+    <string name="location_long_lat">Lengdegrad:%1$f, breddegrad:%2$f</string>
     <string name="location_place_found">Sted funnet. Breddegrad %1$f og lengdegrad %2$f</string>
     <string name="use_magnetic_correction">Bruk magnetisk korrigering</string>
     <string name="use_magnetic_correction_hint">Bruk kjennskap om posisjonen din for å korrigere retning fra magnetisk nord til geografisk nord</string>
     <!-- This string is too long and currently unused -->
-    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">Vis...</string>
+    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">Vis…</string>
     <string name="show_stars_pref">Stjerner</string>
     <string name="show_constellations_pref">Stjernebilder</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Messier-objekter</string>
-    <string name="show_planets_pref">Solsystem</string>
     <string name="show_grid_pref">RA/Dec-rutenett</string>
     <string name="show_horizon_pref">Horisont</string>
     <string name="show_sky_gradient" translation_description="This is a shading of the color of the sky used for effect">Himmelgradient</string>
@@ -70,14 +68,14 @@
     <string name="no_search_results_text">Ingen resultater funnet.</string>
     <string name="many_search_results_title">Mente du?</string>
     <string name="many_search_results_text">Velg en</string>
-    <string name="searching_for_text">Søker etter %s...</string>
+    <string name="searching_for_text">Søker etter %s…</string>
     <string name="found_target_text">Funnet %s.</string>
     <string name="other" translation_description="A preference category (ie preferences that don't belong in any other category)">Andre</string>
     <string name="planetary_images">Vis planetbilder</string>
     <string name="menu_time">Tidsreise</string>
-    <string name="time_travel_start_message">Reiser gjennom tid...</string>
-    <string name="time_travel_start_message_alt">Reiser gjennom tid til %s...</string>
-    <string name="time_travel_close_message">Tilbake til nåtiden...</string>
+    <string name="time_travel_start_message">Reiser gjennom tid…</string>
+    <string name="time_travel_start_message_alt">Reiser gjennom tid til %s…</string>
+    <string name="time_travel_close_message">Tilbake til nåtiden…</string>
     <!--  -->
     <string name="popular_dates_prompt" translation_description="Label for a list of dates the user can choose from">Populære datoer</string>
     <string name="custom_date_prompt" translation_description="Label telling the user to manually specify a date">Eller velg din egen dato:</string>

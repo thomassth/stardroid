@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translation_description="Application Title">Sky Map</string>
     <string name="menu_settings">Einstellungen</string>
     <string name="menu_search">Suche</string>
     <string name="cancel">Abbrechen</string>
@@ -24,15 +23,14 @@
     <string name="location_unable_to_geocode">Ihr Standort konnte nicht ermittelt werden. Sind Sie mit einem Mobilfunknetz verbunden?</string>
     <string name="location_not_found_title" translation_description="dialog box title when location not found">Sorry</string>
     <string name="location_not_found" translation_description="dialog message when placename not found">%s nicht gefunden</string>
-    <string name="location_long_lat">Längengrad:%1$s, Breitengrad:%2$s</string>
+    <string name="location_long_lat">Längengrad:%1$f, Breitengrad:%2$f</string>
     <string name="location_place_found">Ort gefunden. Breitengrad %1$f und Längengrad %2$f</string>
     <string name="use_magnetic_correction">Magnetische Korrektur verwenden</string>
     <string name="use_magnetic_correction_hint">Korrigiert die magnetische Nordrichtung anhand Ihrer Position zur geografischen Nordrichtung.</string>
-    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">Anzeigen...</string>
+    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">Anzeigen…</string>
     <string name="show_stars_pref">Sterne</string>
     <string name="show_constellations_pref">Konstellationen</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Messier-Objekte</string>
-    <string name="show_planets_pref">Planeten</string>
     <string name="show_grid_pref">Rektaszension/Deklination</string>
     <string name="show_horizon_pref">Horizont</string>
     <string name="show_sky_gradient">Himmelsverlauf</string>
@@ -64,14 +62,14 @@
     <string name="no_search_results_text">Keine Ergebnisse gefunden</string>
     <string name="many_search_results_title">Meinten Sie?</string>
     <string name="many_search_results_text">Bitte einen Eintrag auswählen</string>
-    <string name="searching_for_text">Suche nach %s...</string>
+    <string name="searching_for_text">Suche nach %s…</string>
     <string name="found_target_text">%s gefunden</string>
     <string name="other">Sonstiges</string>
     <string name="planetary_images">Planetenbilder zeigen</string>
     <string name="menu_time">Zeitreise</string>
-    <string name="time_travel_start_message">Zeitreise läuft...</string>
-    <string name="time_travel_start_message_alt">Zeitreise nach %s...</string>
-    <string name="time_travel_close_message">Zurück in die Gegenwart...</string>
+    <string name="time_travel_start_message">Zeitreise läuft…</string>
+    <string name="time_travel_start_message_alt">Zeitreise nach %s…</string>
+    <string name="time_travel_close_message">Zurück in die Gegenwart…</string>
     <string name="popular_dates_prompt" translation_description="label for a list of dates the user can choose from">Beliebte Tage</string>
     <string name="custom_date_prompt" translation_description="label telling the user to manually specify a data">Oder eigenes Datum auswählen</string>
     <string name="change_date_prompt">Datum ändern</string>

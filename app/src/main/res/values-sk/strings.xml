@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translation_description="Application Title">Sky Map</string>
     <string name="menu_settings">Nastavení</string>
     <string name="menu_search">Hledat</string>
     <string name="cancel">Storno</string>
@@ -24,15 +23,14 @@
     <string name="location_unable_to_geocode">Nelze najít vaši polohu, možná je síť nedostupná?</string>
     <string name="location_not_found_title" translation_description="dialog box title when location not found">Nenalezeno</string>
     <string name="location_not_found" translation_description="dialog message when placename not found">Nelze nalézt „%s“</string>
-    <string name="location_long_lat">Zeměpisná délka:%1$s, Zeměpisná šířka:%2$s</string>
+    <string name="location_long_lat">Zeměpisná délka:%1$f, Zeměpisná šířka:%2$f</string>
     <string name="location_place_found">Místo nalezeno. Nastavení šířky %1$f a délky %2$f</string>
     <string name="use_magnetic_correction">Použít magnetickou korekci</string>
     <string name="use_magnetic_correction_hint">Použije znalost vaší lokace k opravě orientace magnetického pólu na skutečný zeměpisný pól</string>
-    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">Zobrazit...</string>
+    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">Zobrazit…</string>
     <string name="show_stars_pref">Hvězdy</string>
     <string name="show_constellations_pref">Souhvězdí</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Messierovy objekty</string>
-    <string name="show_planets_pref">Planety</string>
     <string name="show_grid_pref">Síť RA/Dec</string>
     <string name="show_horizon_pref">Horizont</string>
     <string name="show_sky_gradient">Gradient oblohy</string>
@@ -64,14 +62,14 @@
     <string name="no_search_results_text">Nelze najít váš oběkt</string>
     <string name="many_search_results_title">Možná jste chtěli zadat:</string>
     <string name="many_search_results_text">Zvolte výsledek</string>
-    <string name="searching_for_text">Hledání %s...</string>
+    <string name="searching_for_text">Hledání %s…</string>
     <string name="found_target_text">Nalezeno: %s.</string>
     <string name="other">Jiné</string>
     <string name="planetary_images">Zobrazit obrázky planet</string>
     <string name="menu_time">Cestování v čase</string>
-    <string name="time_travel_start_message">Cestování v čase...</string>
-    <string name="time_travel_start_message_alt">Cestování v čase do %s...</string>
-    <string name="time_travel_close_message">Zpět do současnosti...</string>
+    <string name="time_travel_start_message">Cestování v čase…</string>
+    <string name="time_travel_start_message_alt">Cestování v čase do %s…</string>
+    <string name="time_travel_close_message">Zpět do současnosti…</string>
     <string name="popular_dates_prompt" translation_description="label for a list of dates the user can choose from">Oblíbená data</string>
     <string name="custom_date_prompt" translation_description="label telling the user to manually specify a data">Nebo zvolte vlastní datum</string>
     <string name="change_date_prompt">Změnit datum</string>

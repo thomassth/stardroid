@@ -50,6 +50,7 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
  * @author John Taylor
  */
 public class AstronomerModelImpl implements AstronomerModel {
+
     private static final String TAG = MiscUtil.getTag(AstronomerModelImpl.class);
     private static final Vector3 POINTING_DIR_IN_PHONE_COORDS = new Vector3(0, 0, -1);
     private static final Vector3 SCREEN_UP_IN_PHONE_COORDS = new Vector3(0, 1, 0);

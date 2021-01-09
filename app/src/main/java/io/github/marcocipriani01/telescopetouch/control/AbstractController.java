@@ -12,6 +12,7 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
  * @author John Taylor
  */
 public abstract class AbstractController implements Controller {
+
     private static final String TAG = MiscUtil.getTag(AbstractController.class);
     protected boolean enabled = true;
     @Inject

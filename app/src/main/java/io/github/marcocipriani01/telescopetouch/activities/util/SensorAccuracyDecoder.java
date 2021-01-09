@@ -12,6 +12,7 @@ import io.github.marcocipriani01.telescopetouch.R;
  * Created by johntaylor on 4/24/16.
  */
 public class SensorAccuracyDecoder {
+
     private final Resources resources;
     private final Context context;
 

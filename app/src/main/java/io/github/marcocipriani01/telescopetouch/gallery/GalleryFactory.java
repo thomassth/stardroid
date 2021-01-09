@@ -8,9 +8,11 @@ import android.content.res.Resources;
  * @author John Taylor
  */
 public class GalleryFactory {
+
     private static Gallery gallery;
 
     private GalleryFactory() {
+
     }
 
     /**

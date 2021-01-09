@@ -6,6 +6,7 @@ package io.github.marcocipriani01.telescopetouch.gallery;
  * @author John Taylor
  */
 public class GalleryImage {
+
     public int imageId;
     public String name;
     public String searchTerm;

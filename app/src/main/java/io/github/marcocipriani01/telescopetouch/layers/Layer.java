@@ -15,6 +15,7 @@ import io.github.marcocipriani01.telescopetouch.source.AstronomicalSource;
  * @author Brent Bryan
  */
 public interface Layer {
+
     /**
      * Initializes the layer; reading data and computing locations as necessary.
      * This method should return quickly - use a background thread if necessary.

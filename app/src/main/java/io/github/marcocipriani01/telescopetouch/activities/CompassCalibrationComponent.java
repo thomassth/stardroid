@@ -12,4 +12,3 @@ import io.github.marcocipriani01.telescopetouch.inject.PerActivity;
 public interface CompassCalibrationComponent {
     void inject(CompassCalibrationActivity activity);
 }
-

@@ -6,6 +6,7 @@ package io.github.marcocipriani01.telescopetouch.control;
  * @author John Taylor
  */
 public class RealClock implements Clock {
+
     @Override
     public long getTimeInMillisSinceEpoch() {
         // TODO(johntaylor): consider using SystemClock class.

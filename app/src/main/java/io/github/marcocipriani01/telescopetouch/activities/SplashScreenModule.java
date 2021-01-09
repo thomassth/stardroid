@@ -1,15 +1,15 @@
 package io.github.marcocipriani01.telescopetouch.activities;
 
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+
+import androidx.fragment.app.FragmentManager;
 
 import dagger.Module;
 import dagger.Provides;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.EulaDialogFragment;
-import io.github.marcocipriani01.telescopetouch.activities.dialogs.WhatsNewDialogFragment;
 import io.github.marcocipriani01.telescopetouch.inject.PerActivity;
 
 /**
@@ -17,6 +17,7 @@ import io.github.marcocipriani01.telescopetouch.inject.PerActivity;
  */
 @Module
 public class SplashScreenModule {
+
     private final SplashScreenActivity activity;
 
     public SplashScreenModule(SplashScreenActivity activity) {
@@ -29,14 +30,6 @@ public class SplashScreenModule {
         EulaDialogFragment fragment = new EulaDialogFragment();
         fragment.setEulaAcceptanceListener(activity);
         return fragment;
-    }
-
-    @Provides
-    @PerActivity
-    WhatsNewDialogFragment provideWhatsNewDialogFragment() {
-        WhatsNewDialogFragment whatsNewDialogFragment = new WhatsNewDialogFragment();
-        whatsNewDialogFragment.setCloseListener(activity);
-        return whatsNewDialogFragment;
     }
 
     @Provides
@@ -54,6 +47,6 @@ public class SplashScreenModule {
     @Provides
     @PerActivity
     FragmentManager provideFragmentManager() {
-        return activity.getFragmentManager();
+        return activity.getSupportFragmentManager();
     }
 }

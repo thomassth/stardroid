@@ -1,215 +1,175 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:stardroid="http://schemas.android.com/apk/res-auto"
-  android:theme="@android:style/Theme.Black"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent"
-  android:orientation="vertical"
-  android:id="@+id/main_sky_view_root">
-
-  <FrameLayout
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:stardroid="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_sky_view"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_weight="1">
+    android:orientation="vertical"
+    android:theme="@android:style/Theme.Black"
+    tools:ignore="ContentDescription, RtlSymmetry, RtlHardcoded">
+
     <android.opengl.GLSurfaceView
-      android:layout_width="fill_parent"
-      android:layout_height="fill_parent"
-      android:id="@+id/skyrenderer_view" />
-    <!-- Provides a translucent mask over the whole screen -->
-    <View
-      android:layout_width="fill_parent"
-      android:layout_height="fill_parent"
-      android:background="#ff990099"
-      android:visibility="invisible"
-      android:id="@+id/view_mask"/>
-
-    <!-- Include a place for all the modal controls. -->
-      <RelativeLayout
-          android:id="@+id/search_control_bar"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:background="#20990099"
-          android:orientation="vertical"
-          android:padding="1dip"
-          android:visibility="gone">
-
-          <ImageView
-              android:id="@+id/search_icon"
-              android:layout_width="34dip"
-              android:layout_height="wrap_content"
-              android:paddingTop="10dip"
-              android:src="@drawable/search_lens_very_small" />
-
-          <TextView
-              android:id="@+id/search_status_label"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginLeft="2dip"
-              android:layout_toRightOf="@id/search_icon"
-              android:paddingLeft="10dip"
-              android:textAppearance="?android:attr/textAppearanceMedium" />
-
-          <TextView
-              android:id="@+id/search_prompt"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:layout_below="@id/search_status_label"
-              android:layout_marginLeft="34dip"
-              android:text="@string/search_overlay_title"
-              android:textAppearance="?android:attr/textAppearanceSmall" />
-
-          <ImageButton
-              android:id="@+id/cancel_search_button"
-              android:layout_width="32dip"
-              android:layout_height="wrap_content"
-              android:layout_alignParentRight="true"
-              android:background="@android:color/transparent"
-              android:clickable="true"
-              android:src="@drawable/time_travel_close" />
-      </RelativeLayout>
-
-      <LinearLayout
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:orientation="vertical">
-
-      <!-- Include a place for the time travel player controls. -->
-      <include
-        layout="@layout/time_player"
-        android:gravity="top"
-        android:layout_height="wrap_content"
+        android:id="@+id/skyrenderer_view"
         android:layout_width="fill_parent"
-        android:visibility="gone" />
+        android:layout_height="fill_parent" />
 
-      <!-- Include a place for the search controls bar -->
-      </LinearLayout>
-    <!--  The layers/providers button -->
-    <io.github.marcocipriani01.telescopetouch.views.ButtonLayerView
+    <View
+        android:id="@+id/view_mask"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#ff990099"
+        android:visibility="invisible" />
+
+    <RelativeLayout
+        android:id="@+id/search_control_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/layer_buttons_control"
-        android:layout_gravity="left|center_vertical"
+        android:background="#20990099"
         android:orientation="vertical"
-        android:background="@drawable/sidebarnoelements"
+        android:padding="1dip"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/search_icon"
+            android:layout_width="34dip"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dip"
+            android:src="@drawable/search" />
+
+        <TextView
+            android:id="@+id/search_status_label"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dip"
+            android:layout_toEndOf="@id/search_icon"
+            android:paddingStart="10dip"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/search_prompt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/search_status_label"
+            android:layout_marginStart="34dip"
+            android:text="@string/search_overlay_title"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <ImageButton
+            android:id="@+id/cancel_search_button"
+            android:layout_width="32dip"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:background="@android:color/transparent"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/time_travel_close" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include
+            layout="@layout/time_player"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <io.github.marcocipriani01.telescopetouch.views.ButtonLayerView
+        android:id="@+id/layer_buttons_control"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|center_vertical"
+        android:background="@drawable/button_background_rotated"
+        android:orientation="vertical"
+        android:padding="4dp"
         stardroid:fade_time="500">
-      <io.github.marcocipriani01.telescopetouch.views.PreferencesButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="11px"
-        android:paddingBottom="7px"
-        android:paddingLeft="5px"
-        android:background="#00000000"
-        stardroid:pref_key="source_provider.0"
-        stardroid:image_on="@drawable/star_on"
-        stardroid:image_off="@drawable/star_off"/>
-       <io.github.marcocipriani01.telescopetouch.views.PreferencesButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="7px"
-        android:paddingBottom="7px"
-        android:paddingLeft="5px"
-        android:background="#00000000"
-        stardroid:pref_key="source_provider.1"
-        stardroid:image_on="@drawable/stars_on"
-        stardroid:image_off="@drawable/stars_off"/>
-       <io.github.marcocipriani01.telescopetouch.views.PreferencesButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="7px"
-        android:paddingBottom="7px"
-        android:paddingLeft="5px"
-        android:background="#00000000"
-        stardroid:pref_key="source_provider.2"
-        stardroid:image_on="@drawable/messier_on"
-        stardroid:image_off="@drawable/messier_off" />
-       <io.github.marcocipriani01.telescopetouch.views.PreferencesButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="7px"
-        android:paddingBottom="7px"
-        android:paddingLeft="5px"
-        android:background="#00000000"
-        stardroid:pref_key="source_provider.3"
-        stardroid:image_on="@drawable/planet_on"
-        stardroid:image_off="@drawable/planet_off" />
-       <io.github.marcocipriani01.telescopetouch.views.PreferencesButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="7px"
-        android:paddingBottom="7px"
-        android:paddingLeft="5px"
-        android:background="#00000000"
-        stardroid:pref_key="source_provider.6"
-        stardroid:image_on="@drawable/b_meteor_on"
-        stardroid:image_off="@drawable/b_meteor_off" />
-        <!--io.github.marcocipriani01.telescopetouch.views.PreferencesButton
+
+        <io.github.marcocipriani01.telescopetouch.views.PreferencesButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="7px"
-            android:paddingBottom="11px"
-            android:paddingLeft="5px"
             android:background="#00000000"
-            stardroid:pref_key="@string/show_satellite_layer_pref"
-            stardroid:image_on="@drawable/b_iss_on"
-            stardroid:image_off="@drawable/b_iss_off" /-->
-       <io.github.marcocipriani01.telescopetouch.views.PreferencesButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="7px"
-        android:paddingBottom="7px"
-        android:paddingLeft="5px"
-        android:background="#00000000"
-        stardroid:pref_key="source_provider.4"
-        stardroid:image_on="@drawable/grid_on"
-        stardroid:image_off="@drawable/grid_off" />
-       <io.github.marcocipriani01.telescopetouch.views.PreferencesButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="7px"
-        android:paddingBottom="11px"
-        android:paddingLeft="5px"
-        android:background="#00000000"
-        stardroid:pref_key="source_provider.5"
-        stardroid:image_on="@drawable/horizon_on"
-        stardroid:image_off="@drawable/horizon_off" />
+            android:paddingBottom="8dp"
+            stardroid:image_off="@drawable/stars_off"
+            stardroid:image_on="@drawable/stars_on"
+            stardroid:pref_key="source_provider.0" />
+
+        <io.github.marcocipriani01.telescopetouch.views.PreferencesButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:paddingBottom="8dp"
+            stardroid:image_off="@drawable/constellations_off"
+            stardroid:image_on="@drawable/constellations_on"
+            stardroid:pref_key="source_provider.1" />
+
+        <io.github.marcocipriani01.telescopetouch.views.PreferencesButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:paddingBottom="8dp"
+            stardroid:image_off="@drawable/messier_off"
+            stardroid:image_on="@drawable/messier_on"
+            stardroid:pref_key="source_provider.2" />
+
+        <io.github.marcocipriani01.telescopetouch.views.PreferencesButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:paddingBottom="8dp"
+            stardroid:image_off="@drawable/planet_off"
+            stardroid:image_on="@drawable/planet_on"
+            stardroid:pref_key="source_provider.3" />
+
+        <io.github.marcocipriani01.telescopetouch.views.PreferencesButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:paddingBottom="8dp"
+            stardroid:image_off="@drawable/meteor_off"
+            stardroid:image_on="@drawable/meteor_on"
+            stardroid:pref_key="source_provider.6" />
+
+        <io.github.marcocipriani01.telescopetouch.views.PreferencesButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:paddingBottom="8dp"
+            stardroid:image_off="@drawable/grid_off"
+            stardroid:image_on="@drawable/grid_on"
+            stardroid:pref_key="source_provider.4" />
+
+        <io.github.marcocipriani01.telescopetouch.views.PreferencesButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            stardroid:image_off="@drawable/horizon_off"
+            stardroid:image_on="@drawable/horizon_on"
+            stardroid:pref_key="source_provider.5" />
     </io.github.marcocipriani01.telescopetouch.views.ButtonLayerView>
 
-    <!-- This is where we enter the layout logic of the bottom area.
-     Both the zoom controls + manual/auto toggle, and time player controls, are here, and
-     either of these may be invisible or visible. If both visible, time player controls
-     appear below. This is a temporary hack because they didn't appear at all when
-     I tried to place them above (widdows).
--->
-    <RelativeLayout
+    <io.github.marcocipriani01.telescopetouch.views.ButtonLayerView
+        android:id="@+id/layer_manual_auto_toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical">
-      <FrameLayout
-          android:id="@+id/manual_bar"
-          android:layout_width="fill_parent"
-          android:layout_height="wrap_content"
-          android:layout_gravity="bottom">
-        <io.github.marcocipriani01.telescopetouch.views.ButtonLayerView
+        android:layout_gravity="center_vertical|right"
+        android:orientation="vertical"
+        android:background="@drawable/button_background"
+        android:padding="4dp"
+        stardroid:fade_time="500">
+
+        <io.github.marcocipriani01.telescopetouch.views.PreferencesButton
+            android:id="@+id/manual_auto_toggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/layer_manual_auto_toggle"
-            android:layout_gravity="bottom|right"
-            android:orientation="vertical"
-            stardroid:fade_time="500">
-          <io.github.marcocipriani01.telescopetouch.views.PreferencesButton
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:background="#00000000"
-              android:id="@+id/manual_auto_toggle"
-              stardroid:pref_key="auto_mode"
-              stardroid:image_on="@drawable/manualmode"
-              stardroid:image_off="@drawable/automaticmode"
-              stardroid:default_value="true"/>
-        </io.github.marcocipriani01.telescopetouch.views.ButtonLayerView>
-      </FrameLayout>
-    </RelativeLayout>
-  </FrameLayout>
-</RelativeLayout>
-
+            android:background="#00000000"
+            stardroid:default_value="true"
+            stardroid:image_off="@drawable/auto_mode"
+            stardroid:image_on="@drawable/touch"
+            stardroid:pref_key="auto_mode" />
+    </io.github.marcocipriani01.telescopetouch.views.ButtonLayerView>
+</FrameLayout>

@@ -1,59 +1,46 @@
-
-
 package io.github.marcocipriani01.telescopetouch.util;
 
 import android.graphics.Color;
 
 /**
  * Converts celestial magnitudes to brightness on a scale of 0 to 1.
- *
  */
 public class StarAttributeCalculator {
-  // Much above this and the app crashes - best guess we run out of some openGL resource.
-  // TODO(jontayler): find out why.
-  public static final float MAX_MAGNITUDE = 5.6f;
-  private static final int MAX_SIZE = 5;
 
-  private enum Channel {
-    A(24), R(16), G(8), B(0);
+    // Much above this and the app crashes - best guess we run out of some openGL resource.
+    // TODO(jontayler): find out why.
+    public static final float MAX_MAGNITUDE = 5.6f;
+    private static final int MAX_SIZE = 5;
 
-    private final int offset;
-
-    Channel(int offset) {
-      this.offset = offset;
+    private StarAttributeCalculator() {
     }
 
-    public int getOffset() {
-      return offset;
+    public static int getConstellationColor(float magnitude) {
+        return getColor(magnitude, Color.CYAN);
     }
-  }
 
-  private StarAttributeCalculator() {}
-
-  public static int getConstellationColor(float magnitude) {
-    return getColor(magnitude, Color.CYAN);
-  }
-
-  private static int getChannelValue(int baseColor, Channel c, float shade) {
-    int value = (baseColor >> c.getOffset()) & 0xFF;
-    int newValue = (int)(shade * value);
-    return newValue << c.getOffset();
-  }
-
-  public static int getColor(float magnitude, int baseColor) {
-    if (magnitude > MAX_MAGNITUDE) return Color.BLACK;
-    if (magnitude <= 0.0) return baseColor;
-
-    float shade = 1.0f - magnitude/(MAX_MAGNITUDE + 3.0f);
-
-    int result = 0xFF000000;
-    for (Channel c : Channel.values()) {
-      result += getChannelValue(baseColor, c, shade);
+    private static int getChannelValue(int baseColor, Channel c, float shade) {
+        int value = (baseColor >> c.getOffset()) & 0xFF;
+        int newValue = (int) (shade * value);
+        return newValue << c.getOffset();
     }
-    return result;
-  }
 
-  /** Print out the byte associated with the R,G, and B color components in the given Color int. */
+    public static int getColor(float magnitude, int baseColor) {
+        if (magnitude > MAX_MAGNITUDE) return Color.BLACK;
+        if (magnitude <= 0.0) return baseColor;
+
+        float shade = 1.0f - magnitude / (MAX_MAGNITUDE + 3.0f);
+
+        int result = 0xFF000000;
+        for (Channel c : Channel.values()) {
+            result += getChannelValue(baseColor, c, shade);
+        }
+        return result;
+    }
+
+    /**
+     * Print out the byte associated with the R,G, and B color components in the given Color int.
+     */
 /*  private static void printBytes(int color) {
     System.out.println(colorToString(color));
   }
@@ -72,7 +59,21 @@ public class StarAttributeCalculator {
     }
   }
 */
-  public static int getSize(float magnitude) {
-    return (int) Math.max(MAX_SIZE - magnitude, 1);
-  }
+    public static int getSize(float magnitude) {
+        return (int) Math.max(MAX_SIZE - magnitude, 1);
+    }
+
+    private enum Channel {
+        A(24), R(16), G(8), B(0);
+
+        private final int offset;
+
+        Channel(int offset) {
+            this.offset = offset;
+        }
+
+        public int getOffset() {
+            return offset;
+        }
+    }
 }

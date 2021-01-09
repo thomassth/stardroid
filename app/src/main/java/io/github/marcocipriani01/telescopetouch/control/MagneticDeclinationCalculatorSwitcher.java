@@ -15,8 +15,6 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
  *
  * @author John Taylor
  */
-// TODO(johntaylor): add a unit test once we've reworked the tests to use
-// the Android environment (so we can access SharePreferences).
 public class MagneticDeclinationCalculatorSwitcher implements OnSharedPreferenceChangeListener {
     private static final String KEY = "use_magnetic_correction";
     private static final String TAG = MiscUtil.getTag(MagneticDeclinationCalculatorSwitcher.class);

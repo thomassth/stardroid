@@ -1,19 +1,20 @@
 package io.github.marcocipriani01.telescopetouch.activities.dialogs;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 
 /**
  * Dialog explaining the need for the auto-location permission.
  * Created by johntaylor on 4/3/16.
  */
-public class LocationPermissionRationaleFragment extends DialogFragment implements Dialog.OnClickListener {
-    private static final String TAG = MiscUtil.getTag(EulaDialogFragment.class);
+public class LocationPermissionRationaleFragment extends ImprovedDialogFragment implements Dialog.OnClickListener {
+
     private Callback resultListener;
 
     public LocationPermissionRationaleFragment() {
@@ -23,6 +24,7 @@ public class LocationPermissionRationaleFragment extends DialogFragment implemen
         this.resultListener = resultListener;
     }
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity())

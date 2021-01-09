@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -17,6 +18,7 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 
 public class PreferencesButton extends AppCompatImageButton
         implements android.view.View.OnClickListener, OnSharedPreferenceChangeListener {
+
     private static final String TAG = MiscUtil.getTag(PreferencesButton.class);
     private OnClickListener secondaryOnClickListener;
     private Drawable imageOn;
@@ -82,14 +84,11 @@ public class PreferencesButton extends AppCompatImageButton
         isOn = !isOn;
         setVisuallyOnOrOff();
         setPreference();
-        if (secondaryOnClickListener != null) {
-            secondaryOnClickListener.onClick(v);
-        }
+        if (secondaryOnClickListener != null) secondaryOnClickListener.onClick(v);
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-                                          String changedKey) {
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String changedKey) {
         if (changedKey.equals(prefKey)) {
             isOn = sharedPreferences.getBoolean(changedKey, isOn);
             setVisuallyOnOrOff();

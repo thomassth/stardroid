@@ -21,8 +21,8 @@ import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
  * @author John Taylor
  * @author Brent Bryan
  */
+public class EclipticLayer extends AbstractLayer {
 
-public class EclipticLayer extends AbstractSourceLayer {
     public EclipticLayer(Resources resources) {
         super(resources, false);
     }
@@ -55,8 +55,8 @@ public class EclipticLayer extends AbstractSourceLayer {
         private static final float EPSILON = 23.439281f;
         private static final int LINE_COLOR = Color.argb(20, 248, 239, 188);
 
-        private final ArrayList<LineSource> lineSources = new ArrayList<LineSource>();
-        private final ArrayList<TextSource> textSources = new ArrayList<TextSource>();
+        private final ArrayList<LineSource> lineSources = new ArrayList<>();
+        private final ArrayList<TextSource> textSources = new ArrayList<>();
 
         public EclipticSource(Resources res) {
             String title = res.getString(R.string.ecliptic);

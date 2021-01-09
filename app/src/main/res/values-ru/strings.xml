@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translation_description="Application Title">Карта звездного неба</string>
     <string name="menu_settings">Настройки</string>
     <string name="menu_search">Поиск</string>
     <string name="cancel">Отмена</string>
@@ -24,15 +23,14 @@
     <string name="location_unable_to_geocode">Невозможно определить местоположение – возможно, недоступна сеть.</string>
     <string name="location_not_found_title" translation_description="dialog box title when location not found">Извините</string>
     <string name="location_not_found" translation_description="dialog message when placename not found">Не найдено: %s.</string>
-    <string name="location_long_lat">Долгота:%1$s, широта:%2$s</string>
+    <string name="location_long_lat">Долгота:%1$f, широта:%2$f</string>
     <string name="location_place_found">Место найдено. Уст. широта %1$f и долгота %2$f</string>
     <string name="use_magnetic_correction">Исп. поправку на магн. склон.</string>
     <string name="use_magnetic_correction_hint">Используйте информацию о своем местоположении, чтобы изменить ориентацию с магнитного на истинный географический Северный полюс</string>
-    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">Показать...</string>
+    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">Показать…</string>
     <string name="show_stars_pref">Звезды</string>
     <string name="show_constellations_pref">Созвездия</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Объекты Мессье</string>
-    <string name="show_planets_pref">Планеты</string>
     <string name="show_grid_pref">Сетка прям. восх./скл.</string>
     <string name="show_horizon_pref">Горизонт</string>
     <string name="show_sky_gradient">Градиент неба</string>
@@ -64,14 +62,14 @@
     <string name="no_search_results_text">Ничего не найдено.</string>
     <string name="many_search_results_title">Возможно, вы имели в виду:</string>
     <string name="many_search_results_text">Выберите результат</string>
-    <string name="searching_for_text">Поиск %s...</string>
+    <string name="searching_for_text">Поиск %s…</string>
     <string name="found_target_text">Найдено: %s.</string>
     <string name="other">Другое</string>
     <string name="planetary_images">Показывать изображения планет</string>
     <string name="menu_time">Путешествие во времени</string>
-    <string name="time_travel_start_message">Путешествие сквозь время...</string>
-    <string name="time_travel_start_message_alt">Путешествие во времени к объекту %s...</string>
-    <string name="time_travel_close_message">Назад в настоящее...</string>
+    <string name="time_travel_start_message">Путешествие сквозь время…</string>
+    <string name="time_travel_start_message_alt">Путешествие во времени к объекту %s…</string>
+    <string name="time_travel_close_message">Назад в настоящее…</string>
     <string name="popular_dates_prompt" translation_description="label for a list of dates the user can choose from">Популярные даты</string>
     <string name="custom_date_prompt" translation_description="label telling the user to manually specify a data">Или выберите другую дату</string>
     <string name="change_date_prompt">Изменить дату</string>

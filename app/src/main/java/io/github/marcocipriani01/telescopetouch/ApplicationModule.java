@@ -1,6 +1,5 @@
 package io.github.marcocipriani01.telescopetouch;
 
-import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
@@ -129,12 +128,6 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    AccountManager provideAccountManager(Context context) {
-        return AccountManager.get(context);
-    }
-
-    @Provides
-    @Singleton
     LayerManager provideLayerManager(
             AssetManager assetManager, Resources resources, AstronomerModel model,
             SharedPreferences preferences) {
@@ -149,7 +142,6 @@ public class ApplicationModule {
         layerManager.addLayer(new HorizonLayer(model, resources));
         layerManager.addLayer(new EclipticLayer(resources));
         layerManager.addLayer(new SkyGradientLayer(model, resources));
-        // layerManager.addLayer(new IssLayer(resources, model));
 
         layerManager.initialize();
         return layerManager;

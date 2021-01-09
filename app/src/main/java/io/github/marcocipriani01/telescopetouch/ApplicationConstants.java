@@ -7,7 +7,7 @@ import io.github.marcocipriani01.telescopetouch.units.Vector3;
  */
 public class ApplicationConstants {
 
-    public static final String APP_NAME = "Stardroid";
+    public static final String APP_NAME = "Telescope.Touch";
     /**
      * Default value for 'south' in phone coords when the app starts
      */
@@ -29,22 +29,7 @@ public class ApplicationConstants {
     public static final String SOUND_EFFECTS = "sound_effects";
     // Preference that keeps track of whether or not the user accepted the ToS for this version
     public static final String READ_TOS_PREF_VERSION = "read_tos_version";
-    public static final String READ_WHATS_NEW_PREF_VERSION = "read_whats_new_version1";
     public static final String SHARED_PREFERENCE_DISABLE_GYRO = "disable_gyro";
-    // Attention - the following strings must match those in strings.xml and notranslate-arrays.xml.
-    public static final String SENSOR_SPEED_HIGH = "FAST";
-    public static final String SENSOR_SPEED_SLOW = "SLOW";
-    public static final String SENSOR_SPEED_STANDARD = "STANDARD";
-    public static final String SENSOR_SPEED_PREF_KEY = "sensor_speed";
-    public static final String SENSOR_DAMPING_REALLY_HIGH = "REALLY HIGH";
-    public static final String SENSOR_DAMPING_EXTRA_HIGH = "EXTRA HIGH";
-    public static final String SENSOR_DAMPING_HIGH = "HIGH";
-    public static final String SENSOR_DAMPING_STANDARD = "STANDARD";
-    public static final String SENSOR_DAMPING_PREF_KEY = "sensor_damping";
     public static final String REVERSE_MAGNETIC_Z_PREFKEY = "reverse_magnetic_z";
     public static final String ROTATE_HORIZON_PREFKEY = "rotate_horizon";
-
-
-    // End Preference Keys
-
 }

@@ -14,6 +14,7 @@ import io.github.marcocipriani01.telescopetouch.units.Vector3;
  * @author John Taylor
  */
 public interface AstronomerModel {
+
     /**
      * If set to false, will not update the pointing automatically.
      */

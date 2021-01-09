@@ -1,6 +1,5 @@
 package io.github.marcocipriani01.telescopetouch.activities;
 
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,13 +8,14 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 
+import androidx.fragment.app.FragmentManager;
+
 import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.StardroidApplication;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.EulaDialogFragment;
-import io.github.marcocipriani01.telescopetouch.activities.dialogs.WhatsNewDialogFragment;
 import io.github.marcocipriani01.telescopetouch.activities.util.ConstraintsChecker;
 import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
 import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
@@ -24,8 +24,8 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
  * Shows a splash screen, then launch the next activity.
  */
 public class SplashScreenActivity extends InjectableActivity
-        implements EulaDialogFragment.EulaAcceptanceListener, WhatsNewDialogFragment.CloseListener,
-        HasComponent<SplashScreenComponent> {
+        implements EulaDialogFragment.EulaAcceptanceListener, HasComponent<SplashScreenComponent> {
+
     private final static String TAG = MiscUtil.getTag(SplashScreenActivity.class);
     // Update this with new versions of the EULA
     private static final int EULA_VERSION_CODE = 1;
@@ -39,8 +39,6 @@ public class SplashScreenActivity extends InjectableActivity
     EulaDialogFragment eulaDialogFragmentWithButtons;
     @Inject
     FragmentManager fragmentManager;
-    @Inject
-    WhatsNewDialogFragment whatsNewDialogFragment;
     @Inject
     ConstraintsChecker cc;
     private View graphic;
@@ -59,15 +57,19 @@ public class SplashScreenActivity extends InjectableActivity
         graphic = findViewById(R.id.splash);
 
         fadeAnimation.setAnimationListener(new AnimationListener() {
+            @Override
             public void onAnimationEnd(Animation arg0) {
                 Log.d(TAG, "onAnimationEnd");
                 graphic.setVisibility(View.INVISIBLE);
-                maybeShowWhatsNewAndEnd();
+                launchSkyMap();
             }
 
+            @Override
             public void onAnimationRepeat(Animation arg0) {
+
             }
 
+            @Override
             public void onAnimationStart(Animation arg0) {
                 Log.d(TAG, "SplashScreen.Animcation onAnimationStart");
             }
@@ -117,7 +119,6 @@ public class SplashScreenActivity extends InjectableActivity
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(ApplicationConstants.READ_TOS_PREF_VERSION, EULA_VERSION_CODE);
         editor.apply();
-        // Let's go.
         View graphic = findViewById(R.id.splash);
         graphic.startAnimation(fadeAnimation);
     }
@@ -126,25 +127,6 @@ public class SplashScreenActivity extends InjectableActivity
     public void eulaRejected() {
         Log.d(TAG, "Sorry chum, no accept, no app.");
         finish();
-    }
-
-    private void maybeShowWhatsNewAndEnd() {
-        boolean whatsNewSeen = (sharedPreferences.getLong(
-                ApplicationConstants.READ_WHATS_NEW_PREF_VERSION, -1) == app.getVersion());
-        if (whatsNewSeen) {
-            launchSkyMap();
-        } else {
-            whatsNewDialogFragment.show(fragmentManager, "Whats New Dialog");
-        }
-    }
-
-    // What's new dialog closed.
-    @Override
-    public void dialogClosed() {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putLong(ApplicationConstants.READ_WHATS_NEW_PREF_VERSION, app.getVersion());
-        editor.apply();
-        launchSkyMap();
     }
 
     private void launchSkyMap() {

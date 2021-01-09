@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="antlia" translation_description="Name of the Antlia constellation">Antlia</string>
     <string name="apus" translation_description="Name of the Apus constellation">Apus</string>
     <string name="ara" translation_description="Name of the Ara constellation">Ara</string>

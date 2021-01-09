@@ -52,20 +52,15 @@ public class ImageDisplayActivity extends InjectableActivity {
 
         List<GalleryImage> galleryImages = GalleryFactory.getGallery(getResources()).getGalleryImages();
         selectedImage = galleryImages.get(position);
-        ImageView imageView = (ImageView) findViewById(R.id.gallery_image);
+        ImageView imageView = findViewById(R.id.gallery_image);
         imageView.setImageResource(selectedImage.imageId);
-        TextView label = (TextView) findViewById(R.id.gallery_image_title);
+        TextView label = findViewById(R.id.gallery_image_title);
         label.setText(selectedImage.name);
-        Button backButton = (Button) findViewById(R.id.gallery_image_back_btn);
+        Button backButton = findViewById(R.id.gallery_image_back_btn);
         backButton.setOnClickListener(this::goBack);
-        Button searchButton = (Button) findViewById(R.id.gallery_image_search_btn);
+        Button searchButton = findViewById(R.id.gallery_image_search_btn);
         searchButton.setOnClickListener(this::doSearch);
 
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
     }
 
     @Override

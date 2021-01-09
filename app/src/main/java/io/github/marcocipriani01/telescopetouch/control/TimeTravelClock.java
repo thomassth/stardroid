@@ -108,7 +108,7 @@ public class TimeTravelClock implements Clock {
             // For speeds greater than or equal to 1 day/sec we want to move in
             // increments of 1 day so that the map isn't dizzyingly fast.
             // This shows the slow annual procession of the stars.
-            long days = (long) (timeDelta / TimeConstants.MILLISECONDS_PER_DAY);
+            long days = timeDelta / TimeConstants.MILLISECONDS_PER_DAY;
             if (days == 0) {
                 return simulatedTime;
             }
@@ -116,7 +116,7 @@ public class TimeTravelClock implements Clock {
             // day boundary.  If they occur later then the next time jump
             // might be a bit shorter than it should be.  Nevertheless the refresh
             // rate of the renderer is high enough that this should be unnoticeable.
-            timeDelta = (long) (days * TimeConstants.MILLISECONDS_PER_DAY);
+            timeDelta = days * TimeConstants.MILLISECONDS_PER_DAY;
         }
         timeLastSet = now;
         simulatedTime += timeDelta;

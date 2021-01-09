@@ -206,7 +206,7 @@ public class ImageObjectManager extends RendererObjectManager {
             } else {
                 textures[i].bind(gl);
             }
-            ((GL11) gl).glDrawArrays(GL10.GL_TRIANGLE_STRIP, 4 * i, 4);
+            gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 4 * i, 4);
 
             if (mImages[i].useBlending) {
                 gl.glDisable(GL10.GL_BLEND);

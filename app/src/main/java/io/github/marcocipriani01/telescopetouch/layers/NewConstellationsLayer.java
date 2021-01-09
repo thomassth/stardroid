@@ -13,6 +13,7 @@ import io.github.marcocipriani01.telescopetouch.R;
  * @author Brent Bryan
  */
 public class NewConstellationsLayer extends AbstractFileBasedLayer {
+
     public NewConstellationsLayer(AssetManager assetManager, Resources resources) {
         super(assetManager, resources, "constellations.binary");
     }

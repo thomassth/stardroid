@@ -26,6 +26,7 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
  * @author Brent Bryan
  */
 public class SkyGradientLayer implements Layer {
+
     private static final String TAG = MiscUtil.getTag(SkyGradientLayer.class);
     private static final long UPDATE_FREQUENCY_MS = 5L * TimeConstants.MILLISECONDS_PER_MINUTE;
 

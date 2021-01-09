@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translation_description="Application Title">별지도</string>
     <string name="menu_settings">설정</string>
     <string name="menu_search">검색</string>
     <string name="cancel">취소</string>
@@ -24,15 +23,14 @@
     <string name="location_unable_to_geocode">위치를 디코딩할 수 없습니다. 네트워크를 사용할 수 없는 것 같습니다.</string>
     <string name="location_not_found_title" translation_description="dialog box title when location not found">죄송합니다.</string>
     <string name="location_not_found" translation_description="dialog message when placename not found">%s: 찾을 수 없음</string>
-    <string name="location_long_lat">경도:%1$s, 위도:%2$s</string>
+    <string name="location_long_lat">경도:%1$f, 위도:%2$f</string>
     <string name="location_place_found">위치를 찾았습니다. 위도(%1$f)와 경도(%2$f)를 설정합니다.</string>
     <string name="use_magnetic_correction">자기 수정 사용</string>
     <string name="use_magnetic_correction_hint">현재 위치정보를 사용하여 자북과 진북의 방위 차이를 수정합니다.</string>
-    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">표시...</string>
+    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">표시…</string>
     <string name="show_stars_pref">별</string>
     <string name="show_constellations_pref">별자리</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">메시에 천체 목록</string>
-    <string name="show_planets_pref">행성</string>
     <string name="show_grid_pref">적경/적위 그리드</string>
     <string name="show_horizon_pref">지평선</string>
     <string name="show_sky_gradient">스카이 그라데이션</string>
@@ -64,14 +62,14 @@
     <string name="no_search_results_text">검색결과가 없습니다.</string>
     <string name="many_search_results_title">이것을 찾으셨나요?</string>
     <string name="many_search_results_text">선택하세요.</string>
-    <string name="searching_for_text">%s 검색 중...</string>
+    <string name="searching_for_text">%s 검색 중…</string>
     <string name="found_target_text">%s을(를) 찾았습니다.</string>
     <string name="other">기타</string>
     <string name="planetary_images">행성 이미지 표시</string>
     <string name="menu_time">시간 여행</string>
-    <string name="time_travel_start_message">시간 여행 ...</string>
-    <string name="time_travel_start_message_alt">%s(으)로 시간 여행을 떠납니다...</string>
-    <string name="time_travel_close_message">현재로 돌아오기...</string>
+    <string name="time_travel_start_message">시간 여행 …</string>
+    <string name="time_travel_start_message_alt">%s(으)로 시간 여행을 떠납니다…</string>
+    <string name="time_travel_close_message">현재로 돌아오기…</string>
     <string name="popular_dates_prompt" translation_description="label for a list of dates the user can choose from">인기있는 날짜</string>
     <string name="custom_date_prompt" translation_description="label telling the user to manually specify a data">또는 날짜를 직접 선택</string>
     <string name="change_date_prompt">날짜 변경</string>

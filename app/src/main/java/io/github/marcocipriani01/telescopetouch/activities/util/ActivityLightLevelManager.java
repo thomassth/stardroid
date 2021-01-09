@@ -9,6 +9,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
  * @author John Taylor
  */
 public class ActivityLightLevelManager implements OnSharedPreferenceChangeListener {
+
     public static final String LIGHT_MODE_KEY = "lightmode";
     private final ActivityLightLevelChanger lightLevelChanger;
     private final SharedPreferences sharedPreferences;
