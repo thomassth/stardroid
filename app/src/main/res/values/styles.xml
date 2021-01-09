@@ -1,6 +1,9 @@
 <resources>
     <!-- Main App Theme to make global changes easier -->
-    <style name = "AppTheme" parent="@android:style/Theme.Holo">
+    <style name="AppTheme" parent="Theme.AppCompat">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="FullscreenTheme" parent="AppTheme">
@@ -11,7 +14,7 @@
         <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
     </style>
 
-    <style name="FullscreenActionBarStyle" parent="android:Widget.Holo.ActionBar">
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
         <item name="android:background">@color/black_overlay</item>
     </style>
 
@@ -37,11 +40,7 @@
         <item name="android:paddingBottom">5dp</item>
     </style>
 
-    <style name="title" parent="text">
-        <item name="android:textStyle">bold</item>
-    </style>
-
     <style name="text">
-        <item name="android:paddingLeft">5px</item>
+        <item name="android:paddingLeft">5dp</item>
     </style>
 </resources>
