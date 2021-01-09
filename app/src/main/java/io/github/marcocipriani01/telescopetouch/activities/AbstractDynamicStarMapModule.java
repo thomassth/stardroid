@@ -1,7 +1,6 @@
 package io.github.marcocipriani01.telescopetouch.activities;
 
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Handler;
@@ -9,13 +8,14 @@ import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import androidx.fragment.app.FragmentManager;
+
 import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.EulaDialogFragment;
-import io.github.marcocipriani01.telescopetouch.activities.dialogs.HelpDialogFragment;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.LocationPermissionRationaleFragment;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.MultipleSearchResultsDialogFragment;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.NoSearchResultsDialogFragment;
@@ -30,6 +30,7 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
  */
 @Module
 public class AbstractDynamicStarMapModule {
+
     private static final String TAG = MiscUtil.getTag(DynamicStarMapModule.class);
     private final DynamicStarMapActivity activity;
 
@@ -66,12 +67,6 @@ public class AbstractDynamicStarMapModule {
     @PerActivity
     TimeTravelDialogFragment provideTimeTravelDialogFragment() {
         return new TimeTravelDialogFragment();
-    }
-
-    @Provides
-    @PerActivity
-    HelpDialogFragment provideHelpDialogFragment() {
-        return new HelpDialogFragment();
     }
 
     @Provides
@@ -121,7 +116,7 @@ public class AbstractDynamicStarMapModule {
     @Provides
     @PerActivity
     FragmentManager provideFragmentManager() {
-        return activity.getFragmentManager();
+        return activity.getSupportFragmentManager();
     }
 
     @Provides

@@ -1,10 +1,12 @@
 package io.github.marcocipriani01.telescopetouch.views;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.widget.LinearLayout;
 
 import io.github.marcocipriani01.telescopetouch.R;
@@ -15,6 +17,8 @@ import io.github.marcocipriani01.telescopetouch.R;
 
 public class ButtonLayerView extends LinearLayout {
 
+    private final int fadeTime;
+
     public ButtonLayerView(Context context) {
         this(context, null);
     }
@@ -22,24 +26,31 @@ public class ButtonLayerView extends LinearLayout {
     public ButtonLayerView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setFocusable(false);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ButtonLayerView);
+        TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.ButtonLayerView);
+        fadeTime = attributes.getResourceId(R.styleable.ButtonLayerView_fade_time, 500);
+        attributes.recycle();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
-        /* Consume all touch events so they don't get dispatched to the view
-         * beneath this view.
-         */
         return true;
     }
 
-    public void show() {
-        setVisibility(View.GONE);
+    @Override
+    public void setVisibility(int visibility) {
+        if (visibility == VISIBLE) {
+            fade(View.VISIBLE, 0.0f, 1.0f);
+        } else {
+            fade(View.GONE, 1.0f, 0.0f);
+        }
     }
 
-    public void hide() {
-        setVisibility(View.GONE);
+    private void fade(int visibility, float startAlpha, float endAlpha) {
+        AlphaAnimation anim = new AlphaAnimation(startAlpha, endAlpha);
+        anim.setDuration(fadeTime);
+        startAnimation(anim);
+        super.setVisibility(visibility);
     }
 
     @Override

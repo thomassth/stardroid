@@ -42,10 +42,10 @@ public class CompassCalibrationActivity extends InjectableActivity implements Se
                 .compassCalibrationModule(new CompassCalibrationModule(this)).build().inject(this);
 
         setContentView(R.layout.activity_compass_calibration);
-        WebView web = (WebView) findViewById(R.id.compass_calib_activity_webview);
+        WebView web = findViewById(R.id.compass_calib_activity_webview);
         web.loadUrl("file:///android_asset/html/how_to_calibrate.html");
 
-        checkBoxView = (CheckBox) findViewById(R.id.compass_calib_activity_donotshow);
+        checkBoxView = findViewById(R.id.compass_calib_activity_donotshow);
         boolean hideCheckbox = getIntent().getBooleanExtra(HIDE_CHECKBOX, false);
         if (hideCheckbox) {
             checkBoxView.setVisibility(View.GONE);

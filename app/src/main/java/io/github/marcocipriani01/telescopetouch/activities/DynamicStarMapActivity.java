@@ -1,7 +1,6 @@
 package io.github.marcocipriani01.telescopetouch.activities;
 
 import android.annotation.SuppressLint;
-import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,7 +11,6 @@ import android.media.MediaPlayer;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PowerManager;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
@@ -21,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.widget.ImageButton;
@@ -29,9 +28,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -42,7 +43,6 @@ import javax.inject.Provider;
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.EulaDialogFragment;
-import io.github.marcocipriani01.telescopetouch.activities.dialogs.HelpDialogFragment;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.MultipleSearchResultsDialogFragment;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.NoSearchResultsDialogFragment;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.NoSensorsDialogFragment;
@@ -50,7 +50,6 @@ import io.github.marcocipriani01.telescopetouch.activities.dialogs.TimeTravelDia
 import io.github.marcocipriani01.telescopetouch.activities.util.ActivityLightLevelChanger;
 import io.github.marcocipriani01.telescopetouch.activities.util.ActivityLightLevelManager;
 import io.github.marcocipriani01.telescopetouch.activities.util.FullscreenControlsManager;
-import io.github.marcocipriani01.telescopetouch.base.Lists;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.control.ControllerGroup;
 import io.github.marcocipriani01.telescopetouch.control.MagneticDeclinationCalculatorSwitcher;
@@ -105,8 +104,6 @@ public class DynamicStarMapActivity extends InjectableActivity
     @Inject
     TimeTravelDialogFragment timeTravelDialogFragment;
     @Inject
-    HelpDialogFragment helpDialogFragment;
-    @Inject
     NoSearchResultsDialogFragment noSearchResultsDialogFragment;
     @Inject
     MultipleSearchResultsDialogFragment multipleSearchResultsDialogFragment;
@@ -114,8 +111,7 @@ public class DynamicStarMapActivity extends InjectableActivity
     NoSensorsDialogFragment noSensorsDialogFragment;
     @Inject
     SensorAccuracyMonitor sensorAccuracyMonitor;
-    // We need to maintain references to these objects to keep them from
-    // getting gc'd.
+    // We need to maintain references to these objects to keep them from getting gc'd.
     @Inject
     @SuppressWarnings("unused")
     MagneticDeclinationCalculatorSwitcher magneticSwitcher;
@@ -129,10 +125,7 @@ public class DynamicStarMapActivity extends InjectableActivity
     private boolean searchMode = false;
     private GeocentricCoordinates searchTarget = GeocentricCoordinates.getInstance(0, 0);
     private GLSurfaceView skyView;
-    private PowerManager.WakeLock wakeLock;
     private String searchTargetName;
-    // TODO(widdows): Figure out if we should break out the
-    // time dialog and time player into separate activities.
     private View timePlayerUI;
     private DynamicStarMapComponent daggerComponent;
     private MediaPlayer timeTravelNoise;
@@ -158,15 +151,11 @@ public class DynamicStarMapActivity extends InjectableActivity
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
         // Set up full screen mode, hide the system UI etc.
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        // TODO(jontayler): upgrade to
-        // getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-        // when we reach API level 16.
-        // http://developer.android.com/training/system-ui/immersive.html for the right way
-        // to do it at API level 19.
-        //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN |
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE);
 
         initializeModelViewController();
         checkForSensorsAndMaybeWarn();
@@ -178,11 +167,6 @@ public class DynamicStarMapActivity extends InjectableActivity
                 nightMode1 -> DynamicStarMapActivity.this.rendererController.queueNightVisionMode(nightMode1));
         activityLightLevelManager = new ActivityLightLevelManager(activityLightLevelChanger,
                 sharedPreferences);
-
-        PowerManager pm = ContextCompat.getSystemService(this, PowerManager.class);
-        if (pm != null) {
-            wakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, TAG);
-        }
 
         // Were we started as the result of a search?
         Intent intent = getIntent();
@@ -199,11 +183,6 @@ public class DynamicStarMapActivity extends InjectableActivity
         if (sensorManager != null && sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null
                 && sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null) {
             Log.i(TAG, "Minimum sensors present");
-            // We want to reset to auto mode on every restart, as users seem to get
-            // stuck in manual mode and can't find their way out.
-            // TODO(johntaylor): this is a bit of an abuse of the prefs system, but
-            // the button we use is wired into the preferences system.  Should probably
-            // change this to a use a different mechanism.
             sharedPreferences.edit().putBoolean(ApplicationConstants.AUTO_MODE_PREF_KEY, true).apply();
             setAutoMode(true);
             return;
@@ -289,9 +268,6 @@ public class DynamicStarMapActivity extends InjectableActivity
         } else if (itemId == R.id.menu_item_settings) {
             Log.d(TAG, "Settings");
             startActivity(new Intent(this, EditSettingsActivity.class));
-        } else if (itemId == R.id.menu_item_help) {
-            Log.d(TAG, "Help");
-            helpDialogFragment.show(fragmentManager, "Help Dialog");
         } else if (itemId == R.id.menu_item_dim) {
             Log.d(TAG, "Toggling nightmode");
             nightMode = !nightMode;
@@ -334,8 +310,6 @@ public class DynamicStarMapActivity extends InjectableActivity
         Log.i(TAG, "Resuming");
         timeTravelNoise = timeTravelNoiseProvider.get();
         timeTravelBackNoise = timeTravelBackNoiseProvider.get();
-
-        wakeLock.acquire(10 * 60 * 1000L /*10 minutes*/);
         Log.i(TAG, "Starting view");
         skyView.onResume();
         Log.i(TAG, "Starting controller");
@@ -420,7 +394,6 @@ public class DynamicStarMapActivity extends InjectableActivity
         activityLightLevelManager.onPause();
         controller.stop();
         skyView.onPause();
-        wakeLock.release();
         // Debug.stopMethodTracing();
         Log.d(TAG, "DynamicStarMap -onPause");
     }
@@ -499,10 +472,11 @@ public class DynamicStarMapActivity extends InjectableActivity
         multipleSearchResultsDialogFragment.show(fragmentManager, "Multiple Search Results");
     }
 
+    @SuppressLint("SimpleDateFormat")
     private void initializeModelViewController() {
         Log.i(TAG, "Initializing Model, View and Controller @ " + System.currentTimeMillis());
         setContentView(R.layout.skyrenderer);
-        skyView = (GLSurfaceView) findViewById(R.id.skyrenderer_view);
+        skyView = findViewById(R.id.skyrenderer_view);
         // We don't want a depth buffer.
         skyView.setEGLConfigChooser(false);
         SkyRenderer renderer = new SkyRenderer(getResources());
@@ -517,8 +491,81 @@ public class DynamicStarMapActivity extends InjectableActivity
         layerManager.registerWithRenderer(rendererController);
         Log.i(TAG, "Set up controllers @ " + System.currentTimeMillis());
         controller.setModel(model);
-        wireUpScreenControls(); // TODO(johntaylor) move these?
-        wireUpTimePlayer();  // TODO(widdows) move these?
+
+        cancelSearchButton = findViewById(R.id.cancel_search_button);
+        // TODO(johntaylor): move to set this in the XML once we don't support 1.5
+        cancelSearchButton.setOnClickListener(v1 -> cancelSearch());
+
+        ButtonLayerView providerButtons = findViewById(R.id.layer_buttons_control);
+
+        int numChildren = providerButtons.getChildCount();
+        List<View> buttonViews = new ArrayList<>();
+        for (int i = 0; i < numChildren; ++i) {
+            ImageButton button = (ImageButton) providerButtons.getChildAt(i);
+            buttonViews.add(button);
+        }
+        buttonViews.add(findViewById(R.id.manual_auto_toggle));
+        ButtonLayerView manualButtonLayer = findViewById(R.id.layer_manual_auto_toggle);
+
+        fullscreenControlsManager = new FullscreenControlsManager(this, findViewById(R.id.main_sky_view),
+                Arrays.asList(manualButtonLayer, providerButtons), buttonViews);
+
+        MapMover mapMover = new MapMover(model, controller, this);
+
+        gestureDetector = new GestureDetector(this, new GestureInterpreter(fullscreenControlsManager, mapMover));
+        dragZoomRotateDetector = new DragRotateZoomGestureDetector(mapMover);
+
+        Log.d(TAG, "Initializing TimePlayer UI.");
+        timePlayerUI = findViewById(R.id.time_player_view);
+        ImageButton timePlayerCancelButton = findViewById(R.id.time_player_close);
+        ImageButton timePlayerBackwardsButton = findViewById(
+                R.id.time_player_play_backwards);
+        ImageButton timePlayerStopButton = findViewById(R.id.time_player_play_stop);
+        ImageButton timePlayerForwardsButton = findViewById(
+                R.id.time_player_play_forwards);
+        final TextView timeTravelSpeedLabel = findViewById(R.id.time_travel_speed_label);
+
+        timePlayerCancelButton.setOnClickListener(v -> {
+            Log.d(TAG, "Heard time player close click.");
+            setNormalTimeModel();
+        });
+        timePlayerBackwardsButton.setOnClickListener(v -> {
+            Log.d(TAG, "Heard time player play backwards click.");
+            controller.decelerateTimeTravel();
+            timeTravelSpeedLabel.setText(controller.getCurrentSpeedTag());
+        });
+        timePlayerStopButton.setOnClickListener(v -> {
+            Log.d(TAG, "Heard time player play stop click.");
+            controller.pauseTime();
+            timeTravelSpeedLabel.setText(controller.getCurrentSpeedTag());
+        });
+        timePlayerForwardsButton.setOnClickListener(v -> {
+            Log.d(TAG, "Heard time player play forwards click.");
+            controller.accelerateTimeTravel();
+            timeTravelSpeedLabel.setText(controller.getCurrentSpeedTag());
+        });
+
+        Runnable displayUpdater = new Runnable() {
+            private final TextView timeTravelTimeReadout = findViewById(R.id.time_travel_time_readout);
+            private final TextView timeTravelStatusLabel = findViewById(R.id.time_travel_status_label);
+            private final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy.MM.dd G  HH:mm:ss z");
+            private final Date date = new Date();
+
+            @Override
+            public void run() {
+                long time = model.getTimeMillis();
+                date.setTime(time);
+                timeTravelTimeReadout.setText(dateFormatter.format(date));
+                if (time > System.currentTimeMillis()) {
+                    timeTravelStatusLabel.setText(R.string.time_travel_label_future);
+                } else {
+                    timeTravelStatusLabel.setText(R.string.time_travel_label_past);
+                }
+                timeTravelSpeedLabel.setText(controller.getCurrentSpeedTag());
+                handler.postDelayed(this, TIME_DISPLAY_DELAY_MILLIS);
+            }
+        };
+        onResumeRunnables.add(displayUpdater);
     }
 
     private void setAutoMode(boolean auto) {
@@ -528,36 +575,6 @@ public class DynamicStarMapActivity extends InjectableActivity
         } else {
             sensorAccuracyMonitor.stop();
         }
-    }
-
-    private void wireUpScreenControls() {
-        cancelSearchButton = (ImageButton) findViewById(R.id.cancel_search_button);
-        // TODO(johntaylor): move to set this in the XML once we don't support 1.5
-        cancelSearchButton.setOnClickListener(v -> cancelSearch());
-
-        ButtonLayerView providerButtons = (ButtonLayerView) findViewById(R.id.layer_buttons_control);
-
-        int numChildren = providerButtons.getChildCount();
-        List<View> buttonViews = new ArrayList<>();
-        for (int i = 0; i < numChildren; ++i) {
-            ImageButton button = (ImageButton) providerButtons.getChildAt(i);
-            buttonViews.add(button);
-        }
-        buttonViews.add(findViewById(R.id.manual_auto_toggle));
-        ButtonLayerView manualButtonLayer = (ButtonLayerView) findViewById(
-                R.id.layer_manual_auto_toggle);
-
-        fullscreenControlsManager = new FullscreenControlsManager(
-                this,
-                findViewById(R.id.main_sky_view),
-                Lists.asList(manualButtonLayer, providerButtons),
-                buttonViews);
-
-        MapMover mapMover = new MapMover(model, controller, this);
-
-        gestureDetector = new GestureDetector(this, new GestureInterpreter(
-                fullscreenControlsManager, mapMover));
-        dragZoomRotateDetector = new DragRotateZoomGestureDetector(mapMover);
     }
 
     private void cancelSearch() {
@@ -620,72 +637,11 @@ public class DynamicStarMapActivity extends InjectableActivity
             controller.teleport(target);
         }
 
-        TextView searchPromptText = (TextView) findViewById(R.id.search_status_label);
+        TextView searchPromptText = findViewById(R.id.search_status_label);
         searchPromptText.setText(
                 String.format("%s %s", getString(R.string.search_target_looking_message), searchTerm));
         View searchControlBar = findViewById(R.id.search_control_bar);
         searchControlBar.setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * Creates and wire up all time player controls.
-     */
-    @SuppressLint("SimpleDateFormat")
-    private void wireUpTimePlayer() {
-        Log.d(TAG, "Initializing TimePlayer UI.");
-        timePlayerUI = findViewById(R.id.time_player_view);
-        ImageButton timePlayerCancelButton = (ImageButton) findViewById(R.id.time_player_close);
-        ImageButton timePlayerBackwardsButton = (ImageButton) findViewById(
-                R.id.time_player_play_backwards);
-        ImageButton timePlayerStopButton = (ImageButton) findViewById(R.id.time_player_play_stop);
-        ImageButton timePlayerForwardsButton = (ImageButton) findViewById(
-                R.id.time_player_play_forwards);
-        final TextView timeTravelSpeedLabel = (TextView) findViewById(R.id.time_travel_speed_label);
-
-        timePlayerCancelButton.setOnClickListener(v -> {
-            Log.d(TAG, "Heard time player close click.");
-            setNormalTimeModel();
-        });
-        timePlayerBackwardsButton.setOnClickListener(v -> {
-            Log.d(TAG, "Heard time player play backwards click.");
-            controller.decelerateTimeTravel();
-            timeTravelSpeedLabel.setText(controller.getCurrentSpeedTag());
-        });
-        timePlayerStopButton.setOnClickListener(v -> {
-            Log.d(TAG, "Heard time player play stop click.");
-            controller.pauseTime();
-            timeTravelSpeedLabel.setText(controller.getCurrentSpeedTag());
-        });
-        timePlayerForwardsButton.setOnClickListener(v -> {
-            Log.d(TAG, "Heard time player play forwards click.");
-            controller.accelerateTimeTravel();
-            timeTravelSpeedLabel.setText(controller.getCurrentSpeedTag());
-        });
-
-        Runnable displayUpdater = new Runnable() {
-            private final TextView timeTravelTimeReadout = (TextView) findViewById(
-                    R.id.time_travel_time_readout);
-            private final TextView timeTravelStatusLabel = (TextView) findViewById(
-                    R.id.time_travel_status_label);
-            private final SimpleDateFormat dateFormatter = new SimpleDateFormat(
-                    "yyyy.MM.dd G  HH:mm:ss z");
-            private final Date date = new Date();
-
-            @Override
-            public void run() {
-                long time = model.getTimeMillis();
-                date.setTime(time);
-                timeTravelTimeReadout.setText(dateFormatter.format(date));
-                if (time > System.currentTimeMillis()) {
-                    timeTravelStatusLabel.setText(R.string.time_travel_label_future);
-                } else {
-                    timeTravelStatusLabel.setText(R.string.time_travel_label_past);
-                }
-                timeTravelSpeedLabel.setText(controller.getCurrentSpeedTag());
-                handler.postDelayed(this, TIME_DISPLAY_DELAY_MILLIS);
-            }
-        };
-        onResumeRunnables.add(displayUpdater);
     }
 
     public AstronomerModel getModel() {

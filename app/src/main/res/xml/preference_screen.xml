@@ -1,83 +1,92 @@
-<PreferenceScreen
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:key="stardroid.preferences">
-  <PreferenceCategory>
-    <PreferenceScreen android:title="@string/location_prefs">
-      <PreferenceCategory>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:key="stardroid.preferences"
+    app:iconSpaceReserved="false">
+
+    <PreferenceCategory
+        android:title="@string/location_prefs"
+        app:iconSpaceReserved="false">
+
         <CheckBoxPreference
             android:defaultValue="false"
-            android:title="@string/force_gps_pref"
+            android:key="force_gps"
             android:summary="@string/force_gps_pref_hint"
-            android:key="force_gps"/>
+            android:title="@string/force_gps_pref"
+            app:iconSpaceReserved="false" />
+
         <CheckBoxPreference
             android:defaultValue="false"
-            android:title="@string/no_use_gps_pref"
+            android:key="no_auto_locate"
             android:summary="@string/no_use_gps_pref_hint"
-            android:key="no_auto_locate"/>
-        <!-- Set the default location to Galileo's birthplace -->
+            android:title="@string/no_use_gps_pref"
+            app:iconSpaceReserved="false" />
+
         <EditTextPreference
+            android:defaultValue=""
+            android:dependency="no_auto_locate"
             android:key="location"
             android:layout="?android:attr/preferenceLayoutChild"
-            android:title="@string/location_placename"
             android:summary="@string/location_placename_hint"
-            android:dependency="no_auto_locate"
-            android:defaultValue="" />
+            android:title="@string/location_placename"
+            app:iconSpaceReserved="false" />
+
         <EditTextPreference
+            android:defaultValue="0"
+            android:dependency="no_auto_locate"
+            android:inputType="number|numberSigned|numberDecimal"
             android:key="latitude"
             android:layout="?android:attr/preferenceLayoutChild"
-            android:title="@string/location_lat_pref"
-            android:dependency="no_auto_locate"
             android:summary="@string/degrees"
-            android:inputType="number|numberSigned|numberDecimal"
-            android:defaultValue="0"/>
+            android:title="@string/location_lat_pref"
+            app:iconSpaceReserved="false" />
+
         <EditTextPreference
+            android:defaultValue="0"
+            android:dependency="no_auto_locate"
+            android:inputType="number|numberSigned|numberDecimal"
             android:key="longitude"
             android:layout="?android:attr/preferenceLayoutChild"
-            android:title="@string/location_long_pref"
-            android:dependency="no_auto_locate"
             android:summary="@string/degrees"
-            android:inputType="number|numberSigned|numberDecimal"
-            android:defaultValue="0"/>
+            android:title="@string/location_long_pref"
+            app:iconSpaceReserved="false" />
+
         <CheckBoxPreference
             android:defaultValue="true"
+            android:key="use_magnetic_correction"
             android:title="@string/use_magnetic_correction"
-            android:key="use_magnetic_correction"/>
-      </PreferenceCategory>
-    </PreferenceScreen>
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
     <CheckBoxPreference
         android:defaultValue="true"
+        android:key="sound_effects"
         android:title="@string/use_sound_effects"
-        android:key="sound_effects"/>
-  </PreferenceCategory>
-  <PreferenceScreen android:key="sensor_prefs" android:title="@string/sensor_prefs">
-    <PreferenceCategory>
-      <CheckBoxPreference
-          android:defaultValue="false"
-          android:title="@string/disable_gyro_preference_title"
-          android:summary="@string/disable_gyro_preference_summary"
-          android:key="disable_gyro"/>
-      <ListPreference
-          android:key="sensor_speed"
-          android:title="@string/sensor_speed"
-          android:entryValues="@array/sensor_speed_values"
-          android:entries="@array/sensor_speed"
-          android:defaultValue="STANDARD" />
-      <ListPreference
-          android:key="sensor_damping"
-          android:title="@string/sensor_damping"
-          android:entryValues="@array/sensor_damping_values"
-          android:entries="@array/sensor_damping"
-          android:defaultValue="EXTRA HIGH" />
-      <CheckBoxPreference
-          android:defaultValue="false"
-          android:title="@string/sensor_reverse_preference_title"
-          android:summary="@string/sensor_reverse_preference_summary"
-          android:key="reverse_magnetic_z"/>
-      <CheckBoxPreference
-          android:defaultValue="false"
-          android:title="@string/rotate_horizon_preference_title"
-          android:summary="@string/rotate_horizon_preference_summary"
-          android:key="rotate_horizon"/>
+        app:iconSpaceReserved="false" />
+
+    <PreferenceCategory
+        android:key="sensor_prefs"
+        app:iconSpaceReserved="false"
+        app:title="@string/sensor_prefs">
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="disable_gyro"
+            android:summary="@string/disable_gyro_preference_summary"
+            android:title="@string/disable_gyro_preference_title"
+            app:iconSpaceReserved="false" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="reverse_magnetic_z"
+            android:summary="@string/sensor_reverse_preference_summary"
+            android:title="@string/sensor_reverse_preference_title"
+            app:iconSpaceReserved="false" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="rotate_horizon"
+            android:summary="@string/rotate_horizon_preference_summary"
+            android:title="@string/rotate_horizon_preference_title"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
-  </PreferenceScreen>
 </PreferenceScreen>

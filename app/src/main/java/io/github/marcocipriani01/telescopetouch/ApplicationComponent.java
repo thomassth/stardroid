@@ -1,6 +1,5 @@
 package io.github.marcocipriani01.telescopetouch;
 
-import android.accounts.AccountManager;
 import android.content.SharedPreferences;
 import android.hardware.SensorManager;
 import android.location.LocationManager;
@@ -25,6 +24,7 @@ import io.github.marcocipriani01.telescopetouch.search.SearchTermsProvider;
 @Singleton
 @Component(modules = ApplicationModule.class)
 public interface ApplicationComponent {
+
     // What we expose to dependent components
     StardroidApplication provideStardroidApplication();
 
@@ -39,8 +39,6 @@ public interface ApplicationComponent {
     LocationManager provideLocationManager();
 
     LayerManager provideLayerManager();
-
-    AccountManager provideAccountManager();
 
     @Named("zero")
     MagneticDeclinationCalculator provideMagDec1();

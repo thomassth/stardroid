@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Please add  translation_description="" attributes to Strings to assist the translators. -->
 <resources>
-    <string name="app_name" translation_description="Application Title">Sky Map</string>
     <string name="menu_settings">Ajustes</string>
     <string name="menu_search">Buscar</string>
     <string name="cancel">Cancelar</string>
@@ -25,16 +24,15 @@
     <string name="location_unable_to_geocode">No se puede decodificar tu ubicación, ¿quizás tu red no está disponible?</string>
     <string name="location_not_found_title" translation_description="dialog box title when location not found">Lo sentimos</string>
     <string name="location_not_found" translation_description="dialog message when placename not found">%s no fue encontrado.</string>
-    <string name="location_long_lat">Longitude:%1$s, Latitude:%2$s</string>
+    <string name="location_long_lat">Longitude:%1$f, Latitude:%2$f</string>
     <string name="location_place_found">Lugar encontrado. Ajustando latitud %1$f y longitud %2$f</string>
     <string name="use_magnetic_correction">Usar corrección magnética</string>
     <string name="use_magnetic_correction_hint">Usa el conocimiento de tu ubicación y corrige la orientación del norte magnético al verdadero</string>
     <!-- This string is too long and currently unused -->
-    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">Mostrar...</string>
+    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">Mostrar…</string>
     <string name="show_stars_pref">Estrellas</string>
     <string name="show_constellations_pref">Constelaciones</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Objetos Messier</string>
-    <string name="show_planets_pref">Sistema Solar</string>
     <string name="show_grid_pref">Cuadrícula AR/Dec</string>
     <string name="show_horizon_pref">Horizonte</string>
     <string name="show_sky_gradient" translation_description="This is a shading of the color of the sky used for effect">Gradiente del cielo</string>
@@ -68,16 +66,16 @@
     <string name="search_hint" translation_description="an example search target">p.ej. Marte</string>
     <string name="no_search_title">Sin resultados</string>
     <string name="no_search_results_text">Sin resultados.</string>
-    <string name="many_search_results_title">¿Quisiste decir...?</string>
+    <string name="many_search_results_title">¿Quisiste decir…?</string>
     <string name="many_search_results_text">Selecciona uno</string>
-    <string name="searching_for_text">Buscando %s...</string>
+    <string name="searching_for_text">Buscando %s…</string>
     <string name="found_target_text">%s encontrado.</string>
     <string name="other" translation_description="A preference category (ie preferences that don't belong in any other category)">Otros</string>
     <string name="planetary_images">Mostrar imágenes del planeta</string>
     <string name="menu_time">Viaje en el tiempo</string>
-    <string name="time_travel_start_message">Viajando en el tiempo...</string>
-    <string name="time_travel_start_message_alt">Viajando en el tiempo a %s...</string>
-    <string name="time_travel_close_message">Volver al presente...</string>
+    <string name="time_travel_start_message">Viajando en el tiempo…</string>
+    <string name="time_travel_start_message_alt">Viajando en el tiempo a %s…</string>
+    <string name="time_travel_close_message">Volver al presente…</string>
     <!--  -->
     <string name="popular_dates_prompt" translation_description="Label for a list of dates the user can choose from">Fechas populares</string>
     <string name="custom_date_prompt" translation_description="Label telling the user to manually specify a date">O elige tu propia fecha:</string>

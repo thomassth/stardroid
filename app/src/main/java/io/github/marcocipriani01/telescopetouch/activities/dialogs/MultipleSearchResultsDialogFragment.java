@@ -1,12 +1,14 @@
 package io.github.marcocipriani01.telescopetouch.activities.dialogs;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 
 import java.util.ArrayList;
 
@@ -23,32 +25,31 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
  * Created by johntaylor on 4/3/16.
  */
 public class MultipleSearchResultsDialogFragment extends DialogFragment {
+
     private static final String TAG = MiscUtil.getTag(MultipleSearchResultsDialogFragment.class);
     @Inject
     DynamicStarMapActivity parentActivity;
 
     private ArrayAdapter<SearchResult> multipleSearchResultsAdaptor;
 
+    @NonNull
     @Override
+    @SuppressWarnings("unchecked")
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Activities using this dialog MUST implement this interface.  Obviously.
         ((HasComponent<ActivityComponent>) getActivity()).getComponent().inject(this);
 
         // TODO(jontayler): inject
-        multipleSearchResultsAdaptor = new ArrayAdapter<>(
-                parentActivity, android.R.layout.simple_list_item_1, new ArrayList<SearchResult>());
+        multipleSearchResultsAdaptor = new ArrayAdapter<>(parentActivity, android.R.layout.simple_list_item_1, new ArrayList<>());
 
-
-        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                if (whichButton == Dialog.BUTTON_NEGATIVE) {
-                    Log.d(TAG, "Many search results Dialog closed with cancel");
-                } else {
-                    final SearchResult item = multipleSearchResultsAdaptor.getItem(whichButton);
-                    parentActivity.activateSearchTarget(item.coords, item.capitalizedName);
-                }
-                dialog.dismiss();
+        DialogInterface.OnClickListener onClickListener = (dialog, whichButton) -> {
+            if (whichButton == Dialog.BUTTON_NEGATIVE) {
+                Log.d(TAG, "Many search results Dialog closed with cancel");
+            } else {
+                final SearchResult item = multipleSearchResultsAdaptor.getItem(whichButton);
+                parentActivity.activateSearchTarget(item.coords, item.capitalizedName);
             }
+            dialog.dismiss();
         };
 
         return new AlertDialog.Builder(parentActivity)

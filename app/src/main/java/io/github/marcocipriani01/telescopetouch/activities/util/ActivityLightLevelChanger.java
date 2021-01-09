@@ -12,12 +12,13 @@ import androidx.annotation.Nullable;
  * @author John Taylor
  */
 public class ActivityLightLevelChanger {
+
     // This value is based on inspecting the Android source code for the
     // SettingsAppWidgetProvider:
     // http://hi-android.info/src/com/android/settings/widget/SettingsAppWidgetProvider.java.html
     // (We know that 0.05 is OK on the G1 and N1, but not some other phones, so we don't make this
     // as dim as we could...)
-    private static final float BRIGHTNESS_DIM = (float) 20f / 255f;
+    private static final float BRIGHTNESS_DIM = 20f / 255f;
     private final NightModeable nightModeable;
     private final Activity activity;
 

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translation_description="Application Title">Sky Map</string>
     <string name="menu_settings">Instellingen</string>
     <string name="menu_search">Zoeken</string>
     <string name="cancel">Annuleren</string>
@@ -24,15 +23,14 @@
     <string name="location_unable_to_geocode">Kan uw locatie niet decoderen - misschien is uw netwerk niet beschikbaar?</string>
     <string name="location_not_found_title" translation_description="dialog box title when location not found">Sorry</string>
     <string name="location_not_found" translation_description="dialog message when placename not found">%s niet gevonden.</string>
-    <string name="location_long_lat">Lengtegraad:%1$s, breedtegraad:%2$s</string>
+    <string name="location_long_lat">Lengtegraad:%1$f, breedtegraad:%2$f</string>
     <string name="location_place_found">Plaats gevonden. Breedtegraad %1$f en lengtegraad %2$f worden ingesteld</string>
     <string name="use_magnetic_correction">Magnetische correctie gebruiken</string>
     <string name="use_magnetic_correction_hint">Gebruik informatie over uw locatie om de oriëntatie van het magnetische noorden ten opzichte van het echte noorden te corrigeren</string>
-    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">Tonen...</string>
+    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">Tonen…</string>
     <string name="show_stars_pref">Sterren</string>
     <string name="show_constellations_pref">Sterrenbeelden</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Messier-objecten</string>
-    <string name="show_planets_pref">Planeten</string>
     <string name="show_grid_pref">RK/declinatieraster</string>
     <string name="show_horizon_pref">Horizon</string>
     <string name="show_sky_gradient">Hemelgradiënt</string>
@@ -64,14 +62,14 @@
     <string name="no_search_results_text">Er zijn geen resultaten gevonden.</string>
     <string name="many_search_results_title">Bedoelde u?</string>
     <string name="many_search_results_text">Maak een keuze</string>
-    <string name="searching_for_text">Zoeken naar %s...</string>
+    <string name="searching_for_text">Zoeken naar %s…</string>
     <string name="found_target_text">%s gevonden.</string>
     <string name="other">Overige</string>
     <string name="planetary_images">Planeetbeelden weergeven</string>
     <string name="menu_time">Tijdreizen</string>
-    <string name="time_travel_start_message">We reizen door de tijd ...</string>
-    <string name="time_travel_start_message_alt">We reizen door de tijd naar %s ...</string>
-    <string name="time_travel_close_message">Terug naar het heden ...</string>
+    <string name="time_travel_start_message">We reizen door de tijd …</string>
+    <string name="time_travel_start_message_alt">We reizen door de tijd naar %s …</string>
+    <string name="time_travel_close_message">Terug naar het heden …</string>
     <string name="popular_dates_prompt" translation_description="label for a list of dates the user can choose from">Populaire datums</string>
     <string name="custom_date_prompt" translation_description="label telling the user to manually specify a data">Of selecteer uw eigen datum</string>
     <string name="change_date_prompt">Datum wijzigen</string>

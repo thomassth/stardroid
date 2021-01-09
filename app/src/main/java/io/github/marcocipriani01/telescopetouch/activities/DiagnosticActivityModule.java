@@ -13,6 +13,7 @@ import io.github.marcocipriani01.telescopetouch.inject.PerActivity;
  */
 @Module
 public class DiagnosticActivityModule {
+
     private final DiagnosticActivity activity;
 
     public DiagnosticActivityModule(DiagnosticActivity activity) {

@@ -34,6 +34,7 @@ import io.github.marcocipriani01.telescopetouch.units.LatLong;
 import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 
 public class DiagnosticActivity extends InjectableActivity implements SensorEventListener {
+
     private static final String TAG = MiscUtil.getTag(DiagnosticActivity.class);
     private static final int UPDATE_PERIOD_MILLIS = 500;
     private final Set<Sensor> knownSensorAccuracies = new HashSet<>();

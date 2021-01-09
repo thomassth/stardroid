@@ -11,6 +11,7 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
  * @author John Taylor
  */
 public class ZoomController extends AbstractController {
+
     @VisibleForTesting
     public static final float MAX_ZOOM_OUT = 90.0f;
     private static final String TAG = MiscUtil.getTag(ZoomController.class);

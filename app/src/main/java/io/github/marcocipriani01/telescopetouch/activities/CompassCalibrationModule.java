@@ -11,6 +11,7 @@ import io.github.marcocipriani01.telescopetouch.inject.PerActivity;
  */
 @Module
 public class CompassCalibrationModule {
+
     private final CompassCalibrationActivity activity;
 
     public CompassCalibrationModule(CompassCalibrationActivity activity) {

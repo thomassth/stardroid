@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Please add  translation_description="" attributes to Strings to assist the translators. -->
 <resources>
-    <string name="app_name" translation_description="Application Title">Sky Map</string>
     <string name="menu_settings">Ρυθμίσεις</string>
     <string name="menu_search">Αναζήτηση</string>
     <string name="cancel">Ακύρωση</string>
@@ -25,16 +24,15 @@
     <string name="location_unable_to_geocode">Αδυναμία εντοπισμού της τοποθεσίας σας - ίσως το δίκτυό σας δεν είναι διαθέσιμο;</string>
     <string name="location_not_found_title" translation_description="dialog box title when location not found">Συγγνώμη</string>
     <string name="location_not_found" translation_description="dialog message when placename not found">Το %s δε βρέθηκε.</string>
-    <string name="location_long_lat">Γεωγ. μήκος:%1$s, Γεωγ. πλάτος:%2$s</string>
+    <string name="location_long_lat">Γεωγ. μήκος:%1$f, Γεωγ. πλάτος:%2$f</string>
     <string name="location_place_found">Η τοποθεσία βρέθηκε.  Ορίστηκε γεωγ. πλάτος %1$f και γεωγ. μήκος %2$f</string>
     <string name="use_magnetic_correction">Χρήση μαγνητικής διόρθωσης</string>
     <string name="use_magnetic_correction_hint">Χρησιμοποίηση της γνώσης της τοποθεσίας σας για τη διόρθωση του προσανατολισμού από τον μαγνητικό βορρά στον αληθή βορρά</string>
     <!-- This string is too long and currently unused -->
-    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">Να εμφανίζονται...</string>
+    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">Να εμφανίζονται…</string>
     <string name="show_stars_pref">Αστέρια</string>
     <string name="show_constellations_pref">Αστερισμοί</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Αντικείμενα Μεσιέ</string>
-    <string name="show_planets_pref">Ηλιακό σύστημα</string>
     <string name="show_grid_pref">Πλέγμα RA/Dec</string>
     <string name="show_horizon_pref">Ορίζοντας</string>
     <string name="show_sky_gradient" translation_description="This is a shading of the color of the sky used for effect">Απόχρωση ουρανού</string>
@@ -69,14 +67,14 @@
     <string name="no_search_results_text">Δεν βρέθηκαν αποτελέσματα.</string>
     <string name="many_search_results_title">Μήπως εννοούσατε;</string>
     <string name="many_search_results_text">Παρακαλούμε επιλέξτε ένα</string>
-    <string name="searching_for_text">Αναζήτηση για %s...</string>
+    <string name="searching_for_text">Αναζήτηση για %s…</string>
     <string name="found_target_text">Βρέθηκε %s.</string>
     <string name="other" translation_description="A preference category (ie preferences that don't belong in any other category)">Άλλο</string>
     <string name="planetary_images">Εμφάνιση εικόνων πλανητών</string>
     <string name="menu_time">Ταξίδι στο χρόνο</string>
-    <string name="time_travel_start_message">Ταξίδι στο χρόνο ...</string>
-    <string name="time_travel_start_message_alt">Ταξίδι στο χρόνο σε %s ...</string>
-    <string name="time_travel_close_message">Πίσω στο παρόν ...</string>
+    <string name="time_travel_start_message">Ταξίδι στο χρόνο …</string>
+    <string name="time_travel_start_message_alt">Ταξίδι στο χρόνο σε %s …</string>
+    <string name="time_travel_close_message">Πίσω στο παρόν …</string>
     <!--  -->
     <string name="popular_dates_prompt" translation_description="Label for a list of dates the user can choose from">Συχνές ημερομηνίες</string>
     <string name="custom_date_prompt" translation_description="Label telling the user to manually specify a date">Ή επιλέξτε ημερομηνία:</string>

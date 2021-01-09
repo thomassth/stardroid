@@ -1,5 +1,6 @@
 package io.github.marcocipriani01.telescopetouch.layers;
 
+import android.annotation.SuppressLint;
 import android.content.res.Resources;
 import android.graphics.Color;
 
@@ -24,16 +25,15 @@ import io.github.marcocipriani01.telescopetouch.units.RaDec;
  * @author Brent Bryan
  * @author John Taylor
  */
-public class GridLayer extends AbstractSourceLayer {
+public class GridLayer extends AbstractLayer {
+
     private final int numRightAscentionLines;
     private final int numDeclinationLines;
 
     /**
-     * @param resources
-     * @param numRightAscentionLines
-     * @param numDeclinationLines    The number of declination lines to show including the poles
-     *                               on each side of the equator. 9 is a good number for 10 degree
-     *                               intervals.
+     * @param numDeclinationLines The number of declination lines to show including the poles
+     *                            on each side of the equator. 9 is a good number for 10 degree
+     *                            intervals.
      */
     public GridLayer(Resources resources, int numRightAscentionLines, int numDeclinationLines) {
         super(resources, false);
@@ -53,10 +53,9 @@ public class GridLayer extends AbstractSourceLayer {
 
     @Override
     protected int getLayerNameId() {
-        return R.string.show_grid_pref;  // TODO(johntaylor): rename this string Id.
+        return R.string.show_grid_pref;
     }
 
-    // TODO(brent): Remove this.
     @Override
     public String getPreferenceId() {
         return "source_provider.4";
@@ -65,6 +64,7 @@ public class GridLayer extends AbstractSourceLayer {
     /**
      * Implementation of the grid elements as an {@link AstronomicalSource}
      */
+    @SuppressLint("DefaultLocale")
     static class GridSource extends AbstractAstronomicalSource {
         private static final int LINE_COLOR = Color.argb(20, 248, 239, 188);
         /**
@@ -76,15 +76,15 @@ public class GridLayer extends AbstractSourceLayer {
          */
         private static final int NUM_RA_VERTICES = 36;
 
-        private final ArrayList<LineSourceImpl> lineSources = new ArrayList<LineSourceImpl>();
-        private final ArrayList<TextSourceImpl> textSources = new ArrayList<TextSourceImpl>();
+        private final ArrayList<LineSourceImpl> lineSources = new ArrayList<>();
+        private final ArrayList<TextSourceImpl> textSources = new ArrayList<>();
 
         public GridSource(Resources res, int numRaSources, int numDecSources) {
             for (int r = 0; r < numRaSources; r++) {
                 lineSources.add(createRaLine(r, numRaSources));
             }
 
-            /** North & South pole, hour markers every 2hrs. */
+            // North & South pole, hour markers every 2hrs.
             textSources.add(new TextSourceImpl(0f, 90f, res.getString(R.string.north_pole), LINE_COLOR));
             textSources.add(new TextSourceImpl(0f, -90f, res.getString(R.string.south_pole), LINE_COLOR));
             for (int index = 0; index < 12; index++) {
@@ -93,13 +93,13 @@ public class GridLayer extends AbstractSourceLayer {
                 textSources.add(new TextSourceImpl(ra, 0.0f, title, LINE_COLOR));
             }
 
-            lineSources.add(createDecLine(0, 0)); // Equator
+            lineSources.add(createDecLine(0)); // Equator
             // Note that we don't create lines at the poles.
             for (int d = 1; d < numDecSources; d++) {
                 float dec = d * 90.0f / numDecSources;
-                lineSources.add(createDecLine(d, dec));
+                lineSources.add(createDecLine(dec));
                 textSources.add(new TextSourceImpl(0f, dec, String.format("%d°", (int) dec), LINE_COLOR));
-                lineSources.add(createDecLine(d, -dec));
+                lineSources.add(createDecLine(-dec));
                 textSources.add(new TextSourceImpl(0f, -dec, String.format("%d°", (int) -dec), LINE_COLOR));
             }
         }
@@ -123,7 +123,7 @@ public class GridLayer extends AbstractSourceLayer {
             return line;
         }
 
-        private LineSourceImpl createDecLine(int index, float dec) {
+        private LineSourceImpl createDecLine(float dec) {
             LineSourceImpl line = new LineSourceImpl(LINE_COLOR);
             for (int i = 0; i < NUM_RA_VERTICES; i++) {
                 float ra = i * 360.0f / NUM_RA_VERTICES;

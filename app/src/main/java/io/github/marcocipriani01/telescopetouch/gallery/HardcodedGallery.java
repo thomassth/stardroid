@@ -14,6 +14,7 @@ import io.github.marcocipriani01.telescopetouch.R;
  * @author John Taylor
  */
 public class HardcodedGallery implements Gallery {
+
     private final List<GalleryImage> images;
     private final Resources resources;
 
@@ -31,13 +32,13 @@ public class HardcodedGallery implements Gallery {
      * Note, that for this to work the internationalized name _must_ be in the
      * search index.
      */
-    private final void add(ArrayList<GalleryImage> images, int imageId,
-                           int nameId, int searchTermId) {
+    private void add(ArrayList<GalleryImage> images, int imageId,
+                     int nameId, int searchTermId) {
         images.add(new GalleryImage(imageId, getString(nameId), getString(searchTermId)));
     }
 
     private ArrayList<GalleryImage> createImages() {
-        ArrayList<GalleryImage> galleryImages = new ArrayList<GalleryImage>();
+        ArrayList<GalleryImage> galleryImages = new ArrayList<>();
         // Note the internationalized names in places.  Be sure that if the
         // search term is internationalized in the search index then it is here too.
         add(galleryImages, R.drawable.messenger_11_07_39, R.string.mercury, R.string.mercury);

@@ -18,7 +18,8 @@ import io.github.marcocipriani01.telescopetouch.source.AstronomicalSource;
  * @author John Taylor
  * @author Brent Bryan
  */
-public class PlanetsLayer extends AbstractSourceLayer {
+public class PlanetsLayer extends AbstractLayer {
+
     private final SharedPreferences preferences;
     private final AstronomerModel model;
 

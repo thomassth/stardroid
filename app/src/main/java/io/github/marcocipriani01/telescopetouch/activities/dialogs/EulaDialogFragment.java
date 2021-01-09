@@ -1,7 +1,6 @@
 package io.github.marcocipriani01.telescopetouch.activities.dialogs;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -12,10 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+
 import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.StardroidApplication;
 import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
 import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 
@@ -23,7 +24,8 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
  * End User License agreement dialog.
  * Created by johntaylor on 4/3/16.
  */
-public class EulaDialogFragment extends DialogFragment {
+public class EulaDialogFragment extends ImprovedDialogFragment {
+
     private static final String TAG = MiscUtil.getTag(EulaDialogFragment.class);
     @Inject
     Activity parentActivity;
@@ -33,7 +35,9 @@ public class EulaDialogFragment extends DialogFragment {
         this.resultListener = resultListener;
     }
 
+    @NonNull
     @Override
+    @SuppressWarnings("unchecked")
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Activities using this dialog MUST implement this interface.  Obviously.
         ((HasComponent<ActivityComponent>) getActivity()).getComponent().inject(this);
@@ -41,14 +45,9 @@ public class EulaDialogFragment extends DialogFragment {
         LayoutInflater inflater = parentActivity.getLayoutInflater();
         View view = inflater.inflate(R.layout.tos_view, null);
 
-        String apologyText = parentActivity.getString(R.string.language_apology_text);
-        Spanned formattedApologyText = Html.fromHtml(apologyText);
-        TextView apologyTextView = (TextView) view.findViewById(R.id.language_apology_box_text);
-        apologyTextView.setText(formattedApologyText, TextView.BufferType.SPANNABLE);
-
         String eulaText = parentActivity.getString(R.string.eula_text);
         Spanned formattedEulaText = Html.fromHtml(eulaText);
-        TextView eulaTextView = (TextView) view.findViewById(R.id.eula_box_text);
+        TextView eulaTextView = view.findViewById(R.id.eula_box_text);
         eulaTextView.setText(formattedEulaText, TextView.BufferType.SPANNABLE);
 
         AlertDialog.Builder tosDialogBuilder = new AlertDialog.Builder(parentActivity)
@@ -56,18 +55,8 @@ public class EulaDialogFragment extends DialogFragment {
                 .setView(view);
         if (resultListener != null) {
             tosDialogBuilder
-                    .setPositiveButton(R.string.dialog_accept,
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    acceptEula(dialog);
-                                }
-                            })
-                    .setNegativeButton(R.string.dialog_decline,
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    rejectEula(dialog);
-                                }
-                            });
+                    .setPositiveButton(R.string.dialog_accept, (dialog, whichButton) -> acceptEula(dialog))
+                    .setNegativeButton(R.string.dialog_decline, (dialog, whichButton) -> rejectEula(dialog));
         }
         return tosDialogBuilder.create();
     }
@@ -88,12 +77,8 @@ public class EulaDialogFragment extends DialogFragment {
         }
     }
 
-    private String getVersionName() {
-        return ((StardroidApplication) parentActivity.getApplication()).getVersionName();
-    }
-
     @Override
-    public void onCancel(DialogInterface dialog) {
+    public void onCancel(@NonNull DialogInterface dialog) {
         rejectEula(dialog);
     }
 

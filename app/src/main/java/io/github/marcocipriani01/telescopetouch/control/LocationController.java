@@ -1,10 +1,6 @@
 package io.github.marcocipriani01.telescopetouch.control;
 
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -19,6 +15,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.preference.PreferenceManager;
 
 import java.io.IOException;
@@ -38,6 +35,7 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
  * @author John Taylor
  */
 public class LocationController extends AbstractController implements LocationListener {
+
     // Must match the key in the preferences file.
     public static final String NO_AUTO_LOCATE = "no_auto_locate";
     // Must match the key in the preferences file.
@@ -103,23 +101,15 @@ public class LocationController extends AbstractController implements LocationLi
                 String possiblelocationProvider = locationManager.getBestProvider(locationCriteria, false);
                 if (possiblelocationProvider == null) {
                     Log.i(TAG, "No location provider is even available");
-                    // TODO(johntaylor): should we make this a dialog?
-//          Toast.makeText(context, R.string.location_no_auto, Toast.LENGTH_LONG).show();
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
                     alertDialogBuilder
                             .setTitle("Warning")
                             .setMessage(R.string.location_no_auto)
-                            .setNegativeButton("Cancel", new OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    dialogInterface.dismiss();
-                                }
-                            })
+                            .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss())
                             .create();
                     setLocationFromPrefs();
                     return;
                 }
-
                 AlertDialog.Builder alertDialog = getSwitchOnGPSDialog();
                 alertDialog.show();
                 return;
@@ -165,26 +155,22 @@ public class LocationController extends AbstractController implements LocationLi
         return model.getLocation();
     }
 
-    private Builder getSwitchOnGPSDialog() {
+    private AlertDialog.Builder getSwitchOnGPSDialog() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(context);
         dialog.setTitle(R.string.location_offer_to_enable_gps_title);
         dialog.setMessage(R.string.location_offer_to_enable);
-        dialog.setPositiveButton(android.R.string.ok, new OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                Log.d(TAG, "Sending to editor location prefs page");
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                context.startActivity(intent);
-            }
+        dialog.setPositiveButton(android.R.string.ok, (dialog12, which) -> {
+            Log.d(TAG, "Sending to editor location prefs page");
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            context.startActivity(intent);
         });
-        dialog.setNegativeButton(android.R.string.cancel, new OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                Log.d(TAG, "User doesn't want to enable location.");
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-                Editor editor = prefs.edit();
-                editor.putBoolean(NO_AUTO_LOCATE, true);
-                editor.commit();
-                setLocationFromPrefs();
-            }
+        dialog.setNegativeButton(android.R.string.cancel, (dialog1, which) -> {
+            Log.d(TAG, "User doesn't want to enable location.");
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            Editor editor = prefs.edit();
+            editor.putBoolean(NO_AUTO_LOCATE, true);
+            editor.apply();
+            setLocationFromPrefs();
         });
         return dialog;
     }
@@ -253,8 +239,8 @@ public class LocationController extends AbstractController implements LocationLi
         // TODO(johntaylor): move this notification to a separate thread)
         Log.d(TAG, "Reverse geocoding location");
         Geocoder geoCoder = new Geocoder(context);
-        List<Address> addresses = new ArrayList<Address>();
-        String place = "Unknown";
+        List<Address> addresses = new ArrayList<>();
+        String place;
         try {
             addresses = geoCoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
         } catch (IOException e) {

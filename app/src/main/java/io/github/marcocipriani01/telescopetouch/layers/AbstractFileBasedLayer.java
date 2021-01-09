@@ -4,7 +4,6 @@ import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.util.Log;
 
-import com.google.common.io.Closeables;
 import com.google.protobuf.Parser;
 
 import java.io.IOException;
@@ -29,8 +28,8 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
  * @author Brent Bryan
  * @author John Taylor
  */
+public abstract class AbstractFileBasedLayer extends AbstractLayer {
 
-public abstract class AbstractFileBasedLayer extends AbstractSourceLayer {
     private static final String TAG = MiscUtil.getTag(AbstractFileBasedLayer.class);
     private static final Executor BACKGROUND_EXECUTOR = Executors.newFixedThreadPool(1);
 
@@ -46,11 +45,9 @@ public abstract class AbstractFileBasedLayer extends AbstractSourceLayer {
 
     @Override
     public synchronized void initialize() {
-        BACKGROUND_EXECUTOR.execute(new Runnable() {
-            public void run() {
-                readSourceFile(fileName);
-                AbstractFileBasedLayer.super.initialize();
-            }
+        BACKGROUND_EXECUTOR.execute(() -> {
+            readSourceFile(fileName);
+            AbstractFileBasedLayer.super.initialize();
         });
     }
 
@@ -61,12 +58,9 @@ public abstract class AbstractFileBasedLayer extends AbstractSourceLayer {
 
     private void readSourceFile(String sourceFilename) {
         Log.d(TAG, "Loading Proto File: " + sourceFilename + "...");
-        InputStream in = null;
-        try {
-            in = assetManager.open(sourceFilename, AssetManager.ACCESS_BUFFER);
+        try (InputStream in = assetManager.open(sourceFilename, AssetManager.ACCESS_BUFFER)) {
             Parser<AstronomicalSourcesProto> parser = AstronomicalSourcesProto.parser();
             AstronomicalSourcesProto sources = parser.parseFrom(in);
-
             for (AstronomicalSourceProto proto : sources.getSourceList()) {
                 fileSources.add(new ProtobufAstronomicalSource(proto, getResources()));
             }
@@ -74,13 +68,9 @@ public abstract class AbstractFileBasedLayer extends AbstractSourceLayer {
             String s = String.format("Finished Loading: %s | Found %s sourcs.\n",
                     sourceFilename, fileSources.size());
             Log.d(TAG, s);
-
             refreshSources(EnumSet.of(UpdateType.Reset));
         } catch (IOException e) {
             Log.e(TAG, "Unable to open " + sourceFilename);
-        } finally {
-            Closeables.closeQuietly(in);
         }
-
     }
 }

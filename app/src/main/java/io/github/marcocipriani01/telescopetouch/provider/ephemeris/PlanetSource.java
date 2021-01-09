@@ -5,11 +5,11 @@ import android.content.res.Resources;
 import android.graphics.Color;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
 
-import io.github.marcocipriani01.telescopetouch.base.Lists;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererObjectManager.UpdateType;
 import io.github.marcocipriani01.telescopetouch.source.AbstractAstronomicalSource;
@@ -33,6 +33,7 @@ import io.github.marcocipriani01.telescopetouch.units.Vector3;
  * @author Brent Bryan
  */
 public class PlanetSource extends AbstractAstronomicalSource {
+
     private static final int PLANET_SIZE = 3;
     private static final int PLANET_COLOR = Color.argb(20, 129, 126, 246);
     private static final int PLANET_LABEL_COLOR = 0xf67e81;
@@ -53,9 +54,7 @@ public class PlanetSource extends AbstractAstronomicalSource {
 
     private long lastUpdateTimeMs = 0L;
 
-    public PlanetSource(Planet planet, Resources resources,
-                        AstronomerModel model, SharedPreferences prefs) {
-
+    public PlanetSource(Planet planet, Resources resources, AstronomerModel model, SharedPreferences prefs) {
         this.planet = planet;
         this.resources = resources;
         this.model = model;
@@ -65,7 +64,7 @@ public class PlanetSource extends AbstractAstronomicalSource {
 
     @Override
     public List<String> getNames() {
-        return Lists.asList(name);
+        return Collections.singletonList(name);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package io.github.marcocipriani01.telescopetouch.source.impl;
 
-import com.google.common.base.Preconditions;
+import java.util.Objects;
 
 import io.github.marcocipriani01.telescopetouch.source.TextSource;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
@@ -26,10 +26,9 @@ public class TextSourceImpl extends AbstractSource implements TextSource {
 
     public TextSourceImpl(GeocentricCoordinates coords, String label, int color, float offset,
                           int fontSize) {
-
         super(coords, color);
-        this.label = Preconditions.checkNotNull(label);
-        Preconditions.checkArgument(!label.trim().isEmpty());
+        this.label = Objects.requireNonNull(label);
+        if (label.trim().isEmpty()) throw new IllegalArgumentException();
 
         this.offset = offset;
         this.fontSize = fontSize;

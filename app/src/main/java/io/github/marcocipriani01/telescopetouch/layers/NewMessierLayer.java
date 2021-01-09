@@ -13,6 +13,7 @@ import io.github.marcocipriani01.telescopetouch.R;
  * @author Brent Bryan
  */
 public class NewMessierLayer extends AbstractFileBasedLayer {
+
     public NewMessierLayer(AssetManager assetManager, Resources resources) {
         super(assetManager, resources, "messier.binary");
     }

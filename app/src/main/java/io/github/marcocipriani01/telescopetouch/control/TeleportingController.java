@@ -14,6 +14,7 @@ import io.github.marcocipriani01.telescopetouch.util.VectorUtil;
  * @author John Taylor
  */
 public class TeleportingController extends AbstractController {
+
     private static final String TAG = MiscUtil.getTag(TeleportingController.class);
 
     /**

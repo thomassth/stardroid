@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Please add  translation_description="" attributes to Strings to assist the translators. -->
 <resources>
-    <string name="app_name" translation_description="Application Title">星空圖</string>
     <string name="menu_settings">設定</string>
     <string name="menu_search">搜尋</string>
     <string name="cancel">取消</string>
@@ -25,16 +24,15 @@
     <string name="location_unable_to_geocode">無法解譯您的位置資訊，您的網路系統目前的連線狀態是否正常？</string>
     <string name="location_not_found_title" translation_description="dialog box title when location not found">抱歉</string>
     <string name="location_not_found" translation_description="dialog message when placename not found">找不到%s。</string>
-    <string name="location_long_lat">經度：%1$s，緯度：%2$s</string>
+    <string name="location_long_lat">經度：%1$f，緯度：%2$f</string>
     <string name="location_place_found">已找到地點，正在設定緯度%1$f與經度%2$f</string>
     <string name="use_magnetic_correction">使用地磁校正</string>
     <string name="use_magnetic_correction_hint">運用您所掌握的位置資訊，將方位從地磁北方修正至地理北方</string>
     <!-- This string is too long and currently unused -->
-    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">顯示...</string>
+    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">顯示…</string>
     <string name="show_stars_pref">星體</string>
     <string name="show_constellations_pref">星座</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">梅西耶天體</string>
-    <string name="show_planets_pref">行星</string>
     <string name="show_grid_pref">赤道座標線</string>
     <string name="show_horizon_pref">地平線</string>
     <string name="show_sky_gradient" translation_description="This is a shading of the color of the sky used for effect">星空漸層色</string>
@@ -70,14 +68,14 @@
     <string name="no_search_results_text">找不到相符的結果。</string>
     <string name="many_search_results_title">您是不是要查：</string>
     <string name="many_search_results_text">請選取一個結果</string>
-    <string name="searching_for_text">正在搜尋%s...</string>
+    <string name="searching_for_text">正在搜尋%s…</string>
     <string name="found_target_text">找到%s。</string>
     <string name="other" translation_description="A preference category (ie preferences that don't belong in any other category)">其他</string>
     <string name="planetary_images">顯示行星圖片</string>
     <string name="menu_time">時光旅行</string>
-    <string name="time_travel_start_message">時光旅行...</string>
-    <string name="time_travel_start_message_alt">時光轉移到 %s...</string>
-    <string name="time_travel_close_message">回到現在...</string>
+    <string name="time_travel_start_message">時光旅行…</string>
+    <string name="time_travel_start_message_alt">時光轉移到 %s…</string>
+    <string name="time_travel_close_message">回到現在…</string>
     <!--  -->
     <string name="popular_dates_prompt" translation_description="Label for a list of dates the user can choose from">熱門日期</string>
     <string name="custom_date_prompt" translation_description="Label telling the user to manually specify a date">或是自行選取日期</string>

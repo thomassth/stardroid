@@ -1,6 +1,5 @@
 package io.github.marcocipriani01.telescopetouch.control;
 
-import android.content.Context;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -19,8 +18,9 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
  * @author John Taylor
  */
 public class ControllerGroup implements Controller {
+
     private final static String TAG = MiscUtil.getTag(ControllerGroup.class);
-    private final ArrayList<Controller> controllers = new ArrayList<Controller>();
+    private final ArrayList<Controller> controllers = new ArrayList<>();
     private final ZoomController zoomController;
     private final ManualOrientationController manualDirectionController;
     private final SensorOrientationController sensorOrientationController;
@@ -33,8 +33,7 @@ public class ControllerGroup implements Controller {
 
     // TODO(jontayler): inject everything else.
     @Inject
-    ControllerGroup(Context context, SensorOrientationController sensorOrientationController,
-                    LocationController locationController) {
+    ControllerGroup(SensorOrientationController sensorOrientationController, LocationController locationController) {
         addController(locationController);
         this.sensorOrientationController = sensorOrientationController;
         addController(sensorOrientationController);

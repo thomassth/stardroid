@@ -4,11 +4,11 @@ import android.content.res.Resources;
 import android.graphics.Color;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.base.Lists;
 import io.github.marcocipriani01.telescopetouch.base.TimeConstants;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererObjectManager.UpdateType;
@@ -27,7 +27,8 @@ import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
  * @author Brent Bryan
  * @author John Taylor
  */
-public class HorizonLayer extends AbstractSourceLayer {
+public class HorizonLayer extends AbstractLayer {
+
     private final AstronomerModel model;
 
     public HorizonLayer(AstronomerModel model, Resources resources) {
@@ -70,7 +71,7 @@ public class HorizonLayer extends AbstractSourceLayer {
         // colors.
         private static final int LINE_COLOR = Color.argb(120, 86, 176, 245);
         private static final int LABEL_COLOR = Color.argb(120, 245, 176, 86);
-        private static final long UPDATE_FREQ_MS = 1L * TimeConstants.MILLISECONDS_PER_SECOND;
+        private static final long UPDATE_FREQ_MS = TimeConstants.MILLISECONDS_PER_SECOND;
 
         private final GeocentricCoordinates zenith = new GeocentricCoordinates(0, 0, 0);
         private final GeocentricCoordinates nadir = new GeocentricCoordinates(0, 0, 0);
@@ -79,8 +80,8 @@ public class HorizonLayer extends AbstractSourceLayer {
         private final GeocentricCoordinates east = new GeocentricCoordinates(0, 0, 0);
         private final GeocentricCoordinates west = new GeocentricCoordinates(0, 0, 0);
 
-        private final ArrayList<LineSource> lineSources = new ArrayList<LineSource>();
-        private final ArrayList<TextSource> textSources = new ArrayList<TextSource>();
+        private final ArrayList<LineSource> lineSources = new ArrayList<>();
+        private final ArrayList<TextSource> textSources = new ArrayList<>();
         private final AstronomerModel model;
 
         private long lastUpdateTimeMs = 0L;
@@ -88,7 +89,7 @@ public class HorizonLayer extends AbstractSourceLayer {
         public HorizonSource(AstronomerModel model, Resources res) {
             this.model = model;
 
-            List<GeocentricCoordinates> vertices = Lists.asList(north, east, south, west, north);
+            List<GeocentricCoordinates> vertices = Arrays.asList(north, east, south, west, north);
             lineSources.add(new LineSourceImpl(LINE_COLOR, vertices, 1.5f));
 
             textSources.add(new TextSourceImpl(zenith, res.getString(R.string.zenith), LABEL_COLOR));

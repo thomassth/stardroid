@@ -18,6 +18,7 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
  * Allows a group of layers to be controlled together.
  */
 public class LayerManager implements OnSharedPreferenceChangeListener {
+
     private static final String TAG = MiscUtil.getTag(LayerManager.class);
     private final List<Layer> layers = new ArrayList<>();
     private final SharedPreferences sharedPreferences;

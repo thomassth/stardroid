@@ -29,6 +29,7 @@ import io.github.marcocipriani01.telescopetouch.gallery.GalleryImage;
  * @author John Taylor
  */
 public class ImageGalleryActivity extends InjectableActivity {
+
     /**
      * The index of the image id Intent extra.
      */
@@ -91,8 +92,7 @@ public class ImageGalleryActivity extends InjectableActivity {
         @NonNull
         @Override
         public ImageAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.imagedisplaypanel, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.imagedisplaypanel, parent, false);
             return new MyViewHolder(view);
         }
 

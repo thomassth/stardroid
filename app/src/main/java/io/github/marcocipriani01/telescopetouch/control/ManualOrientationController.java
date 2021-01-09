@@ -16,6 +16,7 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
  * @author John Taylor
  */
 public class ManualOrientationController extends AbstractController {
+
     private static final String TAG = MiscUtil.getTag(ManualOrientationController.class);
 
     @Override

@@ -47,7 +47,7 @@
     android:id="@+id/time_travel_time_readout"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:text="Fill in today's date ..."
+    android:text="Fill in today's date…"
     android:layout_below="@id/time_travel_status_label"
     android:layout_marginLeft="34dip"
     android:textAppearance="?android:attr/textAppearanceSmall"

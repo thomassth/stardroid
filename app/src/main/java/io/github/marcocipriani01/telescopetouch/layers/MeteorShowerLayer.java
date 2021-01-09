@@ -27,7 +27,8 @@ import io.github.marcocipriani01.telescopetouch.units.Vector3;
  *
  * @author John Taylor
  */
-public class MeteorShowerLayer extends AbstractSourceLayer {
+public class MeteorShowerLayer extends AbstractLayer {
+
     private static final int ANY_OLD_YEAR = 100;  // = year 2000
     /**
      * Number of meteors per hour for the larger graphic
@@ -47,61 +48,61 @@ public class MeteorShowerLayer extends AbstractSourceLayer {
         // Source: http://www.imo.net/calendar/2011#table5
         // Note the zero-based month. 10=November
         // Actual start for Quadrantids is December 28 - but we can't cross a year boundary.
-        showers.add(new Shower("quadrantids",
+        showers.add(new Shower(
                 R.string.quadrantids, GeocentricCoordinates.getInstance(230, 49),
                 new Date(ANY_OLD_YEAR, 0, 1),
                 new Date(ANY_OLD_YEAR, 0, 4),
                 new Date(ANY_OLD_YEAR, 0, 12),
                 120));
-        showers.add(new Shower("lyrids",
+        showers.add(new Shower(
                 R.string.lyrids, GeocentricCoordinates.getInstance(271, 34),
                 new Date(ANY_OLD_YEAR, 3, 16),
                 new Date(ANY_OLD_YEAR, 3, 22),
                 new Date(ANY_OLD_YEAR, 3, 25),
                 18));
-        showers.add(new Shower("e-aquariids",
+        showers.add(new Shower(
                 R.string.aquariids, GeocentricCoordinates.getInstance(338, -1),
                 new Date(ANY_OLD_YEAR, 3, 19),
                 new Date(ANY_OLD_YEAR, 4, 6),
                 new Date(ANY_OLD_YEAR, 4, 28),
                 70));
-        showers.add(new Shower("d-aquariids",
+        showers.add(new Shower(
                 R.string.deltaaquariids, GeocentricCoordinates.getInstance(340, -16),
                 new Date(ANY_OLD_YEAR, 6, 12),
                 new Date(ANY_OLD_YEAR, 6, 30),
                 new Date(ANY_OLD_YEAR, 7, 23),
                 16));
-        showers.add(new Shower("perseids",
+        showers.add(new Shower(
                 R.string.perseids, GeocentricCoordinates.getInstance(48, 58),
                 new Date(ANY_OLD_YEAR, 6, 17),
                 new Date(ANY_OLD_YEAR, 7, 13),
                 new Date(ANY_OLD_YEAR, 7, 24),
                 100));
-        showers.add(new Shower("orionids",
+        showers.add(new Shower(
                 R.string.orionids, GeocentricCoordinates.getInstance(95, 16),
                 new Date(ANY_OLD_YEAR, 9, 2),
                 new Date(ANY_OLD_YEAR, 9, 21),
                 new Date(ANY_OLD_YEAR, 10, 7),
                 25));
-        showers.add(new Shower("leonids",
+        showers.add(new Shower(
                 R.string.leonids, GeocentricCoordinates.getInstance(152, 22),
                 new Date(ANY_OLD_YEAR, 10, 6),
                 new Date(ANY_OLD_YEAR, 10, 18),
                 new Date(ANY_OLD_YEAR, 10, 30),
                 20));
-        showers.add(new Shower("puppid-velids",
+        showers.add(new Shower(
                 R.string.puppidvelids, GeocentricCoordinates.getInstance(123, -45),
                 new Date(ANY_OLD_YEAR, 11, 1),
                 new Date(ANY_OLD_YEAR, 11, 7),
                 new Date(ANY_OLD_YEAR, 11, 15),
                 10));
-        showers.add(new Shower("geminids",
+        showers.add(new Shower(
                 R.string.geminids, GeocentricCoordinates.getInstance(112, 33),
                 new Date(ANY_OLD_YEAR, 11, 7),
                 new Date(ANY_OLD_YEAR, 11, 14),
                 new Date(ANY_OLD_YEAR, 11, 17),
                 120));
-        showers.add(new Shower("ursides",
+        showers.add(new Shower(
                 R.string.ursids, GeocentricCoordinates.getInstance(217, 76),
                 new Date(ANY_OLD_YEAR, 11, 17),
                 new Date(ANY_OLD_YEAR, 11, 23),
@@ -147,7 +148,7 @@ public class MeteorShowerLayer extends AbstractSourceLayer {
         private final Date end;
         private final int peakMeteorsPerHour;
 
-        public Shower(String name, int nameId, GeocentricCoordinates radiant,
+        public Shower(int nameId, GeocentricCoordinates radiant,
                       Date start, Date peak, Date end, int peakMeteorsPerHour) {
             this.nameId = nameId;
             this.radiant = radiant;
@@ -161,7 +162,7 @@ public class MeteorShowerLayer extends AbstractSourceLayer {
     private static class MeteorRadiantSource extends AbstractAstronomicalSource {
         private static final int LABEL_COLOR = 0xf67e81;
         private static final Vector3 UP = new Vector3(0.0f, 1.0f, 0.0f);
-        private static final long UPDATE_FREQ_MS = 1L * TimeConstants.MILLISECONDS_PER_DAY;
+        private static final long UPDATE_FREQ_MS = TimeConstants.MILLISECONDS_PER_DAY;
         private static final float SCALE_FACTOR = 0.03f;
 
         private final List<ImageSource> imageSources = new ArrayList<>();

@@ -2,6 +2,8 @@ package io.github.marcocipriani01.telescopetouch.control;
 
 import android.hardware.GeomagneticField;
 
+import androidx.annotation.NonNull;
+
 import io.github.marcocipriani01.telescopetouch.units.LatLong;
 
 /**
@@ -36,6 +38,7 @@ public class RealMagneticDeclinationCalculator implements MagneticDeclinationCal
                 timeInMillis);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Real Magnetic Correction";
