@@ -131,6 +131,7 @@ public class ControlPanelFragment extends Fragment
         SearchView searchView = new SearchView(context);
         searchView.setOnQueryTextListener(this);
         searchMenu.setActionView(searchView);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override

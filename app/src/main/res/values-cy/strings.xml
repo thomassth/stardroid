@@ -4,7 +4,6 @@
     <string name="menu_settings">Gosodiadau</string>
     <string name="menu_search">Chwilio</string>
     <string name="cancel">Diddymu</string>
-    <string name="set" translation_description="Button label. Set the date to the given value">Gosod</string>
     <string name="go">Mynd!</string>
     <string name="location_prefs">Gosodiadau Lleoliad</string>
     <string name="force_gps_pref">Defnyddio GPS o hyd</string>
@@ -27,9 +26,7 @@
     <string name="location_long_lat">Hydred:%1$f, Ledred:%2$f</string>
     <string name="location_place_found">Wedi canfod lleoliad. Yn gosod lledred %1$f a hydred %2$f</string>
     <string name="use_magnetic_correction">Defnyddio cywiriad magnetig</string>
-    <string name="use_magnetic_correction_hint">Defnyddia dy wybodaeth am dy leoliad i gywiro\'r cyfeiriad o\'r gogledd magnetig i\'r gwir ogledd.</string>
     <!-- This string is too long and currently unused -->
-    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">Dangos…</string>
     <string name="show_stars_pref">Sêr</string>
     <string name="show_constellations_pref">Cytser</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Gwrthrychau Messier</string>
@@ -38,22 +35,12 @@
     <string name="show_sky_gradient" translation_description="This is a shading of the color of the sky used for effect">Graddfa Awyr</string>
     <string name="show_meteors_pref">Sêr gwib</string>
     <string name="sensor_prefs">Gosodiadau Synhwyrydd (arbenigwyr)</string>
-    <string name="sensor_speed" translation_description="Old, non gyro sensors only: How quickly the sensor should send us data">Cyflymder Synhwyrydd</string>
-    <string name="sensor_damping" translation_description="Old, non gyro sensors only: The amount of smoothing applied to the sensor outputs.">Dampio</string>
     <string name="ecliptic">Ecliptig</string>
     <!-- Just in case we decide to have such a layer for the 4/24 launch -->
-    <string name="show_hubble_layer_pref">Lluniau Hubble</string>
     <string name="malformed_loc_error">Nid yw gosodiad lledred na hydred yn rif.</string>
-    <string name="dialog_accept" translation_description="accepting the licence agreement">Derbyn</string>
-    <string name="dialog_decline" translation_description="declining the licence agreement">Dim diolch</string>
     <string name="dialog_ok_button">Iawn</string>
-    <string name="menu_help" translation_description="menu item to show \'Help\' box">Cymorth</string>
-    <string name="help_dialog_title">Cymorth defnyddio Sky Map</string>
-    <string name="eula_dialog_title">End User License Agreement</string>
     <string name="set_manual">Yn newid i\'r modd llaw</string>
     <string name="set_auto">Yn newid i\'r modd awtomatig</string>
-    <string name="menu_zoom_in">Chwyddo mewn</string>
-    <string name="menu_zoom_out">Chwyddo allan</string>
     <string name="menu_toggle_dim">Toglo modd nos</string>
     <string name="zenith">ANTERTH</string>
     <string name="nadir">NADIR</string>
@@ -66,13 +53,7 @@
     <string name="no_search_title">Dim canlyniadau</string>
     <string name="no_search_results_text">Ni chanfuwyd unrhyw ganlyniadau.</string>
     <string name="many_search_results_title">A oeddet yn meddwl?</string>
-    <string name="many_search_results_text">Dewisa un</string>
-    <string name="searching_for_text">Yn chwilio am %s…</string>
-    <string name="found_target_text">Wedi canfod %s.</string>
-    <string name="other" translation_description="A preference category (ie preferences that don't belong in any other category)">Arall</string>
-    <string name="planetary_images">Dangos Delweddau Planedau</string>
     <string name="menu_time">Teithio mewn Amser</string>
-    <string name="time_travel_start_message">Yn teithio trwy amser …</string>
     <string name="time_travel_start_message_alt">Yn teithio trwy amser i %s …</string>
     <string name="time_travel_close_message">Nôl i\'r presennol …</string>
     <!--  -->
@@ -98,28 +79,20 @@
     <string name="time_travel_hour_speed_back" translation_description="Label showing rate of travel through time">Yn teithio &lt; 1 awr/eil</string>
     <string name="time_travel_day_speed_back" translation_description="Label showing rate of travel through time">Yn teithio &lt; 1 diwrnod/eil</string>
     <string name="time_travel_week_speed_back" translation_description="Label showing rate of travel through time">Yn teithio &lt; 1 wythnos/eil</string>
-    <string name="use_sound_effects" translation_description="A preferences menu label">Galluogi sain</string>
 
-    <string name="enable_layer_toast">Yn galluogi haen %s</string>
-    <string name="disable_layer_toast">Yn analluogi haen %s</string>
-    <string name="menu_gallery">Oriel</string>
     <string name="gallery_image_search_btn">Canfod yn yr awyr</string>
     <string name="gallery_image_back_btn">Nôl i\'r oriel</string>
     <string name="hubble_image_gallery_title">Oriel Sky Map</string>
-    <string name="hubble_image">Delwedd Hubble</string>
     <!--  TODO(johntaylor): currently unused -->
 
-    <string name="search_target_found_message" translation_description="displayed when a search target has been located">Canfyddaist:</string>
     <string name="search_overlay_title" translation_description="title for search overlay">Pwyntia dy ddyfais tua\'r saeth</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">Yn chwilio am:</string>
     <string name="sun_wont_set_message">Dyw\'r haul ddim yn machlud o fewn y 24 awr nesaf yn dy leoliad cyfredol.</string>
-    <string name="sun_wont_rise_message">Dyw\'r haul ddim yn codi o fewn y 24 awr nesaf yn dy leoliad cyfredol.</string>
 
     <string name="sun">Haul</string>
     <string name="moon">Lleuad</string>
     <string name="mercury">Mercher</string>
     <string name="venus">Gwener</string>
-    <string name="earth">Daear</string>
     <string name="mars">Mawrth</string>
     <string name="jupiter">Iau</string>
     <string name="saturn">Sadwrn</string>
@@ -139,11 +112,7 @@
     <string name="cats_eye_nebula" translation_description="hubble object">Nifwl Llygad Gath</string>
     <string name="omega_centauri" translation_description="hubble object">Clwstwr Amgrwn Omega Centauri</string>
     <string name="v838_mon" translation_description="hubble object">V838 Monocerotis</string>
-    <string name="sn1987a" translation_description="hubble object">Uwchnofa 1987a</string>
     <string name="hubble_deep_field" translation_description="hubble object">Maes Dwfn Hubble</string>
-    <string name="hdf" translation_description="hubble object">Maes Dwfn Hubble</string>
-    <string name="rho_oph" translation_description="hubble object">Rho Ophiuchus</string>
-    <string name="menu_tos">Telerau Gwasanaeth</string>
     <string name="menu_diagnostics">Diagnosteg</string>
     <!-- TODO(johntaylor): the following might be deleted in favor of an icon -->
     <string name="control_panel_btn" translation_description="Label for the control panel button">Panel Rheolaeth</string>
@@ -392,13 +361,6 @@
     <string name="beehive_cluster" translation_description="Name of the Messier object Beehive Cluster">Clwstwr Cwch Gwenyn</string>
     <string name="praesepe" translation_description="Name of the Messier object Praesepe">Praesepe</string>
     <string name="seven_sisters" translation_description="Name of the Messier object Seven Sisters">Saith Chwaer</string>
-    <string name="space_station" translation_description="Name of the Internation Space Station">Gorsaf Ofod Rhyngwladol</string>
-    <string name="space_shuttle" translation_description="Name of the Space Shuttle">Gwennol Ofod</string>
-    <string name="kml_load_error">Methwyd â llwytho ffeil KML</string>
-    <string name="load_kml_dialog_title">Llwytho KML</string>
-    <string name="load_kml_file">Llwytho</string>
-    <string name="enable_analytics">Anfon ystadegau defnydd</string>
-    <string name="enable_analytics_desc">Helpa wella Sky Map wrth anfon data anhysbys</string>
     <string name="leonids" translation_description="Meteor Shower">Leonids</string>
     <string name="geminids" translation_description="Meteor Shower">Geminids</string>
     <string name="quadrantids" translation_description="Meteor Shower">Quadrantids</string>
@@ -422,7 +384,6 @@
     <string name="title_activity_diagnostic">Diagnosteg</string>
     <string name="location_rationale_title">Pam ydym yn gofyn am dy leoliad?</string>
     <string name="location_rationale_text">Mae pa sêr rwyt yn eu gweld yn dibynnu o ba ran o\'r blaned rwyt yn edrych. Heb wybod dy leoliad, ni allwn ddangos map cywir i ti. Os nad wyt am i dy ddyfais rhannu dy leoliad gyda ni, gellir gosod unrhyw leoliad o dy ddewis yn y gosodiadau.</string>
-    <string name="play_services_error">Rhybudd: Gwall Google Play Services - Posib na fydd adnabod lleoliad yn gweithio</string>
     <string name="sensor_absent">Absennol</string>
     <string name="sensor_accuracy_unknown">Cywirdeb: Anhysbys</string>
     <string name="sensor_accuracy_unreliable">Cywirdeb: Annibynadwy</string>
@@ -464,7 +425,6 @@
     <string name="compass_calibration_activity_warning">Mae angen calibro dy gwmpawd</string>
     <string name="sensor_reverse_preference_title">Gwrthdroi Z Magnetig</string>
     <string name="sensor_reverse_preference_summary">Dull cywiro ar gyfer dyfeisiau â synwyryddion wedi\'u rhoi ar waith yn anghywir; angen ailgychwyn</string>
-    <string name="whats_new_dialog_title">Yn newydd</string>
     <string name="disable_gyro_preference_title">Analluogi geirosgop</string>
     <string name="disable_gyro_preference_summary">Nid oes gan bob dyfais geirosgop. Os oes un gan dy ddyfais di, bydd gwell canlyniadau os yw wedi\'i alluogi a\'r blwch hwn heb ei ddewis. Ar y llaw arall, os nad oes gan dy ddyfais geirosgop, mae\'n debyg na fydd Sky Map yn gweithio os yw\'r blwch hwn wedi\'i ddewis.</string>
     <string name="rotate_horizon_preference_title">Cylchdroi wrth y gorwel</string>

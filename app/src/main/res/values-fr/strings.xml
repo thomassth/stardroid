@@ -3,7 +3,6 @@
     <string name="menu_settings">Paramètres</string>
     <string name="menu_search">Rechercher</string>
     <string name="cancel">Annuler</string>
-    <string name="set">Définir</string>
     <string name="go">Atteindre</string>
     <string name="location_prefs">Paramètres de position</string>
     <string name="force_gps_pref">Utiliser le GPS</string>
@@ -26,8 +25,6 @@
     <string name="location_long_lat">Longitude : %1$f, latitude : %2$f</string>
     <string name="location_place_found">Lieu trouvé. Définir latitude %1$f et longitude %2$f</string>
     <string name="use_magnetic_correction">Correction magnétique</string>
-    <string name="use_magnetic_correction_hint">Utilisez les informations relatives à votre position pour corriger l\'écart entre le Nord géographique et le Nord magnétique.</string>
-    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">Afficher…</string>
     <string name="show_stars_pref">Étoiles</string>
     <string name="show_constellations_pref">Constellations</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Objets de Messier</string>
@@ -35,20 +32,10 @@
     <string name="show_horizon_pref">Horizon</string>
     <string name="show_sky_gradient">Couleurs du ciel</string>
     <string name="sensor_prefs">Paramètres du capteur</string>
-    <string name="sensor_speed">Vitesse du capteur</string>
-    <string name="sensor_damping" translation_description="The amount of       smoothing applied to the sensor outputs.">Amortissement</string>
     <string name="ecliptic">Écliptique</string>
-    <string name="show_hubble_layer_pref">Images Hubble</string>
     <string name="malformed_loc_error">Indiquez un nombre pour la latitude/longitude.</string>
-    <string name="dialog_accept" translation_description="accepting the licence agreement">Accepter</string>
-    <string name="dialog_decline" translation_description="declining the licence agreement">Non, merci</string>
-    <string name="menu_help" translation_description="menu item to show \'Help\' box">Aide</string>
-    <string name="help_dialog_title">Aide Sky Map</string>
-    <string name="eula_dialog_title">Contrat de licence de l\'utilisateur final</string>
     <string name="set_manual">Activation du mode manuel</string>
     <string name="set_auto">Activation du mode automatique</string>
-    <string name="menu_zoom_in">Zoom avant</string>
-    <string name="menu_zoom_out">Zoom arrière</string>
     <string name="menu_toggle_dim">Activer/Dés. mode nuit</string>
     <string name="zenith">ZÉNITH</string>
     <string name="nadir">NADIR</string>
@@ -57,17 +44,10 @@
     <string name="west">OUEST</string>
     <string name="south">SUD</string>
     <string name="search_label">Rechercher</string>
-    <string name="search_hint" translation_description="an example search target">Ex. : Mars</string>
     <string name="no_search_title">Aucun résultat</string>
     <string name="no_search_results_text">Aucun résultat trouvé</string>
     <string name="many_search_results_title">Essayez avec :</string>
-    <string name="many_search_results_text">Sélectionnez un élt</string>
-    <string name="searching_for_text">Recherche de %s…</string>
-    <string name="found_target_text">%s trouvé</string>
-    <string name="other">Autre</string>
-    <string name="planetary_images">Images de planètes</string>
     <string name="menu_time">Voyage dans le temps</string>
-    <string name="time_travel_start_message">Voyage dans le temps…</string>
     <string name="time_travel_start_message_alt">Voyage dans le temps vers %s…</string>
     <string name="time_travel_close_message">Retour dans le présent…</string>
     <string name="popular_dates_prompt" translation_description="label for a list of dates the user can choose from">Dates populaires</string>
@@ -90,24 +70,16 @@
     <string name="time_travel_hour_speed_back" translation_description="label showing rate of travel through time">Voyage dans le passé (vitesse : 1 heure/s)</string>
     <string name="time_travel_day_speed_back" translation_description="label showing rate of travel through time">Voyage dans le passé (vitesse : 1 jour/s)</string>
     <string name="time_travel_week_speed_back" translation_description="label showing rate of travel through time">Voyage dans le passé (vitesse : 1 semaine/s)</string>
-    <string name="use_sound_effects" translation_description="A preferences menu label">Activer le son</string>
-    <string name="enable_layer_toast">Activation des données géographiques %s</string>
-    <string name="disable_layer_toast">Désactivation des données géographiques %s</string>
-    <string name="menu_gallery">Galerie</string>
     <string name="gallery_image_search_btn">Rechercher dans Sky Map</string>
     <string name="gallery_image_back_btn">Retour à la galerie</string>
     <string name="hubble_image_gallery_title">Galerie Hubble</string>
-    <string name="hubble_image">Image Hubble</string>
-    <string name="search_target_found_message" translation_description="displayed when a search target has been located">Vous avez trouvé :</string>
     <string name="search_overlay_title" translation_description="title for search overlay">Dirigez votre téléphone vers la flèche</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">Vous recherchez :</string>
     <string name="sun_wont_set_message">À votre position actuelle, le soleil ne se couchera pas au cours des prochaines 24 heures.</string>
-    <string name="sun_wont_rise_message">À votre position actuelle, le soleil ne se lèvera pas au cours des prochaines 24 heures.</string>
     <string name="sun">Soleil</string>
     <string name="moon">Lune</string>
     <string name="mercury">Mercure</string>
     <string name="venus">Vénus</string>
-    <string name="earth">Terre</string>
     <string name="mars">Mars</string>
     <string name="jupiter">Jupiter</string>
     <string name="saturn">Saturne</string>
@@ -127,11 +99,7 @@
     <string name="cats_eye_nebula" translation_description="hubble object">Nébuleuse de l\'Œil de Chat</string>
     <string name="omega_centauri" translation_description="hubble object">Amas globulaire Omega Centauri</string>
     <string name="v838_mon" translation_description="hubble object">V838 Monocerotis</string>
-    <string name="sn1987a" translation_description="hubble object">Supernova 1987A</string>
     <string name="hubble_deep_field" translation_description="hubble object">Le champ profond de Hubble (Hubble Deep Field)</string>
-    <string name="rho_oph" translation_description="hubble object">Rhô Ophiuchi</string>
-    <string name="menu_tos">Conditions d\'utilisation</string>
-    <string name="control_panel_btn" translation_description="Label for the control panel button">Panneau de configuration</string>
     <string name="north_pole">PN</string>
     <string name="south_pole">PS</string>
     <string name="andromeda" translation_description="Name of the Andromeda constellation">Andromède</string>
@@ -369,9 +337,74 @@
     <string name="beehive_cluster" translation_description="Name of the Messier object Beehive Cluster">Amas de la Ruche</string>
     <string name="praesepe" translation_description="Name of the Messier object Praesepe">Praesepe</string>
     <string name="seven_sisters" translation_description="Name of the Messier object Seven Sisters">Sept Sœurs</string>
-    <string name="space_station" translation_description="Name of the Internation Space Station">Station spatiale internationale</string>
-    <string name="space_shuttle" translation_description="Name of the Space Shuttle">Navette spatiale</string>
-    <string name="kml_load_error">Échec du chargement du fichier KML</string>
-    <string name="load_kml_dialog_title">Charger un fichier KML</string>
-    <string name="load_kml_file">Charger</string>
+
+
+    <string name="indi_host">Hôte INDI</string>
+    <string name="connect">Connecter</string>
+    <string name="disconnect">Déconnecter</string>
+    <string name="log">Log:</string>
+    <string name="host_prompt">Adresse de l\'hôte</string>
+    <string name="host_add">Ajouter un serveur</string>
+    <string name="host_prompt_text">Adresse IP de l\'hôte :</string>
+    <string name="connecting">Connexion…</string>
+    <string name="menu_motion">Contrôle du mouvement</string>
+    <string name="menu_control_panel">Autres</string>
+    <string name="mount_goto">Search</string>
+    <string name="unavailable">Non disponble</string>
+    <string name="send_request">Envoyer</string>
+    <string name="cancel_request">Annuler</string>
+    <string name="back_request">Retour</string>
+    <string name="BLOB_not_supported">Non supporté</string>
+    <string name="try_to_connect">Tentative de connexion à\u0020</string>
+    <string name="connection_lost">Connexion perdue</string>
+    <string name="ok">OK</string>
+    <string name="connected">Connecté</string>
+    <string name="search_hint">Rechercher un objet</string>
+    <string name="go_to">Pointer</string>
+    <string name="sync">Synchroniser</string>
+    <string name="entry_star">Étoile</string>
+    <string name="colon_with_spaces">": "</string>
+    <string name="entry_names">Noms</string>
+    <string name="entry_type">Type</string>
+    <string name="entry_magnitude">Magnitude</string>
+    <string name="entry_RA">AD</string>
+    <string name="entry_DE">Dec</string>
+    <string name="entry_mag">mag</string>
+    <string name="entry_size">Taille</string>
+    <string name="entry_Ast">Astérisme</string>
+    <string name="entry_cluster_nebulosity">Amas associé à une nébuleuse</string>
+    <string name="entry_Gb">Amas d\'étoiles globulaire</string>
+    <string name="entry_Gx">Galaxie</string>
+    <string name="entry_Kt">Nœud</string>
+    <string name="entry_Nb">Nébuleuse en émission ou par réflexion</string>
+    <string name="entry_OC">Amas d\'étoiles ouvert</string>
+    <string name="entry_PD">Défaut de la plaque photographique</string>
+    <string name="entry_Pl">Nébuleuse planétaire</string>
+    <string name="entry_blank">Non identifié à cet emplacement, ou type inconnu</string>
+    <string name="entry_doubleStar">Étoile double</string>
+    <string name="entry_minus">Objet donné inexistant dans le RNGC</string>
+    <string name="entry_short_Ast">Astérisme</string>
+    <string name="entry_short_cluster_nebula">Amas et nébuleuse</string>
+    <string name="entry_short_Gb">Amas globulaire</string>
+    <string name="entry_short_Gx">Galaxie</string>
+    <string name="entry_short_Kt">Nœud</string>
+    <string name="entry_short_Nb">Nébuleuse</string>
+    <string name="entry_short_OC">Amas ouvert</string>
+    <string name="entry_short_PD">Défaut photographique</string>
+    <string name="entry_short_Pl">Nébuleuse planétaire</string>
+    <string name="entry_short_blank">Inconnu</string>
+    <string name="entry_short_doubleStar">Étoile double</string>
+    <string name="entry_short_minus">Inexistant</string>
+    <string name="entry_short_star">Étoile</string>
+    <string name="entry_short_triStar">Étoile triple</string>
+    <string name="entry_short_uncertain">Incertain</string>
+    <string name="entry_triStar">Étoile triple</string>
+    <string name="entry_uncertain">Incertain</string>
+    <string name="sync_slew_error" >Erreur: impossible de demander le pointage ou la synchronisation</string>
+    <string name="sync_ok" >Synchronisation…</string>
+    <string name="slew_ok" >Pointage en cours</string>
+    <string name="arcmin">arcmin</string>
+    <string name="menu_connection">Connecter</string>
+    <string name="empty_catalog">Catalogue vide</string>
+    <string name="error">Erreur:</string>
 </resources>

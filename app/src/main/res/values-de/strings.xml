@@ -3,7 +3,6 @@
     <string name="menu_settings">Einstellungen</string>
     <string name="menu_search">Suche</string>
     <string name="cancel">Abbrechen</string>
-    <string name="set">Festlegen</string>
     <string name="go">Los</string>
     <string name="location_prefs">Standorteinstellungen</string>
     <string name="force_gps_pref">Immer GPS verwenden</string>
@@ -26,8 +25,6 @@
     <string name="location_long_lat">Längengrad:%1$f, Breitengrad:%2$f</string>
     <string name="location_place_found">Ort gefunden. Breitengrad %1$f und Längengrad %2$f</string>
     <string name="use_magnetic_correction">Magnetische Korrektur verwenden</string>
-    <string name="use_magnetic_correction_hint">Korrigiert die magnetische Nordrichtung anhand Ihrer Position zur geografischen Nordrichtung.</string>
-    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">Anzeigen…</string>
     <string name="show_stars_pref">Sterne</string>
     <string name="show_constellations_pref">Konstellationen</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Messier-Objekte</string>
@@ -35,20 +32,10 @@
     <string name="show_horizon_pref">Horizont</string>
     <string name="show_sky_gradient">Himmelsverlauf</string>
     <string name="sensor_prefs">Sensoreinstellungen</string>
-    <string name="sensor_speed">Sensorgeschwindigkeit</string>
-    <string name="sensor_damping" translation_description="The amount of       smoothing applied to the sensor outputs.">Dämpfung</string>
     <string name="ecliptic">Ekliptik</string>
-    <string name="show_hubble_layer_pref">Hubble-Bilder</string>
     <string name="malformed_loc_error">Längen- oder Breitengrad ist keine Zahl.</string>
-    <string name="dialog_accept" translation_description="accepting the licence agreement">Akzeptieren</string>
-    <string name="dialog_decline" translation_description="declining the licence agreement">Nein danke</string>
-    <string name="menu_help" translation_description="menu item to show \'Help\' box">Hilfe</string>
-    <string name="help_dialog_title">Hilfe zu Sky Map</string>
-    <string name="eula_dialog_title">Endnutzerlizenzvertrag</string>
     <string name="set_manual">Wechsel in manuellen Modus</string>
     <string name="set_auto">Wechsel in automatischen Modus</string>
-    <string name="menu_zoom_in">Heranzoomen</string>
-    <string name="menu_zoom_out">Herauszoomen</string>
     <string name="menu_toggle_dim">Nachtmodus ein/aus</string>
     <string name="zenith">ZENIT</string>
     <string name="nadir">NADIR</string>
@@ -61,13 +48,7 @@
     <string name="no_search_title">Keine Ergebnisse</string>
     <string name="no_search_results_text">Keine Ergebnisse gefunden</string>
     <string name="many_search_results_title">Meinten Sie?</string>
-    <string name="many_search_results_text">Bitte einen Eintrag auswählen</string>
-    <string name="searching_for_text">Suche nach %s…</string>
-    <string name="found_target_text">%s gefunden</string>
-    <string name="other">Sonstiges</string>
-    <string name="planetary_images">Planetenbilder zeigen</string>
     <string name="menu_time">Zeitreise</string>
-    <string name="time_travel_start_message">Zeitreise läuft…</string>
     <string name="time_travel_start_message_alt">Zeitreise nach %s…</string>
     <string name="time_travel_close_message">Zurück in die Gegenwart…</string>
     <string name="popular_dates_prompt" translation_description="label for a list of dates the user can choose from">Beliebte Tage</string>
@@ -90,24 +71,16 @@
     <string name="time_travel_hour_speed_back" translation_description="label showing rate of travel through time">Reise mit &lt; 1 Stunde/Sek.</string>
     <string name="time_travel_day_speed_back" translation_description="label showing rate of travel through time">Reise mit &lt; 1 Tag/Sek.</string>
     <string name="time_travel_week_speed_back" translation_description="label showing rate of travel through time">Reise mit &lt; 1 Woche/Sek.</string>
-    <string name="use_sound_effects" translation_description="A preferences menu label">Ton aktivieren</string>
-    <string name="enable_layer_toast">Ebene \"%s\" wird aktiviert.</string>
-    <string name="disable_layer_toast">Ebene \"%s\" wird deaktiviert.</string>
-    <string name="menu_gallery">Galerie</string>
     <string name="gallery_image_search_btn">Suchen</string>
     <string name="gallery_image_back_btn">Zurück zur Galerie</string>
     <string name="hubble_image_gallery_title">Hubble-Galerie</string>
-    <string name="hubble_image">Hubble-Bild</string>
-    <string name="search_target_found_message" translation_description="displayed when a search target has been located">Gefundenes Ziel:</string>
     <string name="search_overlay_title" translation_description="title for search overlay">Bewegen Sie Ihr Telefon in Richtung des Pfeils.</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">Suche nach:</string>
     <string name="sun_wont_set_message">Die Sonne geht in den nächsten 24 Stunden nicht an Ihrem aktuellen Standort unter.</string>
-    <string name="sun_wont_rise_message">Die Sonne geht in den nächsten 24 Stunden nicht an Ihrem aktuellen Standort auf.</string>
     <string name="sun">Sonne</string>
     <string name="moon">Mond</string>
     <string name="mercury">Merkur</string>
     <string name="venus">Venus</string>
-    <string name="earth">Erde</string>
     <string name="mars">Mars</string>
     <string name="jupiter">Jupiter</string>
     <string name="saturn">Saturn</string>
@@ -127,11 +100,7 @@
     <string name="cats_eye_nebula" translation_description="hubble object">Katzenaugennebel</string>
     <string name="omega_centauri" translation_description="hubble object">Kugelsternhaufen Omega Centauri</string>
     <string name="v838_mon" translation_description="hubble object">V838 Monocerotis</string>
-    <string name="sn1987a" translation_description="hubble object">Supernova 1987a</string>
     <string name="hubble_deep_field" translation_description="hubble object">Hubble Deep Field</string>
-    <string name="rho_oph" translation_description="hubble object">Rho Ophiuchus</string>
-    <string name="menu_tos">Nutzungsbedingungen</string>
-    <string name="control_panel_btn" translation_description="Label for the control panel button">Steuerfeld</string>
     <string name="north_pole">NP</string>
     <string name="south_pole">SP</string>
     <string name="andromeda" translation_description="Name of the Andromeda constellation">Andromeda</string>
@@ -369,11 +338,6 @@
     <string name="beehive_cluster" translation_description="Name of the Messier object Beehive Cluster">Bienenstockhaufen</string>
     <string name="praesepe" translation_description="Name of the Messier object Praesepe">Praesepe</string>
     <string name="seven_sisters" translation_description="Name of the Messier object Seven Sisters">Sieben Schwestern</string>
-    <string name="space_station" translation_description="Name of the Internation Space Station">Internationale Raumstation</string>
-    <string name="space_shuttle" translation_description="Name of the Space Shuttle">Space Shuttle</string>
-    <string name="kml_load_error">KML-Datei konnte nicht geladen werden.</string>
-    <string name="load_kml_dialog_title">KML laden</string>
-    <string name="load_kml_file">Laden</string>
     <string name="compass_calibration_activity_do_not_show_this_again">Diese Meldung nicht mehr anzeigen</string>
     <string name="compass_calibration_activity_warning">Ihr Kompass muss kalibriert werden</string>
     <string name="connected">Verbunden</string>
@@ -397,8 +361,6 @@
     <string name="disabled">Deaktiviert</string>
     <string name="disconnected">Getrennt</string>
     <string name="do_not_show_again">Diese Meldung nicht mehr anzeigen</string>
-    <string name="enable_analytics">Nutzungsstatistiken senden</string>
-    <string name="enable_analytics_desc">Sky Map durch das Übermitteln anonymer Daten an Google Analytics verbessern</string>
     <string name="enabled">Aktiviert</string>
     <string name="location_rationale_title">Worum benötigen wir Ihren Standort?</string>
     <string name="location_rationale_text">Die Sterne, die Sie am Himmel sehen können, hängen von Ihrer Position auf der Erde ab. Ohne Ihren Standort können wir Ihnen keine akkurate Sternenkarte darstellen. Wenn Sie der automatischen Standortbestimmung durch Ihr Gerät nicht zustimmen, können Sie in den Einstellungen manuell einen Standort festlegen. Es reicht dabei aus, die nächste Stadt anzugeben.</string>
@@ -406,7 +368,6 @@
     <string name="menu_diagnostics">Diagnose</string>
     <string name="no_sensor_warning">Ihr Gerät scheint keine Sensoren zur Bestimmung der Orientierung zu besitzen - Der automatische Modus könnte nicht funktionieren</string>
     <string name="permission_disabled">Berechtigung deaktiviert</string>
-    <string name="play_services_error">Achtung: Google Play Services Fehler - Automatische Erkennung des Standorts könnte nicht funktionieren</string>
     <string name="sensor_absent">Nicht vorhanden</string>
     <string name="sensor_accuracy_high">Genauigkeit: Hoch</string>
     <string name="sensor_accuracy_low">Genauigkeit: Niedrig</string>

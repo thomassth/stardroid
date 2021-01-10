@@ -3,7 +3,6 @@
     <string name="menu_settings">Instellingen</string>
     <string name="menu_search">Zoeken</string>
     <string name="cancel">Annuleren</string>
-    <string name="set">Instellen</string>
     <string name="go">Ga!</string>
     <string name="location_prefs">Locatie-instellingen</string>
     <string name="force_gps_pref">Altijd GPS gebruiken</string>
@@ -26,8 +25,6 @@
     <string name="location_long_lat">Lengtegraad:%1$f, breedtegraad:%2$f</string>
     <string name="location_place_found">Plaats gevonden. Breedtegraad %1$f en lengtegraad %2$f worden ingesteld</string>
     <string name="use_magnetic_correction">Magnetische correctie gebruiken</string>
-    <string name="use_magnetic_correction_hint">Gebruik informatie over uw locatie om de oriëntatie van het magnetische noorden ten opzichte van het echte noorden te corrigeren</string>
-    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">Tonen…</string>
     <string name="show_stars_pref">Sterren</string>
     <string name="show_constellations_pref">Sterrenbeelden</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Messier-objecten</string>
@@ -35,20 +32,10 @@
     <string name="show_horizon_pref">Horizon</string>
     <string name="show_sky_gradient">Hemelgradiënt</string>
     <string name="sensor_prefs">Sensorinstellingen</string>
-    <string name="sensor_speed">Sensorsnelheid</string>
-    <string name="sensor_damping" translation_description="The amount of       smoothing applied to the sensor outputs.">Dempen</string>
     <string name="ecliptic">Ecliptica</string>
-    <string name="show_hubble_layer_pref">Hubble-beelden</string>
     <string name="malformed_loc_error">De ingestelde breedte- of lengtegraad is geen getal.</string>
-    <string name="dialog_accept" translation_description="accepting the licence agreement">Accepteren</string>
-    <string name="dialog_decline" translation_description="declining the licence agreement">Nee, bedankt</string>
-    <string name="menu_help" translation_description="menu item to show \'Help\' box">Help</string>
-    <string name="help_dialog_title">Help voor Sky Map</string>
-    <string name="eula_dialog_title">Eindgebruikerslicentieovereenkomst</string>
     <string name="set_manual">Schakelen naar handmatige modus</string>
     <string name="set_auto">Schakelen naar automatische modus</string>
-    <string name="menu_zoom_in">Inzoomen</string>
-    <string name="menu_zoom_out">Uitzoomen</string>
     <string name="menu_toggle_dim">Nachtmodus schakelen</string>
     <string name="zenith">ZENIT</string>
     <string name="nadir">NADIR</string>
@@ -61,13 +48,7 @@
     <string name="no_search_title">Geen resultaten</string>
     <string name="no_search_results_text">Er zijn geen resultaten gevonden.</string>
     <string name="many_search_results_title">Bedoelde u?</string>
-    <string name="many_search_results_text">Maak een keuze</string>
-    <string name="searching_for_text">Zoeken naar %s…</string>
-    <string name="found_target_text">%s gevonden.</string>
-    <string name="other">Overige</string>
-    <string name="planetary_images">Planeetbeelden weergeven</string>
     <string name="menu_time">Tijdreizen</string>
-    <string name="time_travel_start_message">We reizen door de tijd …</string>
     <string name="time_travel_start_message_alt">We reizen door de tijd naar %s …</string>
     <string name="time_travel_close_message">Terug naar het heden …</string>
     <string name="popular_dates_prompt" translation_description="label for a list of dates the user can choose from">Populaire datums</string>
@@ -90,24 +71,16 @@
     <string name="time_travel_hour_speed_back" translation_description="label showing rate of travel through time">Beweegt &lt; @ 1 uur/sec</string>
     <string name="time_travel_day_speed_back" translation_description="label showing rate of travel through time">Beweegt &lt; @ 1 dag/sec</string>
     <string name="time_travel_week_speed_back" translation_description="label showing rate of travel through time">Beweegt &lt; @ 1 week/sec</string>
-    <string name="use_sound_effects" translation_description="A preferences menu label">Geluid inschakelen</string>
-    <string name="enable_layer_toast">De laag %s inschakelen</string>
-    <string name="disable_layer_toast">De laag %s wordt uitgeschakeld</string>
-    <string name="menu_gallery">Galerij</string>
     <string name="gallery_image_search_btn">Vinden in de sterrenhemel</string>
     <string name="gallery_image_back_btn">Terug naar galerij</string>
     <string name="hubble_image_gallery_title">Hubble-galerij met sterrenkaarten</string>
-    <string name="hubble_image">Hubble-beeld</string>
-    <string name="search_target_found_message" translation_description="displayed when a search target has been located">U heeft gevonden:</string>
     <string name="search_overlay_title" translation_description="title for search overlay">Richt uw telefoon in de richting van de pijl</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">Zoeken naar:</string>
     <string name="sun_wont_set_message">De zon gaat op uw huidige locatie niet onder in de komende 24 uur.</string>
-    <string name="sun_wont_rise_message">De zon komt op uw huidige locatie niet op in de komende 24 uur.</string>
     <string name="sun">Zon</string>
     <string name="moon">Maan</string>
     <string name="mercury">Mercurius</string>
     <string name="venus">Venus</string>
-    <string name="earth">Aarde</string>
     <string name="mars">Mars</string>
     <string name="jupiter">Jupiter</string>
     <string name="saturn">Saturnus</string>
@@ -127,11 +100,7 @@
     <string name="cats_eye_nebula" translation_description="hubble object">Kattenoognevel</string>
     <string name="omega_centauri" translation_description="hubble object">Bolvormige sterrenhoop Omega Centauri</string>
     <string name="v838_mon" translation_description="hubble object">V838 Monocerotis</string>
-    <string name="sn1987a" translation_description="hubble object">Supernova 1987a</string>
     <string name="hubble_deep_field" translation_description="hubble object">Hubble Deep Field</string>
-    <string name="rho_oph" translation_description="hubble object">Rho Ophiuchus</string>
-    <string name="menu_tos">Servicevoorwaarden</string>
-    <string name="control_panel_btn" translation_description="Label for the control panel button">Configuratiescherm</string>
     <string name="north_pole">NP</string>
     <string name="south_pole">ZP</string>
     <string name="andromeda" translation_description="Name of the Andromeda constellation">Andromeda</string>
@@ -369,9 +338,4 @@
     <string name="beehive_cluster" translation_description="Name of the Messier object Beehive Cluster">Bijenkorfcluster</string>
     <string name="praesepe" translation_description="Name of the Messier object Praesepe">Kribbe</string>
     <string name="seven_sisters" translation_description="Name of the Messier object Seven Sisters">Zevengesternte</string>
-    <string name="space_station" translation_description="Name of the Internation Space Station">International Space Station (ISS)</string>
-    <string name="space_shuttle" translation_description="Name of the Space Shuttle">Spaceshuttle</string>
-    <string name="kml_load_error">Kan KML-bestand niet laden</string>
-    <string name="load_kml_dialog_title">KML laden</string>
-    <string name="load_kml_file">Laden</string>
 </resources>

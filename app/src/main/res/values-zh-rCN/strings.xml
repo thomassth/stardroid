@@ -4,7 +4,6 @@
     <string name="menu_settings">设置</string>
     <string name="menu_search">搜索</string>
     <string name="cancel">取消</string>
-    <string name="set">设置</string>
     <string name="go">开始！</string>
     <string name="location_prefs">位置设置</string>
     <string name="force_gps_pref">一律使用 GPS</string>
@@ -27,9 +26,7 @@
     <string name="location_long_lat">经度：%1$f，纬度：%2$f</string>
     <string name="location_place_found">地点已找到。正在设置纬度 %1$f 和经度 %2$f</string>
     <string name="use_magnetic_correction">使用磁力修正</string>
-    <string name="use_magnetic_correction_hint">利用您掌握的地理位置知识，将方位从地球磁场北极更正为实际的地理北极</string>
     <!-- This string is too long and currently unused -->
-    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">显示…</string>
     <string name="show_stars_pref">恒星</string>
     <string name="show_constellations_pref">星座</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">梅西耶天体</string>
@@ -37,23 +34,12 @@
     <string name="show_horizon_pref">水平线</string>
     <string name="show_sky_gradient">天空梯度</string>
     <string name="show_meteors_pref">流星雨</string>
-    <string name="show_satellite_layer_pref" translation_description="The layer for satellites">人造卫星</string>
     <!-- Just in case we decide to have such a layer for the 4/24 launch -->
-    <string name="show_hubble_layer_pref">哈勃图片</string>
     <string name="sensor_prefs">传感器设置</string>
-    <string name="sensor_speed">传感器速度</string>
-    <string name="sensor_damping" translation_description="The amount of       smoothing applied to the sensor outputs.">阻尼</string>
     <string name="ecliptic">黄道</string>
     <string name="malformed_loc_error">纬度或经度设置不是数字。</string>
-    <string name="dialog_accept" translation_description="accepting the licence agreement">接受</string>
-    <string name="dialog_decline" translation_description="declining the licence agreement">否</string>
-    <string name="menu_help" translation_description="menu item to show \'Help\' box">帮助</string>
-    <string name="help_dialog_title">星空地图帮助</string>
-    <string name="eula_dialog_title">最终用户许可协议</string>
     <string name="set_manual">切换到手动模式</string>
     <string name="set_auto">切换到自动模式</string>
-    <string name="menu_zoom_in">放大</string>
-    <string name="menu_zoom_out">缩小</string>
     <string name="menu_toggle_dim">切换夜间模式</string>
     <string name="zenith">天顶</string>
     <string name="nadir">天底</string>
@@ -66,13 +52,7 @@
     <string name="no_search_title">无结果</string>
     <string name="no_search_results_text">未找到结果。</string>
     <string name="many_search_results_title">您是不是要找？</string>
-    <string name="many_search_results_text">请选择一个结果</string>
-    <string name="searching_for_text">正在搜索“%s”…</string>
-    <string name="found_target_text">找到“%s”。</string>
-    <string name="other">其他</string>
-    <string name="planetary_images">显示行星图片</string>
     <string name="menu_time">时间旅行</string>
-    <string name="time_travel_start_message">正在进行时光穿梭…</string>
     <string name="time_travel_start_message_alt">正在进行时光穿梭到达“%s”…</string>
     <string name="time_travel_close_message">回到现在…</string>
     <string name="popular_dates_prompt" translation_description="label for a list of dates the user can choose from">热门日期</string>
@@ -95,19 +75,12 @@
     <string name="time_travel_hour_speed_back" translation_description="label showing rate of travel through time">穿梭速率 &lt; 1 小时/秒</string>
     <string name="time_travel_day_speed_back" translation_description="label showing rate of travel through time">穿梭速率 &lt; 1 天/秒</string>
     <string name="time_travel_week_speed_back" translation_description="label showing rate of travel through time">穿梭速率 &lt; 1 周/秒</string>
-    <string name="use_sound_effects" translation_description="A preferences menu label">启用声音</string>
-    <string name="enable_layer_toast">启用“%s”图层</string>
-    <string name="disable_layer_toast">停用“%s”图层</string>
-    <string name="menu_gallery">图片库</string>
     <string name="gallery_image_search_btn">在星空中查找</string>
     <string name="gallery_image_back_btn">返回图片库</string>
     <string name="hubble_image_gallery_title">星空地图哈勃图片库</string>
-    <string name="hubble_image">哈勃图片</string>
-    <string name="search_target_found_message" translation_description="displayed when a search target has been located">您找到：</string>
     <string name="search_overlay_title" translation_description="title for search overlay">将手机朝向箭头所指的方向</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">查找内容：</string>
     <string name="sun_wont_set_message">在未来 24 小时内太阳不会在您当前所在的位置落下。</string>
-    <string name="sun_wont_rise_message">在未来 24 小时内太阳不会在您当前所在的位置升起。</string>
 
     <string name="missing_label" translation_description="Used to indicate to the developer that they've added a resource with no translation.">等待翻译</string>
 
@@ -115,7 +88,6 @@
     <string name="moon">月球</string>
     <string name="mercury">水星</string>
     <string name="venus">金星</string>
-    <string name="earth">地球</string>
     <string name="mars">火星</string>
     <string name="jupiter">木星</string>
     <string name="saturn">土星</string>
@@ -135,12 +107,7 @@
     <string name="cats_eye_nebula" translation_description="hubble object">猫眼星云</string>
     <string name="omega_centauri" translation_description="hubble object">半人马座 Ω 球状星团</string>
     <string name="v838_mon" translation_description="hubble object">麒麟座 V838 变星</string>
-    <string name="sn1987a" translation_description="hubble object">超新星 1987a</string>
     <string name="hubble_deep_field" translation_description="hubble object">哈勃深空</string>
-    <string name="hdf" translation_description="hubble object">哈勃深空</string>
-    <string name="rho_oph" translation_description="hubble object">蛇夫座 ρ</string>
-    <string name="menu_tos">服务条款</string>
-    <string name="control_panel_btn" translation_description="Label for the control panel button">控制面板</string>
     <string name="north_pole">北极</string>
     <string name="south_pole">南极</string>
     <string name="andromeda" translation_description="Name of the Andromeda constellation">仙女座</string>
@@ -382,13 +349,6 @@
     <string name="beehive_cluster" translation_description="Name of the Messier object Beehive Cluster">鬼宿星团</string>
     <string name="praesepe" translation_description="Name of the Messier object Praesepe">鬼宿星团</string>
     <string name="seven_sisters" translation_description="Name of the Messier object Seven Sisters">昴宿星团</string>
-    <string name="space_station" translation_description="Name of the Internation Space Station">国际空间站</string>
-    <string name="space_shuttle" translation_description="Name of the Space Shuttle">航天飞机</string>
-    <string name="kml_load_error">无法载入 KML 文件</string>
-    <string name="load_kml_dialog_title">载入 KML</string>
-    <string name="load_kml_file">载入</string>
-    <string name="enable_analytics">传送使用统计资料</string>
-    <string name="enable_analytics_desc">传送匿名资料给Google Analytics 以改善天象图</string>
     <string name="leonids" translation_description="Meteor Shower">狮子座流星雨</string>
     <string name="geminids" translation_description="Meteor Shower">双子座流星雨</string>
     <string name="quadrantids" translation_description="Meteor Shower">象限仪座流星雨</string>

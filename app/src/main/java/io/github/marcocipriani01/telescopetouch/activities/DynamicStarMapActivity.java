@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
@@ -42,7 +43,6 @@ import javax.inject.Inject;
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
-import io.github.marcocipriani01.telescopetouch.activities.dialogs.EulaDialogFragment;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.MultipleSearchResultsDialogFragment;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.NoSearchResultsDialogFragment;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.NoSensorsDialogFragment;
@@ -90,8 +90,6 @@ public class DynamicStarMapActivity extends InjectableActivity
     Handler handler;
     @Inject
     FragmentManager fragmentManager;
-    @Inject
-    EulaDialogFragment eulaDialogFragmentNoButtons;
     @Inject
     TimeTravelDialogFragment timeTravelDialogFragment;
     @Inject
@@ -157,6 +155,15 @@ public class DynamicStarMapActivity extends InjectableActivity
         activityLightLevelManager = new ActivityLightLevelManager(activityLightLevelChanger,
                 sharedPreferences);
 
+        this.<ImageButton>findViewById(R.id.back_telescope_control)
+                .setOnClickListener(v -> startActivity(new Intent(this, MainActivity.class)));
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
+
         // Were we started as the result of a search?
         Intent intent = getIntent();
         Log.d(TAG, "Intent received: " + intent);
@@ -164,7 +171,6 @@ public class DynamicStarMapActivity extends InjectableActivity
             Log.d(TAG, "Started as a result of a search");
             doSearchWithIntent(intent);
         }
-        Log.d(TAG, "-onCreate at " + System.currentTimeMillis());
     }
 
     private void checkForSensorsAndMaybeWarn() {
@@ -210,7 +216,7 @@ public class DynamicStarMapActivity extends InjectableActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
+        inflater.inflate(R.menu.skymap, menu);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.menu_item_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -254,8 +260,8 @@ public class DynamicStarMapActivity extends InjectableActivity
         super.onOptionsItemSelected(item);
         fullscreenControlsManager.delayHideTheControls();
         int itemId = item.getItemId();
-        if (itemId == R.id.telescope_contro_item) {
-            startActivity(new Intent(this, MainActivity.class));
+        if (item.getItemId() == android.R.id.home) {
+            this.finish();
         } else if (itemId == R.id.menu_item_search) {
             Log.d(TAG, "Search");
             onSearchRequested();
@@ -279,9 +285,6 @@ public class DynamicStarMapActivity extends InjectableActivity
         } else if (itemId == R.id.menu_item_gallery) {
             Log.d(TAG, "Loading gallery");
             startActivity(new Intent(this, ImageGalleryActivity.class));
-        } else if (itemId == R.id.menu_item_tos) {
-            Log.d(TAG, "Loading ToS");
-            eulaDialogFragmentNoButtons.show(fragmentManager, "Eula Dialog No Buttons");
         } else if (itemId == R.id.menu_item_calibrate) {
             Log.d(TAG, "Loading Calibration");
             Intent intent = new Intent(this, CompassCalibrationActivity.class);
@@ -319,7 +322,7 @@ public class DynamicStarMapActivity extends InjectableActivity
     public void setTimeTravelMode(Date newTime) {
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy.MM.dd G  HH:mm:ss z");
         Toast.makeText(this, String.format(getString(R.string.time_travel_start_message_alt),
-                        dateFormatter.format(newTime)), Toast.LENGTH_LONG).show();
+                dateFormatter.format(newTime)), Toast.LENGTH_LONG).show();
         Log.d(TAG, "Showing TimePlayer UI.");
         timePlayerUI.setVisibility(View.VISIBLE);
         timePlayerUI.requestFocus();

@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, new ConnectionFragment()).commit();
         final BottomNavigationView navigation = findViewById(R.id.navigation);
+        navigation.setSelectedItemId(R.id.menu_connection);
         navigation.setOnNavigationItemSelectedListener(this);
         TelescopeTouchApp.setGoToConnectionTab(() -> runOnUiThread(() -> {
             currentPage = Pages.CONNECTION;
@@ -58,7 +59,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.global, menu);
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -74,7 +76,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Pages newPage = Pages.fromId(item.getItemId());
-        if ((newPage != null) && (newPage != currentPage)) {
+        if (newPage == Pages.SKY_MAP) {
+            startActivity(new Intent(this, DynamicStarMapActivity.class));
+        } else if ((newPage != null) && (newPage != currentPage)) {
             if (newPage == Pages.GENERIC) {
                 toolbar.setElevation(0);
             } else {
@@ -93,10 +97,10 @@ public class MainActivity extends AppCompatActivity
      * @author marcocipriani01
      */
     private enum Pages {
+        SKY_MAP(R.id.menu_skymap, null),
         CONNECTION(R.id.menu_connection, new ConnectionFragment()),
         MOTION(R.id.menu_move, new MountControlFragment()),
         GENERIC(R.id.menu_generic, new ControlPanelFragment()),
-        SEARCH(R.id.menu_search, new GoToFragment()),
         FOCUSER(R.id.menu_focuser, new FocuserFragment());
 
         private final int itemId;

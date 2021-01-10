@@ -3,7 +3,6 @@
     <string name="menu_settings">설정</string>
     <string name="menu_search">검색</string>
     <string name="cancel">취소</string>
-    <string name="set">세트</string>
     <string name="go">이동!</string>
     <string name="location_prefs">위치 설정</string>
     <string name="force_gps_pref">항상 GPS 사용</string>
@@ -26,8 +25,6 @@
     <string name="location_long_lat">경도:%1$f, 위도:%2$f</string>
     <string name="location_place_found">위치를 찾았습니다. 위도(%1$f)와 경도(%2$f)를 설정합니다.</string>
     <string name="use_magnetic_correction">자기 수정 사용</string>
-    <string name="use_magnetic_correction_hint">현재 위치정보를 사용하여 자북과 진북의 방위 차이를 수정합니다.</string>
-    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">표시…</string>
     <string name="show_stars_pref">별</string>
     <string name="show_constellations_pref">별자리</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">메시에 천체 목록</string>
@@ -35,20 +32,10 @@
     <string name="show_horizon_pref">지평선</string>
     <string name="show_sky_gradient">스카이 그라데이션</string>
     <string name="sensor_prefs">센서 설정</string>
-    <string name="sensor_speed">센서 속도</string>
-    <string name="sensor_damping" translation_description="The amount of       smoothing applied to the sensor outputs.">감쇠</string>
     <string name="ecliptic">단주기 혜성</string>
-    <string name="show_hubble_layer_pref">허블 이미지</string>
     <string name="malformed_loc_error">위도 또는 경도 설정은 숫자가 아닙니다.</string>
-    <string name="dialog_accept" translation_description="accepting the licence agreement">동의</string>
-    <string name="dialog_decline" translation_description="declining the licence agreement">아니요</string>
-    <string name="menu_help" translation_description="menu item to show \'Help\' box">도움말</string>
-    <string name="help_dialog_title">별지도 도움말</string>
-    <string name="eula_dialog_title">최종 사용자 라이센스 계약</string>
     <string name="set_manual">수동 모드로 전환</string>
     <string name="set_auto">자동 모드로 전환</string>
-    <string name="menu_zoom_in">확대</string>
-    <string name="menu_zoom_out">축소</string>
     <string name="menu_toggle_dim">야간 모드 전환</string>
     <string name="zenith">천정</string>
     <string name="nadir">NADIR</string>
@@ -61,13 +48,7 @@
     <string name="no_search_title">검색결과 없음</string>
     <string name="no_search_results_text">검색결과가 없습니다.</string>
     <string name="many_search_results_title">이것을 찾으셨나요?</string>
-    <string name="many_search_results_text">선택하세요.</string>
-    <string name="searching_for_text">%s 검색 중…</string>
-    <string name="found_target_text">%s을(를) 찾았습니다.</string>
-    <string name="other">기타</string>
-    <string name="planetary_images">행성 이미지 표시</string>
     <string name="menu_time">시간 여행</string>
-    <string name="time_travel_start_message">시간 여행 …</string>
     <string name="time_travel_start_message_alt">%s(으)로 시간 여행을 떠납니다…</string>
     <string name="time_travel_close_message">현재로 돌아오기…</string>
     <string name="popular_dates_prompt" translation_description="label for a list of dates the user can choose from">인기있는 날짜</string>
@@ -90,24 +71,16 @@
     <string name="time_travel_hour_speed_back" translation_description="label showing rate of travel through time">여행 &lt; @ 1시간/초</string>
     <string name="time_travel_day_speed_back" translation_description="label showing rate of travel through time">여행 &lt; @ 1일/초</string>
     <string name="time_travel_week_speed_back" translation_description="label showing rate of travel through time">여행 &lt; @ 1주/초</string>
-    <string name="use_sound_effects" translation_description="A preferences menu label">사운드 사용</string>
-    <string name="enable_layer_toast">%s 레이어 사용</string>
-    <string name="disable_layer_toast">%s 레이어 사용 중지</string>
-    <string name="menu_gallery">갤러리</string>
     <string name="gallery_image_search_btn">하늘에서 찾기</string>
     <string name="gallery_image_back_btn">갤러리로 돌아가기</string>
     <string name="hubble_image_gallery_title">별지도 허블 갤러리</string>
-    <string name="hubble_image">허블 이미지</string>
-    <string name="search_target_found_message" translation_description="displayed when a search target has been located">찾음:</string>
     <string name="search_overlay_title" translation_description="title for search overlay">휴대전화로 화살표 방향 가리키기</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">찾는 중:</string>
     <string name="sun_wont_set_message">현재 위치에서 다음 24시간 동안 태양이 지지 않습니다.</string>
-    <string name="sun_wont_rise_message">현재 위치에서 다음 24시간 동안 태양이 뜨지 않습니다.</string>
     <string name="sun">태양</string>
     <string name="moon">달</string>
     <string name="mercury">수성</string>
     <string name="venus">금성</string>
-    <string name="earth">지구</string>
     <string name="mars">화성</string>
     <string name="jupiter">목성</string>
     <string name="saturn">토성</string>
@@ -127,11 +100,7 @@
     <string name="cats_eye_nebula" translation_description="hubble object">고양이눈 성운</string>
     <string name="omega_centauri" translation_description="hubble object">센타우르스 자리 오메가 구상성단</string>
     <string name="v838_mon" translation_description="hubble object">V838 모노세로티스</string>
-    <string name="sn1987a" translation_description="hubble object">초신성 1987A</string>
     <string name="hubble_deep_field" translation_description="hubble object">허블 딥 필드</string>
-    <string name="rho_oph" translation_description="hubble object">뱀주인자리 로(Rho) 별</string>
-    <string name="menu_tos">서비스 약관</string>
-    <string name="control_panel_btn" translation_description="Label for the control panel button">제어판</string>
     <string name="north_pole">북극</string>
     <string name="south_pole">남극</string>
     <string name="andromeda" translation_description="Name of the Andromeda constellation">안드로메다자리</string>
@@ -369,10 +338,5 @@
     <string name="beehive_cluster" translation_description="Name of the Messier object Beehive Cluster">벌집 성단</string>
     <string name="praesepe" translation_description="Name of the Messier object Praesepe">프레세페</string>
     <string name="seven_sisters" translation_description="Name of the Messier object Seven Sisters">일곱 자매</string>
-    <string name="space_station" translation_description="Name of the Internation Space Station">국제 우주 정거장</string>
-    <string name="space_shuttle" translation_description="Name of the Space Shuttle">우주왕복선</string>
-    <string name="kml_load_error">KML 파일 로드 실패</string>
-    <string name="load_kml_dialog_title">KML 로드</string>
-    <string name="load_kml_file">로드</string>
 </resources>
 

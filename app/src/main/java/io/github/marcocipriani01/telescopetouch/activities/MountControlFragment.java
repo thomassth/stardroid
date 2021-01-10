@@ -2,9 +2,13 @@ package io.github.marcocipriani01.telescopetouch.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -88,6 +92,7 @@ public class MountControlFragment extends Fragment implements INDIServerConnecti
     public void onAttach(@NonNull Context context) {
         this.context = context;
         super.onAttach(context);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -150,6 +155,21 @@ public class MountControlFragment extends Fragment implements INDIServerConnecti
     public void onDestroy() {
         super.onDestroy();
         connectionManager.removeListener(this);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.mount_goto, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.menu_goto) {
+            startActivity(new Intent(requireActivity(), GoToActivity.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void clearVars() {
