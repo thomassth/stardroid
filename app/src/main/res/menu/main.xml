@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/telescope_contro_item"
+        android:icon="@drawable/remote"
+        android:orderInCategory="0"
+        android:title="Telescope control"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/menu_item_search"
         android:icon="@drawable/search"
         android:orderInCategory="1"

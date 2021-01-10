@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererController;
 import io.github.marcocipriani01.telescopetouch.search.SearchResult;
 import io.github.marcocipriani01.telescopetouch.search.SearchTermsProvider.SearchTerm;
@@ -19,7 +19,7 @@ import io.github.marcocipriani01.telescopetouch.search.SearchTermsProvider.Searc
  */
 public class LayerManager implements OnSharedPreferenceChangeListener {
 
-    private static final String TAG = TelescopeTouchApplication.getTag(LayerManager.class);
+    private static final String TAG = TelescopeTouchApp.getTag(LayerManager.class);
     private final List<Layer> layers = new ArrayList<>();
     private final SharedPreferences sharedPreferences;
 

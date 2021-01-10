@@ -5,7 +5,7 @@ package io.github.marcocipriani01.telescopetouch.touch;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
 /**
  * Detects map drags, rotations and pinch zooms.
@@ -13,7 +13,7 @@ import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
  * @author John Taylor
  */
 public class DragRotateZoomGestureDetector {
-    private static final String TAG = TelescopeTouchApplication.getTag(DragRotateZoomGestureDetector.class);
+    private static final String TAG = TelescopeTouchApp.getTag(DragRotateZoomGestureDetector.class);
     private final DragRotateZoomGestureDetectorListener listener;
     private State currentState = State.READY;
     private float last1X;

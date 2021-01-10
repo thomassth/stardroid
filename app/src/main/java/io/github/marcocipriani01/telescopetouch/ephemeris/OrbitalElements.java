@@ -4,7 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.util.Geometry;
 
 import static java.lang.Math.abs;
@@ -28,7 +28,7 @@ import static java.lang.Math.abs;
 public class OrbitalElements {
     // calculation error
     private final static float EPSILON = 1.0e-6f;
-    private static final String TAG = TelescopeTouchApplication.getTag(OrbitalElements.class);
+    private static final String TAG = TelescopeTouchApp.getTag(OrbitalElements.class);
     public final float distance;       // Mean distance (AU)
     public final float eccentricity;   // Eccentricity of orbit
     public final float inclination;    // Inclination of orbit (AngleUtils.RADIANS)

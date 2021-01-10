@@ -25,7 +25,7 @@ import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.util.ActivityLightLevelChanger;
 import io.github.marcocipriani01.telescopetouch.activities.util.ActivityLightLevelManager;
 
@@ -40,7 +40,7 @@ public class EditSettingsActivity extends AppCompatActivity {
     private static final String LONGITUDE = "longitude";
     private static final String LATITUDE = "latitude";
     private static final String LOCATION = "location";
-    private static final String TAG = TelescopeTouchApplication.getTag(EditSettingsActivity.class);
+    private static final String TAG = TelescopeTouchApp.getTag(EditSettingsActivity.class);
     @Inject
     SharedPreferences sharedPreferences;
     private MyPreferenceFragment preferenceFragment;
@@ -50,7 +50,7 @@ public class EditSettingsActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((TelescopeTouchApplication) getApplication()).getApplicationComponent().inject(this);
+        ((TelescopeTouchApp) getApplication()).getApplicationComponent().inject(this);
         activityLightLevelManager = new ActivityLightLevelManager(
                 new ActivityLightLevelChanger(this, null),
                 PreferenceManager.getDefaultSharedPreferences(this));

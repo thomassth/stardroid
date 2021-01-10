@@ -1,25 +1,33 @@
 package io.github.marcocipriani01.telescopetouch;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.text.format.DateFormat;
 import android.util.Log;
 
 import androidx.core.content.pm.PackageInfoCompat;
 import androidx.preference.PreferenceManager;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
 
+import io.github.marcocipriani01.telescopetouch.activities.ConnectionFragment;
+import io.github.marcocipriani01.telescopetouch.activities.ConnectionManager;
+import io.github.marcocipriani01.telescopetouch.activities.MainActivity;
 import io.github.marcocipriani01.telescopetouch.layers.LayerManager;
 
 /**
@@ -27,9 +35,23 @@ import io.github.marcocipriani01.telescopetouch.layers.LayerManager;
  *
  * @author John Taylor
  */
-public class TelescopeTouchApplication extends Application {
+public class TelescopeTouchApp extends Application {
 
-    private static final String TAG = getTag(TelescopeTouchApplication.class);
+    private static final String TAG = getTag(TelescopeTouchApp.class);
+    /**
+     * The context of the whole app.
+     */
+    @SuppressLint("StaticFieldLeak")
+    private static Context context;
+    /**
+     * UI updater
+     */
+    private static UIUpdater uiUpdater = null;
+    /**
+     * Global connection manager.
+     */
+    private static ConnectionManager connectionManager;
+    private static Runnable goToConnection;
     @Inject
     SharedPreferences preferences;
     // We keep a reference to this just to start it initializing.
@@ -37,7 +59,6 @@ public class TelescopeTouchApplication extends Application {
     LayerManager layerManager;
     @Inject
     SensorManager sensorManager;
-
     private ApplicationComponent component;
 
     /**
@@ -56,6 +77,72 @@ public class TelescopeTouchApplication extends Application {
             return ApplicationConstants.APP_NAME + "." + ((Class<?>) o).getSimpleName();
         }
         return ApplicationConstants.APP_NAME + "." + o.getClass().getSimpleName();
+    }
+
+    public static Resources getAppResources() {
+        return context.getResources();
+    }
+
+    /**
+     * @return the Connection Manager for this application.
+     */
+    public static ConnectionManager getConnectionManager() {
+        return connectionManager;
+    }
+
+    /**
+     * @param u a new {@link UIUpdater}
+     */
+    public static void setUiUpdater(UIUpdater u) {
+        uiUpdater = u;
+    }
+
+    /**
+     * Sets the action to fire to go back to the connection tab.
+     *
+     * @param runnable the action.
+     */
+    public static void setGoToConnectionTab(Runnable runnable) {
+        goToConnection = runnable;
+    }
+
+    /**
+     * @return the context of the whole app.
+     */
+    public static Context getContext() {
+        return context;
+    }
+
+    /**
+     * Add the given message to the logs.
+     *
+     * @param message a new log.
+     */
+    public static void log(String message) {
+        Log.i("GlobalLog", message);
+        if (uiUpdater != null) {
+            Date now = new Date();
+            uiUpdater.appendLog(message, DateFormat.getDateFormat(context).format(now) + " " +
+                    DateFormat.getTimeFormat(context).format(now));
+        }
+    }
+
+    /**
+     * @param state the new state of the Connection button.
+     */
+    public static void setState(ConnectionState state) {
+        if (uiUpdater != null) {
+            uiUpdater.setConnectionState(state);
+        }
+    }
+
+    /**
+     * Makes {@link MainActivity} change the current fragment to {@link ConnectionFragment}.
+     */
+    public static void goToConnectionTab() {
+        if (goToConnection != null) {
+            goToConnection.run();
+        }
     }
 
     @Override
@@ -78,6 +165,10 @@ public class TelescopeTouchApplication extends Application {
         PreferenceManager.setDefaultValues(this, R.xml.preference_screen, false);
         performFeatureCheck();
         Log.d(TAG, "StardroidApplication: -onCreate");
+        context = getApplicationContext();
+        if (connectionManager == null) {
+            connectionManager = new ConnectionManager();
+        }
     }
 
     public ApplicationComponent getApplicationComponent() {
@@ -176,5 +267,27 @@ public class TelescopeTouchApplication extends Application {
                 dummy, sensor, SensorManager.SENSOR_DELAY_UI);
         sensorManager.unregisterListener(dummy);
         return success;
+    }
+
+    public enum ConnectionState {
+        DISCONNECTED, CONNECTED, CONNECTING
+    }
+
+    /**
+     * This class offers a safe way to update the UI statically instead of keeping in memory Android Widgets,
+     * which implement the class {@link Context}.
+     *
+     * @author marcocipriani01
+     */
+    public interface UIUpdater {
+        /**
+         * Appends a log to the Log TextView.
+         */
+        void appendLog(final String msg, final String timestamp);
+
+        /**
+         * @param state a new state for the Connection button.
+         */
+        void setConnectionState(ConnectionState state);
     }
 }

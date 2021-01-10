@@ -42,17 +42,17 @@ import io.github.marcocipriani01.telescopetouch.layers.SkyGradientLayer;
  */
 @Module
 public class ApplicationModule {
-    private static final String TAG = TelescopeTouchApplication.getTag(ApplicationModule.class);
-    private final TelescopeTouchApplication app;
+    private static final String TAG = TelescopeTouchApp.getTag(ApplicationModule.class);
+    private final TelescopeTouchApp app;
 
-    public ApplicationModule(TelescopeTouchApplication app) {
+    public ApplicationModule(TelescopeTouchApp app) {
         Log.d(TAG, "Creating application module for " + app);
         this.app = app;
     }
 
     @Provides
     @Singleton
-    TelescopeTouchApplication provideApplication() {
+    TelescopeTouchApp provideApplication() {
         return app;
     }
 

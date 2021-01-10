@@ -2,7 +2,7 @@ package io.github.marcocipriani01.telescopetouch.control;
 
 import android.util.Log;
 
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel.Pointing;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.Matrix33;
@@ -17,7 +17,7 @@ import io.github.marcocipriani01.telescopetouch.util.Geometry;
  */
 public class ManualOrientationController extends AbstractController {
 
-    private static final String TAG = TelescopeTouchApplication.getTag(ManualOrientationController.class);
+    private static final String TAG = TelescopeTouchApp.getTag(ManualOrientationController.class);
 
     @Override
     public void start() {

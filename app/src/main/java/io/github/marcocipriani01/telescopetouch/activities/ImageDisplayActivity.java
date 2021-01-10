@@ -19,7 +19,7 @@ import androidx.preference.PreferenceManager;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.util.ActivityLightLevelChanger;
 import io.github.marcocipriani01.telescopetouch.activities.util.ActivityLightLevelManager;
 import io.github.marcocipriani01.telescopetouch.gallery.GalleryFactory;
@@ -32,7 +32,7 @@ import io.github.marcocipriani01.telescopetouch.gallery.GalleryImage;
  */
 public class ImageDisplayActivity extends InjectableActivity {
 
-    private static final String TAG = TelescopeTouchApplication.getTag(ImageDisplayActivity.class);
+    private static final String TAG = TelescopeTouchApp.getTag(ImageDisplayActivity.class);
     private static final int ERROR_MAGIC_NUMBER = -1;
     private GalleryImage selectedImage;
     private ActivityLightLevelManager activityLightLevelManager;

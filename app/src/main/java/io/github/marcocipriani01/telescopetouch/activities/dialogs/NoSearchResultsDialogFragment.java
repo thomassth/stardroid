@@ -2,7 +2,6 @@ package io.github.marcocipriani01.telescopetouch.activities.dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -10,12 +9,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
-import java.util.Objects;
-
 import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
 
 /**
@@ -24,7 +21,7 @@ import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
  */
 public class NoSearchResultsDialogFragment extends DialogFragment {
 
-    private static final String TAG = TelescopeTouchApplication.getTag(NoSearchResultsDialogFragment.class);
+    private static final String TAG = TelescopeTouchApp.getTag(NoSearchResultsDialogFragment.class);
     @Inject
     Activity parentActivity;
 

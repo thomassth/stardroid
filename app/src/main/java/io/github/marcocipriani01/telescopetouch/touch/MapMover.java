@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.control.ControllerGroup;
 import io.github.marcocipriani01.telescopetouch.util.Geometry;
@@ -18,7 +18,7 @@ import io.github.marcocipriani01.telescopetouch.util.Geometry;
 public class MapMover implements
         DragRotateZoomGestureDetector.DragRotateZoomGestureDetectorListener {
 
-    private static final String TAG = TelescopeTouchApplication.getTag(MapMover.class);
+    private static final String TAG = TelescopeTouchApp.getTag(MapMover.class);
     private final AstronomerModel model;
     private final ControllerGroup controllerGroup;
     private final float sizeTimesRadiansToDegrees;

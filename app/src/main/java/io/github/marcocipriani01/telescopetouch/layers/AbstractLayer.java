@@ -12,7 +12,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererController;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererController.AtomicSection;
@@ -39,7 +39,7 @@ import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
  */
 public abstract class AbstractLayer implements Layer {
 
-    private static final String TAG = TelescopeTouchApplication.getTag(AbstractLayer.class);
+    private static final String TAG = TelescopeTouchApp.getTag(AbstractLayer.class);
 
     private final ReentrantLock renderMapLock = new ReentrantLock();
     private final HashMap<Class<?>, RenderManager<?>> renderMap = new HashMap<>();

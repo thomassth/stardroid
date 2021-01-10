@@ -27,7 +27,7 @@ import java.util.GregorianCalendar;
 import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.DynamicStarMapActivity;
 import io.github.marcocipriani01.telescopetouch.ephemeris.Planet;
 import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
@@ -38,7 +38,7 @@ import io.github.marcocipriani01.telescopetouch.util.TimeUtil;
  */
 public class TimeTravelDialogFragment extends DialogFragment {
 
-    private static final String TAG = TelescopeTouchApplication.getTag(TimeTravelDialogFragment.class);
+    private static final String TAG = TelescopeTouchApp.getTag(TimeTravelDialogFragment.class);
     private static final int MIN_CLICK_TIME = 1000;
     @SuppressLint("SimpleDateFormat")
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z");

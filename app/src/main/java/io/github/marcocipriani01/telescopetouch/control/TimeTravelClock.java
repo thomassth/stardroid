@@ -5,7 +5,7 @@ import android.util.Log;
 import java.util.Date;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.util.TimeUtil;
 
 /**
@@ -34,7 +34,7 @@ public class TimeTravelClock implements Clock {
             new Speed(TimeUtil.SECONDS_PER_WEEK, R.string.time_travel_week_speed),
     };
     private static final int STOPPED_INDEX = SPEEDS.length / 2;
-    private static final String TAG = TelescopeTouchApplication.getTag(TimeTravelClock.class);
+    private static final String TAG = TelescopeTouchApp.getTag(TimeTravelClock.class);
     private int speedIndex = STOPPED_INDEX;
     private long timeLastSet;
     private long simulatedTime;
