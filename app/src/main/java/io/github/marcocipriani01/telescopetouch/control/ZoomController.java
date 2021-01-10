@@ -3,7 +3,6 @@ package io.github.marcocipriani01.telescopetouch.control;
 import android.util.Log;
 
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
-import io.github.marcocipriani01.telescopetouch.base.VisibleForTesting;
 
 /**
  * Controls the field of view of a user.
@@ -12,8 +11,8 @@ import io.github.marcocipriani01.telescopetouch.base.VisibleForTesting;
  */
 public class ZoomController extends AbstractController {
 
-    @VisibleForTesting
-    public static final float MAX_ZOOM_OUT = 90.0f;
+    public static final float MAX_ZOOM = 90.0f;
+    public static final float MIN_ZOOM = 1.5f;
     private static final String TAG = TelescopeTouchApp.getTag(ZoomController.class);
 
     private void setFieldOfView(float zoomDegrees) {
@@ -39,8 +38,12 @@ public class ZoomController extends AbstractController {
      * out, up to a predetermined maximum.
      */
     public void zoomBy(float ratio) {
-        float zoomDegrees = model.getFieldOfView();
-        zoomDegrees = Math.min(zoomDegrees * ratio, MAX_ZOOM_OUT);
+        float zoomDegrees = model.getFieldOfView() * ratio;
+        if (zoomDegrees > MAX_ZOOM) {
+            zoomDegrees = MAX_ZOOM;
+        } else {
+            zoomDegrees = Math.max(zoomDegrees, MIN_ZOOM);
+        }
         setFieldOfView(zoomDegrees);
     }
 }
