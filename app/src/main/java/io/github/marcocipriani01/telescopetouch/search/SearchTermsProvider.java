@@ -77,8 +77,7 @@ public class SearchTermsProvider extends ContentProvider {
     }
 
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
-                        String sortOrder) {
+    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         Log.d(TAG, "Got query for " + uri);
         if (!maybeInjectMe()) {
             return null;
