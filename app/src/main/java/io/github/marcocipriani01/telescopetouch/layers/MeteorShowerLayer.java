@@ -230,9 +230,9 @@ public class MeteorShowerLayer extends AbstractLayer {
                 // Not sure how best to calculate number of meteors - use linear interpolation for now.
                 double numberOfMeteorsPerHour = shower.peakMeteorsPerHour * percentToPeak;
                 if (numberOfMeteorsPerHour > METEOR_THRESHOLD_PER_HR) {
-                    theImage.setImageId(R.drawable.meteor2_screen);
+                    theImage.setImageId(R.drawable.meteors_1);
                 } else {
-                    theImage.setImageId(R.drawable.meteor1_screen);
+                    theImage.setImageId(R.drawable.meteors_2);
                 }
             } else {
                 label.setText(" ");
