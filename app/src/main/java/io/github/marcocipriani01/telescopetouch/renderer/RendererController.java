@@ -38,12 +38,10 @@ public class RendererController extends RendererControllerBase {
 
     public void queueAtomic(final AtomicSection atomic) {
         String msg = "Applying " + atomic.toString();
-        queueRunnable(msg, CommandType.Synchronization, new Runnable() {
-            public void run() {
-                Queue<Runnable> events = atomic.releaseEvents();
-                for (Runnable r : events) {
-                    r.run();
-                }
+        queueRunnable(msg, CommandType.Synchronization, () -> {
+            Queue<Runnable> events = atomic.releaseEvents();
+            for (Runnable r : events) {
+                r.run();
             }
         });
     }
@@ -81,7 +79,7 @@ public class RendererController extends RendererControllerBase {
         }
 
         private static class Queuer implements EventQueuer {
-            private final Queue<Runnable> mQueue = new LinkedList<Runnable>();
+            private final Queue<Runnable> mQueue = new LinkedList<>();
 
             public void queueEvent(Runnable r) {
                 mQueue.add(r);

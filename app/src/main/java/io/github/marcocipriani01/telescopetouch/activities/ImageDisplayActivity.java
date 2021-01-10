@@ -6,11 +6,14 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.preference.PreferenceManager;
 
 import java.util.List;
@@ -61,6 +64,11 @@ public class ImageDisplayActivity extends InjectableActivity {
         Button searchButton = findViewById(R.id.gallery_image_search_btn);
         searchButton.setOnClickListener(this::doSearch);
 
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
     }
 
     @Override
@@ -73,6 +81,15 @@ public class ImageDisplayActivity extends InjectableActivity {
     public void onPause() {
         super.onPause();
         activityLightLevelManager.onPause();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            this.finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void doSearch(View source) {

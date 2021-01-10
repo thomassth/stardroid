@@ -15,7 +15,7 @@ import java.util.Set;
  */
 public class PrefixStore {
 
-    private static final Set<String> EMPTY_SET = Collections.unmodifiableSet(new HashSet<String>());
+    private static final Set<String> EMPTY_SET = Collections.unmodifiableSet(new HashSet<>());
     private final TrieNode root = new TrieNode();
 
     /**
@@ -34,7 +34,7 @@ public class PrefixStore {
             }
             n = c;
         }
-        Set<String> coll = new HashSet<String>();
+        Set<String> coll = new HashSet<>();
         collect(n, coll);
         return coll;
     }

@@ -5,9 +5,8 @@ import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 import android.util.Log;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -57,21 +56,17 @@ interface RenderStateInterface {
 public class SkyRenderer implements GLSurfaceView.Renderer {
     protected final TextureManager mTextureManager;
     private final RenderState mRenderState = new RenderState();
-    private final Set<UpdateClosure> mUpdateClosures = new TreeSet<UpdateClosure>();
+    private final Set<UpdateClosure> mUpdateClosures = new TreeSet<>();
     // All managers - we need to reload all of these when we recreate the surface.
-    private final Set<RendererObjectManager> mAllManagers = new TreeSet<RendererObjectManager>();
+    private final Set<RendererObjectManager> mAllManagers = new TreeSet<>();
     // A list of managers which need to be reloaded before the next frame is rendered.  This may
     // be because they haven't ever been loaded yet, or because their objects have changed since
     // the last frame.
     private final ArrayList<ManagerReloadData> mManagersToReload = new ArrayList<>();
     private final RendererObjectManager.UpdateListener mUpdateListener =
-            new RendererObjectManager.UpdateListener() {
-                public void queueForReload(RendererObjectManager rom, boolean fullReload) {
-                    mManagersToReload.add(new ManagerReloadData(rom, fullReload));
-                }
-            };
-    private SkyBox mSkyBox = null;
-    private OverlayManager mOverlayManager = null;
+            (rom, fullReload) -> mManagersToReload.add(new ManagerReloadData(rom, fullReload));
+    private final SkyBox mSkyBox;
+    private final OverlayManager mOverlayManager;
     private Matrix4x4 mProjectionMatrix;
     private Matrix4x4 mViewMatrix;
     // Indicates whether the transformation matrix has changed since the last
@@ -80,12 +75,12 @@ public class SkyRenderer implements GLSurfaceView.Renderer {
     private boolean mMustUpdateProjection = true;
     // Maps an integer indicating render order to a list of objects at that level.  The managers
     // will be rendered in order, with the lowest number coming first.
-    private TreeMap<Integer, Set<RendererObjectManager>> mLayersToManagersMap = null;
+    private final TreeMap<Integer, Set<RendererObjectManager>> mLayersToManagersMap;
 
     public SkyRenderer(Resources res) {
         mRenderState.setResources(res);
 
-        mLayersToManagersMap = new TreeMap<Integer, Set<RendererObjectManager>>();
+        mLayersToManagersMap = new TreeMap<>();
 
         mTextureManager = new TextureManager(res);
 
@@ -102,19 +97,10 @@ public class SkyRenderer implements GLSurfaceView.Renderer {
     }
 
     static void checkForErrors(GL10 gl) {
-        checkForErrors(gl, false);
-    }
-
-    static void checkForErrors(GL10 gl, boolean printStackTrace) {
         int error = gl.glGetError();
         if (error != 0) {
             Log.e("SkyRenderer", "GL error: " + error);
             Log.e("SkyRenderer", GLU.gluErrorString(error));
-            if (printStackTrace) {
-                StringWriter writer = new StringWriter();
-                new Throwable().printStackTrace(new PrintWriter(writer));
-                Log.e("SkyRenderer", writer.toString());
-            }
         }
     }
 
@@ -257,7 +243,7 @@ public class SkyRenderer implements GLSurfaceView.Renderer {
         // Add it to the appropriate layer.
         Set<RendererObjectManager> managers = mLayersToManagersMap.get(m.getLayer());
         if (managers == null) {
-            managers = new TreeSet<RendererObjectManager>();
+            managers = new TreeSet<>();
             mLayersToManagersMap.put(m.getLayer(), managers);
         }
         managers.add(m);
@@ -265,11 +251,10 @@ public class SkyRenderer implements GLSurfaceView.Renderer {
 
     public void removeObjectManager(RendererObjectManager m) {
         mAllManagers.remove(m);
-
         Set<RendererObjectManager> managers = mLayersToManagersMap.get(m.getLayer());
         // managers shouldn't ever be null, so don't bother checking.  Let it crash if it is so we
         // know there's a bug.
-        managers.remove(m);
+        Objects.requireNonNull(managers).remove(m);
     }
 
     public void enableSkyGradient(GeocentricCoordinates sunPosition) {

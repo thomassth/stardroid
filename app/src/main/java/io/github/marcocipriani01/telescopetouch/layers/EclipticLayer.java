@@ -67,7 +67,7 @@ public class EclipticLayer extends AbstractLayer {
             float[] ra = {0, 90, 180, 270, 0};
             float[] dec = {0, EPSILON, 0, -EPSILON, 0};
 
-            ArrayList<GeocentricCoordinates> vertices = new ArrayList<GeocentricCoordinates>();
+            ArrayList<GeocentricCoordinates> vertices = new ArrayList<>();
             for (int i = 0; i < ra.length; ++i) {
                 vertices.add(GeocentricCoordinates.getInstance(ra[i], dec[i]));
             }

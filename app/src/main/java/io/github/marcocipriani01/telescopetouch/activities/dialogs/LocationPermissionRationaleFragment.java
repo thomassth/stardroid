@@ -7,6 +7,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
+import java.util.Objects;
+
 import io.github.marcocipriani01.telescopetouch.R;
 
 /**
@@ -27,7 +29,7 @@ public class LocationPermissionRationaleFragment extends ImprovedDialogFragment 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity())
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(requireActivity())
                 .setTitle(R.string.location_rationale_title)
                 .setMessage(R.string.location_rationale_text)
                 .setNeutralButton(R.string.dialog_ok_button, LocationPermissionRationaleFragment.this);

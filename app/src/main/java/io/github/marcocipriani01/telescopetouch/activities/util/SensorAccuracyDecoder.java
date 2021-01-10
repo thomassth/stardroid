@@ -47,6 +47,7 @@ public class SensorAccuracyDecoder {
     public int getColorForAccuracy(int accuracy) {
         int accuracyColor = resources.getColor(R.color.bad_sensor);
         switch (accuracy) {
+            case SensorManager.SENSOR_STATUS_NO_CONTACT:
             case SensorManager.SENSOR_STATUS_UNRELIABLE:
                 accuracyColor = resources.getColor(R.color.bad_sensor);
                 break;
@@ -58,9 +59,6 @@ public class SensorAccuracyDecoder {
                 break;
             case SensorManager.SENSOR_STATUS_ACCURACY_HIGH:
                 accuracyColor = resources.getColor(R.color.high_accuracy);
-                break;
-            case SensorManager.SENSOR_STATUS_NO_CONTACT:
-                accuracyColor = resources.getColor(R.color.bad_sensor);
                 break;
         }
         return accuracyColor;

@@ -84,11 +84,6 @@ public class TelescopeTouchApplication extends Application {
         return component;
     }
 
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
-    }
-
     /**
      * Returns the version string for Sky Map.
      */

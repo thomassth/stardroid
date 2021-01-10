@@ -8,7 +8,6 @@ import java.util.TimeZone;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
-import io.github.marcocipriani01.telescopetouch.base.TimeConstants;
 import io.github.marcocipriani01.telescopetouch.base.VisibleForTesting;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.HeliocentricCoordinates;
@@ -18,18 +17,19 @@ import io.github.marcocipriani01.telescopetouch.util.Geometry;
 import io.github.marcocipriani01.telescopetouch.util.TimeUtil;
 
 public enum Planet {
+
     // The order here is the order in which they are drawn.  To ensure that during
     // conjunctions they display "naturally" order them in reverse distance from Earth.
-    Pluto(R.drawable.pluto, R.string.pluto, 1L * TimeConstants.MILLISECONDS_PER_HOUR),
-    Neptune(R.drawable.neptune, R.string.neptune, 1L * TimeConstants.MILLISECONDS_PER_HOUR),
-    Uranus(R.drawable.uranus, R.string.uranus, 1L * TimeConstants.MILLISECONDS_PER_HOUR),
-    Saturn(R.drawable.saturn, R.string.saturn, 1L * TimeConstants.MILLISECONDS_PER_HOUR),
-    Jupiter(R.drawable.jupiter, R.string.jupiter, 1L * TimeConstants.MILLISECONDS_PER_HOUR),
-    Mars(R.drawable.mars, R.string.mars, 1L * TimeConstants.MILLISECONDS_PER_HOUR),
-    Sun(R.drawable.sun, R.string.sun, 1L * TimeConstants.MILLISECONDS_PER_HOUR),
-    Mercury(R.drawable.mercury, R.string.mercury, 1L * TimeConstants.MILLISECONDS_PER_HOUR),
-    Venus(R.drawable.venus, R.string.venus, 1L * TimeConstants.MILLISECONDS_PER_HOUR),
-    Moon(R.drawable.moon4, R.string.moon, 1L * TimeConstants.MILLISECONDS_PER_MINUTE);
+    Pluto(R.drawable.pluto, R.string.pluto, TimeUtil.MILLISECONDS_PER_HOUR),
+    Neptune(R.drawable.neptune, R.string.neptune, TimeUtil.MILLISECONDS_PER_HOUR),
+    Uranus(R.drawable.uranus, R.string.uranus, TimeUtil.MILLISECONDS_PER_HOUR),
+    Saturn(R.drawable.saturn, R.string.saturn, TimeUtil.MILLISECONDS_PER_HOUR),
+    Jupiter(R.drawable.jupiter, R.string.jupiter, TimeUtil.MILLISECONDS_PER_HOUR),
+    Mars(R.drawable.mars, R.string.mars, TimeUtil.MILLISECONDS_PER_HOUR),
+    Sun(R.drawable.sun, R.string.sun, TimeUtil.MILLISECONDS_PER_HOUR),
+    Mercury(R.drawable.mercury, R.string.mercury, TimeUtil.MILLISECONDS_PER_HOUR),
+    Venus(R.drawable.venus, R.string.venus, TimeUtil.MILLISECONDS_PER_HOUR),
+    Moon(R.drawable.moon4, R.string.moon, TimeUtil.MILLISECONDS_PER_MINUTE);
 
     private static final String TAG = TelescopeTouchApplication.getTag(Planet.class);
     // Maximum number of times to calculate rise/set times. If we cannot
@@ -58,7 +58,7 @@ public enum Planet {
      * NOTE: The text does not give a specific time period where the approximation
      * is valid, but it should be valid through at least 2009.
      */
-    public static RaDec calculateLunarGeocentricLocation(Date time) {
+    public static RaDec calculateLunarGeocentricLocation(Calendar time) {
         // First, calculate the number of Julian centuries from J2000.0.
         float t = (float) ((TimeUtil.calculateJulianDay(time) - 2451545.0f) / 36525.0f);
 
@@ -106,12 +106,13 @@ public enum Planet {
      */
     // TODO(serafini): This could also be error prone right around the time
     // of the full and new moons...
-    public static Date getNextFullMoon(Date now) {
+    public static Calendar getNextFullMoon(Calendar now) {
         // First, get the moon's current phase.
         float phase = Moon.calculatePhaseAngle(now);
 
         // Next, figure out if the moon is waxing or waning.
-        Date later = new Date(now.getTime() + 1 * 3600 * 1000);
+        Calendar later = (Calendar) now.clone();
+        later.add(Calendar.HOUR, 1);
         float phase2 = Moon.calculatePhaseAngle(later);
         boolean isWaxing = phase2 > phase;
 
@@ -121,29 +122,9 @@ public enum Planet {
         float baseAngle = (isWaxing ? 180.0f : 360.0f);
         float numDays = (baseAngle - phase) / 360.0f * LUNAR_CYCLE;
 
-        return new Date(now.getTime() + (long) (numDays * 24.0 * 3600.0 * 1000.0));
-    }
-
-    /**
-     * Return the date of the next full moon after today.
-     * Slow incremental version, only correct to within an hour.
-     */
-    public static Date getNextFullMoonSlow(Date now) {
-        Date fullMoon = new Date(now.getTime());
-        float phase = Moon.calculatePhaseAngle(now);
-        boolean waxing = false;
-
-        while (true) {
-            fullMoon.setTime(fullMoon.getTime() + TimeConstants.MILLISECONDS_PER_HOUR);
-            float nextPhase = Moon.calculatePhaseAngle(fullMoon);
-            if (waxing && nextPhase < phase) {
-                fullMoon.setTime(fullMoon.getTime() - TimeConstants.MILLISECONDS_PER_HOUR);
-                return fullMoon;
-            }
-            waxing = (nextPhase > phase);
-            phase = nextPhase;
-            Log.d(TAG, "Phase: " + phase + "\tDate:" + fullMoon);
-        }
+        Calendar res = Calendar.getInstance();
+        res.setTimeInMillis(now.getTimeInMillis() + (long) (numDays * 24.0 * 3600.0 * 1000.0));
+        return res;
     }
 
     // Calculates the hour angle of a given declination for the given location.
@@ -185,7 +166,7 @@ public enum Planet {
     /**
      * Returns the resource id for the planet's image.
      */
-    public int getImageResourceId(Date time) {
+    public int getImageResourceId(Calendar time) {
         if (this.equals(Planet.Moon)) {
             return getLunarPhaseImageId(time);
         }
@@ -196,7 +177,7 @@ public enum Planet {
      * Determine the Moon's phase and return the resource ID of the correct
      * image.
      */
-    private int getLunarPhaseImageId(Date time) {
+    private int getLunarPhaseImageId(Calendar time) {
         // First, calculate phase angle:
         float phase = calculatePhaseAngle(time);
         Log.d(TAG, "Lunar phase = " + phase);
@@ -213,7 +194,8 @@ public enum Planet {
         // Either crescent, quarter, or gibbous. Need to see whether we are
         // waxing or waning. Calculate the phase angle one day in the future.
         // If phase is increasing, we are waxing. If not, we are waning.
-        Date tomorrow = new Date(time.getTime() + 24 * 3600 * 1000);
+        Calendar tomorrow = (Calendar) time.clone();
+        tomorrow.add(Calendar.DATE, 1);
         float phase2 = calculatePhaseAngle(tomorrow);
         Log.d(TAG, "Tomorrow's phase = " + phase2);
 
@@ -233,7 +215,7 @@ public enum Planet {
     // This gives us a good approximation for the years 1800 to 2050 AD.
     // TODO(serafini): Update the numbers so we can extend the approximation to cover
     // 3000 BC to 3000 AD.
-    public OrbitalElements getOrbitalElements(Date date) {
+    public OrbitalElements getOrbitalElements(Calendar date) {
         // Centuries since J2000
         float jc = (float) TimeUtil.julianCenturies(date);
 
@@ -347,7 +329,7 @@ public enum Planet {
      * Calculates the phase angle of the planet, in degrees.
      */
     @VisibleForTesting
-    float calculatePhaseAngle(Date time) {
+    float calculatePhaseAngle(Calendar time) {
         // For the moon, we will approximate phase angle by calculating the
         // elongation of the moon relative to the sun. This is accurate to within
         // about 1%.
@@ -379,24 +361,13 @@ public enum Planet {
     }
 
     /**
-     * Calculate the percent of the body that is illuminated. The value returned
-     * is a fraction in the range from 0.0 to 100.0.
-     */
-    // TODO(serafini): Do we need this method?
-    @VisibleForTesting
-    public float calculatePercentIlluminated(Date time) {
-        float phaseAngle = this.calculatePhaseAngle(time);
-        return 50.0f * (1.0f + (float) Math.cos(phaseAngle * Geometry.DEGREES_TO_RADIANS));
-    }
-
-    /**
      * Calculates the planet's magnitude for the given date.
      * <p>
      * TODO(serafini): I need to re-factor this method so it uses the phase
      * calculations above. For now, I'm going to duplicate some code to avoid
      * some redundant calculations at run time.
      */
-    public float getMagnitude(Date time) {
+    public float getMagnitude(Calendar time) {
         // TODO(serafini): For now, return semi-reasonable values for the Sun and
         // Moon. We shouldn't call this method for those bodies, but we want to do
         // something sane if we do.
@@ -422,8 +393,7 @@ public enum Planet {
         float p = phase / 100.0f;     // Normalized phase angle
 
         // Finally, calculate the magnitude of the body.
-        float mag = -100.0f;      // Apparent visual magnitude
-
+        float mag;      // Apparent visual magnitude
         switch (this) {
             case Mercury:
                 mag = -0.42f + (3.80f - (2.73f - 2.00f * p) * p) * p;
@@ -464,9 +434,6 @@ public enum Planet {
     // TODO(serafini): This is experimental code used to scale planetary images.
     public float getPlanetaryImageSize() {
         switch (this) {
-            case Sun:
-            case Moon:
-                return 0.02f;
             case Mercury:
             case Venus:
             case Mars:
@@ -479,6 +446,8 @@ public enum Planet {
                 return 0.015f;
             case Saturn:
                 return 0.035f;
+            case Sun:
+            case Moon:
             default:
                 return 0.02f;
         }
@@ -507,15 +476,15 @@ public enum Planet {
         // Find the start of this day in the local time zone. The (a / b) * b
         // formulation looks weird, it's using the properties of int arithmetic
         // so that (a / b) is really floor(a / b).
-        long dayStart = (now.getTimeInMillis() / TimeConstants.MILLISECONDS_PER_DAY)
-                * TimeConstants.MILLISECONDS_PER_DAY - riseSetTime.get(Calendar.ZONE_OFFSET);
+        long dayStart = (now.getTimeInMillis() / TimeUtil.MILLISECONDS_PER_DAY)
+                * TimeUtil.MILLISECONDS_PER_DAY - riseSetTime.get(Calendar.ZONE_OFFSET);
         long riseSetUtMillis = (long) (calcRiseSetTime(now.getTime(), loc, indicator)
-                * TimeConstants.MILLISECONDS_PER_HOUR);
+                * TimeUtil.MILLISECONDS_PER_HOUR);
         long newTime = dayStart + riseSetUtMillis + riseSetTime.get(Calendar.ZONE_OFFSET);
         // If the newTime is before the current time, go forward 1 day.
         if (newTime < now.getTimeInMillis()) {
             Log.d(TAG, "Nearest Rise/Set is in the past. Adding one day.");
-            newTime += TimeConstants.MILLISECONDS_PER_DAY;
+            newTime += TimeUtil.MILLISECONDS_PER_DAY;
         }
         riseSetTime.setTimeInMillis(newTime);
         if (!riseSetTime.after(now)) {
@@ -545,13 +514,11 @@ public enum Planet {
 
             // Calculate the hour angle and declination of the planet.
             // TODO(serafini): Need to fix this for arbitrary RA/Dec locations.
-            Date tmp = cal.getTime();
-            HeliocentricCoordinates sunCoordinates =
-                    HeliocentricCoordinates.getInstance(Planet.Sun, tmp);
-            RaDec raDec = RaDec.getInstance(this, tmp, sunCoordinates);
+            HeliocentricCoordinates sunCoordinates = HeliocentricCoordinates.getInstance(Planet.Sun, cal);
+            RaDec raDec = RaDec.getInstance(this, cal, sunCoordinates);
 
             // GHA = GST - RA. (In degrees.)
-            float gst = TimeUtil.meanSiderealTime(tmp, 0);
+            float gst = TimeUtil.meanSiderealTime(cal, 0);
             float gha = gst - raDec.ra;
 
             // The value of -0.83 works for the diameter of the Sun and Moon. We

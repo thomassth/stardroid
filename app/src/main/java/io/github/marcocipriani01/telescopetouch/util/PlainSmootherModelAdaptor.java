@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.util.Log;
 
 import javax.inject.Inject;
@@ -36,11 +35,11 @@ public class PlainSmootherModelAdaptor implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == SensorManager.SENSOR_ACCELEROMETER) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             acceleration.x = event.values[0];
             acceleration.y = event.values[1];
             acceleration.z = event.values[2];
-        } else if (event.sensor.getType() == SensorManager.SENSOR_MAGNETIC_FIELD) {
+        } else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
             magneticValues.x = event.values[0];
             magneticValues.y = event.values[1];
             // The z direction for the mag magneticField sensor is in the opposite
@@ -53,7 +52,6 @@ public class PlainSmootherModelAdaptor implements SensorEventListener {
             Log.e(TAG, "Pump is receiving values that aren't accel or magnetic");
         }
         model.setPhoneSensorValues(acceleration, magneticValues);
-
     }
 
     @Override

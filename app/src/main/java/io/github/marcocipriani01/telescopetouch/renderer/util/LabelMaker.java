@@ -106,12 +106,12 @@ public class LabelMaker {
         int v = 0;
         int lineHeight = 0;
         for (LabelData label : labels) {
-            int ascent = 0;
-            int descent = 0;
-            int measuredTextWidth = 0;
+            int ascent;
+            int descent;
+            int measuredTextWidth;
 
-            int height = 0;
-            int width = 0;
+            int height;
+            int width;
 
             // TODO(jpowell): This is a hack to deal with text that's too wide to
             // fit on the screen.  We should really split this up among multiple lines,
@@ -188,9 +188,9 @@ public class LabelMaker {
      * A class which contains data that describes a label and its position in the texture.
      */
     public static class LabelData {
-        private String mText = "";
-        private int mColor = 0xffffffff;
-        private int mFontSize = 24;
+        private final String mText;
+        private final int mColor;
+        private final int mFontSize;
         private int mWidthInPixels = 0;
         private int mHeightInPixels = 0;
         private IntBuffer mTexCoords = null;

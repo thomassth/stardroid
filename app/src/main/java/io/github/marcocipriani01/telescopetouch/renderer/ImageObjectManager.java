@@ -24,9 +24,10 @@ import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
  * @author James Powell
  */
 public class ImageObjectManager extends RendererObjectManager {
+
+    final EnumSet<UpdateType> mUpdates = EnumSet.noneOf(UpdateType.class);
     private final VertexBuffer mVertexBuffer = new VertexBuffer(false);
     private final TexCoordBuffer mTexCoordBuffer = new TexCoordBuffer(false);
-    EnumSet<UpdateType> mUpdates = EnumSet.noneOf(UpdateType.class);
     private Image[] mImages = new Image[0];
     private TextureReference[] mTextures = new TextureReference[0];
     private TextureReference[] mRedTextures = new TextureReference[0];
@@ -122,9 +123,7 @@ public class ImageObjectManager extends RendererObjectManager {
     @Override
     public void reload(GL10 gl, boolean fullReload) {
         Image[] images = mImages;
-        boolean reloadBuffers = false;
-        boolean reloadImages = false;
-
+        boolean reloadBuffers, reloadImages;
         if (fullReload) {
             reloadBuffers = true;
             reloadImages = true;
@@ -135,8 +134,8 @@ public class ImageObjectManager extends RendererObjectManager {
         } else {
             // Process any queued updates.
             boolean reset = mUpdates.contains(UpdateType.Reset);
-            reloadBuffers |= reset || mUpdates.contains(UpdateType.UpdatePositions);
-            reloadImages |= reset || mUpdates.contains(UpdateType.UpdateImages);
+            reloadBuffers = reset || mUpdates.contains(UpdateType.UpdatePositions);
+            reloadImages = reset || mUpdates.contains(UpdateType.UpdateImages);
             mUpdates.clear();
         }
 
@@ -242,7 +241,6 @@ public class ImageObjectManager extends RendererObjectManager {
     private static class Image {
         String name;
         Bitmap bitmap;
-        int textureID;
         boolean useBlending;
     }
 }

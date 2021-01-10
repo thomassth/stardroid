@@ -7,9 +7,9 @@ package io.github.marcocipriani01.telescopetouch.gallery;
  */
 public class GalleryImage {
 
-    public int imageId;
-    public String name;
-    public String searchTerm;
+    public final int imageId;
+    public final String name;
+    public final String searchTerm;
 
     public GalleryImage(int imageId, String name, String searchTerm) {
         this.imageId = imageId;

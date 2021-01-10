@@ -1,6 +1,6 @@
 package io.github.marcocipriani01.telescopetouch.control;
 
-import java.util.Date;
+import java.util.Calendar;
 
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.LatLong;
@@ -34,7 +34,7 @@ public interface AstronomerModel {
     /**
      * Returns the time, as UTC.
      */
-    Date getTime();
+    Calendar getTime();
 
     /**
      * Sets the clock that provides the time.

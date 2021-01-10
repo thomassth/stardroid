@@ -24,8 +24,6 @@ public interface TextureReference {
      * Note that when the OpenGL surface is being re-created, all resources
      * are automatically freed, so you should not delete the textures in that
      * case.
-     *
-     * @param gl
      */
     void delete(GL10 gl);
 }

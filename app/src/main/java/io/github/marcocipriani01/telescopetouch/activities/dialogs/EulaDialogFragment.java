@@ -14,6 +14,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
+import java.util.Objects;
+
 import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.R;
@@ -40,7 +42,7 @@ public class EulaDialogFragment extends ImprovedDialogFragment {
     @SuppressWarnings("unchecked")
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Activities using this dialog MUST implement this interface.  Obviously.
-        ((HasComponent<ActivityComponent>) getActivity()).getComponent().inject(this);
+        ((HasComponent<ActivityComponent>) Objects.requireNonNull(getActivity())).getComponent().inject(this);
 
         LayoutInflater inflater = parentActivity.getLayoutInflater();
         View view = inflater.inflate(R.layout.tos_view, null);

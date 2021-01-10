@@ -4,23 +4,24 @@ import android.annotation.SuppressLint;
 
 import androidx.annotation.NonNull;
 
-import java.util.Date;
+import java.util.Calendar;
 
 import io.github.marcocipriani01.telescopetouch.ephemeris.OrbitalElements;
 import io.github.marcocipriani01.telescopetouch.ephemeris.Planet;
 import io.github.marcocipriani01.telescopetouch.util.Geometry;
 
 public class HeliocentricCoordinates extends Vector3 {
+
     // Value of the obliquity of the ecliptic for J2000
     private static final float OBLIQUITY = 23.439281f * Geometry.DEGREES_TO_RADIANS;
-    public float radius;  // Radius. (AU)
+    public final float radius;  // Radius. (AU)
 
     public HeliocentricCoordinates(float radius, float xh, float yh, float zh) {
         super(xh, yh, zh);
         this.radius = radius;
     }
 
-    public static HeliocentricCoordinates getInstance(Planet planet, Date date) {
+    public static HeliocentricCoordinates getInstance(Planet planet, Calendar date) {
         return getInstance(planet.getOrbitalElements(date));
     }
 
@@ -33,15 +34,17 @@ public class HeliocentricCoordinates extends Vector3 {
         float per = elem.perihelion;
         float asc = elem.ascendingNode;
         float inc = elem.inclination;
+        float cos = (float) Math.cos(anomaly + per - asc);
+        float sin = (float) Math.sin(anomaly + per - asc);
         float xh = radius *
-                ((float) Math.cos(asc) * (float) Math.cos(anomaly + per - asc) -
-                        (float) Math.sin(asc) * (float) Math.sin(anomaly + per - asc) *
+                ((float) Math.cos(asc) * cos -
+                        (float) Math.sin(asc) * sin *
                                 (float) Math.cos(inc));
         float yh = radius *
-                ((float) Math.sin(asc) * (float) Math.cos(anomaly + per - asc) +
-                        (float) Math.cos(asc) * (float) Math.sin(anomaly + per - asc) *
+                ((float) Math.sin(asc) * cos +
+                        (float) Math.cos(asc) * sin *
                                 (float) Math.cos(inc));
-        float zh = radius * ((float) Math.sin(anomaly + per - asc) * (float) Math.sin(inc));
+        float zh = radius * (sin * (float) Math.sin(inc));
 
         return new HeliocentricCoordinates(radius, xh, yh, zh);
     }

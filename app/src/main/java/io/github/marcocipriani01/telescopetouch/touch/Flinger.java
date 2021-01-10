@@ -14,10 +14,10 @@ import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
  * to simulate an underlying object with some inertia.
  */
 public class Flinger {
+
     private static final String TAG = TelescopeTouchApplication.getTag(Flinger.class);
     private final FlingListener listener;
-    private final int updatesPerSecond = 20;
-    private final int timeIntervalMillis = 1000 / updatesPerSecond;
+    private final int UPDATES_PER_SECOND = 20;
     private final ScheduledExecutorService executor;
     private ScheduledFuture<?> flingTask;
 
@@ -29,8 +29,6 @@ public class Flinger {
     public void fling(float velocityX, float velocityY) {
         Log.d(TAG, "Doing the fling");
         class PositionUpdater implements Runnable {
-            private final float decelFactor = 1.1f;
-            private final float TOL = 10;
             private float myVelocityX, myVelocityY;
 
             public PositionUpdater(float velocityX, float velocityY) {
@@ -38,16 +36,18 @@ public class Flinger {
                 this.myVelocityY = velocityY;
             }
 
+            @Override
             public void run() {
-                if (myVelocityX * myVelocityX + myVelocityY * myVelocityY < TOL) {
+                if (myVelocityX * myVelocityX + myVelocityY * myVelocityY < (float) 10) {
                     stop();
                 }
-                listener.fling(myVelocityX / updatesPerSecond,
-                        myVelocityY / updatesPerSecond);
+                listener.fling(myVelocityX / UPDATES_PER_SECOND, myVelocityY / UPDATES_PER_SECOND);
+                float decelFactor = 1.1f;
                 myVelocityX /= decelFactor;
                 myVelocityY /= decelFactor;
             }
         }
+        int timeIntervalMillis = 1000 / UPDATES_PER_SECOND;
         flingTask = executor.scheduleAtFixedRate(new PositionUpdater(velocityX, velocityY),
                 0, timeIntervalMillis, TimeUnit.MILLISECONDS);
     }

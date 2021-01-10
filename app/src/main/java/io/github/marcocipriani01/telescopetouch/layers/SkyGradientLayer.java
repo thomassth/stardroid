@@ -3,21 +3,21 @@ package io.github.marcocipriani01.telescopetouch.layers;
 import android.content.res.Resources;
 import android.util.Log;
 
+import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
-import io.github.marcocipriani01.telescopetouch.base.TimeConstants;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.ephemeris.SolarPositionCalculator;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererController;
 import io.github.marcocipriani01.telescopetouch.search.SearchResult;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.RaDec;
+import io.github.marcocipriani01.telescopetouch.util.TimeUtil;
 
 /**
  * If enabled, keeps the sky gradient up to date.
@@ -28,7 +28,7 @@ import io.github.marcocipriani01.telescopetouch.units.RaDec;
 public class SkyGradientLayer implements Layer {
 
     private static final String TAG = TelescopeTouchApplication.getTag(SkyGradientLayer.class);
-    private static final long UPDATE_FREQUENCY_MS = 5L * TimeConstants.MILLISECONDS_PER_MINUTE;
+    private static final long UPDATE_FREQUENCY_MS = 5L * TimeUtil.MILLISECONDS_PER_MINUTE;
 
     private final ReentrantLock rendererLock = new ReentrantLock();
     private final AstronomerModel model;
@@ -71,10 +71,10 @@ public class SkyGradientLayer implements Layer {
      * Redraws the sky shading gradient using the model's current time.
      */
     protected void redraw() {
-        Date modelTime = model.getTime();
-        if (Math.abs(modelTime.getTime() - lastUpdateTimeMs) > UPDATE_FREQUENCY_MS) {
-            lastUpdateTimeMs = modelTime.getTime();
-
+        Calendar modelTime = model.getTime();
+        long timeInMillis = modelTime.getTimeInMillis();
+        if (Math.abs(timeInMillis - lastUpdateTimeMs) > UPDATE_FREQUENCY_MS) {
+            lastUpdateTimeMs = timeInMillis;
             RaDec sunPosition = SolarPositionCalculator.getSolarPosition(modelTime);
             // Log.d(TAG, "Enabling sky gradient with sun position " + sunPosition);
             rendererLock.lock();

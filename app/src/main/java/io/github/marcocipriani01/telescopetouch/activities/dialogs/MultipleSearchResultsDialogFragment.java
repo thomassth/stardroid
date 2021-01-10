@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -37,7 +38,7 @@ public class MultipleSearchResultsDialogFragment extends DialogFragment {
     @SuppressWarnings("unchecked")
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Activities using this dialog MUST implement this interface.  Obviously.
-        ((HasComponent<ActivityComponent>) getActivity()).getComponent().inject(this);
+        ((HasComponent<ActivityComponent>) requireActivity()).getComponent().inject(this);
 
         // TODO(jontayler): inject
         multipleSearchResultsAdaptor = new ArrayAdapter<>(parentActivity, android.R.layout.simple_list_item_1, new ArrayList<>());

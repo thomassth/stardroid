@@ -1,6 +1,5 @@
 package io.github.marcocipriani01.telescopetouch.renderer;
 
-import android.content.res.Resources;
 import android.opengl.GLU;
 import android.util.Log;
 
@@ -15,6 +14,7 @@ import io.github.marcocipriani01.telescopetouch.util.Matrix4x4;
 import io.github.marcocipriani01.telescopetouch.util.VectorUtil;
 
 public class OverlayManager extends RendererObjectManager {
+
     private final SearchHelper mSearchHelper = new SearchHelper();
     private final SearchArrow mSearchArrow = new SearchArrow();
     private final CrosshairOverlay mCrosshair = new CrosshairOverlay();
@@ -35,9 +35,8 @@ public class OverlayManager extends RendererObjectManager {
 
     @Override
     public void reload(GL10 gl, boolean fullReload) {
-        Resources res = getRenderState().getResources();
-        mSearchArrow.reloadTextures(gl, res, textureManager());
-        mCrosshair.reloadTextures(gl, res, textureManager());
+        mSearchArrow.reloadTextures(gl, textureManager());
+        mCrosshair.reloadTextures(gl, textureManager());
     }
 
     public void resize(GL10 gl, int screenWidth, int screenHeight) {
@@ -50,7 +49,7 @@ public class OverlayManager extends RendererObjectManager {
         mSearchHelper.setTargetFocusRadius(searchTargetRadius);
         mSearchHelper.resize(screenWidth, screenHeight);
 
-        mSearchArrow.resize(gl, screenWidth, screenHeight, searchTargetRadius);
+        mSearchArrow.resize(screenWidth, screenHeight, searchTargetRadius);
         mCrosshair.resize(gl, screenWidth, screenHeight);
 
         mDarkQuad = new ColoredQuad(0, 0, 0, 0.6f,

@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
-import android.media.MediaPlayer;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,8 +36,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Provider;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
@@ -53,7 +50,6 @@ import io.github.marcocipriani01.telescopetouch.activities.util.ActivityLightLev
 import io.github.marcocipriani01.telescopetouch.activities.util.FullscreenControlsManager;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.control.ControllerGroup;
-import io.github.marcocipriani01.telescopetouch.control.MagneticDeclinationCalculatorSwitcher;
 import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
 import io.github.marcocipriani01.telescopetouch.layers.LayerManager;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererController;
@@ -89,12 +85,6 @@ public class DynamicStarMapActivity extends InjectableActivity
     @Inject
     LayerManager layerManager;
     @Inject
-    @Named("timetravel")
-    Provider<MediaPlayer> timeTravelNoiseProvider;
-    @Inject
-    @Named("timetravelback")
-    Provider<MediaPlayer> timeTravelBackNoiseProvider;
-    @Inject
     Handler handler;
     @Inject
     FragmentManager fragmentManager;
@@ -111,9 +101,9 @@ public class DynamicStarMapActivity extends InjectableActivity
     @Inject
     SensorAccuracyMonitor sensorAccuracyMonitor;
     // We need to maintain references to these objects to keep them from getting gc'd.
-    @Inject
-    @SuppressWarnings("unused")
-    MagneticDeclinationCalculatorSwitcher magneticSwitcher;
+    //@Inject
+    //@SuppressWarnings("unused")
+    //MagneticDeclinationCalculatorSwitcher magneticSwitcher;
     @Inject
     Animation flashAnimation;
     private FullscreenControlsManager fullscreenControlsManager;
@@ -127,8 +117,6 @@ public class DynamicStarMapActivity extends InjectableActivity
     private String searchTargetName;
     private View timePlayerUI;
     private DynamicStarMapComponent daggerComponent;
-    private MediaPlayer timeTravelNoise;
-    private MediaPlayer timeTravelBackNoise;
     private DragRotateZoomGestureDetector dragZoomRotateDetector;
     private ActivityLightLevelManager activityLightLevelManager;
 
@@ -306,9 +294,6 @@ public class DynamicStarMapActivity extends InjectableActivity
     public void onResume() {
         Log.d(TAG, "onResume at " + System.currentTimeMillis());
         super.onResume();
-        Log.i(TAG, "Resuming");
-        timeTravelNoise = timeTravelNoiseProvider.get();
-        timeTravelBackNoise = timeTravelBackNoiseProvider.get();
         Log.i(TAG, "Starting view");
         skyView.onResume();
         Log.i(TAG, "Starting controller");
@@ -326,19 +311,8 @@ public class DynamicStarMapActivity extends InjectableActivity
     @SuppressLint("SimpleDateFormat")
     public void setTimeTravelMode(Date newTime) {
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy.MM.dd G  HH:mm:ss z");
-        Toast.makeText(this,
-                String.format(getString(R.string.time_travel_start_message_alt),
-                        dateFormatter.format(newTime)),
-                Toast.LENGTH_LONG).show();
-        if (sharedPreferences.getBoolean(ApplicationConstants.SOUND_EFFECTS, true)) {
-            try {
-                timeTravelNoise.start();
-            } catch (IllegalStateException | NullPointerException e) {
-                Log.e(TAG, "Exception trying to play time travel sound", e);
-                // It's not the end of the world - carry on.
-            }
-        }
-
+        Toast.makeText(this, String.format(getString(R.string.time_travel_start_message_alt),
+                        dateFormatter.format(newTime)), Toast.LENGTH_LONG).show();
         Log.d(TAG, "Showing TimePlayer UI.");
         timePlayerUI.setVisibility(View.VISIBLE);
         timePlayerUI.requestFocus();
@@ -347,14 +321,6 @@ public class DynamicStarMapActivity extends InjectableActivity
     }
 
     public void setNormalTimeModel() {
-        if (sharedPreferences.getBoolean(ApplicationConstants.SOUND_EFFECTS, true)) {
-            try {
-                timeTravelBackNoise.start();
-            } catch (IllegalStateException | NullPointerException e) {
-                Log.e(TAG, "Exception trying to play return time travel sound", e);
-                // It's not the end of the world - carry on.
-            }
-        }
         flashTheScreen();
         controller.useRealTime();
         Toast.makeText(this,
@@ -379,21 +345,12 @@ public class DynamicStarMapActivity extends InjectableActivity
         Log.d(TAG, "DynamicStarMap onPause");
         super.onPause();
         sensorAccuracyMonitor.stop();
-        if (timeTravelNoise != null) {
-            timeTravelNoise.release();
-            timeTravelNoise = null;
-        }
-        if (timeTravelBackNoise != null) {
-            timeTravelBackNoise.release();
-            timeTravelBackNoise = null;
-        }
         for (Runnable runnable : onResumeRunnables) {
             handler.removeCallbacks(runnable);
         }
         activityLightLevelManager.onPause();
         controller.stop();
         skyView.onPause();
-        // Debug.stopMethodTracing();
         Log.d(TAG, "DynamicStarMap -onPause");
     }
 

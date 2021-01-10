@@ -26,7 +26,6 @@ public class ApplicationConstants {
     public static final String BUNDLE_Y_TARGET = "bundle_y_target";
     public static final String BUNDLE_Z_TARGET = "bundle_z_target";
     public static final String BUNDLE_SEARCH_MODE = "bundle_search";
-    public static final String SOUND_EFFECTS = "sound_effects";
     // Preference that keeps track of whether or not the user accepted the ToS for this version
     public static final String READ_TOS_PREF_VERSION = "read_tos_version";
     public static final String SHARED_PREFERENCE_DISABLE_GYRO = "disable_gyro";

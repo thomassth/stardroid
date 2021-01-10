@@ -4,12 +4,12 @@ import android.content.res.Resources;
 import android.text.format.DateFormat;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.EnumSet;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.base.TimeConstants;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererObjectManager.UpdateType;
 import io.github.marcocipriani01.telescopetouch.source.AbstractAstronomicalSource;
@@ -21,6 +21,7 @@ import io.github.marcocipriani01.telescopetouch.source.impl.ImageSourceImpl;
 import io.github.marcocipriani01.telescopetouch.source.impl.TextSourceImpl;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.Vector3;
+import io.github.marcocipriani01.telescopetouch.util.TimeUtil;
 
 /**
  * A {@link Layer} to show well-known meteor showers.
@@ -29,7 +30,7 @@ import io.github.marcocipriani01.telescopetouch.units.Vector3;
  */
 public class MeteorShowerLayer extends AbstractLayer {
 
-    private static final int ANY_OLD_YEAR = 100;  // = year 2000
+    private static final int ANY_OLD_YEAR = 20000;
     /**
      * Number of meteors per hour for the larger graphic
      */
@@ -50,63 +51,63 @@ public class MeteorShowerLayer extends AbstractLayer {
         // Actual start for Quadrantids is December 28 - but we can't cross a year boundary.
         showers.add(new Shower(
                 R.string.quadrantids, GeocentricCoordinates.getInstance(230, 49),
-                new Date(ANY_OLD_YEAR, 0, 1),
-                new Date(ANY_OLD_YEAR, 0, 4),
-                new Date(ANY_OLD_YEAR, 0, 12),
+                new GregorianCalendar(ANY_OLD_YEAR, 0, 1),
+                new GregorianCalendar(ANY_OLD_YEAR, 0, 4),
+                new GregorianCalendar(ANY_OLD_YEAR, 0, 12),
                 120));
         showers.add(new Shower(
                 R.string.lyrids, GeocentricCoordinates.getInstance(271, 34),
-                new Date(ANY_OLD_YEAR, 3, 16),
-                new Date(ANY_OLD_YEAR, 3, 22),
-                new Date(ANY_OLD_YEAR, 3, 25),
+                new GregorianCalendar(ANY_OLD_YEAR, 3, 16),
+                new GregorianCalendar(ANY_OLD_YEAR, 3, 22),
+                new GregorianCalendar(ANY_OLD_YEAR, 3, 25),
                 18));
         showers.add(new Shower(
                 R.string.aquariids, GeocentricCoordinates.getInstance(338, -1),
-                new Date(ANY_OLD_YEAR, 3, 19),
-                new Date(ANY_OLD_YEAR, 4, 6),
-                new Date(ANY_OLD_YEAR, 4, 28),
+                new GregorianCalendar(ANY_OLD_YEAR, 3, 19),
+                new GregorianCalendar(ANY_OLD_YEAR, 4, 6),
+                new GregorianCalendar(ANY_OLD_YEAR, 4, 28),
                 70));
         showers.add(new Shower(
                 R.string.deltaaquariids, GeocentricCoordinates.getInstance(340, -16),
-                new Date(ANY_OLD_YEAR, 6, 12),
-                new Date(ANY_OLD_YEAR, 6, 30),
-                new Date(ANY_OLD_YEAR, 7, 23),
+                new GregorianCalendar(ANY_OLD_YEAR, 6, 12),
+                new GregorianCalendar(ANY_OLD_YEAR, 6, 30),
+                new GregorianCalendar(ANY_OLD_YEAR, 7, 23),
                 16));
         showers.add(new Shower(
                 R.string.perseids, GeocentricCoordinates.getInstance(48, 58),
-                new Date(ANY_OLD_YEAR, 6, 17),
-                new Date(ANY_OLD_YEAR, 7, 13),
-                new Date(ANY_OLD_YEAR, 7, 24),
+                new GregorianCalendar(ANY_OLD_YEAR, 6, 17),
+                new GregorianCalendar(ANY_OLD_YEAR, 7, 13),
+                new GregorianCalendar(ANY_OLD_YEAR, 7, 24),
                 100));
         showers.add(new Shower(
                 R.string.orionids, GeocentricCoordinates.getInstance(95, 16),
-                new Date(ANY_OLD_YEAR, 9, 2),
-                new Date(ANY_OLD_YEAR, 9, 21),
-                new Date(ANY_OLD_YEAR, 10, 7),
+                new GregorianCalendar(ANY_OLD_YEAR, 9, 2),
+                new GregorianCalendar(ANY_OLD_YEAR, 9, 21),
+                new GregorianCalendar(ANY_OLD_YEAR, 10, 7),
                 25));
         showers.add(new Shower(
                 R.string.leonids, GeocentricCoordinates.getInstance(152, 22),
-                new Date(ANY_OLD_YEAR, 10, 6),
-                new Date(ANY_OLD_YEAR, 10, 18),
-                new Date(ANY_OLD_YEAR, 10, 30),
+                new GregorianCalendar(ANY_OLD_YEAR, 10, 6),
+                new GregorianCalendar(ANY_OLD_YEAR, 10, 18),
+                new GregorianCalendar(ANY_OLD_YEAR, 10, 30),
                 20));
         showers.add(new Shower(
                 R.string.puppidvelids, GeocentricCoordinates.getInstance(123, -45),
-                new Date(ANY_OLD_YEAR, 11, 1),
-                new Date(ANY_OLD_YEAR, 11, 7),
-                new Date(ANY_OLD_YEAR, 11, 15),
+                new GregorianCalendar(ANY_OLD_YEAR, 11, 1),
+                new GregorianCalendar(ANY_OLD_YEAR, 11, 7),
+                new GregorianCalendar(ANY_OLD_YEAR, 11, 15),
                 10));
         showers.add(new Shower(
                 R.string.geminids, GeocentricCoordinates.getInstance(112, 33),
-                new Date(ANY_OLD_YEAR, 11, 7),
-                new Date(ANY_OLD_YEAR, 11, 14),
-                new Date(ANY_OLD_YEAR, 11, 17),
+                new GregorianCalendar(ANY_OLD_YEAR, 11, 7),
+                new GregorianCalendar(ANY_OLD_YEAR, 11, 14),
+                new GregorianCalendar(ANY_OLD_YEAR, 11, 17),
                 120));
         showers.add(new Shower(
                 R.string.ursids, GeocentricCoordinates.getInstance(217, 76),
-                new Date(ANY_OLD_YEAR, 11, 17),
-                new Date(ANY_OLD_YEAR, 11, 23),
-                new Date(ANY_OLD_YEAR, 11, 26),
+                new GregorianCalendar(ANY_OLD_YEAR, 11, 17),
+                new GregorianCalendar(ANY_OLD_YEAR, 11, 23),
+                new GregorianCalendar(ANY_OLD_YEAR, 11, 26),
                 10));
     }
 
@@ -141,15 +142,15 @@ public class MeteorShowerLayer extends AbstractLayer {
      * Represents a meteor shower.
      */
     private static class Shower {
-        private final Date start;
+
+        private final Calendar start;
         private final GeocentricCoordinates radiant;
         private final int nameId;
-        private final Date peak;
-        private final Date end;
+        private final Calendar peak;
+        private final Calendar end;
         private final int peakMeteorsPerHour;
 
-        public Shower(int nameId, GeocentricCoordinates radiant,
-                      Date start, Date peak, Date end, int peakMeteorsPerHour) {
+        public Shower(int nameId, GeocentricCoordinates radiant, Calendar start, Calendar peak, Calendar end, int peakMeteorsPerHour) {
             this.nameId = nameId;
             this.radiant = radiant;
             this.start = start;
@@ -162,7 +163,7 @@ public class MeteorShowerLayer extends AbstractLayer {
     private static class MeteorRadiantSource extends AbstractAstronomicalSource {
         private static final int LABEL_COLOR = 0xf67e81;
         private static final Vector3 UP = new Vector3(0.0f, 1.0f, 0.0f);
-        private static final long UPDATE_FREQ_MS = TimeConstants.MILLISECONDS_PER_DAY;
+        private static final long UPDATE_FREQ_MS = TimeUtil.MILLISECONDS_PER_DAY;
         private static final float SCALE_FACTOR = 0.03f;
 
         private final List<ImageSource> imageSources = new ArrayList<>();
@@ -208,11 +209,11 @@ public class MeteorShowerLayer extends AbstractLayer {
         }
 
         private void updateShower() {
-            lastUpdateTimeMs = model.getTime().getTime();
+            lastUpdateTimeMs = model.getTimeMillis();
             // We will only show the shower if it's the right time of year.
-            Date now = model.getTime();
+            Calendar now = model.getTime();
             // Standardize on the same year as we stored for the showers.
-            now.setYear(ANY_OLD_YEAR);
+            now.set(Calendar.YEAR, ANY_OLD_YEAR);
 
             theImage.setUpVector(UP);
             // TODO(johntaylor): consider varying the sizes by scaling factor as time progresses.
@@ -220,11 +221,11 @@ public class MeteorShowerLayer extends AbstractLayer {
                 label.setText(name);
                 double percentToPeak;
                 if (now.before(shower.peak)) {
-                    percentToPeak = (double) (now.getTime() - shower.start.getTime()) /
-                            (shower.peak.getTime() - shower.start.getTime());
+                    percentToPeak = (double) (now.getTimeInMillis() - shower.start.getTimeInMillis()) /
+                            (shower.peak.getTimeInMillis() - shower.start.getTimeInMillis());
                 } else {
-                    percentToPeak = (double) (shower.end.getTime() - now.getTime()) /
-                            (shower.end.getTime() - shower.peak.getTime());
+                    percentToPeak = (double) (shower.end.getTimeInMillis() - now.getTimeInMillis()) /
+                            (shower.end.getTimeInMillis() - shower.peak.getTimeInMillis());
                 }
                 // Not sure how best to calculate number of meteors - use linear interpolation for now.
                 double numberOfMeteorsPerHour = shower.peakMeteorsPerHour * percentToPeak;
@@ -248,7 +249,7 @@ public class MeteorShowerLayer extends AbstractLayer {
         @Override
         public EnumSet<UpdateType> update() {
             EnumSet<UpdateType> updateTypes = EnumSet.noneOf(UpdateType.class);
-            if (Math.abs(model.getTime().getTime() - lastUpdateTimeMs) > UPDATE_FREQ_MS) {
+            if (Math.abs(model.getTime().getTimeInMillis() - lastUpdateTimeMs) > UPDATE_FREQ_MS) {
                 updateShower();
                 updateTypes.add(UpdateType.Reset);
             }
