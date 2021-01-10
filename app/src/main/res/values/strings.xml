@@ -539,4 +539,5 @@
     <string name="dark_nebula">Dark nebula</string>
     <string name="search">Search</string>
     <string name="sky_map">Sky Map</string>
+    <string name="compass">Compass</string>
 </resources>

@@ -66,8 +66,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_about) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_about) {
             startActivity(new Intent(this, AboutActivity.class));
+            return true;
+        } else if (itemId == R.id.menu_compass) {
+            startActivity(new Intent(this, CompassActivity.class));
             return true;
         }
         return false;
