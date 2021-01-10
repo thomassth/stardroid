@@ -3,7 +3,7 @@ package io.github.marcocipriani01.telescopetouch.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationComponent;
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
 /**
  * Base class for all activities injected by Dagger.
@@ -12,6 +12,6 @@ import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
  */
 public abstract class InjectableActivity extends AppCompatActivity {
     protected ApplicationComponent getApplicationComponent() {
-        return ((TelescopeTouchApplication) getApplication()).getApplicationComponent();
+        return ((TelescopeTouchApp) getApplication()).getApplicationComponent();
     }
 }

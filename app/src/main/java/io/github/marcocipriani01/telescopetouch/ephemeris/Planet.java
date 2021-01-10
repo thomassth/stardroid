@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.base.VisibleForTesting;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.HeliocentricCoordinates;
@@ -31,7 +31,7 @@ public enum Planet {
     Venus(R.drawable.venus, R.string.venus, TimeUtil.MILLISECONDS_PER_HOUR),
     Moon(R.drawable.moon4, R.string.moon, TimeUtil.MILLISECONDS_PER_MINUTE);
 
-    private static final String TAG = TelescopeTouchApplication.getTag(Planet.class);
+    private static final String TAG = TelescopeTouchApp.getTag(Planet.class);
     // Maximum number of times to calculate rise/set times. If we cannot
     // converge after this many iteretions, we will fail.
     private final static int MAX_ITERATIONS = 25;
@@ -423,7 +423,7 @@ public enum Planet {
                 mag = -1.0f;
                 break;
             default:
-                Log.e(TelescopeTouchApplication.getTag(this), "Invalid planet: " + this);
+                Log.e(TelescopeTouchApp.getTag(this), "Invalid planet: " + this);
                 // At least make it faint!
                 mag = 100f;
                 break;

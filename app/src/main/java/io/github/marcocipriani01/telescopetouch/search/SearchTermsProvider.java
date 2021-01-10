@@ -16,7 +16,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationComponent;
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.layers.LayerManager;
 
 /**
@@ -24,7 +24,7 @@ import io.github.marcocipriani01.telescopetouch.layers.LayerManager;
  */
 public class SearchTermsProvider extends ContentProvider {
 
-    private static final String TAG = TelescopeTouchApplication.getTag(SearchTermsProvider.class);
+    private static final String TAG = TelescopeTouchApp.getTag(SearchTermsProvider.class);
     private static final int SEARCH_SUGGEST = 0;
     /**
      * The columns we'll include in our search suggestions.
@@ -64,10 +64,10 @@ public class SearchTermsProvider extends ContentProvider {
             return true;
         }
         Context appContext = getContext().getApplicationContext();
-        if (!(appContext instanceof TelescopeTouchApplication)) {
+        if (!(appContext instanceof TelescopeTouchApp)) {
             return false;
         }
-        ApplicationComponent component = ((TelescopeTouchApplication) appContext).getApplicationComponent();
+        ApplicationComponent component = ((TelescopeTouchApp) appContext).getApplicationComponent();
         if (component == null) {
             return false;
         }

@@ -4,7 +4,7 @@ import android.util.Log;
 
 import javax.inject.Inject;
 
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
 /**
  * Implements some of the boilerplate of a {@link Controller}.
@@ -13,7 +13,7 @@ import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
  */
 public abstract class AbstractController implements Controller {
 
-    private static final String TAG = TelescopeTouchApplication.getTag(AbstractController.class);
+    private static final String TAG = TelescopeTouchApp.getTag(AbstractController.class);
     protected boolean enabled = true;
     @Inject
     AstronomerModel model;

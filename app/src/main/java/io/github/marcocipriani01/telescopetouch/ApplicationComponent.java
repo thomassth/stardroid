@@ -26,7 +26,7 @@ import io.github.marcocipriani01.telescopetouch.search.SearchTermsProvider;
 public interface ApplicationComponent {
 
     // What we expose to dependent components
-    TelescopeTouchApplication provideStardroidApplication();
+    TelescopeTouchApp provideStardroidApplication();
 
     SharedPreferences provideSharedPreferences();
 
@@ -47,7 +47,7 @@ public interface ApplicationComponent {
     MagneticDeclinationCalculator provideMagDec2();
 
     // Who can we inject
-    void inject(TelescopeTouchApplication app);
+    void inject(TelescopeTouchApp app);
 
     void inject(EditSettingsActivity activity);
 

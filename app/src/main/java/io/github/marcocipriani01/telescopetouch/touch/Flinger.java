@@ -7,7 +7,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
 /**
  * Given a flung motion event, this class pumps new Motion events out
@@ -15,7 +15,7 @@ import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
  */
 public class Flinger {
 
-    private static final String TAG = TelescopeTouchApplication.getTag(Flinger.class);
+    private static final String TAG = TelescopeTouchApp.getTag(Flinger.class);
     private final FlingListener listener;
     private final int UPDATES_PER_SECOND = 20;
     private final ScheduledExecutorService executor;

@@ -41,7 +41,7 @@ import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.EulaDialogFragment;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.MultipleSearchResultsDialogFragment;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.NoSearchResultsDialogFragment;
@@ -74,7 +74,7 @@ public class DynamicStarMapActivity extends InjectableActivity
 
     private static final int TIME_DISPLAY_DELAY_MILLIS = 1000;
     private static final float ROTATION_SPEED = 10;
-    private static final String TAG = TelescopeTouchApplication.getTag(DynamicStarMapActivity.class);
+    private static final String TAG = TelescopeTouchApp.getTag(DynamicStarMapActivity.class);
     // A list of runnables to post on the handler when we resume.
     private final List<Runnable> onResumeRunnables = new ArrayList<>();
     // End Activity for result Ids
@@ -254,7 +254,9 @@ public class DynamicStarMapActivity extends InjectableActivity
         super.onOptionsItemSelected(item);
         fullscreenControlsManager.delayHideTheControls();
         int itemId = item.getItemId();
-        if (itemId == R.id.menu_item_search) {
+        if (itemId == R.id.telescope_contro_item) {
+            startActivity(new Intent(this, MainActivity.class));
+        } else if (itemId == R.id.menu_item_search) {
             Log.d(TAG, "Search");
             onSearchRequested();
         } else if (itemId == R.id.menu_item_settings) {

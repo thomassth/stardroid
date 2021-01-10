@@ -2,7 +2,7 @@ package io.github.marcocipriani01.telescopetouch.control;
 
 import android.util.Log;
 
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel.Pointing;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.Vector3;
@@ -15,7 +15,7 @@ import io.github.marcocipriani01.telescopetouch.util.VectorUtil;
  */
 public class TeleportingController extends AbstractController {
 
-    private static final String TAG = TelescopeTouchApplication.getTag(TeleportingController.class);
+    private static final String TAG = TelescopeTouchApp.getTag(TeleportingController.class);
 
     /**
      * Teleport the astronomer instantaneously from his current pointing to a new

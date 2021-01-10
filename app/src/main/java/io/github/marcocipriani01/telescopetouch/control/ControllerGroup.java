@@ -7,7 +7,7 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.base.VisibleForTesting;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 
@@ -19,7 +19,7 @@ import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
  */
 public class ControllerGroup implements Controller {
 
-    private final static String TAG = TelescopeTouchApplication.getTag(ControllerGroup.class);
+    private final static String TAG = TelescopeTouchApp.getTag(ControllerGroup.class);
     private final ArrayList<Controller> controllers = new ArrayList<>();
     private final ZoomController zoomController;
     private final ManualOrientationController manualDirectionController;

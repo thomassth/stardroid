@@ -19,7 +19,7 @@ import java.util.Objects;
 import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
 
 /**
@@ -28,7 +28,7 @@ import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
  */
 public class EulaDialogFragment extends ImprovedDialogFragment {
 
-    private static final String TAG = TelescopeTouchApplication.getTag(EulaDialogFragment.class);
+    private static final String TAG = TelescopeTouchApp.getTag(EulaDialogFragment.class);
     @Inject
     Activity parentActivity;
     private EulaAcceptanceListener resultListener;

@@ -11,12 +11,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.DynamicStarMapActivity;
 import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
 import io.github.marcocipriani01.telescopetouch.search.SearchResult;
@@ -27,7 +26,7 @@ import io.github.marcocipriani01.telescopetouch.search.SearchResult;
  */
 public class MultipleSearchResultsDialogFragment extends DialogFragment {
 
-    private static final String TAG = TelescopeTouchApplication.getTag(MultipleSearchResultsDialogFragment.class);
+    private static final String TAG = TelescopeTouchApp.getTag(MultipleSearchResultsDialogFragment.class);
     @Inject
     DynamicStarMapActivity parentActivity;
 

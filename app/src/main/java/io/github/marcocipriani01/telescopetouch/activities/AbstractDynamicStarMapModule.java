@@ -2,7 +2,6 @@ package io.github.marcocipriani01.telescopetouch.activities;
 
 import android.app.Activity;
 import android.content.Context;
-import android.media.MediaPlayer;
 import android.os.Handler;
 import android.util.Log;
 import android.view.animation.Animation;
@@ -10,12 +9,10 @@ import android.view.animation.AnimationUtils;
 
 import androidx.fragment.app.FragmentManager;
 
-import javax.inject.Named;
-
 import dagger.Module;
 import dagger.Provides;
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.EulaDialogFragment;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.LocationPermissionRationaleFragment;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.MultipleSearchResultsDialogFragment;
@@ -31,7 +28,7 @@ import io.github.marcocipriani01.telescopetouch.inject.PerActivity;
 @Module
 public class AbstractDynamicStarMapModule {
 
-    private static final String TAG = TelescopeTouchApplication.getTag(DynamicStarMapModule.class);
+    private static final String TAG = TelescopeTouchApp.getTag(DynamicStarMapModule.class);
     private final DynamicStarMapActivity activity;
 
     public AbstractDynamicStarMapModule(DynamicStarMapActivity activity) {

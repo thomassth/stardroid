@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_connection"
+        android:icon="@drawable/connect"
+        android:title="@string/menu_connection"/>
+
+    <item
+        android:id="@+id/menu_move"
+        android:icon="@drawable/move"
+        android:title="@string/menu_motion"/>
+
+    <item
+        android:id="@+id/menu_focuser"
+        android:icon="@drawable/focuser"
+        android:title="@string/menu_focuser"/>
+
+    <item
+        android:id="@+id/menu_generic"
+        android:icon="@drawable/control_panel"
+        android:title="@string/menu_control_panel" />
+
+    <item
+        android:id="@+id/menu_search"
+        android:icon="@drawable/search"
+        android:title="@string/mount_goto" />
+</menu>

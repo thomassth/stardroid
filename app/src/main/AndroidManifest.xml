@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-feature
         android:name="android.hardware.location.gps"
@@ -31,17 +31,12 @@
         android:name="android.hardware.touchscreen.multitouch.distinct"
         android:required="false" />
 
-    <supports-screens
-        android:anyDensity="true"
-        android:largeScreens="true"
-        android:normalScreens="true"
-        android:smallScreens="true"
-        android:xlargeScreens="true" />
-
     <application
-        android:name="io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication"
+        android:name="io.github.marcocipriani01.telescopetouch.TelescopeTouchApp"
+        android:allowBackup="false"
         android:icon="@mipmap/app_icon"
         android:label="@string/app_name"
+        android:roundIcon="@mipmap/app_icon_round"
         android:theme="@style/AppTheme">
         <activity
             android:name="io.github.marcocipriani01.telescopetouch.activities.SplashScreenActivity"
@@ -67,7 +62,7 @@
 
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
+                android:resource="@xml/skymap_searchable" />
         </activity>
         <activity android:name="io.github.marcocipriani01.telescopetouch.activities.EditSettingsActivity" />
         <activity android:name="io.github.marcocipriani01.telescopetouch.activities.ImageGalleryActivity" />
@@ -87,5 +82,48 @@
         <activity
             android:name="io.github.marcocipriani01.telescopetouch.activities.CompassCalibrationActivity"
             android:launchMode="singleTop" />
+
+
+        <activity
+            android:name=".activities.MainActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleInstance"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/AppThemeNoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+        <activity
+            android:name=".activities.AboutActivity"
+            android:label="@string/menu_about"
+            android:screenOrientation="fullUser"
+            android:theme="@style/AppThemeNoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activities.ServersActivity"
+            android:label="@string/host_manage"
+            android:screenOrientation="fullUser"
+            android:theme="@style/AppThemeNoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activities.GoToActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+
+        <meta-data
+            android:name="android.app.default_searchable"
+            android:value=".SearchActivity" />
     </application>
 </manifest>

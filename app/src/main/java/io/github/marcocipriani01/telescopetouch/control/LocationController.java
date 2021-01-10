@@ -25,7 +25,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.units.LatLong;
 
 /**
@@ -42,7 +42,7 @@ public class LocationController extends AbstractController implements LocationLi
     private static final String FORCE_GPS = "force_gps";
     private static final int MINIMUM_DISTANCE_BEFORE_UPDATE_METRES = 2000;
     private static final int LOCATION_UPDATE_TIME_MILLISECONDS = 600000;
-    private static final String TAG = TelescopeTouchApplication.getTag(LocationController.class);
+    private static final String TAG = TelescopeTouchApp.getTag(LocationController.class);
     private static final float MIN_DIST_TO_SHOW_TOAST_DEGS = 0.01f;
 
     private final Context context;

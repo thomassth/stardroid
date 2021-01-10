@@ -13,12 +13,12 @@ import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.preference.PreferenceManager;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
 public class PreferencesButton extends AppCompatImageButton
         implements android.view.View.OnClickListener, OnSharedPreferenceChangeListener {
 
-    private static final String TAG = TelescopeTouchApplication.getTag(PreferencesButton.class);
+    private static final String TAG = TelescopeTouchApp.getTag(PreferencesButton.class);
     private OnClickListener secondaryOnClickListener;
     private Drawable imageOn;
     private Drawable imageOff;
