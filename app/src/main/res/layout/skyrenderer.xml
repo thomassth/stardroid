@@ -93,7 +93,7 @@
         android:layout_gravity="left|center_vertical"
         android:background="@drawable/button_background_rotated"
         android:orientation="vertical"
-        android:padding="4dp"
+        android:padding="8dp"
         stardroid:fade_time="500">
 
         <io.github.marcocipriani01.telescopetouch.views.PreferencesButton
@@ -119,8 +119,8 @@
             android:layout_height="wrap_content"
             android:background="#00000000"
             android:paddingBottom="8dp"
-            stardroid:image_off="@drawable/messier_off"
-            stardroid:image_on="@drawable/messier_on"
+            stardroid:image_off="@drawable/galaxy_off"
+            stardroid:image_on="@drawable/galaxy_on"
             stardroid:pref_key="source_provider.2" />
 
         <io.github.marcocipriani01.telescopetouch.views.PreferencesButton
@@ -128,8 +128,8 @@
             android:layout_height="wrap_content"
             android:background="#00000000"
             android:paddingBottom="8dp"
-            stardroid:image_off="@drawable/planet_off"
-            stardroid:image_on="@drawable/planet_on"
+            stardroid:image_off="@drawable/planets_off"
+            stardroid:image_on="@drawable/planets_on"
             stardroid:pref_key="source_provider.3" />
 
         <io.github.marcocipriani01.telescopetouch.views.PreferencesButton
@@ -137,8 +137,8 @@
             android:layout_height="wrap_content"
             android:background="#00000000"
             android:paddingBottom="8dp"
-            stardroid:image_off="@drawable/meteor_off"
-            stardroid:image_on="@drawable/meteor_on"
+            stardroid:image_off="@drawable/meteors_off"
+            stardroid:image_on="@drawable/meteors_on"
             stardroid:pref_key="source_provider.6" />
 
         <io.github.marcocipriani01.telescopetouch.views.PreferencesButton
@@ -166,7 +166,7 @@
         android:layout_gravity="center_vertical|right"
         android:background="@drawable/button_background"
         android:orientation="vertical"
-        android:padding="4dp"
+        android:padding="8dp"
         stardroid:fade_time="500">
 
         <io.github.marcocipriani01.telescopetouch.views.PreferencesButton
