@@ -13,7 +13,6 @@ import dagger.Module;
 import dagger.Provides;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
-import io.github.marcocipriani01.telescopetouch.activities.dialogs.EulaDialogFragment;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.LocationPermissionRationaleFragment;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.MultipleSearchResultsDialogFragment;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.NoSearchResultsDialogFragment;
@@ -52,12 +51,6 @@ public class AbstractDynamicStarMapModule {
     @PerActivity
     Context provideActivityContext() {
         return activity;
-    }
-
-    @Provides
-    @PerActivity
-    EulaDialogFragment provideEulaDialogFragment() {
-        return new EulaDialogFragment();
     }
 
     @Provides

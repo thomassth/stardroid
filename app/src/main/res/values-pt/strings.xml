@@ -3,7 +3,6 @@
     <string name="menu_settings">Configurações</string>
     <string name="menu_search">Pesquisar</string>
     <string name="cancel">Cancelar</string>
-    <string name="set">Definir</string>
     <string name="go">Ir!</string>
     <string name="location_prefs">Configurações de local</string>
     <string name="force_gps_pref">Sempre usar GPS</string>
@@ -26,8 +25,6 @@
     <string name="location_long_lat">Longitude:%1$f, Latitude:%2$f</string>
     <string name="location_place_found">Lugar encontrado.  Definindo latitude %1$f e longitude %2$f</string>
     <string name="use_magnetic_correction">Usar correção magnética</string>
-    <string name="use_magnetic_correction_hint">Use o conhecimento que você tem do local para corrigir a orientação do norte magnético em relação ao norte real.</string>
-    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">Exibir…</string>
     <string name="show_stars_pref">Estrelas</string>
     <string name="show_constellations_pref">Constelações</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Objetos Messier</string>
@@ -35,20 +32,10 @@
     <string name="show_horizon_pref">Horizonte</string>
     <string name="show_sky_gradient">Gradiente de céu</string>
     <string name="sensor_prefs">Configurações do sensor</string>
-    <string name="sensor_speed">Velocidade do sensor</string>
-    <string name="sensor_damping" translation_description="The amount of       smoothing applied to the sensor outputs.">Amortecimento</string>
     <string name="ecliptic">Eclíptica</string>
-    <string name="show_hubble_layer_pref">Imagens do Hubble</string>
     <string name="malformed_loc_error">A conf. de latitude ou longitude não é um número.</string>
-    <string name="dialog_accept" translation_description="accepting the licence agreement">Aceito</string>
-    <string name="dialog_decline" translation_description="declining the licence agreement">Não aceito</string>
-    <string name="menu_help" translation_description="menu item to show \'Help\' box">Ajuda</string>
-    <string name="help_dialog_title">Ajuda do Sky Map</string>
-    <string name="eula_dialog_title">Contrato de licença de usuário final</string>
     <string name="set_manual">Alternando p/ modo manual</string>
     <string name="set_auto">Alternando p/ modo automático</string>
-    <string name="menu_zoom_in">Mais zoom</string>
-    <string name="menu_zoom_out">Menos zoom</string>
     <string name="menu_toggle_dim">Modo noturno</string>
     <string name="zenith">ZÊNITE</string>
     <string name="nadir">NADIR</string>
@@ -61,13 +48,7 @@
     <string name="no_search_title">Sem resultado</string>
     <string name="no_search_results_text">Nenhum resultado encontrado.</string>
     <string name="many_search_results_title">Você quis dizer?</string>
-    <string name="many_search_results_text">Selecione um</string>
-    <string name="searching_for_text">Pesquisando %s…</string>
-    <string name="found_target_text">%s encontrado.</string>
-    <string name="other">Outros</string>
-    <string name="planetary_images">Mostrar imagens planetas</string>
     <string name="menu_time">Viagem no tempo</string>
-    <string name="time_travel_start_message">Viajando no tempo…</string>
     <string name="time_travel_start_message_alt">Viajando no tempo para %s…</string>
     <string name="time_travel_close_message">Voltar ao presente…</string>
     <string name="popular_dates_prompt" translation_description="label for a list of dates the user can choose from">Datas populares</string>
@@ -90,24 +71,16 @@
     <string name="time_travel_hour_speed_back" translation_description="label showing rate of travel through time">Viajando &lt; à 1 hora/s</string>
     <string name="time_travel_day_speed_back" translation_description="label showing rate of travel through time">Viajando &lt; à 1 dia/s</string>
     <string name="time_travel_week_speed_back" translation_description="label showing rate of travel through time">Viajando &lt; à 1 semana/s</string>
-    <string name="use_sound_effects" translation_description="A preferences menu label">Ativar som</string>
-    <string name="enable_layer_toast">Ativando camada %s</string>
-    <string name="disable_layer_toast">Desativando camada %s</string>
-    <string name="menu_gallery">Galeria</string>
     <string name="gallery_image_search_btn">Localizar no céu</string>
     <string name="gallery_image_back_btn">Voltar para galeria</string>
     <string name="hubble_image_gallery_title">Galeria do Hubble do Sky Map</string>
-    <string name="hubble_image">Imagem do Hubble</string>
-    <string name="search_target_found_message" translation_description="displayed when a search target has been located">Você encontrou:</string>
     <string name="search_overlay_title" translation_description="title for search overlay">Aponte o seu telefone em direção à seta</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">Procurando:</string>
     <string name="sun_wont_set_message">O sol não irá se pôr durante as próximas 24 horas no seu local atual.</string>
-    <string name="sun_wont_rise_message">O sol não nascerá durante as próximas 24 horas no seu local atual.</string>
     <string name="sun">Sol</string>
     <string name="moon">Lua</string>
     <string name="mercury">Mercúrio</string>
     <string name="venus">Vênus</string>
-    <string name="earth">Terra</string>
     <string name="mars">Marte</string>
     <string name="jupiter">Júpiter</string>
     <string name="saturn">Saturno</string>
@@ -127,11 +100,7 @@
     <string name="cats_eye_nebula" translation_description="hubble object">Nebulosa do Olho de Gato</string>
     <string name="omega_centauri" translation_description="hubble object">Aglomerado globular de Ômega Centauro</string>
     <string name="v838_mon" translation_description="hubble object">V838 Monocerotis</string>
-    <string name="sn1987a" translation_description="hubble object">Supernova 1987a</string>
     <string name="hubble_deep_field" translation_description="hubble object">Campo Profundo do Hubble</string>
-    <string name="rho_oph" translation_description="hubble object">Rho Ofiúco</string>
-    <string name="menu_tos">Termos de Serviço</string>
-    <string name="control_panel_btn" translation_description="Label for the control panel button">Painel de controle</string>
     <string name="north_pole">NP</string>
     <string name="south_pole">SP</string>
     <string name="andromeda" translation_description="Name of the Andromeda constellation">Andrômeda</string>
@@ -369,9 +338,4 @@
     <string name="beehive_cluster" translation_description="Name of the Messier object Beehive Cluster">Aglomerado da Colmeia</string>
     <string name="praesepe" translation_description="Name of the Messier object Praesepe">Praesepe</string>
     <string name="seven_sisters" translation_description="Name of the Messier object Seven Sisters">Sete Irmãs</string>
-    <string name="space_station" translation_description="Name of the Internation Space Station">Estação Espacial Internacional</string>
-    <string name="space_shuttle" translation_description="Name of the Space Shuttle">Ônibus espacial</string>
-    <string name="kml_load_error">Falha ao carregar o arquivo KML</string>
-    <string name="load_kml_dialog_title">Carregar KML</string>
-    <string name="load_kml_file">Carregar</string>
 </resources>

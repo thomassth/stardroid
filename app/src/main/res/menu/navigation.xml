@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_skymap"
+        android:icon="@drawable/map"
+        android:title="@string/sky_map"/>
 
     <item
         android:id="@+id/menu_connection"
@@ -20,9 +24,4 @@
         android:id="@+id/menu_generic"
         android:icon="@drawable/control_panel"
         android:title="@string/menu_control_panel" />
-
-    <item
-        android:id="@+id/menu_search"
-        android:icon="@drawable/search"
-        android:title="@string/mount_goto" />
 </menu>

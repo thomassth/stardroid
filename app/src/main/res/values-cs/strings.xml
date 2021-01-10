@@ -3,7 +3,6 @@
     <string name="menu_settings">Nastavení</string>
     <string name="menu_search">Hledat</string>
     <string name="cancel">Storno</string>
-    <string name="set">Nastavit</string>
     <string name="go">Hledat!</string>
     <string name="location_prefs">Nastavení polohy</string>
     <string name="force_gps_pref">Vždy používat GPS</string>
@@ -26,8 +25,6 @@
     <string name="location_long_lat">Zeměpisná délka:%1$f, Zeměpisná šířka:%2$f</string>
     <string name="location_place_found">Místo nalezeno. Nastavení šířky %1$f a délky %2$f</string>
     <string name="use_magnetic_correction">Použít magnetickou korekci</string>
-    <string name="use_magnetic_correction_hint">Použije znalost vaší lokace k opravě orientace magnetického pólu na skutečný zeměpisný pól</string>
-    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">Zobrazit…</string>
     <string name="show_stars_pref">Hvězdy</string>
     <string name="show_constellations_pref">Souhvězdí</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Messierovy objekty</string>
@@ -35,20 +32,10 @@
     <string name="show_horizon_pref">Horizont</string>
     <string name="show_sky_gradient">Gradient oblohy</string>
     <string name="sensor_prefs">Nastavení čidel</string>
-    <string name="sensor_speed">Rychlost čidel</string>
-    <string name="sensor_damping" translation_description="The amount of smoothing applied to the sensor outputs.">Korekce senzorů</string>
     <string name="ecliptic">Ekliptika</string>
-    <string name="show_hubble_layer_pref">Snímky z Hubbleova teleskopu</string>
     <string name="malformed_loc_error">Nastavená šířka nebo délka není číslo.</string>
-    <string name="dialog_accept" translation_description="accepting the licence agreement">Přijmout</string>
-    <string name="dialog_decline" translation_description="declining the licence agreement">Odmítnout</string>
-    <string name="menu_help" translation_description="menu item to show \'Help\' box">Nápověda</string>
-    <string name="help_dialog_title">Nápověda pro Sky Map</string>
-    <string name="eula_dialog_title">Licenční smlouva s koncovým uživatelem služby </string>
     <string name="set_manual">Přepnout na manuální režim</string>
     <string name="set_auto">Přepnout na automatický režim</string>
-    <string name="menu_zoom_in">Přiblížit</string>
-    <string name="menu_zoom_out">Oddálit</string>
     <string name="menu_toggle_dim">Přepnout noční/denní režim</string>
     <string name="zenith">ZENIT</string>
     <string name="nadir">NADIR</string>
@@ -61,13 +48,7 @@
     <string name="no_search_title">Nic nenalezeno</string>
     <string name="no_search_results_text">Nelze najít váš oběkt</string>
     <string name="many_search_results_title">Možná jste chtěli zadat:</string>
-    <string name="many_search_results_text">Zvolte výsledek</string>
-    <string name="searching_for_text">Hledání %s…</string>
-    <string name="found_target_text">Nalezeno: %s.</string>
-    <string name="other">Jiné</string>
-    <string name="planetary_images">Zobrazit obrázky planet</string>
     <string name="menu_time">Cestování v čase</string>
-    <string name="time_travel_start_message">Cestování v čase…</string>
     <string name="time_travel_start_message_alt">Cestování v čase do %s…</string>
     <string name="time_travel_close_message">Zpět do současnosti…</string>
     <string name="popular_dates_prompt" translation_description="label for a list of dates the user can choose from">Oblíbená data</string>
@@ -90,24 +71,16 @@
     <string name="time_travel_hour_speed_back" translation_description="label showing rate of travel through time">Rychlost cestování &lt; 1 hod./s</string>
     <string name="time_travel_day_speed_back" translation_description="label showing rate of travel through time">Rychlost cestování &lt; 1 den/s</string>
     <string name="time_travel_week_speed_back" translation_description="label showing rate of travel through time">Rychlost cestování &lt; 1 týden/s</string>
-    <string name="use_sound_effects" translation_description="A preferences menu label">Zapnout zvuk</string>
-    <string name="enable_layer_toast">Aktivace vrstvy %s</string>
-    <string name="disable_layer_toast">Deaktivace vrstvy %s</string>
-    <string name="menu_gallery">Galerie</string>
     <string name="gallery_image_search_btn">Najít na obloze</string>
     <string name="gallery_image_back_btn">Zpět do galerie</string>
     <string name="hubble_image_gallery_title">Galerie snímků z Hubbleova teleskopu na Sky Map</string>
-    <string name="hubble_image">Snímek z Hubbleova teleskopu</string>
-    <string name="search_target_found_message" translation_description="displayed when a search target has been located">Našli jste:</string>
     <string name="search_overlay_title" translation_description="title for search overlay">Namiřte směrem k šipce</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">Hledám:</string>
     <string name="sun_wont_set_message">Při vaší poloze slunce během následujících 24 hodin nezapadne.</string>
-    <string name="sun_wont_rise_message">Při vaší polozeslunce během následujících 24 hodin nevyjde.</string>
     <string name="sun">Slunce</string>
     <string name="moon">Měsíc</string>
     <string name="mercury">Merkur</string>
     <string name="venus">Venuše</string>
-    <string name="earth">Země</string>
     <string name="mars">Mars</string>
     <string name="jupiter">Jupiter</string>
     <string name="saturn">Saturn</string>
@@ -127,11 +100,7 @@
     <string name="cats_eye_nebula" translation_description="hubble object">Mlhovina Kočičí oko</string>
     <string name="omega_centauri" translation_description="hubble object">Kulová hvězdokupa Omega Centauri</string>
     <string name="v838_mon" translation_description="hubble object">V838 Monocerotis</string>
-    <string name="sn1987a" translation_description="hubble object">Supernova 1987a</string>
     <string name="hubble_deep_field" translation_description="hubble object">Hubbleovo hluboké pole</string>
-    <string name="rho_oph" translation_description="hubble object">Rho Ophiuchus</string>
-    <string name="menu_tos">Smluvní podmínky</string>
-    <string name="control_panel_btn" translation_description="Label for the control panel button">Ovládací panel</string>
     <string name="north_pole">SP</string>
     <string name="south_pole">JP</string>
     <string name="andromeda" translation_description="Name of the Andromeda constellation">Andromeda</string>
@@ -369,11 +338,6 @@
     <string name="beehive_cluster" translation_description="Name of the Messier object Beehive Cluster">Hvězdokupa Včelí úl</string>
     <string name="praesepe" translation_description="Name of the Messier object Praesepe">Jesličky</string>
     <string name="seven_sisters" translation_description="Name of the Messier object Seven Sisters">Sedm sester</string>
-    <string name="space_station" translation_description="Name of the Internation Space Station">Mezinárodní vesmírná stanice</string>
-    <string name="space_shuttle" translation_description="Name of the Space Shuttle">Raketoplán</string>
-    <string name="kml_load_error">Nepodařilo se načíst KML soubor</string>
-    <string name="load_kml_dialog_title">Načíst KML soubor</string>
-    <string name="load_kml_file">Načíst</string>
     <string name="show_meteors_pref">Meteorické roje</string>
     <string name="quadrantids" translation_description="Meteor Shower">Kvadrantidy</string>
     <string name="compass_calibration_activity_heading_compass">Kompas</string>
@@ -381,7 +345,6 @@
     <string name="menu_diagnostics">Diagnostika</string>
     <string name="permission_disabled">Povolení odmítnuto</string>
     <string name="sensor_absent">Senzor chybí</string>
-    <string name="enable_analytics">Odeslat statistiky o používání</string>
     <string name="diagnostics_activity_rotation_matrix">Rotační matrice</string>
     <string name="dialog_ok_button">OK</string>
     <string name="disconnected">Odpojeno</string>
@@ -413,27 +376,23 @@
     <string name="diagnostics_activity_sensors_heading">Senzory</string>
     <string name="orionids" translation_description="Meteor Shower">Orionidy</string>
     <string name="diagnostics_activity_sky_map_version">Verze Sky Map</string>
-    <string name="whats_new_dialog_title">Co je nového</string>
     <string name="diagnostics_activity_light_level">Úroveň světla</string>
     <string name="disabled">Zakázat</string>
     <string name="enabled">Povolit</string>
     <string name="location_rationale_text">Hvězdy které lze vidět jsou závislé na vaši lokaci. Bez lokace nelze zobrazit přesnou mapu. Pokud nechcete uvádět přesnou lokaci lze ji zadat ručně v nastavení.  Stačí napsat nejbližší město.</string>
     <string name="puppidvelids" translation_description="Meteor Shower">Pí Puppidy</string>
     <string name="menu_calibrate">Kalibrovat</string>
-    <string name="enable_analytics_desc">Pomozte zlepšit Sky Map odesíláním anonimních dat do Google Analytics</string>
     <string name="cell_network">"mobilní sít"</string>
     <string name="diagnostics_activity_general_heading">Obecné</string>
     <string name="diagnostics_activity_android_version">Verze Androidu</string>
     <string name="title_activity_diagnostic">Diagnostika</string>
     <string name="sensor_reverse_preference_summary">Oprava pro telefony s převráceným senzorem - vyžaduje restart</string>
     <string name="rigil_kent" translation_description="Name of the star Rigil Kent">Rigil Kent</string>
-    <string name="hdf" translation_description="hubble object">Hubbleovo hluboké pole</string>
     <string name="sensor_accuracy_nocontact">Přesnost: Bez kontaktu</string>
     <string name="disable_gyro_preference_summary">Ne všechny zařízení mají gyroskop - pokud ho vaše zařízení má tak dosáhnete lepších vísledků když je povolen a toto políčko odškrtnuté. Na druhou stranu poku gyroskop vaše zařízení nemá pak Sky nebude fungovat pokud toto políčko odšktnete.</string>
     <string name="disable_gyro_preference_title">Zakázat gyroskop</string>
     <string name="diagnostics_activity_connection">Připojení</string>
     <string name="diagnostics_activity_compass">Kompas</string>
-    <string name="play_services_error">Varování: Chyba Google Play služeb - Automatická lokace nemusí fungovat</string>
     <string name="no_gps">Bez GPS</string>
     <string name="sensor_accuracy_high">Přesnost: Vysoká</string>
     <string name="compass_calibration_activity_warning">Je nutné zkalibrovat váš kompas</string>

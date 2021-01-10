@@ -4,7 +4,6 @@
     <string name="menu_settings">تنظیمات</string>
     <string name="menu_search">جستجو</string>
     <string name="cancel">لغو</string>
-    <string name="set" translation_description="Button label. Set the date to the given value">اعمال</string>
     <string name="go">برو!</string>
     <string name="location_prefs">تنظیمات مکان</string>
     <string name="force_gps_pref">همیشه از سنسور مکان استفاده کن</string>
@@ -27,9 +26,7 @@
     <string name="location_long_lat">طول جغرافیایی:%1$f, عرض جغرافیایی:%2$f</string>
     <string name="location_place_found">مکان پیدا شد. عرض جغرافیایی %1$f و طول جغرافیایی %2$f</string>
     <string name="use_magnetic_correction">اصلاح با جهت‌نمای مغناطیسی</string>
-    <string name="use_magnetic_correction_hint">اصلاح شمال مغناطیسی به شمال واقعی بر اساس مکان شما</string>
     <!-- This string is too long and currently unused -->
-    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">نمایش…</string>
     <string name="show_stars_pref">ستاره‌ها</string>
     <string name="show_constellations_pref">صورت‌های فلکی</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">اجرام مسیه</string>
@@ -37,24 +34,13 @@
     <string name="show_horizon_pref">افق</string>
     <string name="show_sky_gradient" translation_description="This is a shading of the color of the sky used for effect">گرادیان آسمان</string>
     <string name="show_meteors_pref">بارش شهابی</string>
-    <string name="show_satellite_layer_pref" translation_description="The layer for satellites">ماهواره‌ها</string>
     <!-- Just in case we decide to have such a layer for the 4/24 launch -->
-    <string name="show_hubble_layer_pref">تصاویر (تلسکوپ) هابل</string>
     <string name="sensor_prefs">تنظیمات حسگرها (پیشرفته)</string>
-    <string name="sensor_speed" translation_description="Old, non gyro sensors only: How quickly the sensor should send us data">سرعت حسگر</string>
-    <string name="sensor_damping" translation_description="Old, non gyro sensors only: The amount of smoothing applied to the sensor outputs.">میرایی</string>
     <string name="ecliptic">دایرة البروج</string>
     <string name="malformed_loc_error">طول و عرض جغرافیایی باید عدد (با ارقام انگلیسی) باشند</string>
-    <string name="dialog_accept" translation_description="accepting the licence agreement">قبول</string>
-    <string name="dialog_decline" translation_description="declining the licence agreement">خیر. متشکرم</string>
     <string name="dialog_ok_button">باشه</string>
-    <string name="menu_help" translation_description="menu item to show \'Help\' box">راهنما</string>
-    <string name="help_dialog_title">راهنمای برنامه</string>
-    <string name="eula_dialog_title">توافقنامه با کاربر</string>
     <string name="set_manual">رفتن به حالت دستی</string>
     <string name="set_auto">رفتن به حالت خودکار</string>
-    <string name="menu_zoom_in">بزرگ‌نمایی</string>
-    <string name="menu_zoom_out">کوچک‌نمایی</string>
     <string name="menu_toggle_dim">تغییر حالت شب</string>
     <string name="zenith">سمت الرأس</string>
     <string name="nadir">پاسو</string>
@@ -67,13 +53,7 @@
     <string name="no_search_title">فاقد نتیجه</string>
     <string name="no_search_results_text">نتیجه‌ای یافت نشد.</string>
     <string name="many_search_results_title">آیا منظورتان این است؟</string>
-    <string name="many_search_results_text">لطفا یک مورد را انتخاب کنید</string>
-    <string name="searching_for_text">جستجو برای %s…</string>
-    <string name="found_target_text">%s نتیجه</string>
-    <string name="other" translation_description="A preference category (ie preferences that don't belong in any other category)">سایر موارد</string>
-    <string name="planetary_images">نمایش تصاویر سیارات</string>
     <string name="menu_time">سفر زمانی</string>
-    <string name="time_travel_start_message">سفر در زمان…</string>
     <string name="time_travel_start_message_alt">سفر در زمان تا %s …</string>
     <string name="time_travel_close_message">بازگشت به زمان حال…</string>
     <!--  -->
@@ -99,22 +79,15 @@
     <string name="time_travel_hour_speed_back" translation_description="Label showing rate of travel through time">سفر با سرعت &lt; @ 1 hour/sec</string>
     <string name="time_travel_day_speed_back" translation_description="Label showing rate of travel through time">سفر با سرعت &lt; @ 1 day/sec</string>
     <string name="time_travel_week_speed_back" translation_description="Label showing rate of travel through time">سفر با سرعت &lt; @ 1 week/sec</string>
-    <string name="use_sound_effects" translation_description="A preferences menu label">فعال کردن صدا</string>
 
-    <string name="enable_layer_toast">فعال کردن %s layer</string>
-    <string name="disable_layer_toast">غیرفعال کردن %s layer</string>
-    <string name="menu_gallery">آلبوم</string>
     <string name="gallery_image_search_btn">جستجو در آسمان</string>
     <string name="gallery_image_back_btn">بازگشت به آلبوم</string>
     <string name="hubble_image_gallery_title">آلبوم برنامه</string>
-    <string name="hubble_image">تصاویر (تلسکوپ) هابل</string>
     <!--  TODO(johntaylor): currently unused -->
 
-    <string name="search_target_found_message" translation_description="displayed when a search target has been located">نتیجه:</string>
     <string name="search_overlay_title" translation_description="title for search overlay">تلفن خود را به سمت فلش قرار دهید</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">جستجو برای:</string>
     <string name="sun_wont_set_message">در مکان انتخابی شما، خورشید تا ۲۴ ساعت آینده غروب نمی‌کند.</string>
-    <string name="sun_wont_rise_message">در مکان انتخابی شما، خورشید تا ۲۴ ساعت آینده طلوع نمی‌کند.</string>
 
     <string name="missing_label" translation_description="Used to indicate to the developer that they've added a resource with no translation.">MISSING_LBL</string>
 
@@ -122,7 +95,6 @@
     <string name="moon">ماه</string>
     <string name="mercury">عطارد</string>
     <string name="venus">زهره</string>
-    <string name="earth">زمین</string>
     <string name="mars">مریخ</string>
     <string name="jupiter">مشتری</string>
     <string name="saturn">زحل</string>
@@ -142,14 +114,9 @@
     <string name="cats_eye_nebula" translation_description="hubble object">سحابی چشم گربه</string>
     <string name="omega_centauri" translation_description="hubble object">خوشه کروی امگا قنطورس</string>
     <string name="v838_mon" translation_description="hubble object">تکشاخ وی۸۳۸</string>
-    <string name="sn1987a" translation_description="hubble object">اس‌ان ۱۹۸۷ای</string>
     <string name="hubble_deep_field" translation_description="hubble object">زمینه ژرف هابل</string>
-    <string name="hdf" translation_description="hubble object">زمینه ژرف هابل</string>
-    <string name="rho_oph" translation_description="hubble object">رو مارافسای</string>
-    <string name="menu_tos">شرایط استفاده</string>
     <string name="menu_diagnostics">عیب یابی</string>
     <!-- TODO(johntaylor): the following might be deleted in favor of an icon -->
-    <string name="control_panel_btn" translation_description="Label for the control panel button">تابلوی کنترل</string>
 
     <string name="north_pole">شمال</string>
     <string name="south_pole">جنوب</string>
@@ -395,13 +362,6 @@
     <string name="beehive_cluster" translation_description="Name of the Messier object Beehive Cluster">خوشه کندوی عسل</string>
     <string name="praesepe" translation_description="Name of the Messier object Praesepe">خوشه کندوی عسل</string>
     <string name="seven_sisters" translation_description="Name of the Messier object Seven Sisters">خوشه پروین (ثریا)</string>
-    <string name="space_station" translation_description="Name of the Internation Space Station">ایستگاه فضایی بین‌المللی</string>
-    <string name="space_shuttle" translation_description="Name of the Space Shuttle">شاتل فضایی</string>
-    <string name="kml_load_error">بارگیری فایل KML ناموفق بود</string>
-    <string name="load_kml_dialog_title">بارگیری KML</string>
-    <string name="load_kml_file">بارگیری</string>
-    <string name="enable_analytics">ارسال آمار استفاده</string>
-    <string name="enable_analytics_desc">بهبود برنامه با ارسال ناشناس آمار استفاده</string>
     <string name="leonids" translation_description="Meteor Shower">بارش شهابی اسدی</string>
     <string name="geminids" translation_description="Meteor Shower">بارش شهابی جوزایی</string>
     <string name="quadrantids" translation_description="Meteor Shower">بارش شهابی ربعی</string>
@@ -425,7 +385,6 @@
     <string name="title_activity_diagnostic">عیب یابی</string>
     <string name="location_rationale_title">چرا مکان شما مهم است؟</string>
     <string name="location_rationale_text">نمای ستاره‌هایی که می‌توانید ببینید، به مکان شما بستگی دارد. بدون موقعیت مکانی شما نمی‌توانیم نقشه دقیقی به شما نشان دهیم. اگر نمی‌خواهید تلفن شما موقعیت مکانی خود را به ما بدهد، می‌توانید آن را به صورت دستی در تنظیمات وارد کنید؛ شما کافی است نزدیک‌ترین شهر را درج کنید.</string>
-    <string name="play_services_error">توجه: خطای خدمات گوگل پلی؛ موقعیت خودکار ممکن است درست کار نکند</string>
     <string name="sensor_absent">غایب</string>
     <string name="sensor_accuracy_unknown">دقت: نامعلوم</string>
     <string name="sensor_accuracy_unreliable">دقت: غیرقابل اعتماد</string>
@@ -467,7 +426,6 @@
     <string name="compass_calibration_activity_warning">گوشی شما نیاز به کالیبره‌شدن دارد</string>
     <string name="sensor_reverse_preference_title">معکوس کردن حسگر مغناطیسی</string>
     <string name="sensor_reverse_preference_summary">رفع اشکال تلفن‌هایی که حسگرهایشان درست عمل نمی‌کند (نیازمند راه‌اندازی مجدد)</string>
-    <string name="whats_new_dialog_title">تغییرات جدید برنامه</string>
     <string name="disable_gyro_preference_title">غیرفعال کردن ژیروسکوپ</string>
     <string name="disable_gyro_preference_summary">همه دستگاه‌ها دارای ژیروسکوپ نیستند - اگر گوشی شما دارد، با فعال کردن آن و علامت زدن این کادر، نتایج بهتری خواهید گرفت. اگر دستگاه شما دارای ژیروسکوپ نباشد، اگر علامت این کادر را بردارید، برنامه کار نمی‌کند.</string>
     <string name="rotate_horizon_preference_title">چرخش افق</string>

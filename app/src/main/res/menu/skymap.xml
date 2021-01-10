@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_item_search"
+        android:icon="@drawable/search"
+        android:orderInCategory="1"
+        android:title="@string/menu_search"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_item_dim"
+        android:icon="@drawable/red_mode"
+        android:orderInCategory="2"
+        android:title="@string/menu_toggle_dim"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_item_settings"
+        android:orderInCategory="3"
+        android:title="@string/menu_settings"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_item_gallery"
+        android:orderInCategory="4"
+        android:title="@string/menu_gallery"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_item_time"
+        android:orderInCategory="5"
+        android:title="@string/menu_time"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_item_calibrate"
+        android:orderInCategory="7"
+        android:title="@string/menu_calibrate"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_item_diagnostics"
+        android:orderInCategory="8"
+        android:title="@string/menu_diagnostics"
+        app:showAsAction="never" />
+</menu>

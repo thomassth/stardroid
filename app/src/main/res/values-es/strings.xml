@@ -4,7 +4,6 @@
     <string name="menu_settings">Ajustes</string>
     <string name="menu_search">Buscar</string>
     <string name="cancel">Cancelar</string>
-    <string name="set" translation_description="Button label. Set the date to the given value">Establecer</string>
     <string name="go">Ir</string>
     <string name="location_prefs">Ajustes de ubicación</string>
     <string name="force_gps_pref">Usar GPS siempre</string>
@@ -27,9 +26,7 @@
     <string name="location_long_lat">Longitude:%1$f, Latitude:%2$f</string>
     <string name="location_place_found">Lugar encontrado. Ajustando latitud %1$f y longitud %2$f</string>
     <string name="use_magnetic_correction">Usar corrección magnética</string>
-    <string name="use_magnetic_correction_hint">Usa el conocimiento de tu ubicación y corrige la orientación del norte magnético al verdadero</string>
     <!-- This string is too long and currently unused -->
-    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">Mostrar…</string>
     <string name="show_stars_pref">Estrellas</string>
     <string name="show_constellations_pref">Constelaciones</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Objetos Messier</string>
@@ -37,24 +34,13 @@
     <string name="show_horizon_pref">Horizonte</string>
     <string name="show_sky_gradient" translation_description="This is a shading of the color of the sky used for effect">Gradiente del cielo</string>
     <string name="show_meteors_pref">Lluvias de meteoros</string>
-    <string name="show_satellite_layer_pref" translation_description="The layer for satellites">Satélites</string>
     <!-- Just in case we decide to have such a layer for the 4/24 launch -->
-    <string name="show_hubble_layer_pref">Imágenes del Hubble</string>
     <string name="sensor_prefs">Ajustes del sensor</string>
-    <string name="sensor_speed" translation_description="Old, non gyro sensors only: How quickly the sensor should send us data">Velocidad del sensor</string>
-    <string name="sensor_damping" translation_description="Old, non gyro sensors only: The amount of smoothing applied to the sensor outputs.">Humedad</string>
     <string name="ecliptic">Eclíptica</string>
     <string name="malformed_loc_error">El ajuste de lat/long no es un número.</string>
-    <string name="dialog_accept" translation_description="accepting the licence agreement">Acepto</string>
-    <string name="dialog_decline" translation_description="declining the licence agreement">No, gracias</string>
     <string name="dialog_ok_button">OK</string>
-    <string name="menu_help" translation_description="menu item to show \'Help\' box">Ayuda</string>
-    <string name="help_dialog_title">Ayuda de Sky Map</string>
-    <string name="eula_dialog_title">Acuerdo de licencia del usuario final</string>
     <string name="set_manual">Cambiando al modo manual</string>
     <string name="set_auto">Cambiando al modo automático</string>
-    <string name="menu_zoom_in">Acercar</string>
-    <string name="menu_zoom_out">Alejar</string>
     <string name="menu_toggle_dim">Alternar visión nocturna</string>
     <string name="zenith">CENIT</string>
     <string name="nadir">NADIR</string>
@@ -67,13 +53,7 @@
     <string name="no_search_title">Sin resultados</string>
     <string name="no_search_results_text">Sin resultados.</string>
     <string name="many_search_results_title">¿Quisiste decir…?</string>
-    <string name="many_search_results_text">Selecciona uno</string>
-    <string name="searching_for_text">Buscando %s…</string>
-    <string name="found_target_text">%s encontrado.</string>
-    <string name="other" translation_description="A preference category (ie preferences that don't belong in any other category)">Otros</string>
-    <string name="planetary_images">Mostrar imágenes del planeta</string>
     <string name="menu_time">Viaje en el tiempo</string>
-    <string name="time_travel_start_message">Viajando en el tiempo…</string>
     <string name="time_travel_start_message_alt">Viajando en el tiempo a %s…</string>
     <string name="time_travel_close_message">Volver al presente…</string>
     <!--  -->
@@ -99,22 +79,15 @@
     <string name="time_travel_hour_speed_back" translation_description="Label showing rate of travel through time">Viajando a &lt; @ 1 hora/seg</string>
     <string name="time_travel_day_speed_back" translation_description="Label showing rate of travel through time">Viajando a &lt; @ 1 día/seg</string>
     <string name="time_travel_week_speed_back" translation_description="Label showing rate of travel through time">Viajando a &lt; @ 1 semana/seg</string>
-    <string name="use_sound_effects" translation_description="A preferences menu label">Activar sonido</string>
 
-    <string name="enable_layer_toast">Activando capa %s</string>
-    <string name="disable_layer_toast">Desactivando capa %s</string>
-    <string name="menu_gallery">Galería</string>
     <string name="gallery_image_search_btn">Buscar en el cielo</string>
     <string name="gallery_image_back_btn">Volver a la galería</string>
     <string name="hubble_image_gallery_title">Galería de Sky Map</string>
-    <string name="hubble_image">Imagen del Hubble</string>
     <!--  TODO(johntaylor): currently unused -->
 
-    <string name="search_target_found_message" translation_description="displayed when a search target has been located">Encontraste:</string>
     <string name="search_overlay_title" translation_description="title for search overlay">Apunta tu teléfono hacia la flecha</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">Buscando:</string>
     <string name="sun_wont_set_message">El sol no se pondrá durante las próximas 24 horas en tu ubicación actual.</string>
-    <string name="sun_wont_rise_message">El sol no saldrá durante las próximas 24 horas en tu ubicación actual.</string>
 
     <string name="missing_label" translation_description="Used to indicate to the developer that they've added a resource with no translation.">MISSING_LBL</string>
 
@@ -122,7 +95,6 @@
     <string name="moon">Luna</string>
     <string name="mercury">Mercurio</string>
     <string name="venus">Venus</string>
-    <string name="earth">Tierra</string>
     <string name="mars">Marte</string>
     <string name="jupiter">Júpiter</string>
     <string name="saturn">Saturno</string>
@@ -142,14 +114,9 @@
     <string name="cats_eye_nebula" translation_description="hubble object">Nebulosa Ojo del Gato</string>
     <string name="omega_centauri" translation_description="hubble object">Cúmulo Globular Omega Centauri</string>
     <string name="v838_mon" translation_description="hubble object">V838 Monocerotis</string>
-    <string name="sn1987a" translation_description="hubble object">Supernova 1987a</string>
     <string name="hubble_deep_field" translation_description="hubble object">Campo Profundo del Hubble</string>
-    <string name="hdf" translation_description="hubble object">Campo Profundo del Hubble</string>
-    <string name="rho_oph" translation_description="hubble object">Rho Ophiuchus</string>
-    <string name="menu_tos">Términos del Servicio</string>
     <string name="menu_diagnostics">Diagnósticos</string>
     <!-- TODO(johntaylor): the following might be deleted in favor of an icon -->
-    <string name="control_panel_btn" translation_description="Label for the control panel button">Panel de control</string>
 
     <string name="north_pole">PN</string>
     <string name="south_pole">PS</string>
@@ -395,13 +362,6 @@
     <string name="beehive_cluster" translation_description="Name of the Messier object Beehive Cluster">Cúmulo El Pesebre</string>
     <string name="praesepe" translation_description="Name of the Messier object Praesepe">Praesepe</string>
     <string name="seven_sisters" translation_description="Name of the Messier object Seven Sisters">Siete Hermanas</string>
-    <string name="space_station" translation_description="Name of the Internation Space Station">Estación Espacial Internacional</string>
-    <string name="space_shuttle" translation_description="Name of the Space Shuttle">Transbordador Espacial</string>
-    <string name="kml_load_error">Falló al cargar el archivo KML</string>
-    <string name="load_kml_dialog_title">Cargar KML</string>
-    <string name="load_kml_file">Cargar</string>
-    <string name="enable_analytics">Enviar estadísticas de uso</string>
-    <string name="enable_analytics_desc">Mejora Sky Map enviando datos anónimos a Google Analytics</string>
     <string name="leonids" translation_description="Meteor Shower">Leónidas</string>
     <string name="geminids" translation_description="Meteor Shower">Gemínidas</string>
     <string name="quadrantids" translation_description="Meteor Shower">Quadrántidas</string>
@@ -431,7 +391,6 @@
     <string name="title_activity_diagnostic">Diagnósticos</string>
     <string name="location_rationale_title">¿Por qué pedimos tu ubicación?</string>
     <string name="location_rationale_text">Las estrellas que puedes ver dependen del lugar en el que te encuentres. Sin tu ubicación, no podemos mostrarte un mapa preciso. Si no deseas que tu teléfono nos dé la ubicación, puedes proporcionarla manualmente en los ajustes. Solo necesitas proporcionar la ciudad más cercana.</string>
-    <string name="play_services_error">Advertencia: error de Google Play Services - La ubicación automática puede no funcionar</string>
     <string name="sensor_absent">Ausente</string>
     <string name="sensor_accuracy_unknown">Exactitud: Desconocida</string>
     <string name="sensor_accuracy_unreliable">Exactitud: No confiable</string>
@@ -473,7 +432,6 @@
     <string name="compass_calibration_activity_warning">Tu brújula debe ser calibrada</string>
     <string name="sensor_reverse_preference_title">Z magnético inverso</string>
     <string name="sensor_reverse_preference_summary">Solución para teléfonos con sensores implementados incorrectamente: requiere reiniciar</string>
-    <string name="whats_new_dialog_title">¿Qué hay nuevo?</string>
     <string name="disable_gyro_preference_title">Desactivar giroscopio</string>
     <string name="disable_gyro_preference_summary">No todos los dispositivos tienen un giroscopio; si el tuyo lo tiene, obtendrás mejores resultados con él activado y esta opción sin marcar. Pero, si tu dispositivo no lo tiene, es probable que Sky Map no funcione si desmarca esta opción.</string>
     <string name="rotate_horizon_preference_title">Rotar horizonte</string>

@@ -141,7 +141,8 @@ public class ServersActivity extends AppCompatActivity implements ServersReloadL
         setContentView(R.layout.activity_servers);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
         }
 
         findViewById(R.id.addServerFab).setOnClickListener(v -> {

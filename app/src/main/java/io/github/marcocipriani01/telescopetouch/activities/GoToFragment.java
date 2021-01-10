@@ -155,7 +155,9 @@ public class GoToFragment extends ListFragment
         };
         setListAdapter(entriesAdapter);
         if (catalog.isReady()) {
-            new Handler(Looper.getMainLooper()).post(() -> searchMenu.setVisible(true));
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                if (searchMenu != null) searchMenu.setVisible(true);
+            }, 50);
         } else {
             // List loading
             setListShown(false);
@@ -195,6 +197,7 @@ public class GoToFragment extends ListFragment
         SearchView searchView = new SearchView(context);
         searchView.setOnQueryTextListener(this);
         searchMenu.setActionView(searchView);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -245,7 +248,7 @@ public class GoToFragment extends ListFragment
         builder.setMessage(entries.get(position).createDescription(context)).setTitle(entries.get(position).getName());
         // Only display buttons if the telescope is ready
         if ((telescopeCoordP != null) && (telescopeOnCoordSetP != null)) {
-            builder.setPositiveButton(R.string.GOTO, (dialog, which) -> {
+            builder.setPositiveButton(R.string.go_to, (dialog, which) -> {
                 try {
                     telescopeOnCoordSetTrack.setDesiredValue(Constants.SwitchStatus.ON);
                     telescopeOnCoordSetSlew.setDesiredValue(Constants.SwitchStatus.OFF);
@@ -256,6 +259,7 @@ public class GoToFragment extends ListFragment
                     telescopeCoordDE.setDesiredValue(precessed.getDeStr());
                     new PropUpdater(telescopeCoordP).start();
                     Toast.makeText(context, context.getString(R.string.slew_ok), Toast.LENGTH_LONG).show();
+                    getActivity().finish();
                 } catch (INDIValueException e) {
                     Toast.makeText(context, context.getString(R.string.sync_slew_error), Toast.LENGTH_LONG).show();
                 }
@@ -270,11 +274,10 @@ public class GoToFragment extends ListFragment
                     telescopeCoordRA.setDesiredValue(precessed.getRaStr());
                     telescopeCoordDE.setDesiredValue(precessed.getDeStr());
                     new PropUpdater(telescopeCoordP).start();
-                    Toast toast = Toast.makeText(context, context.getString(R.string.sync_ok), Toast.LENGTH_LONG);
-                    toast.show();
+                    Toast.makeText(context, context.getString(R.string.sync_ok), Toast.LENGTH_LONG).show();
+                    getActivity().finish();
                 } catch (INDIValueException e) {
-                    Toast toast = Toast.makeText(context, context.getString(R.string.sync_slew_error), Toast.LENGTH_LONG);
-                    toast.show();
+                    Toast.makeText(context, context.getString(R.string.sync_slew_error), Toast.LENGTH_LONG).show();
                 }
             });
         }

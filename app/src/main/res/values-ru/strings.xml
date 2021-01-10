@@ -3,7 +3,6 @@
     <string name="menu_settings">Настройки</string>
     <string name="menu_search">Поиск</string>
     <string name="cancel">Отмена</string>
-    <string name="set">Настройка</string>
     <string name="go">Вперед!</string>
     <string name="location_prefs">Параметры местоположения</string>
     <string name="force_gps_pref">Всегда исп. GPS</string>
@@ -26,8 +25,6 @@
     <string name="location_long_lat">Долгота:%1$f, широта:%2$f</string>
     <string name="location_place_found">Место найдено. Уст. широта %1$f и долгота %2$f</string>
     <string name="use_magnetic_correction">Исп. поправку на магн. склон.</string>
-    <string name="use_magnetic_correction_hint">Используйте информацию о своем местоположении, чтобы изменить ориентацию с магнитного на истинный географический Северный полюс</string>
-    <string name="provider_prefs" translation_description="Dialog box title for a preferences dialog">Показать…</string>
     <string name="show_stars_pref">Звезды</string>
     <string name="show_constellations_pref">Созвездия</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Объекты Мессье</string>
@@ -35,20 +32,10 @@
     <string name="show_horizon_pref">Горизонт</string>
     <string name="show_sky_gradient">Градиент неба</string>
     <string name="sensor_prefs">Настройки матрицы</string>
-    <string name="sensor_speed">Скорость матрицы</string>
-    <string name="sensor_damping" translation_description="The amount of       smoothing applied to the sensor outputs.">Сглаживание</string>
     <string name="ecliptic">эклиптика</string>
-    <string name="show_hubble_layer_pref">Фотографии, отснятые телескопом Хаббл</string>
     <string name="malformed_loc_error">Значение широты или долготы не явл. числом.</string>
-    <string name="dialog_accept" translation_description="accepting the licence agreement">Принять</string>
-    <string name="dialog_decline" translation_description="declining the licence agreement">Нет, спасибо</string>
-    <string name="menu_help" translation_description="menu item to show \'Help\' box">Справка</string>
-    <string name="help_dialog_title">Справка Карты звездного неба</string>
-    <string name="eula_dialog_title">Лицензионное соглашение конечного пользователя</string>
     <string name="set_manual">Переключение в ручной режим</string>
     <string name="set_auto">Перекл. в авт. режим</string>
-    <string name="menu_zoom_in">Увеличить</string>
-    <string name="menu_zoom_out">Уменьшить</string>
     <string name="menu_toggle_dim">Ночной режим вкл./выкл.</string>
     <string name="zenith">ЗЕНИТ</string>
     <string name="nadir">НАДИР</string>
@@ -61,13 +48,7 @@
     <string name="no_search_title">Нет результатов</string>
     <string name="no_search_results_text">Ничего не найдено.</string>
     <string name="many_search_results_title">Возможно, вы имели в виду:</string>
-    <string name="many_search_results_text">Выберите результат</string>
-    <string name="searching_for_text">Поиск %s…</string>
-    <string name="found_target_text">Найдено: %s.</string>
-    <string name="other">Другое</string>
-    <string name="planetary_images">Показывать изображения планет</string>
     <string name="menu_time">Путешествие во времени</string>
-    <string name="time_travel_start_message">Путешествие сквозь время…</string>
     <string name="time_travel_start_message_alt">Путешествие во времени к объекту %s…</string>
     <string name="time_travel_close_message">Назад в настоящее…</string>
     <string name="popular_dates_prompt" translation_description="label for a list of dates the user can choose from">Популярные даты</string>
@@ -90,24 +71,16 @@
     <string name="time_travel_hour_speed_back" translation_description="label showing rate of travel through time">Путешествие со скоростью &lt; @ 1 ч/с</string>
     <string name="time_travel_day_speed_back" translation_description="label showing rate of travel through time">Путешествие со скоростью &lt; @ 1 дн/с</string>
     <string name="time_travel_week_speed_back" translation_description="label showing rate of travel through time">Путешествие со скоростью &lt; @ 1 нед/с</string>
-    <string name="use_sound_effects" translation_description="A preferences menu label">Включить звук</string>
-    <string name="enable_layer_toast">Включение слоя %s</string>
-    <string name="disable_layer_toast">Отключение слоя %s</string>
-    <string name="menu_gallery">Галерея</string>
     <string name="gallery_image_search_btn">Найти в небе</string>
     <string name="gallery_image_back_btn">Назад в галерею</string>
     <string name="hubble_image_gallery_title">Галерея Хаббл для Карты звездного неба</string>
-    <string name="hubble_image">Фотография, отснятая телескопом Хаббл</string>
-    <string name="search_target_found_message" translation_description="displayed when a search target has been located">Вы нашли:</string>
     <string name="search_overlay_title" translation_description="title for search overlay">Поверните телефон в направлении стрелки</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">Поиск:</string>
     <string name="sun_wont_set_message">В течение ближайших 24 часов захода Солнца в вашем местоположении не будет.</string>
-    <string name="sun_wont_rise_message">В течение ближайших 24 часов восхода Солнца в вашем местоположении не будет.</string>
     <string name="sun">Солнце</string>
     <string name="moon">Луна</string>
     <string name="mercury">Меркурий</string>
     <string name="venus">Венера</string>
-    <string name="earth">Земля</string>
     <string name="mars">Марс</string>
     <string name="jupiter">Юпитер</string>
     <string name="saturn">Сатурн</string>
@@ -127,11 +100,7 @@
     <string name="cats_eye_nebula" translation_description="hubble object">Туманность Кошачий Глаз</string>
     <string name="omega_centauri" translation_description="hubble object">Шаровое скопление Омега Центавра</string>
     <string name="v838_mon" translation_description="hubble object">V838 Единорога</string>
-    <string name="sn1987a" translation_description="hubble object">Сверхновая 1987a</string>
     <string name="hubble_deep_field" translation_description="hubble object">Область глубокого обзора Хаббла</string>
-    <string name="rho_oph" translation_description="hubble object">Ро Змееносца</string>
-    <string name="menu_tos">Условия предоставления услуг</string>
-    <string name="control_panel_btn" translation_description="Label for the control panel button">Панель управления</string>
     <string name="north_pole">СП</string>
     <string name="south_pole">ЮП</string>
     <string name="andromeda" translation_description="Name of the Andromeda constellation">Андромеда</string>
@@ -369,23 +338,15 @@
     <string name="beehive_cluster" translation_description="Name of the Messier object Beehive Cluster">Скопление Улей</string>
     <string name="praesepe" translation_description="Name of the Messier object Praesepe">Ясли</string>
     <string name="seven_sisters" translation_description="Name of the Messier object Seven Sisters">Семь сестер</string>
-    <string name="space_station" translation_description="Name of the Internation Space Station">Международная орбитальная станция</string>
-    <string name="space_shuttle" translation_description="Name of the Space Shuttle">Space Shuttle</string>
-    <string name="kml_load_error">Не удалось загрузить файл KML</string>
-    <string name="load_kml_dialog_title">Загрузка KML</string>
-    <string name="load_kml_file">Загрузить</string>
 
     <!--new translation added by Makhanov Madiyar-->
     <string name="show_meteors_pref">Метеоритные дожди</string>
-    <string name="hdf" translation_description="hubble object">Область глубокого обзора Хаббла</string>
     <string name="menu_diagnostics">Диагностика</string>
     <string name="alpha_centauri" translation_description="Name of the star Alpha Centauri">Альфа Центавра</string>
     <string name="rigil_kent" translation_description="Name of the star Rigil Kent">Ригель Кентаурус</string>
     <string name="e_lyrae" translation_description="Name of the star ε Lyrae">ε Лиры</string>
     <string name="rigil_kentaurus_a" translation_description="Name of the Star Rigil Kentaurus A">Ригель Центавра А</string>
 
-    <string name="enable_analytics">Отправить статистику использования</string>
-    <string name="enable_analytics_desc">Сделайте Sky Map лучше, отправив анонимные данные в Google Analytics</string>
     <string name="leonids" translation_description="Meteor Shower">Леониды</string>
     <string name="geminids" translation_description="Meteor Shower">Геминиды</string>
     <string name="quadrantids" translation_description="Meteor Shower">Квадрантиды</string>
@@ -415,7 +376,6 @@
     <string name="title_activity_diagnostic">Диагностика</string>
     <string name="location_rationale_title">Почему мы спрашиваем ваше местоположение?</string>
     <string name="location_rationale_text">Звезды, которые вы видите, зависят от того, где вы находитесь на планете Земля. Без вашего местоположения мы не сможем показать вам точную карту. Если вы не хотите, чтобы ваш телефон сообщал нам ваше местоположение, вы можете указать его вручную в настройках. Вам нужно только предоставить ближайший город.</string>
-    <string name="play_services_error">Предупреждение: Ошибка служб Google Play - автоматическое определение местоположения может не работать</string>
     <string name="sensor_absent">Отсутствует</string>
     <string name="sensor_accuracy_unknown">Точность: неизвестна</string>
     <string name="sensor_accuracy_unreliable">Точность: Ненадежна</string>
@@ -457,7 +417,6 @@
     <string name="compass_calibration_activity_warning">Ваш компас должен быть откалиброван</string>
     <string name="sensor_reverse_preference_title">Обратный магнитный Z</string>
     <string name="sensor_reverse_preference_summary">Исправлено для телефонов с неправильно установленными датчиками - требуется перезагрузка</string>
-    <string name="whats_new_dialog_title">Что нового</string>
     <string name="disable_gyro_preference_title">Отключить гироскоп</string>
     <string name="disable_gyro_preference_summary">Не на всех устройствах есть гироскоп - если у вас есть, то вы получите лучшие результаты, если он включен, а этот флажок снят. С другой стороны, если ваше устройство не имеет гироскопа, Sky Map, вероятно, не будет работать, если вы снимите этот флажок.</string>
     <string name="rotate_horizon_preference_title">Повернуть горизонтально</string>

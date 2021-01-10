@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_about"
-        android:icon="@drawable/info"
+        android:id="@+id/menu_goto"
+        android:icon="@drawable/location"
         android:orderInCategory="0"
-        android:title="@string/menu_about"
-        app:showAsAction="ifRoom" />
+        android:title="@string/mount_goto"
+        app:showAsAction="always" />
 </menu>

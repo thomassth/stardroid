@@ -174,9 +174,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#00000000"
+            android:paddingBottom="16dp"
             stardroid:default_value="true"
             stardroid:image_off="@drawable/auto_mode"
             stardroid:image_on="@drawable/touch"
             stardroid:pref_key="auto_mode" />
+
+        <ImageButton
+            android:id="@+id/back_telescope_control"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:background="@android:color/transparent"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/remote" />
     </io.github.marcocipriani01.telescopetouch.views.ButtonLayerView>
 </FrameLayout>

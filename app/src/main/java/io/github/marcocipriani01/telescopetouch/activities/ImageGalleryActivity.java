@@ -85,7 +85,6 @@ public class ImageGalleryActivity extends InjectableActivity {
     }
 
     private void addImagesToGallery() {
-
         RecyclerView mRecyclerView = findViewById(R.id.gallery_list);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
