@@ -26,16 +26,16 @@ public interface AstronomicalSource {
      */
     GeocentricCoordinates getSearchLocation();
 
-    /**
-     * Returns the zoom level to which the user should be taken (in manual mode)
-     * to completely see this object when searching.
+    /*
+      Returns the zoom level to which the user should be taken (in manual mode)
+      to completely see this object when searching.
      */
     // float getSearchLevel();
 
-    /**
-     * Returns the level associated with this source. Levels typically corresponds
-     * to the magnitude of the object and dictate whether the source will be shown
-     * given the zoom level and limits set by the user.
+    /*
+      Returns the level associated with this source. Levels typically corresponds
+      to the magnitude of the object and dictate whether the source will be shown
+      given the zoom level and limits set by the user.
      */
     // float getLevel();
 

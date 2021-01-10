@@ -8,9 +8,9 @@ import javax.microedition.khronos.opengles.GL10;
  * @author James Powell
  */
 public class TexturedQuad {
-    private TexCoordBuffer mTexCoords = null;
-    private VertexBuffer mPosition = null;
-    private TextureReference mTexture = null;
+    private final TexCoordBuffer mTexCoords;
+    private final VertexBuffer mPosition;
+    private final TextureReference mTexture;
 
     /**
      * Constructs the textured quad.
@@ -20,15 +20,6 @@ public class TexturedQuad {
      * The four vertices of the quad are: by p +/- u +/- v
      *
      * @param tex The texture to apply to the quad
-     * @param px
-     * @param py
-     * @param pz
-     * @param ux
-     * @param uy
-     * @param uz
-     * @param vx
-     * @param vy
-     * @param vz
      */
     public TexturedQuad(TextureReference tex,
                         float px, float py, float pz,

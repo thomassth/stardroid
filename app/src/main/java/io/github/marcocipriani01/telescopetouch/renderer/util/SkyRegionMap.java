@@ -119,7 +119,7 @@ public class SkyRegionMap<RegionRenderingData> {
   */
     // Maps the region ID to the rendering data for the region.
     private final Map<Integer, RegionRenderingData> mRegionData =
-            new TreeMap<Integer, RegionRenderingData>();
+            new TreeMap<>();
 
     // We want to use a set of points that minimizes the maximum distance from
     // any point on the sphere to one of these points.  This is called
@@ -184,7 +184,7 @@ public class SkyRegionMap<RegionRenderingData> {
         float angleThreshold = screenAngle + REGION_COVERAGE_ANGLE_IN_RADIANS;
         float dotProductThreshold = (float) Math.cos(angleThreshold);
         float[] regionCenterDotProducts = new float[REGION_CENTERS.length];
-        ArrayList<Integer> activeStandardRegions = new ArrayList<Integer>();
+        ArrayList<Integer> activeStandardRegions = new ArrayList<>();
         for (int i = 0; i < REGION_CENTERS.length; i++) {
             float dotProduct = VectorUtil.dotProduct(lookDir, REGION_CENTERS[i]);
             regionCenterDotProducts[i] = dotProduct;
@@ -326,7 +326,7 @@ public class SkyRegionMap<RegionRenderingData> {
      * regions.
      */
     public ArrayList<RegionRenderingData> getDataForActiveRegions(ActiveRegionData regions) {
-        ArrayList<RegionRenderingData> data = new ArrayList<RegionRenderingData>();
+        ArrayList<RegionRenderingData> data = new ArrayList<>();
 
         // Always add the catchall region if non-NULL.
         RegionRenderingData catchallData = mRegionData.get(CATCHALL_REGION_ID);

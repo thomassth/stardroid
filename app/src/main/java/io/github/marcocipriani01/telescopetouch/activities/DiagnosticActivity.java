@@ -13,10 +13,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -67,6 +71,12 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
                 getApplicationComponent()).diagnosticActivityModule(new DiagnosticActivityModule(this))
                 .build().inject(this);
         setContentView(R.layout.activity_diagnostic);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
     }
 
     @Override
@@ -165,13 +175,12 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
         AstronomerModel.Pointing pointing = model.getPointing();
         GeocentricCoordinates lineOfSight = pointing.getLineOfSight();
         setText(R.id.diagnose_pointing_txt, getDegreeInHour(lineOfSight.getRa()) + ", " + lineOfSight.getDec());
-        Date nowTime = model.getTime();
+        Calendar nowTime = model.getTime();
         SimpleDateFormat dateFormatUtc = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
         dateFormatUtc.setTimeZone(TimeZone.getTimeZone("UTC"));
         SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
-
-        setText(R.id.diagnose_utc_datetime_txt, dateFormatUtc.format(nowTime));
-        setText(R.id.diagnose_local_datetime_txt, dateFormatLocal.format(nowTime));
+        setText(R.id.diagnose_utc_datetime_txt, dateFormatUtc.format(nowTime.getTime()));
+        setText(R.id.diagnose_local_datetime_txt, dateFormatLocal.format(nowTime.getTime()));
     }
 
     @Override
@@ -179,6 +188,15 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
         super.onPause();
         continueUpdates = false;
         sensorManager.unregisterListener(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            this.finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {

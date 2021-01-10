@@ -9,7 +9,6 @@ import java.util.EnumSet;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.base.TimeConstants;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererObjectManager.UpdateType;
 import io.github.marcocipriani01.telescopetouch.source.AbstractAstronomicalSource;
@@ -20,6 +19,7 @@ import io.github.marcocipriani01.telescopetouch.source.TextSource;
 import io.github.marcocipriani01.telescopetouch.source.impl.LineSourceImpl;
 import io.github.marcocipriani01.telescopetouch.source.impl.TextSourceImpl;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.util.TimeUtil;
 
 /**
  * Creates a mark at the zenith, nadir and cardinal point and a horizon.
@@ -71,7 +71,7 @@ public class HorizonLayer extends AbstractLayer {
         // colors.
         private static final int LINE_COLOR = Color.argb(120, 86, 176, 245);
         private static final int LABEL_COLOR = Color.argb(120, 245, 176, 86);
-        private static final long UPDATE_FREQ_MS = TimeConstants.MILLISECONDS_PER_SECOND;
+        private static final long UPDATE_FREQ_MS = TimeUtil.MILLISECONDS_PER_SECOND;
 
         private final GeocentricCoordinates zenith = new GeocentricCoordinates(0, 0, 0);
         private final GeocentricCoordinates nadir = new GeocentricCoordinates(0, 0, 0);
@@ -103,7 +103,7 @@ public class HorizonLayer extends AbstractLayer {
         private void updateCoords() {
             // Blog.d(this, "Updating Coords: " + (model.getTime().getTime() - lastUpdateTimeMs));
 
-            this.lastUpdateTimeMs = model.getTime().getTime();
+            this.lastUpdateTimeMs = model.getTime().getTimeInMillis();
             this.zenith.assign(model.getZenith());
             this.nadir.assign(model.getNadir());
             this.north.assign(model.getNorth());
@@ -123,7 +123,7 @@ public class HorizonLayer extends AbstractLayer {
             EnumSet<UpdateType> updateTypes = EnumSet.noneOf(UpdateType.class);
 
             // TODO(brent): Add distance here.
-            if (Math.abs(model.getTime().getTime() - lastUpdateTimeMs) > UPDATE_FREQ_MS) {
+            if (Math.abs(model.getTime().getTimeInMillis() - lastUpdateTimeMs) > UPDATE_FREQ_MS) {
                 updateCoords();
                 updateTypes.add(UpdateType.UpdatePositions);
             }

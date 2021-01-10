@@ -10,7 +10,7 @@ public class Matrix4x4 {
     }
 
     public Matrix4x4(float[] contents) {
-        assert (contents.length == 16);
+        if (contents.length != 16) throw new IllegalArgumentException("Bad matrix");
         System.arraycopy(contents, 0, mValues, 0, 16);
     }
 

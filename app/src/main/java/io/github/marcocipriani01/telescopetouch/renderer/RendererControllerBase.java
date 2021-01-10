@@ -31,12 +31,10 @@ public abstract class RendererControllerBase {
         // appropriate logging statements.  Otherwise, just queue it.
         if (SHOULD_LOG_QUEUE || SHOULD_LOG_RUN || SHOULD_LOG_FINISH) {
             logQueue(msg, type);
-            queuer.queueEvent(new Runnable() {
-                public void run() {
-                    logRun(msg, type);
-                    r.run();
-                    logFinish(msg, type);
-                }
+            queuer.queueEvent(() -> {
+                logRun(msg, type);
+                r.run();
+                logFinish(msg, type);
             });
         } else {
             queuer.queueEvent(r);
@@ -87,29 +85,17 @@ public abstract class RendererControllerBase {
 
     public void queueNightVisionMode(final boolean enable) {
         final String msg = "Setting night vision mode: " + enable;
-        queueRunnable(msg, CommandType.View, new Runnable() {
-            public void run() {
-                mRenderer.setNightVisionMode(enable);
-            }
-        });
+        queueRunnable(msg, CommandType.View, () -> mRenderer.setNightVisionMode(enable));
     }
 
     public void queueFieldOfView(final float fov) {
         final String msg = "Setting fov: " + fov;
-        queueRunnable(msg, CommandType.View, new Runnable() {
-            public void run() {
-                mRenderer.setRadiusOfView(fov);
-            }
-        });
+        queueRunnable(msg, CommandType.View, () -> mRenderer.setRadiusOfView(fov));
     }
 
     public void queueTextAngle(final float angleInRadians) {
         final String msg = "Setting text angle: " + angleInRadians;
-        queueRunnable(msg, CommandType.View, new Runnable() {
-            public void run() {
-                mRenderer.setTextAngle(angleInRadians);
-            }
-        });
+        queueRunnable(msg, CommandType.View, () -> mRenderer.setTextAngle(angleInRadians));
     }
 
     public void queueViewerUpDirection(final GeocentricCoordinates up) {
@@ -120,20 +106,12 @@ public abstract class RendererControllerBase {
     public void queueSetViewOrientation(final float dirX, final float dirY, final float dirZ,
                                         final float upX, final float upY, final float upZ) {
         final String msg = "Setting view orientation";
-        queueRunnable(msg, CommandType.Data, new Runnable() {
-            public void run() {
-                mRenderer.setViewOrientation(dirX, dirY, dirZ, upX, upY, upZ);
-            }
-        });
+        queueRunnable(msg, CommandType.Data, () -> mRenderer.setViewOrientation(dirX, dirY, dirZ, upX, upY, upZ));
     }
 
     public void queueEnableSkyGradient(final GeocentricCoordinates sunPosition) {
         final String msg = "Enabling sky gradient at: " + sunPosition;
-        queueRunnable(msg, CommandType.Data, new Runnable() {
-            public void run() {
-                mRenderer.enableSkyGradient(sunPosition);
-            }
-        });
+        queueRunnable(msg, CommandType.Data, () -> mRenderer.enableSkyGradient(sunPosition));
     }
 
     public void queueDisableSkyGradient() {
@@ -144,11 +122,7 @@ public abstract class RendererControllerBase {
     public void queueEnableSearchOverlay(final GeocentricCoordinates target,
                                          final String targetName) {
         final String msg = "Enabling search overlay";
-        queueRunnable(msg, CommandType.Data, new Runnable() {
-            public void run() {
-                mRenderer.enableSearchOverlay(target, targetName);
-            }
-        });
+        queueRunnable(msg, CommandType.Data, () -> mRenderer.enableSearchOverlay(target, targetName));
     }
 
     public void queueDisableSearchOverlay() {
@@ -158,22 +132,12 @@ public abstract class RendererControllerBase {
 
     public void addUpdateClosure(final UpdateClosure runnable) {
         final String msg = "Setting update callback";
-        queueRunnable(msg, CommandType.Data, new Runnable() {
-            @Override
-            public void run() {
-                mRenderer.addUpdateClosure(runnable);
-            }
-        });
+        queueRunnable(msg, CommandType.Data, () -> mRenderer.addUpdateClosure(runnable));
     }
 
     public void removeUpdateCallback(final UpdateClosure update) {
         final String msg = "Removing update callback";
-        queueRunnable(msg, CommandType.Data, new Runnable() {
-            @Override
-            public void run() {
-                mRenderer.removeUpdateCallback(update);
-            }
-        });
+        queueRunnable(msg, CommandType.Data, () -> mRenderer.removeUpdateCallback(update));
     }
 
     /**
@@ -183,11 +147,7 @@ public abstract class RendererControllerBase {
      */
     public <E> void queueAddManager(final RenderManager<E> rom) {
         String msg = "Adding manager: " + rom;
-        queueRunnable(msg, CommandType.Data, new Runnable() {
-            public void run() {
-                mRenderer.addObjectManager(rom.mManager);
-            }
-        });
+        queueRunnable(msg, CommandType.Data, () -> mRenderer.addObjectManager(rom.mManager));
     }
 
     public void waitUntilFinished() {
@@ -232,20 +192,12 @@ public abstract class RendererControllerBase {
 
         public void queueEnabled(final boolean enable, RendererControllerBase controller) {
             final String msg = (enable ? "Enabling" : "Disabling") + " manager " + mManager;
-            controller.queueRunnable(msg, CommandType.Data, new Runnable() {
-                public void run() {
-                    mManager.enable(enable);
-                }
-            });
+            controller.queueRunnable(msg, CommandType.Data, () -> mManager.enable(enable));
         }
 
         public void queueMaxFieldOfView(final float fov, RendererControllerBase controller) {
             final String msg = "Setting manager max field of view: " + fov;
-            controller.queueRunnable(msg, CommandType.Data, new Runnable() {
-                public void run() {
-                    mManager.setMaxRadiusOfView(fov);
-                }
-            });
+            controller.queueRunnable(msg, CommandType.Data, () -> mManager.setMaxRadiusOfView(fov));
         }
 
         public abstract void queueObjects(
@@ -267,11 +219,7 @@ public abstract class RendererControllerBase {
                                  final EnumSet<RendererObjectManager.UpdateType> updateType,
                                  RendererControllerBase controller) {
             String msg = "Setting point objects";
-            controller.queueRunnable(msg, CommandType.Data, new Runnable() {
-                public void run() {
-                    ((PointObjectManager) mManager).updateObjects(points, updateType);
-                }
-            });
+            controller.queueRunnable(msg, CommandType.Data, () -> ((PointObjectManager) mManager).updateObjects(points, updateType));
         }
     }
 
@@ -288,11 +236,7 @@ public abstract class RendererControllerBase {
                                  final EnumSet<RendererObjectManager.UpdateType> updateType,
                                  RendererControllerBase controller) {
             String msg = "Setting line objects";
-            controller.queueRunnable(msg, CommandType.Data, new Runnable() {
-                public void run() {
-                    ((PolyLineObjectManager) mManager).updateObjects(lines, updateType);
-                }
-            });
+            controller.queueRunnable(msg, CommandType.Data, () -> ((PolyLineObjectManager) mManager).updateObjects(lines, updateType));
         }
     }
 
@@ -309,11 +253,7 @@ public abstract class RendererControllerBase {
                                  final EnumSet<RendererObjectManager.UpdateType> updateType,
                                  RendererControllerBase controller) {
             String msg = "Setting label objects";
-            controller.queueRunnable(msg, CommandType.Data, new Runnable() {
-                public void run() {
-                    ((LabelObjectManager) mManager).updateObjects(labels, updateType);
-                }
-            });
+            controller.queueRunnable(msg, CommandType.Data, () -> ((LabelObjectManager) mManager).updateObjects(labels, updateType));
         }
     }
 
@@ -330,11 +270,7 @@ public abstract class RendererControllerBase {
                                  final EnumSet<RendererObjectManager.UpdateType> updateType,
                                  RendererControllerBase controller) {
             String msg = "Setting image objects";
-            controller.queueRunnable(msg, CommandType.Data, new Runnable() {
-                public void run() {
-                    ((ImageObjectManager) mManager).updateObjects(images, updateType);
-                }
-            });
+            controller.queueRunnable(msg, CommandType.Data, () -> ((ImageObjectManager) mManager).updateObjects(images, updateType));
         }
     }
 }

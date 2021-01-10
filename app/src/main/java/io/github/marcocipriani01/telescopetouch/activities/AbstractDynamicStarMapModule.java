@@ -89,20 +89,6 @@ public class AbstractDynamicStarMapModule {
 
     @Provides
     @PerActivity
-    @Named("timetravel")
-    MediaPlayer provideTimeTravelNoise() {
-        return MediaPlayer.create(activity, R.raw.timetravel);
-    }
-
-    @Provides
-    @PerActivity
-    @Named("timetravelback")
-    MediaPlayer provideTimeTravelBackNoise() {
-        return MediaPlayer.create(activity, R.raw.timetravelback);
-    }
-
-    @Provides
-    @PerActivity
     Animation provideTimeTravelFlashAnimation() {
         return AnimationUtils.loadAnimation(activity, R.anim.timetravelflash);
     }

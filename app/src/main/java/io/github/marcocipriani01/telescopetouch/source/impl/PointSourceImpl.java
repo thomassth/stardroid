@@ -8,7 +8,6 @@ import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
  *
  * @author Brent Bryan
  */
-
 public class PointSourceImpl extends AbstractSource implements PointSource {
 
     public final int size;

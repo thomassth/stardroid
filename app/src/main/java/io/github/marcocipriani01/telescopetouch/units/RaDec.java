@@ -2,7 +2,7 @@ package io.github.marcocipriani01.telescopetouch.units;
 
 import androidx.annotation.NonNull;
 
-import java.util.Date;
+import java.util.Calendar;
 
 import io.github.marcocipriani01.telescopetouch.ephemeris.Planet;
 import io.github.marcocipriani01.telescopetouch.util.Geometry;
@@ -25,14 +25,14 @@ public class RaDec {
         return new RaDec(ra, dec);
     }
 
-    public static RaDec getInstance(Planet planet, Date time,
+    public static RaDec getInstance(Planet planet, Calendar time,
                                     HeliocentricCoordinates earthCoordinates) {
         // TODO(serafini): This is a temporary hack until we re-factor the Planetary calculations.
         if (planet.equals(Planet.Moon)) {
             return Planet.calculateLunarGeocentricLocation(time);
         }
 
-        HeliocentricCoordinates coords = null;
+        HeliocentricCoordinates coords;
         if (planet.equals(Planet.Sun)) {
             // Invert the view, since we want the Sun in earth coordinates, not the Earth in sun
             // coordinates.

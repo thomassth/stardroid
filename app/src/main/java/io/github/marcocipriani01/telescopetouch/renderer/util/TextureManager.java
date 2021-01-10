@@ -4,8 +4,11 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
+import android.graphics.drawable.Drawable;
 import android.opengl.GLUtils;
 import android.util.Log;
+
+import androidx.core.content.ContextCompat;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -14,6 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.microedition.khronos.opengles.GL10;
+
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 
 /**
  * Manages all textures used by the application.  Useful to make sure that we don't accidentally
@@ -28,9 +33,9 @@ import javax.microedition.khronos.opengles.GL10;
 public final class TextureManager {
     private final Resources mRes;
     private final Map<Integer, TextureData> mResourceIdToTextureMap =
-            new HashMap<Integer, TextureData>();
+            new HashMap<>();
     private final ArrayList<TextureReferenceImpl> mAllTextures =
-            new ArrayList<TextureReferenceImpl>();
+            new ArrayList<>();
 
     public TextureManager(Resources res) {
         mRes = res;

@@ -18,6 +18,7 @@ import io.github.marcocipriani01.telescopetouch.units.Vector3;
 import io.github.marcocipriani01.telescopetouch.util.VectorUtil;
 
 public class PolyLineObjectManager extends RendererObjectManager {
+
     private final VertexBuffer mVertexBuffer = new VertexBuffer(true);
     private final NightVisionColorBuffer mColorBuffer = new NightVisionColorBuffer(true);
     private final TexCoordBuffer mTexCoordBuffer = new TexCoordBuffer(true);

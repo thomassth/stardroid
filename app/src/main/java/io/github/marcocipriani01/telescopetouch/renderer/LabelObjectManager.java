@@ -33,9 +33,9 @@ public class LabelObjectManager extends RendererObjectManager {
     // Should we compute the regions for the labels?
     // If false, we just put them in the catchall region.
     private static final boolean COMPUTE_REGIONS = true;
-    private final SkyRegionMap<ArrayList<Label>> mSkyRegions = new SkyRegionMap<ArrayList<Label>>();
+    private final SkyRegionMap<ArrayList<Label>> mSkyRegions = new SkyRegionMap<>();
     private final IntBuffer mQuadBuffer;
-    private Paint mLabelPaint = null;
+    private Paint mLabelPaint;
     private LabelMaker mLabelMaker = null;
     private Label[] mLabels = new Label[0];
     // These are intermediate variables set in beginDrawing() and used in

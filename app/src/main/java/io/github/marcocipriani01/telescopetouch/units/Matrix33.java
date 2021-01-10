@@ -1,5 +1,7 @@
 package io.github.marcocipriani01.telescopetouch.units;
 
+import androidx.annotation.NonNull;
+
 /**
  * Class for representing a 3x3 matrix explicitly, avoiding heap
  * allocation as far as possible.
@@ -68,7 +70,6 @@ public class Matrix33 implements Cloneable {
             this.zy = v2.z;
             this.xz = v3.x;
             this.yz = v3.y;
-            this.zz = v3.z;
         } else {
             this.xx = v1.x;
             this.xy = v1.y;
@@ -78,8 +79,8 @@ public class Matrix33 implements Cloneable {
             this.yz = v2.z;
             this.zx = v3.x;
             this.zy = v3.y;
-            this.zz = v3.z;
         }
+        this.zz = v3.z;
     }
 
     /**
@@ -94,6 +95,8 @@ public class Matrix33 implements Cloneable {
     }
 
     // TODO(widdows): rename this to something like copyOf().
+    @NonNull
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
     public Matrix33 clone() {
         return new Matrix33(xx, xy, xz,

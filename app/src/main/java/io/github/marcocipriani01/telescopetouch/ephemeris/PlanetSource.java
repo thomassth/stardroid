@@ -5,8 +5,8 @@ import android.content.res.Resources;
 import android.graphics.Color;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -40,9 +40,9 @@ public class PlanetSource extends AbstractAstronomicalSource {
     private static final String SHOW_PLANETARY_IMAGES = "show_planetary_images";
     private static final Vector3 UP = new Vector3(0.0f, 1.0f, 0.0f);
 
-    private final ArrayList<PointSource> pointSources = new ArrayList<PointSource>();
-    private final ArrayList<ImageSourceImpl> imageSources = new ArrayList<ImageSourceImpl>();
-    private final ArrayList<TextSource> labelSources = new ArrayList<TextSource>();
+    private final ArrayList<PointSource> pointSources = new ArrayList<>();
+    private final ArrayList<ImageSourceImpl> imageSources = new ArrayList<>();
+    private final ArrayList<TextSource> labelSources = new ArrayList<>();
     private final Planet planet;
     private final Resources resources;
     private final AstronomerModel model;
@@ -72,8 +72,8 @@ public class PlanetSource extends AbstractAstronomicalSource {
         return currentCoords;
     }
 
-    private void updateCoords(Date time) {
-        this.lastUpdateTimeMs = time.getTime();
+    private void updateCoords(Calendar time) {
+        this.lastUpdateTimeMs = time.getTimeInMillis();
         this.sunCoords = HeliocentricCoordinates.getInstance(Planet.Sun, time);
         this.currentCoords.updateFromRaDec(RaDec.getInstance(planet, time, sunCoords));
         for (ImageSourceImpl imageSource : imageSources) {
@@ -83,7 +83,7 @@ public class PlanetSource extends AbstractAstronomicalSource {
 
     @Override
     public Sources initialize() {
-        Date time = model.getTime();
+        Calendar time = model.getTime();
         updateCoords(time);
         this.imageId = planet.getImageResourceId(time);
 
@@ -108,8 +108,8 @@ public class PlanetSource extends AbstractAstronomicalSource {
     public EnumSet<UpdateType> update() {
         EnumSet<UpdateType> updates = EnumSet.noneOf(UpdateType.class);
 
-        Date modelTime = model.getTime();
-        if (Math.abs(modelTime.getTime() - lastUpdateTimeMs) > planet.getUpdateFrequencyMs()) {
+        Calendar modelTime = model.getTime();
+        if (Math.abs(modelTime.getTimeInMillis() - lastUpdateTimeMs) > planet.getUpdateFrequencyMs()) {
             updates.add(UpdateType.UpdatePositions);
             // update location
             updateCoords(modelTime);

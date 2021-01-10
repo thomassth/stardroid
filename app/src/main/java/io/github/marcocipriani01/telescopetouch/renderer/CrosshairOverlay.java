@@ -16,7 +16,7 @@ public class CrosshairOverlay {
     private TexturedQuad mQuad = null;
     private TextureReference mTex = null;
 
-    public void reloadTextures(GL10 gl, Resources res, TextureManager textureManager) {
+    public void reloadTextures(GL10 gl, TextureManager textureManager) {
         // Load the crosshair texture.
         mTex = textureManager.getTextureFromResource(gl, R.drawable.crosshair);
     }

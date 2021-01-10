@@ -57,12 +57,6 @@
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="sound_effects"
-        android:title="@string/use_sound_effects"
-        app:iconSpaceReserved="false" />
-
     <PreferenceCategory
         android:key="sensor_prefs"
         app:iconSpaceReserved="false"

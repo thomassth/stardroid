@@ -1,6 +1,6 @@
 package io.github.marcocipriani01.telescopetouch.ephemeris;
 
-import java.util.Date;
+import java.util.Calendar;
 
 import io.github.marcocipriani01.telescopetouch.units.HeliocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.RaDec;
@@ -13,7 +13,7 @@ import io.github.marcocipriani01.telescopetouch.units.RaDec;
  * but the current ephemeris/provider code is a bit too tangled up for easy reuse.
  */
 public class SolarPositionCalculator {
-    public static RaDec getSolarPosition(Date time) {
+    public static RaDec getSolarPosition(Calendar time) {
         HeliocentricCoordinates sunCoordinates = HeliocentricCoordinates.getInstance(Planet.Sun, time);
         return RaDec.getInstance(Planet.Sun, time, sunCoordinates);
     }

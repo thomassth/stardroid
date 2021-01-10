@@ -34,24 +34,24 @@ import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
  * @author Brent Bryan
  */
 public class ProtobufAstronomicalSource extends AbstractAstronomicalSource {
+
     // Ideally we'd get this from Context.getPackageName but for some reason passing it in as a
     // string via the contructor results in it always being null when I need it. Buggered if
     // I know why - it's certainly a concern. Hopefully this class won't be around for much longer.
     public static final String PACKAGE = "io.github.marcocipriani01.telescopetouch";
     private static final String TAG = TelescopeTouchApplication.getTag(ProtobufAstronomicalSource.class);
-    private static final Map<io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.Shape, PointSource.Shape> shapeMap =
-            new HashMap<io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.Shape, PointSource.Shape>();
+    private static final Map<SourceProto.Shape, PointSource.Shape> shapeMap = new HashMap<>();
 
     static {
-        shapeMap.put(io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.Shape.CIRCLE, PointSource.Shape.CIRCLE);
-        shapeMap.put(io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.Shape.STAR, PointSource.Shape.CIRCLE);
-        shapeMap.put(io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.Shape.ELLIPTICAL_GALAXY, PointSource.Shape.ELLIPTICAL_GALAXY);
-        shapeMap.put(io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.Shape.SPIRAL_GALAXY, PointSource.Shape.SPIRAL_GALAXY);
-        shapeMap.put(io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.Shape.IRREGULAR_GALAXY, PointSource.Shape.IRREGULAR_GALAXY);
-        shapeMap.put(io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.Shape.LENTICULAR_GALAXY, PointSource.Shape.LENTICULAR_GALAXY);
-        shapeMap.put(io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.Shape.GLOBULAR_CLUSTER, PointSource.Shape.GLOBULAR_CLUSTER);
-        shapeMap.put(io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.Shape.OPEN_CLUSTER, PointSource.Shape.OPEN_CLUSTER);
-        shapeMap.put(io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.Shape.NEBULA, PointSource.Shape.NEBULA);
+        shapeMap.put(SourceProto.Shape.CIRCLE, PointSource.Shape.CIRCLE);
+        shapeMap.put(SourceProto.Shape.STAR, PointSource.Shape.CIRCLE);
+        shapeMap.put(SourceProto.Shape.ELLIPTICAL_GALAXY, PointSource.Shape.ELLIPTICAL_GALAXY);
+        shapeMap.put(SourceProto.Shape.SPIRAL_GALAXY, PointSource.Shape.SPIRAL_GALAXY);
+        shapeMap.put(SourceProto.Shape.IRREGULAR_GALAXY, PointSource.Shape.IRREGULAR_GALAXY);
+        shapeMap.put(SourceProto.Shape.LENTICULAR_GALAXY, PointSource.Shape.LENTICULAR_GALAXY);
+        shapeMap.put(SourceProto.Shape.GLOBULAR_CLUSTER, PointSource.Shape.GLOBULAR_CLUSTER);
+        shapeMap.put(SourceProto.Shape.OPEN_CLUSTER, PointSource.Shape.OPEN_CLUSTER);
+        shapeMap.put(SourceProto.Shape.NEBULA, PointSource.Shape.NEBULA);
         shapeMap.put(SourceProto.Shape.HUBBLE_DEEP_FIELD, PointSource.Shape.HUBBLE_DEEP_FIELD);
     }
 
@@ -106,7 +106,7 @@ public class ProtobufAstronomicalSource extends AbstractAstronomicalSource {
     @Override
     public synchronized ArrayList<String> getNames() {
         if (names == null) {
-            names = new ArrayList<String>(proto.getNameIntIdsCount());
+            names = new ArrayList<>(proto.getNameIntIdsCount());
             for (int id : proto.getNameIntIdsList()) {
                 names.add(resources.getString(id));
             }
@@ -137,7 +137,7 @@ public class ProtobufAstronomicalSource extends AbstractAstronomicalSource {
         if (proto.getLabelCount() == 0) {
             return Collections.emptyList();
         }
-        ArrayList<TextSource> points = new ArrayList<TextSource>(proto.getLabelCount());
+        ArrayList<TextSource> points = new ArrayList<>(proto.getLabelCount());
         for (LabelElementProto element : proto.getLabelList()) {
             Log.d(TAG, "Label " + element.getStringsIntId() + " : " + element.getStringsStrId());
             points.add(new TextSourceImpl(getCoords(element.getLocation()),

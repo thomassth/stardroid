@@ -53,12 +53,4 @@ public abstract class AbstractSource implements Colorable, PositionSource {
     public GeocentricCoordinates getLocation() {
         return xyz;
     }
-
-    /**
-     * Each source has an update granularity associated with it, which
-     * defines how often it's provider expects its value to change.
-     */
-    public enum UpdateGranularity {
-        Second, Minute, Hour, Day, Year
-    }
 }

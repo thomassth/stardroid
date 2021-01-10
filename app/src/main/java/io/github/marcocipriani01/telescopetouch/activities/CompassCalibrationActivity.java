@@ -6,10 +6,14 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.CheckBox;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 
 import javax.inject.Inject;
 
@@ -40,6 +44,12 @@ public class CompassCalibrationActivity extends InjectableActivity implements Se
         DaggerCompassCalibrationComponent.builder()
                 .applicationComponent(getApplicationComponent())
                 .compassCalibrationModule(new CompassCalibrationModule(this)).build().inject(this);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
 
         setContentView(R.layout.activity_compass_calibration);
         WebView web = findViewById(R.id.compass_calib_activity_webview);
@@ -77,6 +87,15 @@ public class CompassCalibrationActivity extends InjectableActivity implements Se
     }
 
     @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            this.finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onSensorChanged(SensorEvent event) {
         if (!accuracyReceived) {
             onAccuracyChanged(event.sensor, event.accuracy);
@@ -90,8 +109,7 @@ public class CompassCalibrationActivity extends InjectableActivity implements Se
         String accuracyText = accuracyDecoder.getTextForAccuracy(accuracy);
         accuracyTextView.setText(accuracyText);
         accuracyTextView.setTextColor(accuracyDecoder.getColorForAccuracy(accuracy));
-        if (accuracy == SensorManager.SENSOR_STATUS_ACCURACY_HIGH
-                && getIntent().getBooleanExtra(AUTO_DISMISSABLE, false)) {
+        if (accuracy == SensorManager.SENSOR_STATUS_ACCURACY_HIGH && getIntent().getBooleanExtra(AUTO_DISMISSABLE, false)) {
             toaster.toastLong(R.string.sensor_accuracy_high);
             this.finish();
         }

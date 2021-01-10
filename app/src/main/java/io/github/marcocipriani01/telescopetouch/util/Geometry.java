@@ -1,6 +1,6 @@
 package io.github.marcocipriani01.telescopetouch.util;
 
-import java.util.Date;
+import java.util.Calendar;
 
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.LatLong;
@@ -98,7 +98,7 @@ public class Geometry {
     /**
      * Compute celestial coordinates of zenith from utc, lat long.
      */
-    public static RaDec calculateRADecOfZenith(Date utc, LatLong location) {
+    public static RaDec calculateRADecOfZenith(Calendar utc, LatLong location) {
         // compute overhead RA in degrees
         float my_ra = TimeUtil.meanSiderealTime(utc, location.getLongitude());
         float my_dec = location.getLatitude();

@@ -7,7 +7,7 @@ public class ColoredQuad {
     private final float mG;
     private final float mB;
     private final float mA;
-    private VertexBuffer mPosition = null;
+    private VertexBuffer mPosition;
 
     public ColoredQuad(float r, float g, float b, float a,
                        float px, float py, float pz,

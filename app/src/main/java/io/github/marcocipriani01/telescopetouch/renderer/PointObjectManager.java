@@ -21,6 +21,7 @@ import io.github.marcocipriani01.telescopetouch.units.Vector3;
 import io.github.marcocipriani01.telescopetouch.util.VectorUtil;
 
 public class PointObjectManager extends RendererObjectManager {
+
     private static final int NUM_STARS_IN_TEXTURE = 2;
     // Small sets of point aren't worth breaking up into regions.
     // Right now, I'm arbitrarily setting the threshold to 200.
@@ -28,7 +29,7 @@ public class PointObjectManager extends RendererObjectManager {
     // Should we compute the regions for the points?
     // If false, we just put them in the catchall region.
     private static final boolean COMPUTE_REGIONS = true;
-    private final SkyRegionMap<RegionData> mSkyRegions = new SkyRegionMap<RegionData>();
+    private final SkyRegionMap<RegionData> mSkyRegions = new SkyRegionMap<>();
     private int mNumPoints = 0;
     private TextureReference mTextureRef = null;
 
@@ -39,24 +40,18 @@ public class PointObjectManager extends RendererObjectManager {
     }
 
     public void updateObjects(List<PointSource> points, EnumSet<UpdateType> updateType) {
-        boolean onlyUpdatePoints = true;
-        // We only care about updates to positions, ignore any other updates.
-        if (updateType.contains(UpdateType.Reset)) {
-            onlyUpdatePoints = false;
-        } else if (updateType.contains(UpdateType.UpdatePositions)) {
+        if (updateType.contains(UpdateType.UpdatePositions)) {
             // Sanity check: make sure the number of points is unchanged.
             if (points.size() != mNumPoints) {
-                Log.e("PointObjectManager",
-                        "Updating PointObjectManager a different number of points: update had " +
+                Log.e("PointObjectManager", "Updating PointObjectManager a different number of points: update had " +
                                 points.size() + " vs " + mNumPoints + " before");
                 return;
             }
-        } else {
+        } else if (!updateType.contains(UpdateType.Reset)) {
             return;
         }
 
         mNumPoints = points.size();
-
         mSkyRegions.clear();
 
         if (COMPUTE_REGIONS) {
@@ -217,13 +212,13 @@ public class PointObjectManager extends RendererObjectManager {
         gl.glDisable(GL10.GL_ALPHA_TEST);
     }
 
-    private class RegionData {
+    private static class RegionData {
         private final VertexBuffer mVertexBuffer = new VertexBuffer(true);
         private final NightVisionColorBuffer mColorBuffer = new NightVisionColorBuffer(true);
         private final TexCoordBuffer mTexCoordBuffer = new TexCoordBuffer(true);
         private final IndexBuffer mIndexBuffer = new IndexBuffer(true);
         // TODO(jpowell): This is a convenient hack until the catalog tells us the
         // region for all of its sources.  Remove this once we add that.
-        List<PointSource> sources = new ArrayList<PointSource>();
+        List<PointSource> sources = new ArrayList<>();
     }
 }

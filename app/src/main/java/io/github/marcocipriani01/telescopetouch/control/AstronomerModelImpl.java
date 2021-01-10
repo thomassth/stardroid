@@ -3,7 +3,7 @@ package io.github.marcocipriani01.telescopetouch.control;
 import android.hardware.SensorManager;
 import android.util.Log;
 
-import java.util.Date;
+import java.util.Calendar;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
@@ -141,8 +141,10 @@ public class AstronomerModelImpl implements AstronomerModel {
     }
 
     @Override
-    public Date getTime() {
-        return new Date(clock.getTimeInMillisSinceEpoch());
+    public Calendar getTime() {
+        Calendar instance = Calendar.getInstance();
+        instance.setTimeInMillis(clock.getTimeInMillisSinceEpoch());
+        return instance;
     }
 
     @Override

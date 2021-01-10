@@ -1,7 +1,6 @@
 package io.github.marcocipriani01.telescopetouch.util;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
 
 /**
@@ -12,6 +11,17 @@ import java.util.TimeZone;
  */
 public class TimeUtil {
 
+    public static final long MILLISECONDS_PER_SECOND = 1000L;
+    public static final long MILLISECONDS_PER_MINUTE = 60000L;
+    public static final long MILLISECONDS_PER_HOUR = 3600000L;
+    public static final long MILLISECONDS_PER_DAY = 86400000L;
+    public static final long SECONDS_PER_SECOND = 1L;
+    public static final long SECONDS_PER_MINUTE = 60L;
+    public static final long SECONDS_PER_10MINUTE = 600L;
+    public static final long SECONDS_PER_HOUR = 3600L;
+    public static final long SECONDS_PER_DAY = 24 * SECONDS_PER_HOUR;
+    public static final long SECONDS_PER_WEEK = 7 * SECONDS_PER_DAY;
+
     private TimeUtil() {
     }
 
@@ -19,7 +29,7 @@ public class TimeUtil {
      * Calculate the number of Julian Centuries from the epoch 2000.0
      * (equivalent to Julian Day 2451545.0).
      */
-    public static double julianCenturies(Date date) {
+    public static double julianCenturies(Calendar date) {
         double jd = calculateJulianDay(date);
         double delta = jd - 2451545.0;
         return delta / 36525.0;
@@ -32,18 +42,14 @@ public class TimeUtil {
      * <p>
      * Note that this is only valid for the year range 1900 - 2099.
      */
-    public static double calculateJulianDay(Date date) {
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-        cal.setTime(date);
-
-        double hour = cal.get(Calendar.HOUR_OF_DAY)
-                + cal.get(Calendar.MINUTE) / 60.0f
-                + cal.get(Calendar.SECOND) / 3600.0f;
-
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH) + 1;
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-
+    public static double calculateJulianDay(Calendar date) {
+        date.setTimeZone(TimeZone.getTimeZone("GMT"));
+        double hour = date.get(Calendar.HOUR_OF_DAY)
+                + date.get(Calendar.MINUTE) / 60.0f
+                + date.get(Calendar.SECOND) / 3600.0f;
+        int year = date.get(Calendar.YEAR);
+        int month = date.get(Calendar.MONTH) + 1;
+        int day = date.get(Calendar.DAY_OF_MONTH);
         return 367.0 * year - Math.floor(7.0 * (year
                 + Math.floor((month + 9.0) / 12.0)) / 4.0)
                 + Math.floor(275.0 * month / 9.0) + day
@@ -51,39 +57,10 @@ public class TimeUtil {
     }
 
     /**
-     * Convert the given Julian Day to Gregorian Date (in UT time zone).
-     * Based on the formula given in the Explanitory Supplement to the
-     * Astronomical Almanac, pg 604.
-     */
-    public static Date calculateGregorianDate(double jd) {
-        int l = (int) jd + 68569;
-        int n = (4 * l) / 146097;
-        l = l - (146097 * n + 3) / 4;
-        int i = (4000 * (l + 1)) / 1461001;
-        l = l - (1461 * i) / 4 + 31;
-        int j = (80 * l) / 2447;
-        int d = l - (2447 * j) / 80;
-        l = j / 11;
-        int m = j + 2 - 12 * l;
-        int y = 100 * (n - 49) + i + l;
-
-        double fraction = jd - Math.floor(jd);
-        double dHours = fraction * 24.0;
-        int hours = (int) dHours;
-        double dMinutes = (dHours - hours) * 60.0;
-        int minutes = (int) dMinutes;
-        int seconds = (int) ((dMinutes - minutes) * 60.0);
-
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UT"));
-        cal.set(y, m - 1, d, hours + 12, minutes, seconds);
-        return cal.getTime();
-    }
-
-    /**
      * Calculate local mean sidereal time in degrees. Note that longitude is
      * negative for western longitude values.
      */
-    public static float meanSiderealTime(Date date, float longitude) {
+    public static float meanSiderealTime(Calendar date, float longitude) {
         // First, calculate number of Julian days since J2000.0.
         double jd = calculateJulianDay(date);
         double delta = jd - 2451545.0f;
@@ -111,21 +88,5 @@ public class TimeUtil {
         double remainder = time % 24;
         if (remainder < 0) remainder += 24;
         return remainder;
-    }
-
-    /**
-     * Take a universal time between 0 and 24 and return a triple
-     * [hours, minutes, seconds].
-     *
-     * @param ut Universal time - presumed to be between 0 and 24.
-     * @return [hours, minutes, seconds]
-     */
-    public static int[] clockTimeFromHrs(double ut) {
-        int[] hms = new int[3];
-        hms[0] = (int) Math.floor(ut);
-        double remainderMins = 60 * (ut - hms[0]);
-        hms[1] = (int) Math.floor(remainderMins);
-        hms[2] = (int) Math.floor(remainderMins - hms[1]);
-        return hms;
     }
 }

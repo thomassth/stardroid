@@ -13,7 +13,6 @@ import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 import io.github.marcocipriani01.telescopetouch.activities.CompassCalibrationActivity;
-import io.github.marcocipriani01.telescopetouch.base.TimeConstants;
 
 /**
  * Monitors the compass accuracy and if it is not medium or high warns the user.
@@ -23,7 +22,7 @@ public class SensorAccuracyMonitor implements SensorEventListener {
     private static final String TAG = TelescopeTouchApplication.getTag(SensorAccuracyMonitor.class);
     private static final String LAST_CALIBRATION_WARNING_PREF_KEY = "Last calibration warning time";
     private static final long MIN_INTERVAL_BETWEEN_WARNINGS =
-            180 * TimeConstants.MILLISECONDS_PER_SECOND;
+            180 * TimeUtil.MILLISECONDS_PER_SECOND;
     private final SensorManager sensorManager;
     private final Sensor compassSensor;
     private final Context context;

@@ -20,18 +20,18 @@ public class LineSourceImpl extends AbstractSource implements LineSource {
     public final float lineWidth;
 
     public LineSourceImpl() {
-        this(Color.WHITE, new ArrayList<GeocentricCoordinates>(), 1.5f);
+        this(Color.WHITE, new ArrayList<>(), 1.5f);
     }
 
     public LineSourceImpl(int color) {
-        this(color, new ArrayList<GeocentricCoordinates>(), 1.5f);
+        this(color, new ArrayList<>(), 1.5f);
     }
 
     public LineSourceImpl(int color, List<GeocentricCoordinates> vertices, float lineWidth) {
         super(color);
 
         this.vertices = vertices;
-        this.raDecs = new ArrayList<RaDec>();
+        this.raDecs = new ArrayList<>();
         this.lineWidth = lineWidth;
     }
 
@@ -44,7 +44,7 @@ public class LineSourceImpl extends AbstractSource implements LineSource {
         if (vertices != null) {
             result = vertices;
         } else {
-            result = new ArrayList<GeocentricCoordinates>();
+            result = new ArrayList<>();
         }
         return Collections.unmodifiableList(result);
     }

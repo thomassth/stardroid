@@ -22,14 +22,15 @@ import androidx.fragment.app.DialogFragment;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 import io.github.marcocipriani01.telescopetouch.activities.DynamicStarMapActivity;
-import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
 import io.github.marcocipriani01.telescopetouch.ephemeris.Planet;
+import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
 import io.github.marcocipriani01.telescopetouch.util.TimeUtil;
 
 /**
@@ -54,7 +55,7 @@ public class TimeTravelDialogFragment extends DialogFragment {
     @SuppressWarnings("unchecked")
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Activities using this dialog MUST implement this interface.  Obviously.
-        ((HasComponent<ActivityComponent>) getActivity()).getComponent().inject(this);
+        ((HasComponent<ActivityComponent>) requireActivity()).getComponent().inject(this);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity);
         View root = View.inflate(parentActivity, R.layout.time_dialog, null);
@@ -106,8 +107,6 @@ public class TimeTravelDialogFragment extends DialogFragment {
             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                 String s = (String) popularDatesMenu.getSelectedItem();
                 Log.d(TAG, "Popular date " + popularDatesMenu.getSelectedItemPosition() + "  " + s);
-                Calendar c = Calendar.getInstance();
-                c.setTime(parentActivity.getModel().getTime());
                 switch (popularDatesMenu.getSelectedItemPosition()) {
                     case 0:  // Now
                         calendar.setTime(new Date());
@@ -119,11 +118,11 @@ public class TimeTravelDialogFragment extends DialogFragment {
                         setToNextSunRiseOrSet(Planet.RiseSetIndicator.RISE);
                         break;
                     case 3:  // Next full moon
-                        Date nextFullMoon = Planet.getNextFullMoon(calendar.getTime());
+                        Calendar nextFullMoon = Planet.getNextFullMoon(calendar);
                         setDate(nextFullMoon);
                         break;
                     case 4:  // Moon Landing 1969.
-                        setDate(new Date(-14182953622L));
+                        setDate(new GregorianCalendar(1969, GregorianCalendar.JULY, 20, 20, 27, 39));
                         break;
                     default:
                         Log.d(TAG, "Incorrect popular date index!");
@@ -148,15 +147,14 @@ public class TimeTravelDialogFragment extends DialogFragment {
     /**
      * Sets the internal calendar of this dialog to the given date.
      */
-    private void setDate(Date date) {
-        calendar.setTime(date);
+    private void setDate(Calendar date) {
+        calendar.setTimeInMillis(date.getTimeInMillis());
         updateDisplay();
     }
 
     private void updateDisplay() {
-        Date date = calendar.getTime();
         dateTimeReadout.setText(parentActivity.getString(R.string.now_visiting,
-                dateFormat.format(date)));
+                dateFormat.format(calendar.getTime())));
     }
 
     private void setToNextSunRiseOrSet(Planet.RiseSetIndicator indicator) {
@@ -166,7 +164,7 @@ public class TimeTravelDialogFragment extends DialogFragment {
         } else {
             Log.d(TAG, "Sun rise or set is at: " + TimeUtil.normalizeHours(
                     riseSet.get(Calendar.HOUR_OF_DAY)) + ":" + riseSet.get(Calendar.MINUTE));
-            setDate(riseSet.getTime());
+            setDate(riseSet);
         }
     }
 

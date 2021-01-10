@@ -1,7 +1,5 @@
 package io.github.marcocipriani01.telescopetouch.renderer;
 
-import android.content.res.Resources;
-
 import javax.microedition.khronos.opengles.GL10;
 
 import io.github.marcocipriani01.telescopetouch.R;
@@ -16,9 +14,9 @@ import io.github.marcocipriani01.telescopetouch.util.VectorUtil;
 public class SearchArrow {
 
     // The arrow quad is 10% of the screen width or height, whichever is smaller.
-    private final float ARROW_SIZE = 0.1f;
+    private static final float ARROW_SIZE = 0.1f;
     // The circle quad is 40% of the screen width or height, whichever is smaller.
-    private final float CIRCLE_SIZE = 0.4f;
+    private static final float CIRCLE_SIZE = 0.4f;
 
     // The target position is (1, theta, phi) in spherical coordinates.
     private float mTargetTheta = 0;
@@ -53,29 +51,25 @@ public class SearchArrow {
         return (float) Math.atan2(sinAngle, cosAngle);
     }
 
-    public void reloadTextures(GL10 gl, Resources res, TextureManager textureManager) {
+    public void reloadTextures(GL10 gl, TextureManager textureManager) {
         gl.glEnable(GL10.GL_TEXTURE_2D);
-
         mArrowTex = textureManager.getTextureFromResource(gl, R.drawable.arrow);
         mCircleTex = textureManager.getTextureFromResource(gl, R.drawable.arrowcircle);
-
         gl.glDisable(GL10.GL_TEXTURE_2D);
     }
 
-    public void resize(GL10 gl, int screenWidth, int screenHeight, float fullCircleSize) {
+    public void resize(int screenWidth, int screenHeight, float fullCircleSize) {
         mArrowSizeFactor = ARROW_SIZE * Math.min(screenWidth, screenHeight);
         mArrowQuad = new TexturedQuad(mArrowTex,
                 0, 0, 0,
                 0.5f, 0, 0,
                 0, 0.5f, 0);
-
         mFullCircleScaleFactor = fullCircleSize;
         mCircleSizeFactor = CIRCLE_SIZE * mFullCircleScaleFactor;
         mCircleQuad = new TexturedQuad(mCircleTex,
                 0, 0, 0,
                 0.5f, 0, 0,
                 0, 0.5f, 0);
-
         mArrowOffset = mCircleSizeFactor + mArrowSizeFactor;
     }
 
@@ -148,7 +142,6 @@ public class SearchArrow {
             gl.glTranslatef(mArrowOffset * 0.5f, 0, 0);
             gl.glScalef(arrowScale, arrowScale, arrowScale);
             mArrowQuad.draw(gl);
-            gl.glPopMatrix();
         } else {
             gl.glColor4x(FixedPoint.ONE, FixedPoint.ONE, FixedPoint.ONE,
                     FixedPoint.floatToFixedPoint(0.7f));
@@ -161,8 +154,8 @@ public class SearchArrow {
                     mCircleSizeFactor * (1 - expandFactor);
             gl.glScalef(circleScale, circleScale, circleScale);
             mCircleQuad.draw(gl);
-            gl.glPopMatrix();
         }
+        gl.glPopMatrix();
         gl.glPopMatrix();
 
         gl.glTexEnvf(GL10.GL_TEXTURE_ENV, GL10.GL_TEXTURE_ENV_MODE, GL10.GL_REPLACE);

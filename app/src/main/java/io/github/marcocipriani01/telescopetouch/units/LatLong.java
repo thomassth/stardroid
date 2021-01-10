@@ -41,7 +41,6 @@ public class LatLong {
     /**
      * Angular distance between the two points.
      *
-     * @param other
      * @return degrees
      */
     public float distanceFrom(LatLong other) {
