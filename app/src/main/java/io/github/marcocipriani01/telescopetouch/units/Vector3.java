@@ -1,6 +1,8 @@
 package io.github.marcocipriani01.telescopetouch.units;
 
-import io.github.marcocipriani01.telescopetouch.util.MathUtil;
+import android.annotation.SuppressLint;
+
+import androidx.annotation.NonNull;
 
 public class Vector3 {
 
@@ -18,8 +20,6 @@ public class Vector3 {
      * Constructs a Vector3 from a float[2] object.
      * Checks for length. This is probably inefficient, so if you're using this
      * you should already be questioning your use of float[] instead of Vector3.
-     *
-     * @param xyz
      */
     public Vector3(float[] xyz) throws IllegalArgumentException {
         if (xyz.length != 3) {
@@ -56,7 +56,7 @@ public class Vector3 {
      * Returns the vector's length.
      */
     public float length() {
-        return MathUtil.sqrt(length2());
+        return (float) Math.sqrt(length2());
     }
 
     /**
@@ -103,6 +103,8 @@ public class Vector3 {
         return Float.floatToIntBits(x) + Float.floatToIntBits(y) + Float.floatToIntBits(z);
     }
 
+    @SuppressLint("DefaultLocale")
+    @NonNull
     @Override
     public String toString() {
         return String.format("x=%f, y=%f, z=%f", x, y, z);

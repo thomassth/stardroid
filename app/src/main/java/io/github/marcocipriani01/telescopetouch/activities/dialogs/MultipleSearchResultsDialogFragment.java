@@ -15,10 +15,10 @@ import java.util.ArrayList;
 import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 import io.github.marcocipriani01.telescopetouch.activities.DynamicStarMapActivity;
 import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
 import io.github.marcocipriani01.telescopetouch.search.SearchResult;
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 
 /**
  * End User License agreement dialog.
@@ -26,7 +26,7 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
  */
 public class MultipleSearchResultsDialogFragment extends DialogFragment {
 
-    private static final String TAG = MiscUtil.getTag(MultipleSearchResultsDialogFragment.class);
+    private static final String TAG = TelescopeTouchApplication.getTag(MultipleSearchResultsDialogFragment.class);
     @Inject
     DynamicStarMapActivity parentActivity;
 

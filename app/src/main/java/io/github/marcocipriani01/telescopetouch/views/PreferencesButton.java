@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -14,12 +13,12 @@ import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.preference.PreferenceManager;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 
 public class PreferencesButton extends AppCompatImageButton
         implements android.view.View.OnClickListener, OnSharedPreferenceChangeListener {
 
-    private static final String TAG = MiscUtil.getTag(PreferencesButton.class);
+    private static final String TAG = TelescopeTouchApplication.getTag(PreferencesButton.class);
     private OnClickListener secondaryOnClickListener;
     private Drawable imageOn;
     private Drawable imageOff;
@@ -51,11 +50,12 @@ public class PreferencesButton extends AppCompatImageButton
     }
 
     public void setAttrs(Context context, AttributeSet attrs) {
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.PreferencesButton);
-        imageOn = a.getDrawable(R.styleable.PreferencesButton_image_on);
-        imageOff = a.getDrawable(R.styleable.PreferencesButton_image_off);
-        prefKey = a.getString(R.styleable.PreferencesButton_pref_key);
-        defaultValue = a.getBoolean(R.styleable.PreferencesButton_default_value, true);
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.PreferencesButton);
+        imageOn = typedArray.getDrawable(R.styleable.PreferencesButton_image_on);
+        imageOff = typedArray.getDrawable(R.styleable.PreferencesButton_image_off);
+        prefKey = typedArray.getString(R.styleable.PreferencesButton_pref_key);
+        defaultValue = typedArray.getBoolean(R.styleable.PreferencesButton_default_value, true);
+        typedArray.recycle();
         Log.d(TAG, "Preference key is " + prefKey);
     }
 

@@ -16,13 +16,12 @@ import io.github.marcocipriani01.telescopetouch.units.Vector3;
  * @author Dominic Widdows
  * @author John Taylor
  */
-
 public class Geometry {
     // Convert Degrees to Radians
-    public static final float DEGREES_TO_RADIANS = MathUtil.PI / 180.0f;
+    public static final float DEGREES_TO_RADIANS = (float) Math.PI / 180.0f;
 
     // Convert Radians to Degrees
-    public static final float RADIANS_TO_DEGREES = 180.0f / MathUtil.PI;
+    public static final float RADIANS_TO_DEGREES = 180.0f / (float) Math.PI;
 
     private Geometry() {
     }
@@ -33,9 +32,9 @@ public class Geometry {
     public static float abs_floor(float x) {
         float result;
         if (x >= 0.0)
-            result = MathUtil.floor(x);
+            result = (float) Math.floor(x);
         else
-            result = MathUtil.ceil(x);
+            result = (float) Math.ceil(x);
         return result;
     }
 
@@ -44,10 +43,10 @@ public class Geometry {
      * to 2\pi radians.
      */
     public static float mod2pi(float x) {
-        float factor = x / MathUtil.TWO_PI;
-        float result = MathUtil.TWO_PI * (factor - abs_floor(factor));
+        float factor = x / (2f * (float) Math.PI);
+        float result = 2f * (float) Math.PI * (factor - abs_floor(factor));
         if (result < 0.0) {
-            result = MathUtil.TWO_PI + result;
+            result = 2f * (float) Math.PI + result;
         }
         return result;
     }
@@ -72,8 +71,6 @@ public class Geometry {
     /**
      * Creates and returns a new Vector3 which is the sum of both arguments.
      *
-     * @param first
-     * @param second
      * @return vector sum first + second
      */
     public static Vector3 addVectors(Vector3 first, Vector3 second) {
@@ -82,9 +79,8 @@ public class Geometry {
 
     public static float cosineSimilarity(Vector3 v1, Vector3 v2) {
         // We might want to optimize this implementation at some point.
-        return scalarProduct(v1, v2)
-                / MathUtil.sqrt(scalarProduct(v1, v1)
-                * scalarProduct(v2, v2));
+        return (float) (scalarProduct(v1, v2) / Math.sqrt(scalarProduct(v1, v1)
+                * scalarProduct(v2, v2)));
     }
 
     /**
@@ -94,9 +90,9 @@ public class Geometry {
         float raRadians = raDec.ra * DEGREES_TO_RADIANS;
         float decRadians = raDec.dec * DEGREES_TO_RADIANS;
         return new GeocentricCoordinates(
-                MathUtil.cos(raRadians) * MathUtil.cos(decRadians),
-                MathUtil.sin(raRadians) * MathUtil.cos(decRadians),
-                MathUtil.sin(decRadians));
+                (float) Math.cos(raRadians) * (float) Math.cos(decRadians),
+                (float) Math.sin(raRadians) * (float) Math.cos(decRadians),
+                (float) Math.sin(decRadians));
     }
 
     /**
@@ -137,13 +133,12 @@ public class Geometry {
      * Calculate the rotation matrix for a certain number of degrees about the
      * give axis.
      *
-     * @param degrees
-     * @param axis    - must be a unit vector.
+     * @param axis - must be a unit vector.
      */
     public static Matrix33 calculateRotationMatrix(float degrees, Vector3 axis) {
         // Construct the rotation matrix about this vector
-        float cosD = MathUtil.cos(degrees * Geometry.DEGREES_TO_RADIANS);
-        float sinD = MathUtil.sin(degrees * Geometry.DEGREES_TO_RADIANS);
+        float cosD = (float) Math.cos(degrees * Geometry.DEGREES_TO_RADIANS);
+        float sinD = (float) Math.sin(degrees * Geometry.DEGREES_TO_RADIANS);
         float oneMinusCosD = 1f - cosD;
 
         float x = axis.x;

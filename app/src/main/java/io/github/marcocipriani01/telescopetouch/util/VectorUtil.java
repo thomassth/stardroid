@@ -19,11 +19,11 @@ public class VectorUtil {
     }
 
     public static float angleBetween(Vector3 p1, Vector3 p2) {
-        return MathUtil.acos(dotProduct(p1, p2) / (length(p1) * length(p2)));
+        return (float) Math.acos(dotProduct(p1, p2) / (length(p1) * length(p2)));
     }
 
     public static float length(Vector3 v) {
-        return MathUtil.sqrt(lengthSqr(v));
+        return (float) Math.sqrt(lengthSqr(v));
     }
 
     public static float lengthSqr(Vector3 v) {

@@ -1,10 +1,11 @@
 package io.github.marcocipriani01.telescopetouch.units;
 
+import androidx.annotation.NonNull;
+
 import java.util.Date;
 
-import io.github.marcocipriani01.telescopetouch.provider.ephemeris.Planet;
+import io.github.marcocipriani01.telescopetouch.ephemeris.Planet;
 import io.github.marcocipriani01.telescopetouch.util.Geometry;
-import io.github.marcocipriani01.telescopetouch.util.MathUtil;
 
 public class RaDec {
     public float ra;        // In degrees
@@ -17,9 +18,9 @@ public class RaDec {
 
     public static RaDec calculateRaDecDist(HeliocentricCoordinates coords) {
         // find the RA and DEC from the rectangular equatorial coords
-        float ra = Geometry.mod2pi(MathUtil.atan2(coords.y, coords.x)) * Geometry.RADIANS_TO_DEGREES;
-        float dec = MathUtil.atan(coords.z / MathUtil.sqrt(coords.x * coords.x + coords.y * coords.y))
-                * Geometry.RADIANS_TO_DEGREES;
+        float ra = Geometry.mod2pi((float) Math.atan2(coords.y, coords.x)) * Geometry.RADIANS_TO_DEGREES;
+        float dec = (float) (Math.atan(coords.z / Math.sqrt(coords.x * coords.x + coords.y * coords.y))
+                * Geometry.RADIANS_TO_DEGREES);
 
         return new RaDec(ra, dec);
     }
@@ -46,15 +47,15 @@ public class RaDec {
     }
 
     public static RaDec getInstance(GeocentricCoordinates coords) {
-        float raRad = MathUtil.atan2(coords.y, coords.x);
-        if (raRad < 0) raRad += MathUtil.TWO_PI;
-        float decRad = MathUtil.atan2(coords.z,
-                MathUtil.sqrt(coords.x * coords.x + coords.y * coords.y));
-
+        float raRad = (float) Math.atan2(coords.y, coords.x);
+        if (raRad < 0) raRad += 2f * (float) Math.PI;
+        float decRad = (float) Math.atan2(coords.z,
+                Math.sqrt(coords.x * coords.x + coords.y * coords.y));
         return new RaDec(raRad * Geometry.RADIANS_TO_DEGREES,
                 decRad * Geometry.RADIANS_TO_DEGREES);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "RA: " + ra + " degrees\n" +

@@ -114,11 +114,7 @@ public abstract class RendererControllerBase {
 
     public void queueViewerUpDirection(final GeocentricCoordinates up) {
         final String msg = "Setting up direction: " + up;
-        queueRunnable(msg, CommandType.View, new Runnable() {
-            public void run() {
-                mRenderer.setViewerUpDirection(up);
-            }
-        });
+        queueRunnable(msg, CommandType.View, () -> mRenderer.setViewerUpDirection(up));
     }
 
     public void queueSetViewOrientation(final float dirX, final float dirY, final float dirZ,

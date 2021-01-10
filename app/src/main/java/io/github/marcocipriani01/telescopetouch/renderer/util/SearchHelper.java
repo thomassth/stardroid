@@ -1,7 +1,6 @@
 package io.github.marcocipriani01.telescopetouch.renderer.util;
 
 import io.github.marcocipriani01.telescopetouch.units.Vector3;
-import io.github.marcocipriani01.telescopetouch.util.MathUtil;
 import io.github.marcocipriani01.telescopetouch.util.Matrix4x4;
 
 public class SearchHelper {
@@ -80,7 +79,7 @@ public class SearchHelper {
         if (position.z > 0) {
             float dx = position.x * mHalfScreenWidth;
             float dy = position.y * mHalfScreenHeight;
-            return MathUtil.sqrt(dx * dx + dy * dy);
+            return (float) Math.sqrt(dx * dx + dy * dy);
         } else {
             return Float.POSITIVE_INFINITY;
         }

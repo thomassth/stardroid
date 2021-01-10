@@ -15,6 +15,7 @@ import javax.inject.Named;
 import dagger.Module;
 import dagger.Provides;
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.EulaDialogFragment;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.LocationPermissionRationaleFragment;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.MultipleSearchResultsDialogFragment;
@@ -22,7 +23,6 @@ import io.github.marcocipriani01.telescopetouch.activities.dialogs.NoSearchResul
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.NoSensorsDialogFragment;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.TimeTravelDialogFragment;
 import io.github.marcocipriani01.telescopetouch.inject.PerActivity;
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 
 /**
  * Dagger module
@@ -31,7 +31,7 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 @Module
 public class AbstractDynamicStarMapModule {
 
-    private static final String TAG = MiscUtil.getTag(DynamicStarMapModule.class);
+    private static final String TAG = TelescopeTouchApplication.getTag(DynamicStarMapModule.class);
     private final DynamicStarMapActivity activity;
 
     public AbstractDynamicStarMapModule(DynamicStarMapActivity activity) {

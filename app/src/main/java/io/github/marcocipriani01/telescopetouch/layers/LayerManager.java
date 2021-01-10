@@ -9,17 +9,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererController;
 import io.github.marcocipriani01.telescopetouch.search.SearchResult;
 import io.github.marcocipriani01.telescopetouch.search.SearchTermsProvider.SearchTerm;
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 
 /**
  * Allows a group of layers to be controlled together.
  */
 public class LayerManager implements OnSharedPreferenceChangeListener {
 
-    private static final String TAG = MiscUtil.getTag(LayerManager.class);
+    private static final String TAG = TelescopeTouchApplication.getTag(LayerManager.class);
     private final List<Layer> layers = new ArrayList<>();
     private final SharedPreferences sharedPreferences;
 

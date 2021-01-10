@@ -2,12 +2,12 @@ package io.github.marcocipriani01.telescopetouch.control;
 
 import android.util.Log;
 
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel.Pointing;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.Matrix33;
 import io.github.marcocipriani01.telescopetouch.units.Vector3;
 import io.github.marcocipriani01.telescopetouch.util.Geometry;
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 
 /**
  * Allows user-input elements such as touch screens and trackballs to move the
@@ -17,7 +17,7 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
  */
 public class ManualOrientationController extends AbstractController {
 
-    private static final String TAG = MiscUtil.getTag(ManualOrientationController.class);
+    private static final String TAG = TelescopeTouchApplication.getTag(ManualOrientationController.class);
 
     @Override
     public void start() {

@@ -13,8 +13,8 @@ import androidx.fragment.app.DialogFragment;
 import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 
 /**
  * End User License agreement dialog.
@@ -22,7 +22,7 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
  */
 public class NoSearchResultsDialogFragment extends DialogFragment {
 
-    private static final String TAG = MiscUtil.getTag(NoSearchResultsDialogFragment.class);
+    private static final String TAG = TelescopeTouchApplication.getTag(NoSearchResultsDialogFragment.class);
     @Inject
     Activity parentActivity;
 

@@ -4,7 +4,7 @@ import android.util.Log;
 
 import java.util.Date;
 
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 
 /**
  * A clock that knows how to transition between a {@link TimeTravelClock}
@@ -16,7 +16,7 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 public class TransitioningCompositeClock implements Clock {
 
     public static final long TRANSITION_TIME_MILLIS = 2500L;
-    private static final String TAG = MiscUtil.getTag(TransitioningCompositeClock.class);
+    private static final String TAG = TelescopeTouchApplication.getTag(TransitioningCompositeClock.class);
     private final Clock realClock;
     private final TimeTravelClock timeTravelClock;
     private Mode mode = Mode.REAL_TIME;

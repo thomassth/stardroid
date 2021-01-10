@@ -10,7 +10,6 @@ import java.util.EnumSet;
 import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
-import javax.microedition.khronos.opengles.GL11;
 
 import io.github.marcocipriani01.telescopetouch.renderer.util.TexCoordBuffer;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TextureManager;

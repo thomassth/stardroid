@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
@@ -27,10 +26,10 @@ import java.util.Date;
 import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 import io.github.marcocipriani01.telescopetouch.activities.DynamicStarMapActivity;
 import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
-import io.github.marcocipriani01.telescopetouch.provider.ephemeris.Planet;
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
+import io.github.marcocipriani01.telescopetouch.ephemeris.Planet;
 import io.github.marcocipriani01.telescopetouch.util.TimeUtil;
 
 /**
@@ -38,7 +37,7 @@ import io.github.marcocipriani01.telescopetouch.util.TimeUtil;
  */
 public class TimeTravelDialogFragment extends DialogFragment {
 
-    private static final String TAG = MiscUtil.getTag(TimeTravelDialogFragment.class);
+    private static final String TAG = TelescopeTouchApplication.getTag(TimeTravelDialogFragment.class);
     private static final int MIN_CLICK_TIME = 1000;
     @SuppressLint("SimpleDateFormat")
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z");

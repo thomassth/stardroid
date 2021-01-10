@@ -1,11 +1,14 @@
 package io.github.marcocipriani01.telescopetouch.units;
 
+import android.annotation.SuppressLint;
+
+import androidx.annotation.NonNull;
+
 import java.util.Date;
 
-import io.github.marcocipriani01.telescopetouch.provider.ephemeris.OrbitalElements;
-import io.github.marcocipriani01.telescopetouch.provider.ephemeris.Planet;
+import io.github.marcocipriani01.telescopetouch.ephemeris.OrbitalElements;
+import io.github.marcocipriani01.telescopetouch.ephemeris.Planet;
 import io.github.marcocipriani01.telescopetouch.util.Geometry;
-import io.github.marcocipriani01.telescopetouch.util.MathUtil;
 
 public class HeliocentricCoordinates extends Vector3 {
     // Value of the obliquity of the ecliptic for J2000
@@ -24,21 +27,21 @@ public class HeliocentricCoordinates extends Vector3 {
     public static HeliocentricCoordinates getInstance(OrbitalElements elem) {
         float anomaly = elem.getAnomaly();
         float ecc = elem.eccentricity;
-        float radius = elem.distance * (1 - ecc * ecc) / (1 + ecc * MathUtil.cos(anomaly));
+        float radius = elem.distance * (1 - ecc * ecc) / (1 + ecc * (float) Math.cos(anomaly));
 
         // heliocentric rectangular coordinates of planet
         float per = elem.perihelion;
         float asc = elem.ascendingNode;
         float inc = elem.inclination;
         float xh = radius *
-                (MathUtil.cos(asc) * MathUtil.cos(anomaly + per - asc) -
-                        MathUtil.sin(asc) * MathUtil.sin(anomaly + per - asc) *
-                                MathUtil.cos(inc));
+                ((float) Math.cos(asc) * (float) Math.cos(anomaly + per - asc) -
+                        (float) Math.sin(asc) * (float) Math.sin(anomaly + per - asc) *
+                                (float) Math.cos(inc));
         float yh = radius *
-                (MathUtil.sin(asc) * MathUtil.cos(anomaly + per - asc) +
-                        MathUtil.cos(asc) * MathUtil.sin(anomaly + per - asc) *
-                                MathUtil.cos(inc));
-        float zh = radius * (MathUtil.sin(anomaly + per - asc) * MathUtil.sin(inc));
+                ((float) Math.sin(asc) * (float) Math.cos(anomaly + per - asc) +
+                        (float) Math.cos(asc) * (float) Math.sin(anomaly + per - asc) *
+                                (float) Math.cos(inc));
+        float zh = radius * ((float) Math.sin(anomaly + per - asc) * (float) Math.sin(inc));
 
         return new HeliocentricCoordinates(radius, xh, yh, zh);
     }
@@ -54,19 +57,20 @@ public class HeliocentricCoordinates extends Vector3 {
     }
 
     public HeliocentricCoordinates CalculateEquatorialCoordinates() {
-        return new HeliocentricCoordinates(this.radius,
-                this.x,
-                this.y * MathUtil.cos(OBLIQUITY) - this.z * MathUtil.sin(OBLIQUITY),
-                this.y * MathUtil.sin(OBLIQUITY) + this.z * MathUtil.cos(OBLIQUITY));
+        return new HeliocentricCoordinates(this.radius, this.x,
+                (float) (this.y * Math.cos(OBLIQUITY) - this.z * Math.sin(OBLIQUITY)),
+                (float) (this.y * Math.sin(OBLIQUITY) + this.z * Math.cos(OBLIQUITY)));
     }
 
     public float DistanceFrom(HeliocentricCoordinates other) {
         float dx = this.x - other.x;
         float dy = this.y - other.y;
         float dz = this.z - other.z;
-        return MathUtil.sqrt(dx * dx + dy * dy + dz * dz);
+        return (float) Math.sqrt(dx * dx + dy * dy + dz * dz);
     }
 
+    @SuppressLint("DefaultLocale")
+    @NonNull
     @Override
     public String toString() {
         return String.format("(%f, %f, %f, %f)", x, y, z, radius);

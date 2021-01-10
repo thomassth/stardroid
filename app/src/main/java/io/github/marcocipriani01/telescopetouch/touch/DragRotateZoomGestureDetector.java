@@ -5,8 +5,7 @@ package io.github.marcocipriani01.telescopetouch.touch;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import io.github.marcocipriani01.telescopetouch.util.MathUtil;
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 
 /**
  * Detects map drags, rotations and pinch zooms.
@@ -14,7 +13,7 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
  * @author John Taylor
  */
 public class DragRotateZoomGestureDetector {
-    private static final String TAG = MiscUtil.getTag(DragRotateZoomGestureDetector.class);
+    private static final String TAG = TelescopeTouchApplication.getTag(DragRotateZoomGestureDetector.class);
     private final DragRotateZoomGestureDetectorListener listener;
     private State currentState = State.READY;
     private float last1X;
@@ -113,17 +112,17 @@ public class DragRotateZoomGestureDetector {
             // Log.d(TAG, "Previous vector: " + vectorBeforeX + ", " + vectorBeforeY);
             // Log.d(TAG, "Current vector: " + vectorCurrentX + ", " + vectorCurrentY);
 
-            float lengthRatio = MathUtil.sqrt(normSquared(vectorCurrentX, vectorCurrentY)
+            float lengthRatio = (float) Math.sqrt(normSquared(vectorCurrentX, vectorCurrentY)
                     / normSquared(vectorLastX, vectorLastY));
             // Log.d(TAG, "Stretching map by ratio " + ratio);
             listener.onStretch(lengthRatio);
-            float angleLast = MathUtil.atan2(vectorLastX, vectorLastY);
-            float angleCurrent = MathUtil.atan2(vectorCurrentX, vectorCurrentY);
+            float angleLast = (float) Math.atan2(vectorLastX, vectorLastY);
+            float angleCurrent = (float) Math.atan2(vectorCurrentX, vectorCurrentY);
             // Log.d(TAG, "Angle before " + angleBefore);
             // Log.d(TAG, "Angle after " + angleAfter);
             float angleDelta = angleCurrent - angleLast;
             // Log.d(TAG, "Rotating map by angle delta " + angleDelta);
-            listener.onRotate(angleDelta * MathUtil.RADIANS_TO_DEGREES);
+            listener.onRotate(angleDelta * (180 / (float) Math.PI));
 
             last1X = current1X;
             last1Y = current1Y;

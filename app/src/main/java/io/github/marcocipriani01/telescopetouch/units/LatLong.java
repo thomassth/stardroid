@@ -1,7 +1,6 @@
 package io.github.marcocipriani01.telescopetouch.units;
 
 import io.github.marcocipriani01.telescopetouch.util.Geometry;
-import io.github.marcocipriani01.telescopetouch.util.MathUtil;
 
 /**
  * A simple struct for latitude and longitude.
@@ -52,7 +51,7 @@ public class LatLong {
         GeocentricCoordinates thisPnt = GeocentricCoordinates.getInstance(this.longitude,
                 this.latitude);
         float cosTheta = Geometry.cosineSimilarity(thisPnt, otherPnt);
-        return MathUtil.acos(cosTheta) * 180f / MathUtil.PI;
+        return (float) Math.acos(cosTheta) * 180f / (float) Math.PI;
     }
 
     public float getLatitude() {

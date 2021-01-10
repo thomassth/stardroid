@@ -10,7 +10,6 @@ import io.github.marcocipriani01.telescopetouch.renderer.util.TextureManager;
 import io.github.marcocipriani01.telescopetouch.renderer.util.VertexBuffer;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.Vector3;
-import io.github.marcocipriani01.telescopetouch.util.MathUtil;
 import io.github.marcocipriani01.telescopetouch.util.VectorUtil;
 
 public class SkyBox extends RendererObjectManager {
@@ -39,10 +38,10 @@ public class SkyBox extends RendererObjectManager {
         float[] cosAngles = new float[NUM_STEPS_IN_BAND];
 
         float angleInBand = 0;
-        float dAngle = MathUtil.TWO_PI / (NUM_STEPS_IN_BAND - 1);
+        float dAngle = 2f * (float) Math.PI / (NUM_STEPS_IN_BAND - 1);
         for (int i = 0; i < NUM_STEPS_IN_BAND; i++) {
-            sinAngles[i] = MathUtil.sin(angleInBand);
-            cosAngles[i] = MathUtil.cos(angleInBand);
+            sinAngles[i] = (float) Math.sin(angleInBand);
+            cosAngles[i] = (float) Math.cos(angleInBand);
             angleInBand += dAngle;
         }
 
@@ -64,7 +63,7 @@ public class SkyBox extends RendererObjectManager {
                 color = (intensity << 16) | (intensity << 8) | intensity | 0xff000000;
             }
 
-            float sinPhi = bandPos > -1 ? MathUtil.sqrt(1 - bandPos * bandPos) : 0;
+            float sinPhi = bandPos > -1 ? (float) Math.sqrt(1 - bandPos * bandPos) : 0;
             for (int i = 0; i < NUM_STEPS_IN_BAND; i++) {
                 vb.addPoint(cosAngles[i] * sinPhi, bandPos, sinAngles[i] * sinPhi);
                 cb.addColor(color);
@@ -149,7 +148,7 @@ public class SkyBox extends RendererObjectManager {
         // Rotate the sky box to the position of the sun.
         Vector3 cp = VectorUtil.crossProduct(new Vector3(0, 1, 0), mSunPos);
         cp = VectorUtil.normalized(cp);
-        float angle = 180.0f / MathUtil.PI * MathUtil.acos(mSunPos.y);
+        float angle = 180.0f / (float) Math.PI * (float) Math.acos(mSunPos.y);
         gl.glRotatef(angle, cp.x, cp.y, cp.z);
 
         mVertexBuffer.set(gl);

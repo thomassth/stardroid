@@ -2,6 +2,8 @@ package io.github.marcocipriani01.telescopetouch.renderer;
 
 import android.opengl.GLSurfaceView;
 
+import androidx.annotation.NonNull;
+
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -24,6 +26,7 @@ public class RendererController extends RendererControllerBase {
         return mQueuer;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "RendererController";
@@ -65,6 +68,7 @@ public class RendererController extends RendererControllerBase {
             return mQueuer;
         }
 
+        @NonNull
         @Override
         public String toString() {
             return "AtomicSection" + mID;

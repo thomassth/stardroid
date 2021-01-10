@@ -25,21 +25,20 @@ import java.util.TimeZone;
 import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.StardroidApplication;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 import io.github.marcocipriani01.telescopetouch.activities.util.SensorAccuracyDecoder;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.control.LocationController;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.LatLong;
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 
 public class DiagnosticActivity extends InjectableActivity implements SensorEventListener {
 
-    private static final String TAG = MiscUtil.getTag(DiagnosticActivity.class);
+    private static final String TAG = TelescopeTouchApplication.getTag(DiagnosticActivity.class);
     private static final int UPDATE_PERIOD_MILLIS = 500;
     private final Set<Sensor> knownSensorAccuracies = new HashSet<>();
     @Inject
-    StardroidApplication app;
+    TelescopeTouchApplication app;
     @Inject
     SensorManager sensorManager;
     @Inject

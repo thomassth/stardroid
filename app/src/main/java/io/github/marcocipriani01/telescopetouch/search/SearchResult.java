@@ -1,5 +1,7 @@
 package io.github.marcocipriani01.telescopetouch.search;
 
+import androidx.annotation.NonNull;
+
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 
 /**
@@ -26,6 +28,7 @@ public class SearchResult {
         this.coords = coords;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return capitalizedName;

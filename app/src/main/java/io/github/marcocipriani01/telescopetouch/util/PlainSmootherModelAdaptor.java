@@ -1,4 +1,4 @@
-package io.github.marcocipriani01.telescopetouch.util.smoothers;
+package io.github.marcocipriani01.telescopetouch.util;
 
 import android.content.SharedPreferences;
 import android.hardware.Sensor;
@@ -10,9 +10,9 @@ import android.util.Log;
 import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.units.Vector3;
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 
 /**
  * Adapts sensor output for use with the astronomer model.
@@ -20,7 +20,8 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
  * @author John Taylor
  */
 public class PlainSmootherModelAdaptor implements SensorEventListener {
-    private static final String TAG = MiscUtil.getTag(PlainSmootherModelAdaptor.class);
+
+    private static final String TAG = TelescopeTouchApplication.getTag(PlainSmootherModelAdaptor.class);
     private final Vector3 magneticValues = ApplicationConstants.INITIAL_SOUTH.copy();
     private final Vector3 acceleration = ApplicationConstants.INITIAL_DOWN.copy();
     private final AstronomerModel model;

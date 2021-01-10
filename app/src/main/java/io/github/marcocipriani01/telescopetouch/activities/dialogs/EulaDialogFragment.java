@@ -17,8 +17,8 @@ import androidx.appcompat.app.AlertDialog;
 import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 
 /**
  * End User License agreement dialog.
@@ -26,7 +26,7 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
  */
 public class EulaDialogFragment extends ImprovedDialogFragment {
 
-    private static final String TAG = MiscUtil.getTag(EulaDialogFragment.class);
+    private static final String TAG = TelescopeTouchApplication.getTag(EulaDialogFragment.class);
     @Inject
     Activity parentActivity;
     private EulaAcceptanceListener resultListener;

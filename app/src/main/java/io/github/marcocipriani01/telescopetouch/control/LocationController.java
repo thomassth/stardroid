@@ -25,8 +25,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 import io.github.marcocipriani01.telescopetouch.units.LatLong;
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 
 /**
  * Sets the AstronomerModel's (and thus the user's) position using one of the
@@ -42,7 +42,7 @@ public class LocationController extends AbstractController implements LocationLi
     private static final String FORCE_GPS = "force_gps";
     private static final int MINIMUM_DISTANCE_BEFORE_UPDATE_METRES = 2000;
     private static final int LOCATION_UPDATE_TIME_MILLISECONDS = 600000;
-    private static final String TAG = MiscUtil.getTag(LocationController.class);
+    private static final String TAG = TelescopeTouchApplication.getTag(LocationController.class);
     private static final float MIN_DIST_TO_SHOW_TOAST_DEGS = 0.01f;
 
     private final Context context;
@@ -66,11 +66,8 @@ public class LocationController extends AbstractController implements LocationLi
     @Override
     public void start() {
         Log.d(TAG, "LocationController start");
-        boolean noAutoLocate = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
-                NO_AUTO_LOCATE, false);
-
-        boolean forceGps = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(FORCE_GPS,
-                false);
+        boolean noAutoLocate = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(NO_AUTO_LOCATE, false);
+        boolean forceGps = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(FORCE_GPS, false);
 
         if (noAutoLocate) {
             Log.d(TAG, "User has elected to set location manually.");
@@ -98,8 +95,8 @@ public class LocationController extends AbstractController implements LocationLi
             String locationProvider = locationManager.getBestProvider(locationCriteria, true);
             if (locationProvider == null) {
                 Log.w(TAG, "No location provider is enabled");
-                String possiblelocationProvider = locationManager.getBestProvider(locationCriteria, false);
-                if (possiblelocationProvider == null) {
+                String possibleLocationProvider = locationManager.getBestProvider(locationCriteria, false);
+                if (possibleLocationProvider == null) {
                     Log.i(TAG, "No location provider is even available");
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
                     alertDialogBuilder

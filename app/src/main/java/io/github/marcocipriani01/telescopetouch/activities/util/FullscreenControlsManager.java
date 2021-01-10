@@ -10,7 +10,7 @@ import android.view.View;
 
 import java.util.List;
 
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 
 /**
  * Manages the showing and hiding of controls and system UI in full screen mode.
@@ -19,7 +19,7 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
  */
 public class FullscreenControlsManager {
 
-    private static final String TAG = MiscUtil.getTag(FullscreenControlsManager.class);
+    private static final String TAG = TelescopeTouchApplication.getTag(FullscreenControlsManager.class);
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.

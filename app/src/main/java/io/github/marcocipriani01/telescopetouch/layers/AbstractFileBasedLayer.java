@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererObjectManager.UpdateType;
 import io.github.marcocipriani01.telescopetouch.source.AstronomicalSource;
 import io.github.marcocipriani01.telescopetouch.source.proto.ProtobufAstronomicalSource;
 import io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.AstronomicalSourceProto;
 import io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.AstronomicalSourcesProto;
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 
 /**
  * Implementation of the {@link Layer} interface which reads its data from
@@ -30,7 +30,7 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
  */
 public abstract class AbstractFileBasedLayer extends AbstractLayer {
 
-    private static final String TAG = MiscUtil.getTag(AbstractFileBasedLayer.class);
+    private static final String TAG = TelescopeTouchApplication.getTag(AbstractFileBasedLayer.class);
     private static final Executor BACKGROUND_EXECUTOR = Executors.newFixedThreadPool(1);
 
     private final AssetManager assetManager;

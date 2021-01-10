@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 import io.github.marcocipriani01.telescopetouch.source.AbstractAstronomicalSource;
 import io.github.marcocipriani01.telescopetouch.source.AstronomicalSource;
 import io.github.marcocipriani01.telescopetouch.source.LineSource;
@@ -24,7 +25,6 @@ import io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.LabelEl
 import io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.LineElementProto;
 import io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.PointElementProto;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 
 /**
  * Implementation of the
@@ -38,7 +38,7 @@ public class ProtobufAstronomicalSource extends AbstractAstronomicalSource {
     // string via the contructor results in it always being null when I need it. Buggered if
     // I know why - it's certainly a concern. Hopefully this class won't be around for much longer.
     public static final String PACKAGE = "io.github.marcocipriani01.telescopetouch";
-    private static final String TAG = MiscUtil.getTag(ProtobufAstronomicalSource.class);
+    private static final String TAG = TelescopeTouchApplication.getTag(ProtobufAstronomicalSource.class);
     private static final Map<io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.Shape, PointSource.Shape> shapeMap =
             new HashMap<io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.Shape, PointSource.Shape>();
 

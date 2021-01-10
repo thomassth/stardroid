@@ -16,16 +16,15 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationComponent;
-import io.github.marcocipriani01.telescopetouch.StardroidApplication;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 import io.github.marcocipriani01.telescopetouch.layers.LayerManager;
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 
 /**
  * Provides search suggestions for a list of words and their definitions.
  */
 public class SearchTermsProvider extends ContentProvider {
 
-    private static final String TAG = MiscUtil.getTag(SearchTermsProvider.class);
+    private static final String TAG = TelescopeTouchApplication.getTag(SearchTermsProvider.class);
     private static final int SEARCH_SUGGEST = 0;
     /**
      * The columns we'll include in our search suggestions.
@@ -65,10 +64,10 @@ public class SearchTermsProvider extends ContentProvider {
             return true;
         }
         Context appContext = getContext().getApplicationContext();
-        if (!(appContext instanceof StardroidApplication)) {
+        if (!(appContext instanceof TelescopeTouchApplication)) {
             return false;
         }
-        ApplicationComponent component = ((StardroidApplication) appContext).getApplicationComponent();
+        ApplicationComponent component = ((TelescopeTouchApplication) appContext).getApplicationComponent();
         if (component == null) {
             return false;
         }

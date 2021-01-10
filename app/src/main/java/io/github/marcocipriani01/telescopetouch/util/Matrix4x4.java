@@ -42,9 +42,9 @@ public class Matrix4x4 {
         float ySqr = axis.y * axis.y;
         float zSqr = axis.z * axis.z;
 
-        float sinAngle = MathUtil.sin(angle);
+        float sinAngle = (float) Math.sin(angle);
 
-        float cosAngle = MathUtil.cos(angle);
+        float cosAngle = (float) Math.cos(angle);
         float oneMinusCosAngle = 1 - cosAngle;
 
         float xSinAngle = axis.x * sinAngle;
@@ -86,7 +86,7 @@ public class Matrix4x4 {
 
         float inverseAspectRatio = height / width;
 
-        float oneOverTanHalfRadiusOfView = 1.0f / MathUtil.tan(fovyInRadians);
+        float oneOverTanHalfRadiusOfView = 1.0f / ((float) Math.sin(fovyInRadians) / (float) Math.cos(fovyInRadians));
 
         return new Matrix4x4(new float[]{
                 inverseAspectRatio * oneOverTanHalfRadiusOfView,
