@@ -21,16 +21,15 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.layers.LayerManager;
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 
 /**
  * The main Stardroid Application class.
  *
  * @author John Taylor
  */
-public class StardroidApplication extends Application {
+public class TelescopeTouchApplication extends Application {
 
-    private static final String TAG = MiscUtil.getTag(StardroidApplication.class);
+    private static final String TAG = getTag(TelescopeTouchApplication.class);
     @Inject
     SharedPreferences preferences;
     // We keep a reference to this just to start it initializing.
@@ -47,6 +46,16 @@ public class StardroidApplication extends Application {
      */
     public static String getSafeNameForSensor(Sensor sensor) {
         return "Sensor type: " + sensor.getStringType() + ": " + sensor.getType();
+    }
+
+    /**
+     * Returns the Tag for a class to be used in Android logging statements
+     */
+    public static String getTag(Object o) {
+        if (o instanceof Class<?>) {
+            return ApplicationConstants.APP_NAME + "." + ((Class<?>) o).getSimpleName();
+        }
+        return ApplicationConstants.APP_NAME + "." + o.getClass().getSimpleName();
     }
 
     @Override

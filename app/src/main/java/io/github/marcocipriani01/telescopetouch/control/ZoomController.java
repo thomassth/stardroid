@@ -2,8 +2,8 @@ package io.github.marcocipriani01.telescopetouch.control;
 
 import android.util.Log;
 
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 import io.github.marcocipriani01.telescopetouch.base.VisibleForTesting;
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 
 /**
  * Controls the field of view of a user.
@@ -14,7 +14,7 @@ public class ZoomController extends AbstractController {
 
     @VisibleForTesting
     public static final float MAX_ZOOM_OUT = 90.0f;
-    private static final String TAG = MiscUtil.getTag(ZoomController.class);
+    private static final String TAG = TelescopeTouchApplication.getTag(ZoomController.class);
 
     private void setFieldOfView(float zoomDegrees) {
         if (!enabled) {

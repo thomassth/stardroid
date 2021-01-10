@@ -4,8 +4,8 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 import io.github.marcocipriani01.telescopetouch.activities.util.FullscreenControlsManager;
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 
 /**
  * Processes touch events and scrolls the screen in manual mode.
@@ -13,7 +13,7 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
  * @author John Taylor
  */
 public class GestureInterpreter extends GestureDetector.SimpleOnGestureListener {
-    private static final String TAG = MiscUtil.getTag(GestureInterpreter.class);
+    private static final String TAG = TelescopeTouchApplication.getTag(GestureInterpreter.class);
     private final FullscreenControlsManager fullscreenControlsManager;
     private final MapMover mapMover;
     private final Flinger flinger = new Flinger(new Flinger.FlingListener() {

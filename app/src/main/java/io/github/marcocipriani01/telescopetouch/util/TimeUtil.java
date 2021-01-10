@@ -11,6 +11,7 @@ import java.util.TimeZone;
  * @author Brent Bryan
  */
 public class TimeUtil {
+
     private TimeUtil() {
     }
 

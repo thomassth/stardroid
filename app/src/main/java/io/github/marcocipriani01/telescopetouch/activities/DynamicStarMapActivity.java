@@ -42,6 +42,7 @@ import javax.inject.Provider;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.EulaDialogFragment;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.MultipleSearchResultsDialogFragment;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.NoSearchResultsDialogFragment;
@@ -64,8 +65,6 @@ import io.github.marcocipriani01.telescopetouch.touch.GestureInterpreter;
 import io.github.marcocipriani01.telescopetouch.touch.MapMover;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.Vector3;
-import io.github.marcocipriani01.telescopetouch.util.MathUtil;
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 import io.github.marcocipriani01.telescopetouch.util.SensorAccuracyMonitor;
 import io.github.marcocipriani01.telescopetouch.views.ButtonLayerView;
 
@@ -77,7 +76,7 @@ public class DynamicStarMapActivity extends InjectableActivity
 
     private static final int TIME_DISPLAY_DELAY_MILLIS = 1000;
     private static final float ROTATION_SPEED = 10;
-    private static final String TAG = MiscUtil.getTag(DynamicStarMapActivity.class);
+    private static final String TAG = TelescopeTouchApplication.getTag(DynamicStarMapActivity.class);
     // A list of runnables to post on the handler when we resume.
     private final List<Runnable> onResumeRunnables = new ArrayList<>();
     // End Activity for result Ids
@@ -692,7 +691,7 @@ public class DynamicStarMapActivity extends InjectableActivity
             rendererController.queueSetViewOrientation(directionX, directionY, directionZ, upX, upY, upZ);
 
             Vector3 up = model.getPhoneUpDirection();
-            rendererController.queueTextAngle(MathUtil.atan2(up.x, up.y));
+            rendererController.queueTextAngle((float) Math.atan2(up.x, up.y));
             rendererController.queueViewerUpDirection(model.getZenith().copy());
 
             float fieldOfView = model.getFieldOfView();

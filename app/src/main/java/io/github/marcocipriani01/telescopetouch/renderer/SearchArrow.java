@@ -11,10 +11,10 @@ import io.github.marcocipriani01.telescopetouch.renderer.util.TextureReference;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TexturedQuad;
 import io.github.marcocipriani01.telescopetouch.units.Vector3;
 import io.github.marcocipriani01.telescopetouch.util.FixedPoint;
-import io.github.marcocipriani01.telescopetouch.util.MathUtil;
 import io.github.marcocipriani01.telescopetouch.util.VectorUtil;
 
 public class SearchArrow {
+
     // The arrow quad is 10% of the screen width or height, whichever is smaller.
     private final float ARROW_SIZE = 0.1f;
     // The circle quad is 40% of the screen width or height, whichever is smaller.
@@ -50,7 +50,7 @@ public class SearchArrow {
         float cosAngle = VectorUtil.dotProduct(v1proj, v2);
         float sinAngle = -VectorUtil.dotProduct(perp, v2);
 
-        return MathUtil.atan2(sinAngle, cosAngle);
+        return (float) Math.atan2(sinAngle, cosAngle);
     }
 
     public void reloadTextures(GL10 gl, Resources res, TextureManager textureManager) {
@@ -79,10 +79,9 @@ public class SearchArrow {
         mArrowOffset = mCircleSizeFactor + mArrowSizeFactor;
     }
 
-    public void draw(GL10 gl, Vector3 lookDir, Vector3 upDir, SearchHelper searchHelper,
-                     boolean nightVisionMode) {
-        float lookPhi = MathUtil.acos(lookDir.y);
-        float lookTheta = MathUtil.atan2(lookDir.z, lookDir.x);
+    public void draw(GL10 gl, Vector3 lookDir, Vector3 upDir, SearchHelper searchHelper, boolean nightVisionMode) {
+        float lookPhi = (float) Math.acos(lookDir.y);
+        float lookTheta = (float) Math.atan2(lookDir.z, lookDir.x);
 
         // Positive diffPhi means you need to look up.
         float diffPhi = lookPhi - mTargetPhi;
@@ -92,16 +91,16 @@ public class SearchArrow {
 
         // diffTheta could potentially be in the range from (-2*Pi, 2*Pi), but we need it
         // in the range (-Pi, Pi).
-        if (diffTheta > MathUtil.PI) {
-            diffTheta -= MathUtil.TWO_PI;
-        } else if (diffTheta < -MathUtil.PI) {
-            diffTheta += MathUtil.TWO_PI;
+        if (diffTheta > (float) Math.PI) {
+            diffTheta -= 2f * (float) Math.PI;
+        } else if (diffTheta < -(float) Math.PI) {
+            diffTheta += 2f * (float) Math.PI;
         }
 
         // The image I'm using is an arrow pointing right, so an angle of 0 corresponds to that.
         // This is why we're taking arctan(diffPhi / diffTheta), because diffTheta corresponds to
         // the amount we need to rotate in the xz plane and diffPhi in the up direction.
-        float angle = MathUtil.atan2(diffPhi, diffTheta);
+        float angle = (float) Math.atan2(diffPhi, diffTheta);
 
         // Need to add on the camera roll, which is the amount you need to rotate the vector (0, 1, 0)
         // about the look direction in order to get it in the same plane as the up direction.
@@ -110,14 +109,13 @@ public class SearchArrow {
         angle += roll;
 
         // Distance is a normalized value of the distance.
-        float distance = 1.0f / (1.414f * MathUtil.PI) *
-                MathUtil.sqrt(diffTheta * diffTheta + diffPhi * diffPhi);
+        float distance = (float) (1.0 / (1.414 * Math.PI) * Math.sqrt(diffTheta * diffTheta + diffPhi * diffPhi));
 
         gl.glEnable(GL10.GL_BLEND);
         gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 
         gl.glPushMatrix();
-        gl.glRotatef(angle * 180.0f / MathUtil.PI, 0, 0, -1);
+        gl.glRotatef(angle * 180.0f / (float) Math.PI, 0, 0, -1);
 
         gl.glTexEnvf(GL10.GL_TEXTURE_ENV, GL10.GL_TEXTURE_ENV_MODE, GL10.GL_BLEND);
 
@@ -174,7 +172,7 @@ public class SearchArrow {
 
     public void setTarget(Vector3 position) {
         position = VectorUtil.normalized(position);
-        mTargetPhi = MathUtil.acos(position.y);
-        mTargetTheta = MathUtil.atan2(position.z, position.x);
+        mTargetPhi = (float) Math.acos(position.y);
+        mTargetTheta = (float) Math.atan2(position.z, position.x);
     }
 }

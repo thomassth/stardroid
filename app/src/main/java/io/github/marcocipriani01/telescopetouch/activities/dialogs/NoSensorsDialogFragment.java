@@ -2,7 +2,6 @@ package io.github.marcocipriani01.telescopetouch.activities.dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,8 +17,8 @@ import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 
 /**
  * No sensors dialog fragment.
@@ -27,7 +26,7 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
  */
 public class NoSensorsDialogFragment extends DialogFragment {
 
-    private static final String TAG = MiscUtil.getTag(NoSensorsDialogFragment.class);
+    private static final String TAG = TelescopeTouchApplication.getTag(NoSensorsDialogFragment.class);
     @Inject
     Activity parentActivity;
     @Inject

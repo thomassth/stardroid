@@ -15,7 +15,6 @@ import io.github.marcocipriani01.telescopetouch.renderer.util.VertexBuffer;
 import io.github.marcocipriani01.telescopetouch.source.LineSource;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.Vector3;
-import io.github.marcocipriani01.telescopetouch.util.MathUtil;
 import io.github.marcocipriani01.telescopetouch.util.VectorUtil;
 
 public class PolyLineObjectManager extends RendererObjectManager {
@@ -56,8 +55,8 @@ public class PolyLineObjectManager extends RendererObjectManager {
         ib.reset(numIndices);
 
         // See comment in PointObjectManager for justification of this calculation.
-        float fovyInRadians = 60 * MathUtil.PI / 180.0f;
-        float sizeFactor = MathUtil.tan(fovyInRadians * 0.5f) / 480;
+        float fovyInRadians = 60 * (float) Math.PI / 180.0f;
+        float sizeFactor = (float) Math.sin(fovyInRadians * 0.5f) / (float) Math.cos(fovyInRadians * 0.5f) / 480;
 
         boolean opaque = true;
 

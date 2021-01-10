@@ -1,7 +1,6 @@
 package io.github.marcocipriani01.telescopetouch.units;
 
 import io.github.marcocipriani01.telescopetouch.util.Geometry;
-import io.github.marcocipriani01.telescopetouch.util.MathUtil;
 
 /**
  * This class corresponds to an object's location in Euclidean space
@@ -55,9 +54,9 @@ public class GeocentricCoordinates extends Vector3 {
         float raRadians = ra * Geometry.DEGREES_TO_RADIANS;
         float decRadians = dec * Geometry.DEGREES_TO_RADIANS;
 
-        this.x = MathUtil.cos(raRadians) * MathUtil.cos(decRadians);
-        this.y = MathUtil.sin(raRadians) * MathUtil.cos(decRadians);
-        this.z = MathUtil.sin(decRadians);
+        this.x = (float) Math.cos(raRadians) * (float) Math.cos(decRadians);
+        this.y = (float) Math.sin(raRadians) * (float) Math.cos(decRadians);
+        this.z = (float) Math.sin(decRadians);
     }
 
     /**
@@ -65,7 +64,7 @@ public class GeocentricCoordinates extends Vector3 {
      */
     public float getRa() {
         // Assumes unit sphere.
-        return Geometry.RADIANS_TO_DEGREES * MathUtil.atan2(y, x);
+        return Geometry.RADIANS_TO_DEGREES * (float) Math.atan2(y, x);
     }
 
     /**
@@ -73,7 +72,7 @@ public class GeocentricCoordinates extends Vector3 {
      */
     public float getDec() {
         // Assumes unit sphere.
-        return Geometry.RADIANS_TO_DEGREES * MathUtil.asin(z);
+        return Geometry.RADIANS_TO_DEGREES * (float) Math.asin(z);
     }
 
     @Override

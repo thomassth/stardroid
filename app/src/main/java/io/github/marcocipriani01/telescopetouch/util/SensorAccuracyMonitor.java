@@ -11,6 +11,7 @@ import android.util.Log;
 
 import javax.inject.Inject;
 
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 import io.github.marcocipriani01.telescopetouch.activities.CompassCalibrationActivity;
 import io.github.marcocipriani01.telescopetouch.base.TimeConstants;
 
@@ -19,7 +20,7 @@ import io.github.marcocipriani01.telescopetouch.base.TimeConstants;
  * Created by johntaylor on 4/24/16.
  */
 public class SensorAccuracyMonitor implements SensorEventListener {
-    private static final String TAG = MiscUtil.getTag(SensorAccuracyMonitor.class);
+    private static final String TAG = TelescopeTouchApplication.getTag(SensorAccuracyMonitor.class);
     private static final String LAST_CALIBRATION_WARNING_PREF_KEY = "Last calibration warning time";
     private static final long MIN_INTERVAL_BETWEEN_WARNINGS =
             180 * TimeConstants.MILLISECONDS_PER_SECOND;

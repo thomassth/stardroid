@@ -6,13 +6,13 @@ import android.util.Log;
 import java.util.Date;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.LatLong;
 import io.github.marcocipriani01.telescopetouch.units.Matrix33;
 import io.github.marcocipriani01.telescopetouch.units.RaDec;
 import io.github.marcocipriani01.telescopetouch.units.Vector3;
 import io.github.marcocipriani01.telescopetouch.util.Geometry;
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 
 /**
  * The model of the astronomer.
@@ -51,7 +51,7 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
  */
 public class AstronomerModelImpl implements AstronomerModel {
 
-    private static final String TAG = MiscUtil.getTag(AstronomerModelImpl.class);
+    private static final String TAG = TelescopeTouchApplication.getTag(AstronomerModelImpl.class);
     private static final Vector3 POINTING_DIR_IN_PHONE_COORDS = new Vector3(0, 0, -1);
     private static final Vector3 SCREEN_UP_IN_PHONE_COORDS = new Vector3(0, 1, 0);
     private static final Vector3 SCREEN_DOWN_IN_PHONE_COORDS = new Vector3(1, 0, 0);

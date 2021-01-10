@@ -1,4 +1,4 @@
-package io.github.marcocipriani01.telescopetouch.provider.ephemeris;
+package io.github.marcocipriani01.telescopetouch.ephemeris;
 
 import android.content.SharedPreferences;
 import android.content.res.Resources;

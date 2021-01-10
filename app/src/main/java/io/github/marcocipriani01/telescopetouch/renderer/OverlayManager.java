@@ -11,7 +11,6 @@ import io.github.marcocipriani01.telescopetouch.renderer.util.SearchHelper;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TextureManager;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.Vector3;
-import io.github.marcocipriani01.telescopetouch.util.MathUtil;
 import io.github.marcocipriani01.telescopetouch.util.Matrix4x4;
 import io.github.marcocipriani01.telescopetouch.util.VectorUtil;
 
@@ -29,7 +28,6 @@ public class OverlayManager extends RendererObjectManager {
     private boolean mMustUpdateTransformedOrientation = true;
     private boolean mSearching = false;
     private ColoredQuad mDarkQuad = null;
-    private TextureManager mTextureManager;
 
     public OverlayManager(int layer, TextureManager manager) {
         super(layer, manager);
@@ -70,36 +68,28 @@ public class OverlayManager extends RendererObjectManager {
     @Override
     public void drawInternal(GL10 gl) {
         updateTransformedOrientationIfNecessary();
-
         setupMatrices(gl);
-
         if (mSearching) {
             mSearchHelper.setTransform(getRenderState().getTransformToDeviceMatrix());
             mSearchHelper.checkState();
-
-            float transitionFactor = mSearchHelper.getTransitionFactor();
-
             // Darken the background.
             mDarkQuad.draw(gl);
-
             // Draw the crosshair.
             mCrosshair.draw(gl, mSearchHelper, getRenderState().getNightVisionMode());
-
             // Draw the search arrow.
             mSearchArrow.draw(gl, mTransformedLookDir, mTransformedUpDir, mSearchHelper,
                     getRenderState().getNightVisionMode());
         }
-
         restoreMatrices(gl);
     }
 
     // viewerUp MUST be normalized.
     public void setViewerUpDirection(GeocentricCoordinates viewerUp) {
         // Log.d("OverlayManager", "Setting viewer up " + viewerUp);
-        if (MathUtil.abs(viewerUp.y) < 0.999f) {
+        if (Math.abs(viewerUp.y) < 0.999f) {
             Vector3 cp = VectorUtil.crossProduct(viewerUp, new Vector3(0, 1, 0));
             cp = VectorUtil.normalized(cp);
-            mGeoToViewerTransform = Matrix4x4.createRotation(MathUtil.acos(viewerUp.y), cp);
+            mGeoToViewerTransform = Matrix4x4.createRotation((float) Math.acos(viewerUp.y), cp);
         } else {
             mGeoToViewerTransform = Matrix4x4.createIdentity();
         }

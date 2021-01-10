@@ -21,7 +21,6 @@ import io.github.marcocipriani01.telescopetouch.renderer.util.TextureManager;
 import io.github.marcocipriani01.telescopetouch.renderer.util.UpdateClosure;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.Vector3;
-import io.github.marcocipriani01.telescopetouch.util.MathUtil;
 import io.github.marcocipriani01.telescopetouch.util.Matrix4x4;
 import io.github.marcocipriani01.telescopetouch.util.VectorUtil;
 
@@ -309,7 +308,7 @@ public class SkyRenderer implements GLSurfaceView.Renderer {
     public void setViewOrientation(float dirX, float dirY, float dirZ,
                                    float upX, float upY, float upZ) {
         // Normalize the look direction
-        float dirLen = MathUtil.sqrt(dirX * dirX + dirY * dirY + dirZ * dirZ);
+        float dirLen = (float) Math.sqrt(dirX * dirX + dirY * dirY + dirZ * dirZ);
         float oneOverDirLen = 1.0f / dirLen;
         dirX *= oneOverDirLen;
         dirY *= oneOverDirLen;
@@ -323,7 +322,7 @@ public class SkyRenderer implements GLSurfaceView.Renderer {
         upZ -= lookDotUp * dirZ;
 
         // Normalize the up vector
-        float upLen = MathUtil.sqrt(upX * upX + upY * upY + upZ * upZ);
+        float upLen = (float) Math.sqrt(upX * upX + upY * upY + upZ * upZ);
         float oneOverUpLen = 1.0f / upLen;
         upX *= oneOverUpLen;
         upY *= oneOverUpLen;
@@ -492,8 +491,8 @@ class RenderState implements RenderStateInterface {
 
     public void setUpAngle(float angle) {
         mUpAngle = angle;
-        mCosUpAngle = MathUtil.cos(angle);
-        mSinUpAngle = MathUtil.sin(angle);
+        mCosUpAngle = (float) Math.cos(angle);
+        mSinUpAngle = (float) Math.sin(angle);
     }
 
     public float getCosUpAngle() {

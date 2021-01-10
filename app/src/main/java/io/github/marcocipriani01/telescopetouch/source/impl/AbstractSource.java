@@ -17,9 +17,9 @@ import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
  * @author Brent Bryan
  */
 public abstract class AbstractSource implements Colorable, PositionSource {
+
     private final int color;
     private final GeocentricCoordinates xyz;
-    public UpdateGranularity granularity;
     private List<String> names;
 
     @Deprecated

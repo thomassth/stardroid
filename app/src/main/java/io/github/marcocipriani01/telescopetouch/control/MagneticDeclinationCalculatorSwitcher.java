@@ -7,7 +7,7 @@ import android.util.Log;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 
 /**
  * Aggregates the RealMagneticDeclinationCalculator and the
@@ -17,7 +17,7 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
  */
 public class MagneticDeclinationCalculatorSwitcher implements OnSharedPreferenceChangeListener {
     private static final String KEY = "use_magnetic_correction";
-    private static final String TAG = MiscUtil.getTag(MagneticDeclinationCalculatorSwitcher.class);
+    private static final String TAG = TelescopeTouchApplication.getTag(MagneticDeclinationCalculatorSwitcher.class);
 
     private final MagneticDeclinationCalculator realCalculator;
     private final MagneticDeclinationCalculator zeroCalculator;

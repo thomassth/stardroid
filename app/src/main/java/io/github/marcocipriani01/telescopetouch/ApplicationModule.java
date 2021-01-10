@@ -35,7 +35,6 @@ import io.github.marcocipriani01.telescopetouch.layers.NewMessierLayer;
 import io.github.marcocipriani01.telescopetouch.layers.NewStarsLayer;
 import io.github.marcocipriani01.telescopetouch.layers.PlanetsLayer;
 import io.github.marcocipriani01.telescopetouch.layers.SkyGradientLayer;
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 
 /**
  * Dagger module
@@ -43,17 +42,17 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
  */
 @Module
 public class ApplicationModule {
-    private static final String TAG = MiscUtil.getTag(ApplicationModule.class);
-    private final StardroidApplication app;
+    private static final String TAG = TelescopeTouchApplication.getTag(ApplicationModule.class);
+    private final TelescopeTouchApplication app;
 
-    public ApplicationModule(StardroidApplication app) {
+    public ApplicationModule(TelescopeTouchApplication app) {
         Log.d(TAG, "Creating application module for " + app);
         this.app = app;
     }
 
     @Provides
     @Singleton
-    StardroidApplication provideApplication() {
+    TelescopeTouchApplication provideApplication() {
         return app;
     }
 

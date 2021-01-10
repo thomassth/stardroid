@@ -1,4 +1,4 @@
-package io.github.marcocipriani01.telescopetouch.provider.ephemeris;
+package io.github.marcocipriani01.telescopetouch.ephemeris;
 
 import android.util.Log;
 
@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 import io.github.marcocipriani01.telescopetouch.base.TimeConstants;
 import io.github.marcocipriani01.telescopetouch.base.VisibleForTesting;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
@@ -14,8 +15,6 @@ import io.github.marcocipriani01.telescopetouch.units.HeliocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.LatLong;
 import io.github.marcocipriani01.telescopetouch.units.RaDec;
 import io.github.marcocipriani01.telescopetouch.util.Geometry;
-import io.github.marcocipriani01.telescopetouch.util.MathUtil;
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 import io.github.marcocipriani01.telescopetouch.util.TimeUtil;
 
 public enum Planet {
@@ -32,7 +31,7 @@ public enum Planet {
     Venus(R.drawable.venus, R.string.venus, 1L * TimeConstants.MILLISECONDS_PER_HOUR),
     Moon(R.drawable.moon4, R.string.moon, 1L * TimeConstants.MILLISECONDS_PER_MINUTE);
 
-    private static final String TAG = MiscUtil.getTag(Planet.class);
+    private static final String TAG = TelescopeTouchApplication.getTag(Planet.class);
     // Maximum number of times to calculate rise/set times. If we cannot
     // converge after this many iteretions, we will fail.
     private final static int MAX_ITERATIONS = 25;
@@ -66,17 +65,17 @@ public enum Planet {
         // Second, calculate the approximate geocentric orbital elements.
         float lambda =
                 218.32f + 481267.881f * t + 6.29f
-                        * MathUtil.sin((135.0f + 477198.87f * t) * Geometry.DEGREES_TO_RADIANS) - 1.27f
-                        * MathUtil.sin((259.3f - 413335.36f * t) * Geometry.DEGREES_TO_RADIANS) + 0.66f
-                        * MathUtil.sin((235.7f + 890534.22f * t) * Geometry.DEGREES_TO_RADIANS) + 0.21f
-                        * MathUtil.sin((269.9f + 954397.74f * t) * Geometry.DEGREES_TO_RADIANS) - 0.19f
-                        * MathUtil.sin((357.5f + 35999.05f * t) * Geometry.DEGREES_TO_RADIANS) - 0.11f
-                        * MathUtil.sin((186.5f + 966404.03f * t) * Geometry.DEGREES_TO_RADIANS);
+                        * (float) Math.sin((135.0f + 477198.87f * t) * Geometry.DEGREES_TO_RADIANS) - 1.27f
+                        * (float) Math.sin((259.3f - 413335.36f * t) * Geometry.DEGREES_TO_RADIANS) + 0.66f
+                        * (float) Math.sin((235.7f + 890534.22f * t) * Geometry.DEGREES_TO_RADIANS) + 0.21f
+                        * (float) Math.sin((269.9f + 954397.74f * t) * Geometry.DEGREES_TO_RADIANS) - 0.19f
+                        * (float) Math.sin((357.5f + 35999.05f * t) * Geometry.DEGREES_TO_RADIANS) - 0.11f
+                        * (float) Math.sin((186.5f + 966404.03f * t) * Geometry.DEGREES_TO_RADIANS);
         float beta =
-                5.13f * MathUtil.sin((93.3f + 483202.02f * t) * Geometry.DEGREES_TO_RADIANS) + 0.28f
-                        * MathUtil.sin((228.2f + 960400.89f * t) * Geometry.DEGREES_TO_RADIANS) - 0.28f
-                        * MathUtil.sin((318.3f + 6003.15f * t) * Geometry.DEGREES_TO_RADIANS) - 0.17f
-                        * MathUtil.sin((217.6f - 407332.21f * t) * Geometry.DEGREES_TO_RADIANS);
+                5.13f * (float) Math.sin((93.3f + 483202.02f * t) * Geometry.DEGREES_TO_RADIANS) + 0.28f
+                        * (float) Math.sin((228.2f + 960400.89f * t) * Geometry.DEGREES_TO_RADIANS) - 0.28f
+                        * (float) Math.sin((318.3f + 6003.15f * t) * Geometry.DEGREES_TO_RADIANS) - 0.17f
+                        * (float) Math.sin((217.6f - 407332.21f * t) * Geometry.DEGREES_TO_RADIANS);
         //float pi =
         //    0.9508f + 0.0518f * MathUtil.cos((135.0f + 477198.87f * t) * Geometry.DEGREES_TO_RADIANS)
         //        + 0.0095f * MathUtil.cos((259.3f - 413335.36f * t) * Geometry.DEGREES_TO_RADIANS)
@@ -86,18 +85,18 @@ public enum Planet {
 
         // Third, convert to RA and Dec.
         float l =
-                MathUtil.cos(beta * Geometry.DEGREES_TO_RADIANS)
-                        * MathUtil.cos(lambda * Geometry.DEGREES_TO_RADIANS);
+                (float) Math.cos(beta * Geometry.DEGREES_TO_RADIANS)
+                        * (float) Math.cos(lambda * Geometry.DEGREES_TO_RADIANS);
         float m =
-                0.9175f * MathUtil.cos(beta * Geometry.DEGREES_TO_RADIANS)
-                        * MathUtil.sin(lambda * Geometry.DEGREES_TO_RADIANS) - 0.3978f
-                        * MathUtil.sin(beta * Geometry.DEGREES_TO_RADIANS);
+                0.9175f * (float) Math.cos(beta * Geometry.DEGREES_TO_RADIANS)
+                        * (float) Math.sin(lambda * Geometry.DEGREES_TO_RADIANS) - 0.3978f
+                        * (float) Math.sin(beta * Geometry.DEGREES_TO_RADIANS);
         float n =
-                0.3978f * MathUtil.cos(beta * Geometry.DEGREES_TO_RADIANS)
-                        * MathUtil.sin(lambda * Geometry.DEGREES_TO_RADIANS) + 0.9175f
-                        * MathUtil.sin(beta * Geometry.DEGREES_TO_RADIANS);
-        float ra = Geometry.mod2pi(MathUtil.atan2(m, l)) * Geometry.RADIANS_TO_DEGREES;
-        float dec = MathUtil.asin(n) * Geometry.RADIANS_TO_DEGREES;
+                0.3978f * (float) Math.cos(beta * Geometry.DEGREES_TO_RADIANS)
+                        * (float) Math.sin(lambda * Geometry.DEGREES_TO_RADIANS) + 0.9175f
+                        * (float) Math.sin(beta * Geometry.DEGREES_TO_RADIANS);
+        float ra = Geometry.mod2pi((float) Math.atan2(m, l)) * Geometry.RADIANS_TO_DEGREES;
+        float dec = (float) Math.asin(n) * Geometry.RADIANS_TO_DEGREES;
 
         return new RaDec(ra, dec);
     }
@@ -157,13 +156,13 @@ public enum Planet {
     // cos ha = (sin alt - sin lat * sin dec) / (cos lat * cos dec)
     public static float calculateHourAngle(float altitude, float latitude,
                                            float declination) {
-        float altRads = altitude * MathUtil.DEGREES_TO_RADIANS;
-        float latRads = latitude * MathUtil.DEGREES_TO_RADIANS;
-        float decRads = declination * MathUtil.DEGREES_TO_RADIANS;
-        float cosHa = (MathUtil.sin(altRads) - MathUtil.sin(latRads) * MathUtil.sin(decRads)) /
-                (MathUtil.cos(latRads) * MathUtil.cos(decRads));
+        float altRads = altitude * ((float) Math.PI / 180);
+        float latRads = latitude * ((float) Math.PI / 180);
+        float decRads = declination * ((float) Math.PI / 180);
+        float cosHa = ((float) Math.sin(altRads) - (float) Math.sin(latRads) * (float) Math.sin(decRads)) /
+                ((float) Math.cos(latRads) * (float) Math.cos(decRads));
 
-        return MathUtil.RADIANS_TO_DEGREES * MathUtil.acos(cosHa);
+        return 180 / (float) Math.PI * (float) Math.acos(cosHa);
     }
 
 
@@ -361,7 +360,7 @@ public enum Planet {
             GeocentricCoordinates sun = GeocentricCoordinates.getInstance(sunRaDec);
 
             return 180.0f -
-                    MathUtil.acos(sun.x * moon.x + sun.y * moon.y + sun.z * moon.z)
+                    (float) Math.acos(sun.x * moon.x + sun.y * moon.y + sun.z * moon.z)
                             * Geometry.RADIANS_TO_DEGREES;
         }
 
@@ -373,7 +372,7 @@ public enum Planet {
         float earthDistance = planetCoords.DistanceFrom(earthCoords);
 
         // Finally, calculate the phase of the body.
-        return MathUtil.acos((earthDistance * earthDistance +
+        return (float) Math.acos((earthDistance * earthDistance +
                 planetCoords.radius * planetCoords.radius -
                 earthCoords.radius * earthCoords.radius) /
                 (2.0f * earthDistance * planetCoords.radius)) * Geometry.RADIANS_TO_DEGREES;
@@ -387,7 +386,7 @@ public enum Planet {
     @VisibleForTesting
     public float calculatePercentIlluminated(Date time) {
         float phaseAngle = this.calculatePhaseAngle(time);
-        return 50.0f * (1.0f + MathUtil.cos(phaseAngle * Geometry.DEGREES_TO_RADIANS));
+        return 50.0f * (1.0f + (float) Math.cos(phaseAngle * Geometry.DEGREES_TO_RADIANS));
     }
 
     /**
@@ -416,7 +415,7 @@ public enum Planet {
         float earthDistance = planetCoords.DistanceFrom(earthCoords);
 
         // Third, calculate the phase of the body.
-        float phase = MathUtil.acos((earthDistance * earthDistance +
+        float phase = (float) Math.acos((earthDistance * earthDistance +
                 planetCoords.radius * planetCoords.radius -
                 earthCoords.radius * earthCoords.radius) /
                 (2.0f * earthDistance * planetCoords.radius)) * Geometry.RADIANS_TO_DEGREES;
@@ -454,12 +453,12 @@ public enum Planet {
                 mag = -1.0f;
                 break;
             default:
-                Log.e(MiscUtil.getTag(this), "Invalid planet: " + this);
+                Log.e(TelescopeTouchApplication.getTag(this), "Invalid planet: " + this);
                 // At least make it faint!
                 mag = 100f;
                 break;
         }
-        return (mag + 5.0f * MathUtil.log10(planetCoords.radius * earthDistance));
+        return (mag + 5.0f * (float) Math.log10(planetCoords.radius * earthDistance));
     }
 
     // TODO(serafini): This is experimental code used to scale planetary images.
@@ -539,10 +538,10 @@ public enum Planet {
 
         int counter = 0;
         while ((Math.abs(delta) > 0.008) && counter < MAX_ITERATIONS) {
-            cal.set(Calendar.HOUR_OF_DAY, (int) MathUtil.floor(ut));
-            float minutes = (ut - MathUtil.floor(ut)) * 60.0f;
+            cal.set(Calendar.HOUR_OF_DAY, (int) (float) Math.floor(ut));
+            float minutes = (ut - (float) Math.floor(ut)) * 60.0f;
             cal.set(Calendar.MINUTE, (int) minutes);
-            cal.set(Calendar.SECOND, (int) ((minutes - MathUtil.floor(minutes)) * 60.f));
+            cal.set(Calendar.SECOND, (int) ((minutes - (float) Math.floor(minutes)) * 60.f));
 
             // Calculate the hour angle and declination of the planet.
             // TODO(serafini): Need to fix this for arbitrary RA/Dec locations.

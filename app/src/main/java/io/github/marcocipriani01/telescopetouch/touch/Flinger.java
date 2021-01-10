@@ -7,14 +7,14 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 
 /**
  * Given a flung motion event, this class pumps new Motion events out
  * to simulate an underlying object with some inertia.
  */
 public class Flinger {
-    private static final String TAG = MiscUtil.getTag(Flinger.class);
+    private static final String TAG = TelescopeTouchApplication.getTag(Flinger.class);
     private final FlingListener listener;
     private final int updatesPerSecond = 20;
     private final int timeIntervalMillis = 1000 / updatesPerSecond;

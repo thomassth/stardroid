@@ -1,10 +1,13 @@
-package io.github.marcocipriani01.telescopetouch.provider.ephemeris;
+package io.github.marcocipriani01.telescopetouch.ephemeris;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 import io.github.marcocipriani01.telescopetouch.util.Geometry;
-import io.github.marcocipriani01.telescopetouch.util.MathUtil;
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
+
+import static java.lang.Math.abs;
 
 /**
  * This class wraps the six parameters which define the path an object takes as
@@ -25,7 +28,7 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 public class OrbitalElements {
     // calculation error
     private final static float EPSILON = 1.0e-6f;
-    private static final String TAG = MiscUtil.getTag(OrbitalElements.class);
+    private static final String TAG = TelescopeTouchApplication.getTag(OrbitalElements.class);
     public final float distance;       // Mean distance (AU)
     public final float eccentricity;   // Eccentricity of orbit
     public final float inclination;    // Inclination of orbit (AngleUtils.RADIANS)
@@ -48,26 +51,24 @@ public class OrbitalElements {
     // Return value is in radians.
     private static float calculateTrueAnomaly(float m, float e) {
         // initial approximation of eccentric anomaly
-        float e0 = m + e * MathUtil.sin(m) * (1.0f + e * MathUtil.cos(m));
+        float e0 = m + e * (float) Math.sin(m) * (1.0f + e * (float) Math.cos(m));
         float e1;
 
         // iterate to improve accuracy
         int counter = 0;
         do {
             e1 = e0;
-            e0 = e1 - (e1 - e * MathUtil.sin(e1) - m) / (1.0f - e * MathUtil.cos(e1));
+            e0 = e1 - (e1 - e * (float) Math.sin(e1) - m) / (1.0f - e * (float) Math.cos(e1));
             if (counter++ > 100) {
                 Log.d(TAG, "Failed to converge! Exiting.");
                 Log.d(TAG, "e1 = " + e1 + ", e0 = " + e0);
-                Log.d(TAG, "diff = " + MathUtil.abs(e0 - e1));
+                Log.d(TAG, "diff = " + abs(e0 - e1));
                 break;
             }
-        } while (MathUtil.abs(e0 - e1) > EPSILON);
+        } while (abs(e0 - e1) > EPSILON);
 
         // convert eccentric anomaly to true anomaly
-        float v =
-                2f * MathUtil.atan(MathUtil.sqrt((1 + e) / (1 - e))
-                        * MathUtil.tan(0.5f * e0));
+        float v = 2f * (float) Math.atan((float) (Math.sqrt((1 + e) / (1 - e)) * ((float) Math.sin(0.5f * e0) / (float) Math.cos(0.5f * e0))));
         return Geometry.mod2pi(v);
     }
 
@@ -75,6 +76,7 @@ public class OrbitalElements {
         return calculateTrueAnomaly(meanLongitude - perihelion, eccentricity);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Mean Distance: " + distance + " (AU)\n" +

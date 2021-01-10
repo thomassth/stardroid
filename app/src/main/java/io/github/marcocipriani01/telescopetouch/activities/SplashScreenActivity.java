@@ -14,11 +14,10 @@ import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.StardroidApplication;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.EulaDialogFragment;
 import io.github.marcocipriani01.telescopetouch.activities.util.ConstraintsChecker;
 import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 
 /**
  * Shows a splash screen, then launch the next activity.
@@ -26,11 +25,11 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
 public class SplashScreenActivity extends InjectableActivity
         implements EulaDialogFragment.EulaAcceptanceListener, HasComponent<SplashScreenComponent> {
 
-    private final static String TAG = MiscUtil.getTag(SplashScreenActivity.class);
+    private final static String TAG = TelescopeTouchApplication.getTag(SplashScreenActivity.class);
     // Update this with new versions of the EULA
     private static final int EULA_VERSION_CODE = 1;
     @Inject
-    StardroidApplication app;
+    TelescopeTouchApplication app;
     @Inject
     SharedPreferences sharedPreferences;
     @Inject

@@ -11,6 +11,7 @@ import javax.inject.Inject;
  * Created by johntaylor on 4/24/16.
  */
 public class Toaster {
+
     private final Context context;
 
     @Inject

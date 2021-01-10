@@ -10,7 +10,7 @@ import android.util.Log;
 import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
-import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApplication;
 
 /**
  * Sets the direction of view from the orientation sensors.
@@ -19,7 +19,7 @@ import io.github.marcocipriani01.telescopetouch.util.MiscUtil;
  */
 public class SensorOrientationController extends AbstractController implements SensorEventListener {
 
-    private final static String TAG = MiscUtil.getTag(SensorOrientationController.class);
+    private final static String TAG = TelescopeTouchApplication.getTag(SensorOrientationController.class);
     private final SensorManager manager;
     private final Sensor rotationSensor;
     private final Sensor geomagneticRotationSensor;

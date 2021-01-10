@@ -22,7 +22,6 @@ import io.github.marcocipriani01.telescopetouch.source.TextSource;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.Vector3;
 import io.github.marcocipriani01.telescopetouch.util.FixedPoint;
-import io.github.marcocipriani01.telescopetouch.util.MathUtil;
 import io.github.marcocipriani01.telescopetouch.util.Matrix4x4;
 
 /**
@@ -207,8 +206,8 @@ public class LabelObjectManager extends RendererObjectManager {
         // If a label isn't within the field of view angle from the target vector, it can't
         // be on the screen.  Compute the cosine of this angle so we can quickly identify these.
         // TODO(jpowell): I know I can make this tighter - do so.
-        final float DEGREES_TO_RADIANS = MathUtil.PI / 180.0f;
-        mDotProductThreshold = MathUtil.cos(rs.getRadiusOfView() * DEGREES_TO_RADIANS *
+        final float DEGREES_TO_RADIANS = (float) Math.PI / 180.0f;
+        mDotProductThreshold = (float) Math.cos(rs.getRadiusOfView() * DEGREES_TO_RADIANS *
                 (1 + viewWidth / viewHeight) * 0.5f);
     }
 
@@ -257,7 +256,7 @@ public class LabelObjectManager extends RendererObjectManager {
         gl.glPushMatrix();
 
         gl.glTranslatef(screenPos.x, screenPos.y, 0);
-        gl.glRotatef(MathUtil.RADIANS_TO_DEGREES * getRenderState().getUpAngle(), 0, 0, -1);
+        gl.glRotatef(180 / (float) Math.PI * getRenderState().getUpAngle(), 0, 0, -1);
         gl.glScalef(label.getWidthInPixels(), label.getHeightInPixels(), 1);
 
         gl.glVertexPointer(2, GL10.GL_FIXED, 0, mQuadBuffer);

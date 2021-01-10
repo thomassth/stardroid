@@ -18,7 +18,6 @@ import io.github.marcocipriani01.telescopetouch.renderer.util.TextureReference;
 import io.github.marcocipriani01.telescopetouch.renderer.util.VertexBuffer;
 import io.github.marcocipriani01.telescopetouch.source.PointSource;
 import io.github.marcocipriani01.telescopetouch.units.Vector3;
-import io.github.marcocipriani01.telescopetouch.util.MathUtil;
 import io.github.marcocipriani01.telescopetouch.util.VectorUtil;
 
 public class PointObjectManager extends RendererObjectManager {
@@ -95,8 +94,8 @@ public class PointObjectManager extends RendererObjectManager {
             // pixels high, a size of 1 means "1 pixel," so calculate sizeFactor
             // based on this.  These numbers mostly come from the fact that that's
             // what I think looks reasonable.
-            float fovyInRadians = 60 * MathUtil.PI / 180.0f;
-            float sizeFactor = MathUtil.tan(fovyInRadians * 0.5f) / 480;
+            float fovyInRadians = 60 * (float) Math.PI / 180.0f;
+            float sizeFactor = (float) Math.sin(fovyInRadians * 0.5f) / (float) Math.cos(fovyInRadians * 0.5f) / 480;
 
             Vector3 bottomLeftPos = new Vector3(0, 0, 0);
             Vector3 topLeftPos = new Vector3(0, 0, 0);
