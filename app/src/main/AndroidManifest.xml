@@ -57,11 +57,13 @@
             android:launchMode="singleTask"
             android:screenOrientation="userPortrait"
             android:theme="@style/FullscreenTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/skymap_searchable" />
@@ -69,23 +71,43 @@
         <activity
             android:name="io.github.marcocipriani01.telescopetouch.activities.EditSettingsActivity"
             android:label="@string/menu_settings"
-            android:screenOrientation="fullUser" />
+            android:screenOrientation="fullUser">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.DynamicStarMapActivity" />
+        </activity>
         <activity
             android:name="io.github.marcocipriani01.telescopetouch.activities.ImageGalleryActivity"
             android:label="@string/menu_gallery"
-            android:screenOrientation="fullUser" />
+            android:screenOrientation="fullUser">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.DynamicStarMapActivity" />
+        </activity>
         <activity
             android:name="io.github.marcocipriani01.telescopetouch.activities.ImageDisplayActivity"
             android:label="@string/menu_gallery"
-            android:screenOrientation="fullUser" />
+            android:screenOrientation="fullUser">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.ImageGalleryActivity" />
+        </activity>
         <activity
             android:name="io.github.marcocipriani01.telescopetouch.activities.DiagnosticActivity"
             android:label="@string/title_activity_diagnostic"
-            android:screenOrientation="fullUser" />
+            android:screenOrientation="fullUser">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.DynamicStarMapActivity" />
+        </activity>
         <activity
             android:name="io.github.marcocipriani01.telescopetouch.activities.CompassCalibrationActivity"
             android:label="@string/menu_calibrate"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.DynamicStarMapActivity" />
+        </activity>
         <activity
             android:name=".activities.AboutActivity"
             android:label="@string/menu_about"
@@ -103,10 +125,21 @@
                 android:value=".activities.MainActivity" />
         </activity>
         <activity
-            android:name=".activities.GoToActivity"
-            android:launchMode="singleTop"
-            android:label="@string/mount_goto"
+            android:name=".activities.CompassActivity"
+            android:label="@string/compass"
             android:screenOrientation="fullUser">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activities.GoToActivity"
+            android:label="@string/mount_goto"
+            android:launchMode="singleTop"
+            android:screenOrientation="fullUser">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
