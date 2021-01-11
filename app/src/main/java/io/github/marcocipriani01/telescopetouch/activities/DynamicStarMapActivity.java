@@ -72,6 +72,7 @@ import io.github.marcocipriani01.telescopetouch.views.ButtonLayerView;
 public class DynamicStarMapActivity extends InjectableActivity
         implements OnSharedPreferenceChangeListener, HasComponent<DynamicStarMapComponent> {
 
+    public static final String SKY_MAP_INTENT_ACTION = "io.github.marcocipriani01.telescopetouch.activities.DynamicStarMapActivity";
     private static final int TIME_DISPLAY_DELAY_MILLIS = 1000;
     private static final float ROTATION_SPEED = 10;
     private static final String TAG = TelescopeTouchApp.getTag(DynamicStarMapActivity.class);
@@ -119,6 +120,7 @@ public class DynamicStarMapActivity extends InjectableActivity
     private DynamicStarMapComponent daggerComponent;
     private DragRotateZoomGestureDetector dragZoomRotateDetector;
     private ActivityLightLevelManager activityLightLevelManager;
+    private boolean isSkyMapOnly;
 
     @Override
     public DynamicStarMapComponent getComponent() {
@@ -155,13 +157,20 @@ public class DynamicStarMapActivity extends InjectableActivity
         activityLightLevelManager = new ActivityLightLevelManager(activityLightLevelChanger,
                 sharedPreferences);
 
-        this.<ImageButton>findViewById(R.id.back_telescope_control).setOnClickListener(v -> onBackPressed());
-
+        String intentAction = getIntent().getAction();
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
+            isSkyMapOnly = ((intentAction != null) && (intentAction.equals(SKY_MAP_INTENT_ACTION)));
+            actionBar.setDisplayHomeAsUpEnabled(!isSkyMapOnly);
+            actionBar.setDisplayShowHomeEnabled(!isSkyMapOnly);
         }
+        this.<ImageButton>findViewById(R.id.back_telescope_control).setOnClickListener(v -> {
+            if (isSkyMapOnly) {
+                startActivity(new Intent(this, MainActivity.class));
+            } else {
+                onBackPressed();
+            }
+        });
 
         // Were we started as the result of a search?
         Intent intent = getIntent();
@@ -218,6 +227,7 @@ public class DynamicStarMapActivity extends InjectableActivity
         inflater.inflate(R.menu.skymap, menu);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.menu_item_search).getActionView();
+        searchView.setMaxWidth(Integer.MAX_VALUE);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         return true;
     }

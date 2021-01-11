@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="44dp"
     android:background="@drawable/list_item_selector">
@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_toStartOf="@id/listview_drag" />
+        android:layout_toStartOf="@id/listview_drag"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <ImageView
         android:id="@+id/listview_drag"
@@ -19,6 +20,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
+        android:contentDescription="@string/slide_to_reorganize"
+        android:paddingStart="16dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
         android:src="@drawable/listview_drag"
-        android:contentDescription="@string/slide_to_reorganize" />
+        tools:ignore="RtlSymmetry" />
 </RelativeLayout>

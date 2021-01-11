@@ -337,8 +337,6 @@
     <string name="praesepe" translation_description="Name of the Messier object Praesepe">Presepe</string>
     <string name="seven_sisters" translation_description="Name of the Messier object Seven Sisters">Sette sorelle</string>
 
-
-    <string name="app_name">IPARCOS</string>
     <string name="indi_host">Seleziona un server INDI:</string>
     <string name="connect">Connessione</string>
     <string name="disconnect">Disconnetti</string>
@@ -454,4 +452,6 @@
     <string name="search">Cerca</string>
     <string name="menu_gallery">Galleria di Sky Map</string>
     <string name="hdf">Campo profondo Hubble (HDF)</string>
+    <string name="shortcuts_not_supported">Il tuo dispositivo non supporta le scorciatoie.</string>
+    <string name="add_sky_map_shortcut">Aggiungi scorciatoia alla mappa stellare</string>
 </resources>

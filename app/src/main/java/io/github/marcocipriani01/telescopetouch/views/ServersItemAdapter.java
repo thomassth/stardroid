@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.util.Pair;
 
 import com.woxthebox.draglistview.DragItemAdapter;
 
@@ -17,13 +16,13 @@ import io.github.marcocipriani01.telescopetouch.R;
 /**
  * @author marcocipriani01
  */
-public abstract class ServersItemAdapter extends DragItemAdapter<Pair<Long, String>, ServersItemAdapter.ViewHolder> {
+public abstract class ServersItemAdapter extends DragItemAdapter<String, ServersItemAdapter.ViewHolder> {
 
     private final int layoutId;
     private final int grabHandleId;
     private final boolean dragOnLongPress;
 
-    public ServersItemAdapter(ArrayList<Pair<Long, String>> list, int layoutId, int grabHandleId, boolean dragOnLongPress) {
+    public ServersItemAdapter(ArrayList<String> list, int layoutId, int grabHandleId, boolean dragOnLongPress) {
         this.layoutId = layoutId;
         this.grabHandleId = grabHandleId;
         this.dragOnLongPress = dragOnLongPress;
@@ -39,14 +38,13 @@ public abstract class ServersItemAdapter extends DragItemAdapter<Pair<Long, Stri
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
-        holder.text.setText(mItemList.get(position).second);
+        holder.text.setText(mItemList.get(position));
         holder.itemView.setTag(mItemList.get(position));
     }
 
     @Override
     public long getUniqueItemId(int position) {
-        Long first = mItemList.get(position).first;
-        return first == null ? -1 : first;
+        return mItemList.get(position).hashCode();
     }
 
     public abstract void onItemLongClicked(TextView view);

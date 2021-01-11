@@ -46,6 +46,7 @@ import java.util.List;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.prop.PropUpdater;
+import io.github.marcocipriani01.telescopetouch.views.ImprovedSpinnerListener;
 
 /**
  * This fragment shows directional buttons to move a telescope. It also provides
@@ -58,7 +59,6 @@ import io.github.marcocipriani01.telescopetouch.prop.PropUpdater;
 public class MountControlFragment extends Fragment implements INDIServerConnectionListener, INDIPropertyListener,
         INDIDeviceListener, OnTouchListener, OnClickListener, CompoundButton.OnCheckedChangeListener {
 
-    private final SpinnerInteractionListener spinnerListener = new SpinnerInteractionListener();
     private ConnectionManager connectionManager;
     private Context context;
     // Properties and elements associated to the buttons
@@ -86,6 +86,27 @@ public class MountControlFragment extends Fragment implements INDIServerConnecti
     private Button btnMoveSW = null;
     private Button btnStop = null;
     private Spinner slewRateSpinner = null;
+    private final ImprovedSpinnerListener spinnerListener = new ImprovedSpinnerListener() {
+        @Override
+        protected void onImprovedItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+            try {
+                String selected = ((String) slewRateSpinner.getAdapter().getItem(pos));
+                if ((selected != null) && (!selected.equals(getString(R.string.unavailable)))) {
+                    for (INDISwitchElement element : telescopeSlewRateP.getElementsAsList()) {
+                        String label = element.getLabel();
+                        if (label.equals(selected)) {
+                            element.setDesiredValue(Constants.SwitchStatus.ON);
+                        } else {
+                            element.setDesiredValue(Constants.SwitchStatus.OFF);
+                        }
+                    }
+                    new PropUpdater(telescopeSlewRateP).start();
+                }
+            } catch (Exception e) {
+                Log.e("MotionFragment", "Slew rate error!", e);
+            }
+        }
+    };
     private TextView mountName = null;
 
     @Override
@@ -121,7 +142,7 @@ public class MountControlFragment extends Fragment implements INDIServerConnecti
         btnMoveW.setOnTouchListener(this);
         btnMoveNW.setOnTouchListener(this);
         btnStop.setOnClickListener(this);
-        slewRateSpinner.setOnTouchListener(spinnerListener);
+        spinnerListener.attach(slewRateSpinner);
         return rootView;
     }
 
@@ -208,9 +229,7 @@ public class MountControlFragment extends Fragment implements INDIServerConnecti
                     }
                 }
                 slewRateSpinner.setAdapter(arrayAdapter);
-                slewRateSpinner.setOnItemSelectedListener(null);
                 slewRateSpinner.setSelection(selectedItem);
-                slewRateSpinner.setOnItemSelectedListener(spinnerListener);
             });
         }
     }
@@ -526,9 +545,7 @@ public class MountControlFragment extends Fragment implements INDIServerConnecti
                             for (i = 0; i < adapter.getCount(); i++) {
                                 if (adapter.getItem(i).equals(selected)) break;
                             }
-                            slewRateSpinner.setOnItemSelectedListener(null);
                             slewRateSpinner.setSelection(i);
-                            slewRateSpinner.setOnItemSelectedListener(spinnerListener);
                         }
                     });
                 }
@@ -552,50 +569,5 @@ public class MountControlFragment extends Fragment implements INDIServerConnecti
     @Override
     public void messageChanged(INDIDevice device) {
 
-    }
-
-    /**
-     * @author Andres Q.
-     * @author marcocipriani01
-     * @see <a href="https://stackoverflow.com/a/28466764">Spinner onItemSelected called multiple times after screen rotation</a>
-     */
-    private class SpinnerInteractionListener implements AdapterView.OnItemSelectedListener, OnTouchListener {
-
-        private boolean userSelect = false;
-
-        @SuppressLint("ClickableViewAccessibility")
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            userSelect = true;
-            return false;
-        }
-
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            if (userSelect) {
-                try {
-                    String selected = ((String) slewRateSpinner.getAdapter().getItem(position));
-                    if ((selected != null) && (!selected.equals(getString(R.string.unavailable)))) {
-                        for (INDISwitchElement element : telescopeSlewRateP.getElementsAsList()) {
-                            String label = element.getLabel();
-                            if (label.equals(selected)) {
-                                element.setDesiredValue(Constants.SwitchStatus.ON);
-                            } else {
-                                element.setDesiredValue(Constants.SwitchStatus.OFF);
-                            }
-                        }
-                        new PropUpdater(telescopeSlewRateP).start();
-                    }
-                } catch (Exception e) {
-                    Log.e("MotionFragment", "Slew rate error!", e);
-                }
-                userSelect = false;
-            }
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {
-
-        }
     }
 }

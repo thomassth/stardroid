@@ -11,8 +11,13 @@
 
     <item
         android:id="@+id/menu_compass"
-        android:icon="@drawable/info"
         android:orderInCategory="1"
         android:title="@string/compass"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_skymap_shortcut"
+        android:orderInCategory="2"
+        android:title="@string/add_sky_map_shortcut"
         app:showAsAction="never" />
 </menu>
