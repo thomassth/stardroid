@@ -1,88 +1,69 @@
-# Experimental repository
+<img align="left" width="100" height="100" src="docs/icon.svg">
 
-### An attempt to merge [Sky Map](https://github.com/sky-map-team/stardroid) and [IPARCOS](https://github.com/INDIForJava/IPARCOS).
+# Telescope.Touch: the definitive mobile planetarium
 
-Pretty much a crazy experiment, a Frankenstein app.
+Telescope.Touch was born as an attempt of merging [Sky Map](https://github.com/sky-map-team/stardroid) and
+[IPARCOS](https://github.com/INDIForJava/IPARCOS), an INDI client for Android. It features full telescope control
+and mobile sky chart functionality, with a completely renewed user interface and base code.
 
-## Building
+The source code is available on [GitHub](https://github.com/marcocipriani01/Telescope.Touch)
 
-You should see the following
-two directories:
- * app: Application source
- * tools: Source for generating binary data used by the app.
+## Features
 
-To build SkyMap, you can use Android Developer Studio or Gradle.  Begin by
-creating a `local.properties` file containing the location of your
-Android installation:
+- Mobile planetarium derived from the [Sky Map](https://github.com/sky-map-team/stardroid) project
+- Mount and focuser controller with directional pads and speed controls
+- Database full of objects to which you can point the telescope directly from the app
+- INDI control panel compatible with every device
+- Languages: English, Italian and French. Sky maps are translated in almost every language.
 
-    sdk.dir=<path to your SDK>
+## Installing Telescope.Touch
 
-Android Developer Studio can create this for you.  You can regenerate the datafiles and
-rebuild everything with the `build_skymap.sh` script:
+- Minimum Android version: 5.0
+- From Google Play: coming soon
+- From the .apk file:
+  - Allow apps from unknown sources in the Android settings (Settings → Security → Unknown sources)
+  - Download and install the latest release from the GitHub project page
 
-    ./build_skymap.sh
-    
-(or its f-droid equivalent).
+## Telescope control usage
 
-If you just want to quickly regenerate an apk please see the following instructions
-(note: assembleRelease won't work because the f-droid flavor needs some tweaking which
-is done by the shell script - so make sure you build the Gms flavor specifically).
+1. Prerequisite
+  - An INDI server must be running on the remote computer.
+  - You must have network access to the server. 
+    - To achieve this, the Android device and the remote computer can be placed on your home network.
+    - Alternatively, you can create a wireless network with your Android device and connect the remote computer to this network.
+2. Connection:
+  - Choose the server address in the list or press on "Add server" to add a new server in the list
+  - Optionally, you can change the port number if you do not use the default value for the INDI protocol (7624)
+  - Click on "Connect"
+3. INDI control panel:
+  - Click on the gear icon in the navigation bar to display the control panel.
+  - Use the tabs to switch between the devices.
+  - The properties of the device are displayed in a list. Click on a property to edit it or show the details.
+4. Telescope motion:
+  - Press the joystick icon to display the telescope motion control panel.
+  - The buttons will be enabled or disabled depending on the devices features.
+  - If the device is not connected, the properties may not appear and the buttons will be disabled.
+  - Go-to database can be viewed by pressing on the toolbar icon.
+5. Focuser control:
+  - Supports speed control, focus in/out and absolute position;
 
-## Building a debug apk
+## Sky Map feature
 
-From the root directory execute
+You can access the sky map by pressing on the map icon in the navigation bar. There, you'll find all the usual Sky Map features
+with a renewed user interface and high-definition planet thumbnails.
 
-    ./gradlew assembleGmsDebug
+## Developed by
 
-The apk can be found in `app/build/outputs/apk/`.
+- **Marco Cipriani** (@marcocipriani01): main developer
+- **Romain Fafet** (@farom57): [IPARCOS](https://github.com/INDIForJava/IPARCOS) codebase
+- **Sky Map team**: [Sky Map](https://github.com/sky-map-team/stardroid) codebase
 
-## Building a release apk
-(Sky Map team only)
+### Libraries and credits
 
-Create a file in the app directory called
-`no-checkin.properties` with appropriate values for the
-keys
-    store-pwd=
-    key-pwd=
-    analytics-key=
-
-and overwrite google-services.json with the correct file.
-
-From the root directory execute
-
-    ./gradlew assembleGms
-
-or
-
-    ./gradlew assembleGmsRelease
-
-The apk can be found in `app/build/outputs/apk/`.
-
-
-## Running tests
-Unit tests:
-
-    ./gradlew test
-
-Connected device/emulator required tests:
-
-    ./gradlew app:connectedAndroidTest
-
-# Code and Language Contributions
-Yes, we know that Sky Map's code and UX is very dated. It needs a big overhaul.
-
-In general, bug fix contributions are welcome, for example, simple one file fixes or dependency version upgrades.  We're particularly grateful for fixed or new translations since as the app is developed we lose the 100% coverage of non-English languages that we once had.
-
-**However, please email us (or file a feature request) first before embarking on any major changes or feature additions. We may have a different vision for the direction of the app and it would be a pity to do work that we can't accept and would be wasted.**
-
-It is likely we'll be slow to respond to emails and PR requests. Depending on what else is going on it might be days, it might be months. I do apologize for that - life is busy. Sometimes the reply might be simply to point you at this documentation, which will seem very ungrateful and unfriendly. Again, I apologize, but it's the only way to keep up with the emails.
-
-Small, focussed PRs to fix bugs or upgrade dependencies etc are very easy for us to approve. If your PR does too much it might get stalled because even if 90% of it is welcome there might be 10% that we're not happy with. So keep them small if you can. Plus, we'll be able to review them faster.
-
-Thanks for your contributions! They're definitely appreciated even if our slowness to respond might make it seem otherwise.
-
-## Credits
-
-https://www.flaticon.com/free-icon/telescope_1086070?term=telescope&page=1&position=81&related_item_id=1086070
-
-https://www.flaticon.com/free-icon/touch_941563?term=touch&page=1&position=6&related_item_id=941563
+- The [IPARCOS](https://github.com/INDIForJava/IPARCOS) project, GPL v3 license
+- The [Sky Map](https://github.com/sky-map-team/stardroid) project, Apache 2.0 license
+- [INDIForJava](https://github.com/INDIForJava/INDIForJava), LGPL v3 license
+- [DragListView](https://github.com/woxblom/DragListView), Apache 2.0 license
+- [Material icons](https://material.io/resources/icons/), Apache 2.0 license
+- [Telescope icon](https://www.flaticon.com/free-icon/telescope_1086070?term=telescope&page=1&position=81&related_item_id=1086070), Flaticon License
+- [Touch icon](https://www.flaticon.com/free-icon/touch_941563?term=touch&page=1&position=6&related_item_id=941563), Flaticon License

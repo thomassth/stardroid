@@ -41,7 +41,7 @@ public class ImageDisplayActivity extends InjectableActivity {
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         getApplicationComponent().inject(this);
-        setContentView(R.layout.imagedisplay);
+        setContentView(R.layout.activity_gallery_image);
         activityLightLevelManager = new ActivityLightLevelManager(
                 new ActivityLightLevelChanger(this, null),
                 PreferenceManager.getDefaultSharedPreferences(this));

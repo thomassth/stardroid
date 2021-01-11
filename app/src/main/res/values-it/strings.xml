@@ -406,15 +406,18 @@
     <string name="sync_ok">Sincronizzazione…</string>
     <string name="empty_catalog">Catalogo vuoto</string>
     <string name="menu_about">Informazioni</string>
-    <string name="app_description">IPARCOS (Indi Protocol Android Remote COntrol Software) è un client INDI per Android.
-        \nContiene un pannello di controllo e altri strumenti specifici per controllare i tuoi dispositivi.\n\n
-        Il codice sorgente è disponibile alla pagina github.com/INDIForJava/IPARCOS
-        \n\Sviluppato da\n
-        • Marco Cipriani (marcocipriani01)\n
-        • Romain Fafet (farom57)
-        \n\nLibrerie utilizzate:\n
-        • INDIForJava, LGPL v3 license - github.com/INDIForJava/INDIForJava\n
-        • DragListView, Apache 2.0 license - github.com/woxblom/DragListView
+    <string name="app_description">Telescope.Touch è nato come un tentativo di unire l\'app Sky Map e il progetto IPARCOS, un client INDI per Android.
+        \nPermette il controllo completo di un telescopio e la visualizzazione di una mappa stellare, con un\'interfaccia utente completamente rinnovata e un code sorgente moderno.\n\n
+        Il codice sorgente è disponibile alla pagina github.com/marcocipriani01/Telescope.Touch
+        \n\nSviluppato da <b>Marco Cipriani</b> (marcocipriani01)
+        \n\nLibrerie e crediti:\n
+        • Il progetto IPARCOS, licenza GPL v3: github.com/INDIForJava/IPARCOS\n
+        • Il progetto Sky Map, licenza Apache 2.0: github.com/sky-map-team/stardroid\n
+        • INDIForJava, licenza LGPL v3: github.com/INDIForJava/INDIForJava\n
+        • DragListView, licenza Apache 2.0: github.com/woxblom/DragListView\n
+        • Material icons, licenza Apache 2.0: material.io/resources/icons\n
+        • Telescope icon, licenza Flaticon: flaticon.com\n
+        • Touch icon, licenza Flaticon: flaticon.com
     </string>
     <string name="error_no_devices">Nessun dispositivo trovato!</string>
     <string name="error">Errore:</string>

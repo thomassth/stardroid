@@ -44,7 +44,7 @@ public class ImageGalleryActivity extends InjectableActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getApplicationComponent().inject(this);
-        setContentView(R.layout.imagegallery);
+        setContentView(R.layout.activity_gallery);
         activityLightLevelManager = new ActivityLightLevelManager(
                 new ActivityLightLevelChanger(this, null),
                 PreferenceManager.getDefaultSharedPreferences(this));
@@ -107,7 +107,7 @@ public class ImageGalleryActivity extends InjectableActivity {
         @NonNull
         @Override
         public ImageAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.imagedisplaypanel, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.gallery_item, parent, false);
             return new MyViewHolder(view);
         }
 
