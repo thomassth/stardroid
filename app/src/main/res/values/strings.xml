@@ -112,7 +112,6 @@
     <string name="hubble_deep_field" translation_description="hubble object">Hubble Deep Field</string>
     <string name="hdf" translation_description="hubble object">Hubble Deep Field</string>
     <string name="menu_diagnostics">Diagnostics</string>
-    <!-- TODO(johntaylor): the following might be deleted in favor of an icon -->
     <string name="north_pole">NP</string>
     <string name="south_pole">SP</string>
     <string name="andromeda" translation_description="Name of the Andromeda constellation">Andromeda</string>
@@ -498,15 +497,18 @@
     <string name="sync_ok">Sync …</string>
     <string name="empty_catalog">Empty catalog</string>
     <string name="menu_about">About this app</string>
-    <string name="app_description">IPARCOS (Indi Protocol Android Remote COntrol Software) is an INDI client for Android.
-        \nIt features a control panel and others specialized tools to easily control your devices.\n\n
-        The source code is available at github.com/INDIForJava/IPARCOS
-        \n\nDeveloped by\n
-        • <b>Marco Cipriani</b> (marcocipriani01)\n
-        • <b>Romain Fafet</b> (farom57)
-        \n\nOpen Source libraries:\n
+    <string name="app_description">Telescope.Touch was born as an attempt of merging the Sky Map app and the IPARCOS project, an INDI client for Android.
+        \nIt features full telescope control and mobile sky chart functionality, with a completely renewed user interface and base code.\n\n
+        The source code is available at github.com/marcocipriani01/Telescope.Touch
+        \n\nDeveloped by <b>Marco Cipriani</b> (marcocipriani01)
+        \n\nLibraries and credits:\n
+        • The IPARCOS project, GPL v3 license: github.com/INDIForJava/IPARCOS\n
+        • The Sky Map project, Apache 2.0 license: github.com/sky-map-team/stardroid\n
         • INDIForJava, LGPL v3 license: github.com/INDIForJava/INDIForJava\n
-        • DragListView, Apache 2.0 license: github.com/woxblom/DragListView
+        • DragListView, Apache 2.0 license: github.com/woxblom/DragListView\n
+        • Material icons, Apache 2.0 license: material.io/resources/icons\n
+        • Telescope icon, Flaticon license: flaticon.com\n
+        • Touch icon, Flaticon license: flaticon.com
     </string>
     <string name="error_no_devices">No devices found!</string>
     <string name="error">Error:</string>
