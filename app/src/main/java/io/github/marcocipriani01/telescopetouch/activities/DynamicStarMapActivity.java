@@ -155,8 +155,7 @@ public class DynamicStarMapActivity extends InjectableActivity
         activityLightLevelManager = new ActivityLightLevelManager(activityLightLevelChanger,
                 sharedPreferences);
 
-        this.<ImageButton>findViewById(R.id.back_telescope_control)
-                .setOnClickListener(v -> startActivity(new Intent(this, MainActivity.class)));
+        this.<ImageButton>findViewById(R.id.back_telescope_control).setOnClickListener(v -> onBackPressed());
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -260,8 +259,8 @@ public class DynamicStarMapActivity extends InjectableActivity
         super.onOptionsItemSelected(item);
         fullscreenControlsManager.delayHideTheControls();
         int itemId = item.getItemId();
-        if (item.getItemId() == android.R.id.home) {
-            startActivity(new Intent(this, MainActivity.class));
+        if (itemId == android.R.id.home) {
+            onBackPressed();
         } else if (itemId == R.id.menu_item_search) {
             Log.d(TAG, "Search");
             onSearchRequested();
@@ -294,7 +293,6 @@ public class DynamicStarMapActivity extends InjectableActivity
             Log.d(TAG, "Loading Diagnostics");
             startActivity(new Intent(this, DiagnosticActivity.class));
         } else {
-            Log.e(TAG, "Unwired-up menu item");
             return false;
         }
         return true;

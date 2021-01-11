@@ -1,5 +1,6 @@
 package io.github.marcocipriani01.telescopetouch.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -40,7 +41,7 @@ public class GoToActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            this.finish();
+            onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);

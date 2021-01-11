@@ -2,6 +2,7 @@ package io.github.marcocipriani01.telescopetouch.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -33,6 +34,8 @@ public class MainActivity extends AppCompatActivity
      */
     private Toolbar toolbar;
     private FragmentManager fragmentManager;
+    private BottomNavigationView navigation;
+    private boolean visible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,19 +45,40 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, new ConnectionFragment()).commit();
-        final BottomNavigationView navigation = findViewById(R.id.navigation);
+        navigation = findViewById(R.id.navigation);
         navigation.setSelectedItemId(R.id.menu_connection);
         navigation.setOnNavigationItemSelectedListener(this);
         TelescopeTouchApp.setGoToConnectionTab(() -> runOnUiThread(() -> {
-            currentPage = Pages.CONNECTION;
-            toolbar.setElevation(8);
-            navigation.setOnNavigationItemSelectedListener(null);
-            navigation.setSelectedItemId(currentPage.itemId);
-            navigation.setOnNavigationItemSelectedListener(this);
+            if (visible && (navigation != null) && (fragmentManager != null))
+                goToConnectionTab();
+        }));
+    }
+
+    private void goToConnectionTab() {
+        currentPage = Pages.CONNECTION;
+        toolbar.setElevation(8);
+        navigation.setOnNavigationItemSelectedListener(null);
+        navigation.setSelectedItemId(currentPage.itemId);
+        navigation.setOnNavigationItemSelectedListener(this);
+        try {
             fragmentManager.beginTransaction()
                     .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out)
                     .replace(R.id.content_frame, Pages.CONNECTION.instance).commit();
-        }));
+        } catch (IllegalStateException e) {
+            Log.e("MainActivity", "FragmentManager error", e);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        visible = false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        visible = true;
     }
 
     @Override
@@ -62,6 +86,15 @@ public class MainActivity extends AppCompatActivity
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (currentPage == Pages.CONNECTION) {
+            super.onBackPressed();
+        } else {
+            goToConnectionTab();
+        }
     }
 
     @Override
