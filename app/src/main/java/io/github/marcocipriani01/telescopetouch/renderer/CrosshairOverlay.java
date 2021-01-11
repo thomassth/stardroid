@@ -1,7 +1,5 @@
 package io.github.marcocipriani01.telescopetouch.renderer;
 
-import android.content.res.Resources;
-
 import javax.microedition.khronos.opengles.GL10;
 
 import io.github.marcocipriani01.telescopetouch.R;

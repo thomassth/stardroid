@@ -1,4 +1,4 @@
-package io.github.marcocipriani01.telescopetouch;
+package io.github.marcocipriani01.telescopetouch.views;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +11,8 @@ import androidx.core.util.Pair;
 import com.woxthebox.draglistview.DragItemAdapter;
 
 import java.util.ArrayList;
+
+import io.github.marcocipriani01.telescopetouch.R;
 
 /**
  * @author marcocipriani01

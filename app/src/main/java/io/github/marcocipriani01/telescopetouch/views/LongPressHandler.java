@@ -1,4 +1,4 @@
-package io.github.marcocipriani01.telescopetouch;
+package io.github.marcocipriani01.telescopetouch.views;
 
 import android.annotation.SuppressLint;
 import android.os.Handler;
@@ -10,13 +10,12 @@ import android.view.View;
  */
 public abstract class LongPressHandler {
 
-    private final Handler handler = new Handler();
     protected final View incrementalView;
     protected final View decrementalView;
+    protected final long delay;
+    private final Handler handler = new Handler();
     protected boolean autoIncrement = false;
     protected boolean autoDecrement = false;
-    protected final long delay;
-
     private final Runnable counterRunnable = new Runnable() {
         @Override
         public void run() {

@@ -81,6 +81,8 @@ Small, focussed PRs to fix bugs or upgrade dependencies etc are very easy for us
 
 Thanks for your contributions! They're definitely appreciated even if our slowness to respond might make it seem otherwise.
 
-## Coding Style
+## Credits
 
-We follow the [Google style guide](https://google.github.io/styleguide/javaguide.html) (or try to).  We wrap at 100 chars and we do not use the common Android style of prefixing member variables with a 'm'. 
+https://www.flaticon.com/free-icon/telescope_1086070?term=telescope&page=1&position=81&related_item_id=1086070
+
+https://www.flaticon.com/free-icon/touch_941563?term=touch&page=1&position=6&related_item_id=941563

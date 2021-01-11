@@ -5,11 +5,11 @@ import android.content.res.Resources;
 import android.text.Spannable;
 import android.util.Log;
 
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
 /**
  * A catalog of astronomical objects.
@@ -32,6 +32,8 @@ public class Catalog {
         Resources resources = TelescopeTouchApp.getAppResources();
         try {
             loading = true;
+            Log.i("CatalogManager", "Loading planets...");
+            PlanetEntry.loadToList(entries, resources);
             Log.i("CatalogManager", "Loading DSO...");
             DSOEntry.loadToList(entries, resources);
             Log.i("CatalogManager", "Loading stars...");
@@ -82,7 +84,7 @@ public class Catalog {
     public int searchIndex(final String query) {
         int index = Collections.binarySearch(entries, new CatalogEntry() {
             @Override
-            public Coordinates getCoordinates() {
+            public CatalogCoordinates getCoordinates() {
                 return null;
             }
 

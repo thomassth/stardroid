@@ -22,7 +22,7 @@ public class SensorAccuracyMonitor implements SensorEventListener {
     private static final String TAG = TelescopeTouchApp.getTag(SensorAccuracyMonitor.class);
     private static final String LAST_CALIBRATION_WARNING_PREF_KEY = "Last calibration warning time";
     private static final long MIN_INTERVAL_BETWEEN_WARNINGS =
-            180 * TimeUtil.MILLISECONDS_PER_SECOND;
+            180 * AstroTimeUtils.MILLISECONDS_PER_SECOND;
     private final SensorManager sensorManager;
     private final Sensor compassSensor;
     private final Context context;

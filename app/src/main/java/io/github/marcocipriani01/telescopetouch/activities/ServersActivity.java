@@ -30,8 +30,8 @@ import java.util.List;
 import java.util.Set;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.ServersItemAdapter;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
+import io.github.marcocipriani01.telescopetouch.views.ServersItemAdapter;
 
 /**
  * @author marcocipriani01
@@ -97,7 +97,8 @@ public class ServersActivity extends AppCompatActivity implements ServersReloadL
                     inputMethodManager.hideSoftInputFromWindow(input.getWindowToken(), 0);
                     String server = input.getText().toString();
                     if (!server.equals("")) {
-                        if (!isIp(server)) Toast.makeText(context, context.getString(R.string.not_valid_ip), Toast.LENGTH_SHORT).show();
+                        if (!isIp(server))
+                            Toast.makeText(context, context.getString(R.string.not_valid_ip), Toast.LENGTH_SHORT).show();
                         // Retrieve the list
                         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
                         Set<String> set = preferences.getStringSet(PREFERENCES_TAG, null);

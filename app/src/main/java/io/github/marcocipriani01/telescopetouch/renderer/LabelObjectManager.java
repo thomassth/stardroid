@@ -35,7 +35,7 @@ public class LabelObjectManager extends RendererObjectManager {
     private static final boolean COMPUTE_REGIONS = true;
     private final SkyRegionMap<ArrayList<Label>> mSkyRegions = new SkyRegionMap<>();
     private final IntBuffer mQuadBuffer;
-    private Paint mLabelPaint;
+    private final Paint mLabelPaint;
     private LabelMaker mLabelMaker = null;
     private Label[] mLabels = new Label[0];
     // These are intermediate variables set in beginDrawing() and used in

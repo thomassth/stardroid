@@ -6,8 +6,8 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import io.github.marcocipriani01.telescopetouch.Compass;
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.views.Compass;
 
 public class CompassActivity extends AppCompatActivity {
 
@@ -19,7 +19,7 @@ public class CompassActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compass);
         compass = new Compass(this);
-        compass.arrowView = (ImageView) findViewById(R.id.compass_arrow_view);
+        compass.arrowView = findViewById(R.id.compass_arrow_view);
     }
 
     @Override

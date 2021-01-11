@@ -13,23 +13,23 @@ import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.HeliocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.LatLong;
 import io.github.marcocipriani01.telescopetouch.units.RaDec;
+import io.github.marcocipriani01.telescopetouch.util.AstroTimeUtils;
 import io.github.marcocipriani01.telescopetouch.util.Geometry;
-import io.github.marcocipriani01.telescopetouch.util.TimeUtil;
 
 public enum Planet {
 
     // The order here is the order in which they are drawn.  To ensure that during
     // conjunctions they display "naturally" order them in reverse distance from Earth.
-    Pluto(R.drawable.pluto, R.string.pluto, TimeUtil.MILLISECONDS_PER_HOUR),
-    Neptune(R.drawable.neptune, R.string.neptune, TimeUtil.MILLISECONDS_PER_HOUR),
-    Uranus(R.drawable.uranus, R.string.uranus, TimeUtil.MILLISECONDS_PER_HOUR),
-    Saturn(R.drawable.saturn, R.string.saturn, TimeUtil.MILLISECONDS_PER_HOUR),
-    Jupiter(R.drawable.jupiter, R.string.jupiter, TimeUtil.MILLISECONDS_PER_HOUR),
-    Mars(R.drawable.mars, R.string.mars, TimeUtil.MILLISECONDS_PER_HOUR),
-    Sun(R.drawable.sun, R.string.sun, TimeUtil.MILLISECONDS_PER_HOUR),
-    Mercury(R.drawable.mercury, R.string.mercury, TimeUtil.MILLISECONDS_PER_HOUR),
-    Venus(R.drawable.venus, R.string.venus, TimeUtil.MILLISECONDS_PER_HOUR),
-    Moon(R.drawable.moon4, R.string.moon, TimeUtil.MILLISECONDS_PER_MINUTE);
+    Pluto(R.drawable.pluto, R.string.pluto, AstroTimeUtils.MILLISECONDS_PER_HOUR),
+    Neptune(R.drawable.neptune, R.string.neptune, AstroTimeUtils.MILLISECONDS_PER_HOUR),
+    Uranus(R.drawable.uranus, R.string.uranus, AstroTimeUtils.MILLISECONDS_PER_HOUR),
+    Saturn(R.drawable.saturn, R.string.saturn, AstroTimeUtils.MILLISECONDS_PER_HOUR),
+    Jupiter(R.drawable.jupiter, R.string.jupiter, AstroTimeUtils.MILLISECONDS_PER_HOUR),
+    Mars(R.drawable.mars, R.string.mars, AstroTimeUtils.MILLISECONDS_PER_HOUR),
+    Sun(R.drawable.sun, R.string.sun, AstroTimeUtils.MILLISECONDS_PER_HOUR),
+    Mercury(R.drawable.mercury, R.string.mercury, AstroTimeUtils.MILLISECONDS_PER_HOUR),
+    Venus(R.drawable.venus, R.string.venus, AstroTimeUtils.MILLISECONDS_PER_HOUR),
+    Moon(R.drawable.moon4, R.string.moon, AstroTimeUtils.MILLISECONDS_PER_MINUTE);
 
     private static final String TAG = TelescopeTouchApp.getTag(Planet.class);
     // Maximum number of times to calculate rise/set times. If we cannot
@@ -60,7 +60,7 @@ public enum Planet {
      */
     public static RaDec calculateLunarGeocentricLocation(Calendar time) {
         // First, calculate the number of Julian centuries from J2000.0.
-        float t = (float) ((TimeUtil.calculateJulianDay(time) - 2451545.0f) / 36525.0f);
+        float t = (float) AstroTimeUtils.julianDayToCentury(AstroTimeUtils.julianDayGreenwich(time));
 
         // Second, calculate the approximate geocentric orbital elements.
         float lambda =
@@ -217,7 +217,7 @@ public enum Planet {
     // 3000 BC to 3000 AD.
     public OrbitalElements getOrbitalElements(Calendar date) {
         // Centuries since J2000
-        float jc = (float) TimeUtil.julianCenturies(date);
+        float jc = (float) AstroTimeUtils.julianDayToCentury(AstroTimeUtils.julianDayGreenwich(date));
 
         switch (this) {
             case Mercury: {
@@ -476,15 +476,15 @@ public enum Planet {
         // Find the start of this day in the local time zone. The (a / b) * b
         // formulation looks weird, it's using the properties of int arithmetic
         // so that (a / b) is really floor(a / b).
-        long dayStart = (now.getTimeInMillis() / TimeUtil.MILLISECONDS_PER_DAY)
-                * TimeUtil.MILLISECONDS_PER_DAY - riseSetTime.get(Calendar.ZONE_OFFSET);
+        long dayStart = (now.getTimeInMillis() / AstroTimeUtils.MILLISECONDS_PER_DAY)
+                * AstroTimeUtils.MILLISECONDS_PER_DAY - riseSetTime.get(Calendar.ZONE_OFFSET);
         long riseSetUtMillis = (long) (calcRiseSetTime(now.getTime(), loc, indicator)
-                * TimeUtil.MILLISECONDS_PER_HOUR);
+                * AstroTimeUtils.MILLISECONDS_PER_HOUR);
         long newTime = dayStart + riseSetUtMillis + riseSetTime.get(Calendar.ZONE_OFFSET);
         // If the newTime is before the current time, go forward 1 day.
         if (newTime < now.getTimeInMillis()) {
             Log.d(TAG, "Nearest Rise/Set is in the past. Adding one day.");
-            newTime += TimeUtil.MILLISECONDS_PER_DAY;
+            newTime += AstroTimeUtils.MILLISECONDS_PER_DAY;
         }
         riseSetTime.setTimeInMillis(newTime);
         if (!riseSetTime.after(now)) {
@@ -518,7 +518,7 @@ public enum Planet {
             RaDec raDec = RaDec.getInstance(this, cal, sunCoordinates);
 
             // GHA = GST - RA. (In degrees.)
-            float gst = TimeUtil.meanSiderealTime(cal, 0);
+            float gst = (float) AstroTimeUtils.meanSiderealTime(cal, 0);
             float gha = gst - raDec.ra;
 
             // The value of -0.83 works for the diameter of the Sun and Moon. We

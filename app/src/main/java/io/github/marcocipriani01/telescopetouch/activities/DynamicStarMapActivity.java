@@ -261,7 +261,7 @@ public class DynamicStarMapActivity extends InjectableActivity
         fullscreenControlsManager.delayHideTheControls();
         int itemId = item.getItemId();
         if (item.getItemId() == android.R.id.home) {
-            this.finish();
+            startActivity(new Intent(this, MainActivity.class));
         } else if (itemId == R.id.menu_item_search) {
             Log.d(TAG, "Search");
             onSearchRequested();
