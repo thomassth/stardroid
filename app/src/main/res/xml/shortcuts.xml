@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shortcuts xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <shortcut
-        android:shortcutId="telescope_control"
         android:enabled="true"
         android:icon="@mipmap/move_launcher"
-        android:shortcutShortLabel="@string/telescope_control"
-        android:shortcutLongLabel="@string/telescope_control"
         android:shortcutDisabledMessage="@string/telescope_control"
+        android:shortcutId="telescope_ctrl_shortcut"
+        android:shortcutLongLabel="@string/telescope_control"
+        android:shortcutShortLabel="@string/telescope_control"
         tools:targetApi="n_mr1">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="io.github.marcocipriani01.telescopetouch"
-            android:targetClass="io.github.marcocipriani01.telescopetouch.activities.MainActivity" />
+            android:targetClass="io.github.marcocipriani01.telescopetouch.activities.MainActivity"
+            android:targetPackage="io.github.marcocipriani01.telescopetouch" />
         <categories android:name="android.shortcut.telescope_control" />
     </shortcut>
     <shortcut
-        android:shortcutId="skymap"
         android:enabled="true"
         android:icon="@mipmap/map_launcher"
-        android:shortcutShortLabel="@string/sky_map"
-        android:shortcutLongLabel="@string/sky_map"
         android:shortcutDisabledMessage="@string/sky_map"
+        android:shortcutId="skymap_shortcut"
+        android:shortcutLongLabel="@string/sky_map"
+        android:shortcutShortLabel="@string/sky_map"
         tools:targetApi="n_mr1">
         <intent
-            android:action="android.intent.action.VIEW"
-            android:targetPackage="io.github.marcocipriani01.telescopetouch"
-            android:targetClass="io.github.marcocipriani01.telescopetouch.activities.DynamicStarMapActivity" />
+            android:action="io.github.marcocipriani01.telescopetouch.activities.DynamicStarMapActivity"
+            android:targetClass="io.github.marcocipriani01.telescopetouch.activities.DynamicStarMapActivity"
+            android:targetPackage="io.github.marcocipriani01.telescopetouch" />
         <categories android:name="android.shortcut.skymap" />
     </shortcut>
 </shortcuts>

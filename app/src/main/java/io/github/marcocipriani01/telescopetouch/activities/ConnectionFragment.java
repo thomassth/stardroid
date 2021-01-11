@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -12,28 +13,23 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
-
-import static io.github.marcocipriani01.telescopetouch.activities.ServersActivity.PREFERENCES_TAG;
+import io.github.marcocipriani01.telescopetouch.views.ImprovedSpinner;
+import io.github.marcocipriani01.telescopetouch.views.ImprovedSpinnerListener;
 
 /**
  * The main screen of the application, which manages the connection.
@@ -47,7 +43,7 @@ public class ConnectionFragment extends Fragment implements ServersReloadListene
      * All the logs.
      */
     private final static ArrayList<LogItem> logs = new ArrayList<>();
-    private static final String PORT_PREF = "INDI_PORT";
+    private static final String INDI_PORT_PREF = "INDI_PORT_PREF";
     private static TelescopeTouchApp.ConnectionState state = TelescopeTouchApp.ConnectionState.DISCONNECTED;
     /**
      * The last position of the spinner (to restore the Fragment's state)
@@ -55,7 +51,19 @@ public class ConnectionFragment extends Fragment implements ServersReloadListene
     private static int selectedSpinnerItem = 0;
     private Context context;
     private Button connectionButton;
-    private Spinner serversSpinner;
+    private ImprovedSpinner serversSpinner;
+    private final ImprovedSpinnerListener spinnerListener = new ImprovedSpinnerListener() {
+        @Override
+        protected void onImprovedItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+            String selected = parent.getItemAtPosition(pos).toString();
+            if (selected.equals(getResources().getString(R.string.host_add))) {
+                serversSpinner.post(() -> serversSpinner.setSelection(0));
+                ServersActivity.addServer(context, ConnectionFragment.this);
+            } else if (selected.equals(getResources().getString(R.string.host_manage))) {
+                startActivityForResult(new Intent(context, ServersActivity.class), 1);
+            }
+        }
+    };
     private EditText portEditText;
     /**
      * The original position of the floating action button.
@@ -74,18 +82,15 @@ public class ConnectionFragment extends Fragment implements ServersReloadListene
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) loadServers();
+        if (requestCode == 1) loadServers(ServersActivity.getServers(context));
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Views
         View rootView = inflater.inflate(R.layout.fragment_connection, container, false);
-
         logsList = rootView.findViewById(R.id.logsList);
         logAdapter = new LogAdapter(context);
         logsList.setAdapter(logAdapter);
-
         clearLogsButton = rootView.findViewById(R.id.clearLogsButton);
         clearLogsButton.setOnClickListener(v -> {
             logs.clear();
@@ -113,31 +118,11 @@ public class ConnectionFragment extends Fragment implements ServersReloadListene
         });
 
         connectionButton = rootView.findViewById(R.id.connectionButton);
-
         serversSpinner = rootView.findViewById(R.id.spinnerHost);
-        serversSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                String selected = parent.getItemAtPosition(pos).toString();
-                if (selected.equals(getResources().getString(R.string.host_add))) {
-                    serversSpinner.post(() -> serversSpinner.setSelection(0));
-                    ServersActivity.addServer(context, ConnectionFragment.this);
-                } else if (selected.equals(getResources().getString(R.string.host_manage))) {
-                    startActivityForResult(new Intent(context, ServersActivity.class), 1);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-        loadServers();
-
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        loadServers(ServersActivity.getServers(preferences));
         portEditText = rootView.findViewById(R.id.port_edittext);
-        portEditText.setText(String.valueOf(preferences.getInt(PORT_PREF, 7624)));
-
+        portEditText.setText(String.valueOf(preferences.getInt(INDI_PORT_PREF, 7624)));
         connectionButton.setOnClickListener(v -> {
             // Retrieve Hostname and port number
             String host = String.valueOf(serversSpinner.getSelectedItem());
@@ -148,7 +133,7 @@ public class ConnectionFragment extends Fragment implements ServersReloadListene
             } else {
                 try {
                     port = Integer.parseInt(portStr);
-                    preferences.edit().putInt(PORT_PREF, port).apply();
+                    preferences.edit().putInt(INDI_PORT_PREF, port).apply();
                 } catch (NumberFormatException e) {
                     port = 7624;
                 }
@@ -171,6 +156,7 @@ public class ConnectionFragment extends Fragment implements ServersReloadListene
                     .hideSoftInputFromWindow(portEditText.getWindowToken(), 0);
         });
         serversSpinner.setSelection(selectedSpinnerItem);
+        spinnerListener.attach(serversSpinner);
         refreshUi();
         TelescopeTouchApp.setUiUpdater(this);
         return rootView;
@@ -233,24 +219,11 @@ public class ConnectionFragment extends Fragment implements ServersReloadListene
     }
 
     @Override
-    public void loadServers() {
-        Set<String> set = PreferenceManager.getDefaultSharedPreferences(context)
-                .getStringSet(PREFERENCES_TAG, null);
-        List<String> serversList = new ArrayList<>();
-        if (set != null) {
-            ArrayList<Pair<Long, String>> pairsList = new ArrayList<>();
-            for (String s : set) {
-                int index = s.indexOf('#');
-                pairsList.add(new Pair<>(Long.valueOf(s.substring(0, index)), s.substring(index + 1)));
-            }
-            ServersActivity.sortPairs(pairsList);
-            for (Pair<Long, String> pair : pairsList) {
-                serversList.add(pair.second);
-            }
-        }
-        serversList.add(getResources().getString(R.string.host_add));
-        serversList.add(getResources().getString(R.string.host_manage));
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, serversList);
+    public void loadServers(ArrayList<String> servers) {
+        Resources resources = context.getResources();
+        servers.add(resources.getString(R.string.host_add));
+        servers.add(resources.getString(R.string.host_manage));
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, servers);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         serversSpinner.setAdapter(dataAdapter);
     }

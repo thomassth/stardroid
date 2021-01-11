@@ -1,6 +1,5 @@
 package io.github.marcocipriani01.telescopetouch.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
