@@ -338,5 +338,6 @@
     <string name="beehive_cluster" translation_description="Name of the Messier object Beehive Cluster">벌집 성단</string>
     <string name="praesepe" translation_description="Name of the Messier object Praesepe">프레세페</string>
     <string name="seven_sisters" translation_description="Name of the Messier object Seven Sisters">일곱 자매</string>
+    <string name="hdf">허블 딥 필드</string>
 </resources>
 
