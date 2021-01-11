@@ -429,4 +429,5 @@
     <string name="compass_calibration_activity_warning">Η πυξίδα σας χρειάζεται βαθμονόμηση</string>
     <string name="sensor_reverse_preference_title">Αντιστροφή του μαγνητικού Ζ</string>
     <string name="sensor_reverse_preference_summary">Για συσκευές με εσφαλμένη υλοποίηση του αισθητήρα - απαιτεί επανεκκίνηση</string>
+    <string name="hdf">Hubble Deep Field</string>
 </resources>

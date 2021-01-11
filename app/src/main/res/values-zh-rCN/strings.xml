@@ -359,6 +359,7 @@
     <string name="orionids" translation_description="Meteor Shower">猎户座流星雨</string>
     <string name="puppidvelids" translation_description="Meteor Shower">船尾/船帆座流星雨</string>
     <string name="ursids" translation_description="Meteor Shower">小熊座流星雨</string>
+    <string name="hdf">哈勃深空</string>
 </resources>
 
 

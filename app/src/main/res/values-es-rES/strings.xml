@@ -338,4 +338,5 @@
     <string name="beehive_cluster" translation_description="Name of the Messier object Beehive Cluster">Cúmulo Colmena</string>
     <string name="praesepe" translation_description="Name of the Messier object Praesepe">El Pesebre</string>
     <string name="seven_sisters" translation_description="Name of the Messier object Seven Sisters">Pléyades</string>
+    <string name="hdf">Campo prof Hubble</string>
 </resources>

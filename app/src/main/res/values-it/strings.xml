@@ -450,4 +450,5 @@
     <string name="dark_nebula">Nebulosa oscura</string>
     <string name="search">Cerca</string>
     <string name="menu_gallery">Galleria di Sky Map</string>
+    <string name="hdf">Campo profondo Hubble (HDF)</string>
 </resources>

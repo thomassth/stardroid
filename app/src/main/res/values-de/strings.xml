@@ -382,5 +382,6 @@
     <string name="warning_dialog_title">Warnung!</string>
     <string name="wifi">" (WLAN)"</string>
     <string name="diagnostics_activity_pointing_ra_dec">Letzte Blickrichtung (RA, D)</string>
+    <string name="hdf">Hubble Deep Field</string>
 </resources>
 
