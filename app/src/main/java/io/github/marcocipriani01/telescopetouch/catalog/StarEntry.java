@@ -31,7 +31,7 @@ public class StarEntry extends CatalogEntry {
      */
     private StarEntry(String data) {
         String[] split = data.split("\\t");
-        coord = new Coordinates(Double.parseDouble(split[0].trim()), Double.parseDouble(split[1].trim()));
+        coord = new CatalogCoordinates(Double.parseDouble(split[0].trim()), Double.parseDouble(split[1].trim()));
         magnitude = split[2].trim();
         String hd = "HD" + split[4].trim(),
                 sao = "SAO" + split[3].trim(),

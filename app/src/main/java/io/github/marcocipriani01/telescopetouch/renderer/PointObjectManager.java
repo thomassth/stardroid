@@ -44,7 +44,7 @@ public class PointObjectManager extends RendererObjectManager {
             // Sanity check: make sure the number of points is unchanged.
             if (points.size() != mNumPoints) {
                 Log.e("PointObjectManager", "Updating PointObjectManager a different number of points: update had " +
-                                points.size() + " vs " + mNumPoints + " before");
+                        points.size() + " vs " + mNumPoints + " before");
                 return;
             }
         } else if (!updateType.contains(UpdateType.Reset)) {

@@ -71,7 +71,7 @@ public class DSOEntry extends CatalogEntry {
         String raString = data.substring(i, i + RA_LENGTH).trim();
         i += RA_LENGTH;
         String decString = data.substring(i).trim();
-        coord = new Coordinates(raString, decString);
+        coord = new CatalogCoordinates(raString, decString);
     }
 
     public static void loadToList(List<CatalogEntry> list, Resources resources) throws IOException {

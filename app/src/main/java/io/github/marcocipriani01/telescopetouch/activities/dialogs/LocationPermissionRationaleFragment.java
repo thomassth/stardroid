@@ -7,8 +7,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
-import java.util.Objects;
-
 import io.github.marcocipriani01.telescopetouch.R;
 
 /**

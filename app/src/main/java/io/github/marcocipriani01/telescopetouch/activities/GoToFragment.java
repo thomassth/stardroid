@@ -36,22 +36,17 @@ import org.indilib.i4j.client.INDIValueException;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.catalog.Catalog;
+import io.github.marcocipriani01.telescopetouch.catalog.CatalogCoordinates;
 import io.github.marcocipriani01.telescopetouch.catalog.CatalogEntry;
-import io.github.marcocipriani01.telescopetouch.catalog.Coordinates;
+import io.github.marcocipriani01.telescopetouch.catalog.DSOEntry;
+import io.github.marcocipriani01.telescopetouch.catalog.StarEntry;
 import io.github.marcocipriani01.telescopetouch.prop.PropUpdater;
-
-import static java.lang.Math.asin;
-import static java.lang.Math.atan2;
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
-import static java.lang.Math.toDegrees;
-import static java.lang.Math.toRadians;
+import io.github.marcocipriani01.telescopetouch.util.AstroTimeUtils;
 
 /**
  * Allows the user to look for an astronomical object and slew the telescope.
@@ -73,60 +68,6 @@ public class GoToFragment extends ListFragment
     private INDISwitchElement telescopeOnCoordSetSync = null;
     private INDISwitchElement telescopeOnCoordSetSlew = null;
     private INDISwitchElement telescopeOnCoordSetTrack = null;
-
-    // ------ Astronomy utils ------
-
-    /**
-     * Equation taken from the book "Astronomical Algorithms" by Jean Meeus
-     * (published by Willmann-Bell, Inc., Richmond, VA). Chapter 7, Julian Day.
-     *
-     * @see <a href="https://www.willbell.com/math/mc1.HTM">"Astronomical Algorithms" by Jean Meeus</a>
-     */
-    @SuppressWarnings("IntegerDivisionInFloatingPointContext")
-    private static double jd() {
-        Calendar calendar = GregorianCalendar.getInstance();
-        int y = calendar.get(Calendar.YEAR);
-        int m = calendar.get(Calendar.MONTH) + 1;
-        double d = calendar.get(Calendar.DATE) +
-                (calendar.get(Calendar.HOUR) / 24.0) +
-                (calendar.get(Calendar.MINUTE) / 1440.0) +
-                (calendar.get(Calendar.SECOND) / 86400.0);
-        if ((m == 1) || (m == 2)) {
-            y--;
-            m += 12;
-        }
-        return ((int) (365.25 * (y + 4716.0))) +
-                ((int) (30.6001 * (m + 1.0))) +
-                d + (2 - ((3 * y) / 400)) - 1524.5;
-    }
-
-    /**
-     * Equation taken from the book "Astronomical Algorithms" by Jean Meeus
-     * (published by Willmann-Bell, Inc., Richmond, VA). Chapter 21, Precession.
-     *
-     * @see <a href="https://www.willbell.com/math/mc1.HTM">"Astronomical Algorithms" by Jean Meeus</a>
-     */
-    private static Coordinates precess(Coordinates in) {
-        Log.d("AstroUtils", "Precessing: " + in.toString());
-        double jd = jd();
-        Log.d("AstroUtils", "JD: " + jd);
-        double dec0 = toRadians(in.getDec()),
-                t = (jd - 2451545.0) / 36525.0,
-                t2 = t * t, t3 = t2 * t,
-                zeta = (0.6406161389 * t) + (0.00008385555556 * t2) + (0.000004999444444 * t3),
-                theta = toRadians((0.5567530278 * t) - (0.0001185138889 * t2) - (0.00001162027778 * t3)),
-                sinTheta = sin(theta),
-                cosTheta = cos(theta),
-                tmp = cos(dec0) * cos(toRadians(in.getRa() + zeta));
-        Coordinates out = new Coordinates(toDegrees(
-                atan2(cos(dec0) * sin(toRadians(in.getRa() + zeta)), (cosTheta * tmp) - (sinTheta * sin(dec0)))) +
-                (0.6406161389 * t) + (0.0003040777778 * t2) + (0.000005056388889 * t3),
-                toDegrees(asin((sinTheta * tmp) + (cosTheta * sin(dec0)))));
-        Log.d("AstroUtils", "Result: " + out.toString());
-        return out;
-    }
-
-    // ------ Android UI ------
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -243,7 +184,8 @@ public class GoToFragment extends ListFragment
     @Override
     public void onListItemClick(@NonNull ListView l, @NonNull View v, int position, long id) {
         List<CatalogEntry> entries = catalog.getEntries();
-        final Coordinates coord = entries.get(position).getCoordinates();
+        final CatalogEntry selectedEntry = entries.get(position);
+        final CatalogCoordinates coord = selectedEntry.getCoordinates();
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(entries.get(position).createDescription(context)).setTitle(entries.get(position).getName());
         // Only display buttons if the telescope is ready
@@ -254,12 +196,17 @@ public class GoToFragment extends ListFragment
                     telescopeOnCoordSetSlew.setDesiredValue(Constants.SwitchStatus.OFF);
                     telescopeOnCoordSetSync.setDesiredValue(Constants.SwitchStatus.OFF);
                     new PropUpdater(telescopeOnCoordSetP).start();
-                    Coordinates precessed = precess(coord);
-                    telescopeCoordRA.setDesiredValue(precessed.getRaStr());
-                    telescopeCoordDE.setDesiredValue(precessed.getDeStr());
+                    if ((selectedEntry instanceof StarEntry) || (selectedEntry instanceof DSOEntry)) {
+                        CatalogCoordinates precessed = AstroTimeUtils.precess(Calendar.getInstance(), coord);
+                        telescopeCoordRA.setDesiredValue(precessed.getRaStr());
+                        telescopeCoordDE.setDesiredValue(precessed.getDeStr());
+                    } else {
+                        telescopeCoordRA.setDesiredValue(coord.getRaStr());
+                        telescopeCoordDE.setDesiredValue(coord.getDeStr());
+                    }
                     new PropUpdater(telescopeCoordP).start();
                     Toast.makeText(context, context.getString(R.string.slew_ok), Toast.LENGTH_LONG).show();
-                    getActivity().finish();
+                    requireActivity().finish();
                 } catch (INDIValueException e) {
                     Toast.makeText(context, context.getString(R.string.sync_slew_error), Toast.LENGTH_LONG).show();
                 }
@@ -270,12 +217,12 @@ public class GoToFragment extends ListFragment
                     telescopeOnCoordSetTrack.setDesiredValue(Constants.SwitchStatus.OFF);
                     telescopeOnCoordSetSlew.setDesiredValue(Constants.SwitchStatus.OFF);
                     new PropUpdater(telescopeOnCoordSetP).start();
-                    Coordinates precessed = precess(coord);
+                    CatalogCoordinates precessed = AstroTimeUtils.precess(Calendar.getInstance(), coord);
                     telescopeCoordRA.setDesiredValue(precessed.getRaStr());
                     telescopeCoordDE.setDesiredValue(precessed.getDeStr());
                     new PropUpdater(telescopeCoordP).start();
                     Toast.makeText(context, context.getString(R.string.sync_ok), Toast.LENGTH_LONG).show();
-                    getActivity().finish();
+                    requireActivity().finish();
                 } catch (INDIValueException e) {
                     Toast.makeText(context, context.getString(R.string.sync_slew_error), Toast.LENGTH_LONG).show();
                 }

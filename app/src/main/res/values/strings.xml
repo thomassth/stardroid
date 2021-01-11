@@ -539,5 +539,6 @@
     <string name="dark_nebula">Dark nebula</string>
     <string name="search">Search</string>
     <string name="sky_map">Sky Map</string>
+    <string name="telescope_control">Telescope control</string>
     <string name="compass">Compass</string>
 </resources>

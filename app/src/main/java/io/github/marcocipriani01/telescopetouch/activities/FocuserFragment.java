@@ -34,11 +34,11 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import io.github.marcocipriani01.telescopetouch.CounterHandler;
-import io.github.marcocipriani01.telescopetouch.LongPressHandler;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.prop.PropUpdater;
+import io.github.marcocipriani01.telescopetouch.views.CounterHandler;
+import io.github.marcocipriani01.telescopetouch.views.LongPressHandler;
 
 /**
  * This fragment shows directional buttons to move a focuser.

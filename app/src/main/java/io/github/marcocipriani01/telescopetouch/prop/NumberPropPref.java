@@ -27,11 +27,11 @@ import org.indilib.i4j.client.INDINumberProperty;
 import org.indilib.i4j.client.INDIProperty;
 import org.indilib.i4j.client.INDIValueException;
 
-import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
 public class NumberPropPref extends PropPref<INDINumberElement> {
 
@@ -120,7 +120,7 @@ public class NumberPropPref extends PropPref<INDINumberElement> {
                 int interval = (int) ((max - min) / step);
                 if (interval <= 1000) {
                     seekBar = new SeekBar(context);
-                    seekBar.setPadding(padding *2 , padding, padding * 2, padding);
+                    seekBar.setPadding(padding * 2, padding, padding * 2, padding);
                     seekBar.setMax(interval);
                     seekBar.setProgress((int) ((element.getValue() - min) / step));
                     seekBar.setOnSeekBarChangeListener(this);

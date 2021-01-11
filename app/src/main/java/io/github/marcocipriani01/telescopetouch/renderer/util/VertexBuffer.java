@@ -15,7 +15,7 @@ public class VertexBuffer {
     private final GLBuffer mGLBuffer = new GLBuffer(GL11.GL_ARRAY_BUFFER);
     private IntBuffer mPositionBuffer = null;
     private int mNumVertices = 0;
-    private boolean mUseVBO;
+    private final boolean mUseVBO;
 
     //Creates an empty buffer.  Must call reset() before adding vertices.
     public VertexBuffer() {

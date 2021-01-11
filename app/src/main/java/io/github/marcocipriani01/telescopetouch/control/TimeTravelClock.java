@@ -6,7 +6,7 @@ import java.util.Date;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
-import io.github.marcocipriani01.telescopetouch.util.TimeUtil;
+import io.github.marcocipriani01.telescopetouch.util.AstroTimeUtils;
 
 /**
  * Controls time as selected / created by the user in Time Travel mode.
@@ -19,19 +19,19 @@ import io.github.marcocipriani01.telescopetouch.util.TimeUtil;
 public class TimeTravelClock implements Clock {
     public static final long STOPPED = 0;
     private static final Speed[] SPEEDS = {
-            new Speed(-TimeUtil.SECONDS_PER_WEEK, R.string.time_travel_week_speed_back),
-            new Speed(-TimeUtil.SECONDS_PER_DAY, R.string.time_travel_day_speed_back),
-            new Speed(-TimeUtil.SECONDS_PER_HOUR, R.string.time_travel_hour_speed_back),
-            new Speed(-TimeUtil.SECONDS_PER_10MINUTE, R.string.time_travel_10minute_speed_back),
-            new Speed(-TimeUtil.SECONDS_PER_MINUTE, R.string.time_travel_minute_speed_back),
-            new Speed(-TimeUtil.SECONDS_PER_SECOND, R.string.time_travel_second_speed_back),
+            new Speed(-AstroTimeUtils.SECONDS_PER_WEEK, R.string.time_travel_week_speed_back),
+            new Speed(-AstroTimeUtils.SECONDS_PER_DAY, R.string.time_travel_day_speed_back),
+            new Speed(-AstroTimeUtils.SECONDS_PER_HOUR, R.string.time_travel_hour_speed_back),
+            new Speed(-AstroTimeUtils.SECONDS_PER_10MINUTE, R.string.time_travel_10minute_speed_back),
+            new Speed(-AstroTimeUtils.SECONDS_PER_MINUTE, R.string.time_travel_minute_speed_back),
+            new Speed(-AstroTimeUtils.SECONDS_PER_SECOND, R.string.time_travel_second_speed_back),
             new Speed(STOPPED, R.string.time_travel_stopped),
-            new Speed(TimeUtil.SECONDS_PER_SECOND, R.string.time_travel_second_speed),
-            new Speed(TimeUtil.SECONDS_PER_MINUTE, R.string.time_travel_minute_speed),
-            new Speed(TimeUtil.SECONDS_PER_10MINUTE, R.string.time_travel_10minute_speed),
-            new Speed(TimeUtil.SECONDS_PER_HOUR, R.string.time_travel_hour_speed),
-            new Speed(TimeUtil.SECONDS_PER_DAY, R.string.time_travel_day_speed),
-            new Speed(TimeUtil.SECONDS_PER_WEEK, R.string.time_travel_week_speed),
+            new Speed(AstroTimeUtils.SECONDS_PER_SECOND, R.string.time_travel_second_speed),
+            new Speed(AstroTimeUtils.SECONDS_PER_MINUTE, R.string.time_travel_minute_speed),
+            new Speed(AstroTimeUtils.SECONDS_PER_10MINUTE, R.string.time_travel_10minute_speed),
+            new Speed(AstroTimeUtils.SECONDS_PER_HOUR, R.string.time_travel_hour_speed),
+            new Speed(AstroTimeUtils.SECONDS_PER_DAY, R.string.time_travel_day_speed),
+            new Speed(AstroTimeUtils.SECONDS_PER_WEEK, R.string.time_travel_week_speed),
     };
     private static final int STOPPED_INDEX = SPEEDS.length / 2;
     private static final String TAG = TelescopeTouchApp.getTag(TimeTravelClock.class);
@@ -104,11 +104,11 @@ public class TimeTravelClock implements Clock {
         long elapsedTimeMillis = now - timeLastSet;
         double rate = SPEEDS[speedIndex].rate;
         long timeDelta = (long) (rate * elapsedTimeMillis);
-        if (Math.abs(rate) >= TimeUtil.SECONDS_PER_DAY) {
+        if (Math.abs(rate) >= AstroTimeUtils.SECONDS_PER_DAY) {
             // For speeds greater than or equal to 1 day/sec we want to move in
             // increments of 1 day so that the map isn't dizzyingly fast.
             // This shows the slow annual procession of the stars.
-            long days = timeDelta / TimeUtil.MILLISECONDS_PER_DAY;
+            long days = timeDelta / AstroTimeUtils.MILLISECONDS_PER_DAY;
             if (days == 0) {
                 return simulatedTime;
             }
@@ -116,7 +116,7 @@ public class TimeTravelClock implements Clock {
             // day boundary.  If they occur later then the next time jump
             // might be a bit shorter than it should be.  Nevertheless the refresh
             // rate of the renderer is high enough that this should be unnoticeable.
-            timeDelta = days * TimeUtil.MILLISECONDS_PER_DAY;
+            timeDelta = days * AstroTimeUtils.MILLISECONDS_PER_DAY;
         }
         timeLastSet = now;
         simulatedTime += timeDelta;

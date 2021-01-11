@@ -13,7 +13,7 @@ public abstract class CatalogEntry implements Comparable<CatalogEntry> {
     /**
      * His coordinates.
      */
-    protected Coordinates coord;
+    protected CatalogCoordinates coord;
     /**
      * His name.
      */
@@ -22,7 +22,7 @@ public abstract class CatalogEntry implements Comparable<CatalogEntry> {
     /**
      * @return the stored coordinates.
      */
-    public Coordinates getCoordinates() {
+    public CatalogCoordinates getCoordinates() {
         return coord;
     }
 

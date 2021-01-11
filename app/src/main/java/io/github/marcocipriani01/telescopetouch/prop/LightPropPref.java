@@ -10,11 +10,10 @@ import android.text.style.ForegroundColorSpan;
 import org.indilib.i4j.client.INDILightElement;
 import org.indilib.i4j.client.INDIProperty;
 
+import java.util.List;
+
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
-
-
-import java.util.List;
 
 public class LightPropPref extends PropPref<INDILightElement> {
 

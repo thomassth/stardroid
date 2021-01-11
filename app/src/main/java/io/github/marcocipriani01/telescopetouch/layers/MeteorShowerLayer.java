@@ -21,7 +21,7 @@ import io.github.marcocipriani01.telescopetouch.source.impl.ImageSourceImpl;
 import io.github.marcocipriani01.telescopetouch.source.impl.TextSourceImpl;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.Vector3;
-import io.github.marcocipriani01.telescopetouch.util.TimeUtil;
+import io.github.marcocipriani01.telescopetouch.util.AstroTimeUtils;
 
 /**
  * A {@link Layer} to show well-known meteor showers.
@@ -163,7 +163,7 @@ public class MeteorShowerLayer extends AbstractLayer {
     private static class MeteorRadiantSource extends AbstractAstronomicalSource {
         private static final int LABEL_COLOR = 0xf67e81;
         private static final Vector3 UP = new Vector3(0.0f, 1.0f, 0.0f);
-        private static final long UPDATE_FREQ_MS = TimeUtil.MILLISECONDS_PER_DAY;
+        private static final long UPDATE_FREQ_MS = AstroTimeUtils.MILLISECONDS_PER_DAY;
         private static final float SCALE_FACTOR = 0.03f;
 
         private final List<ImageSource> imageSources = new ArrayList<>();

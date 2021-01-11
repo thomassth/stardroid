@@ -67,15 +67,15 @@ public class SkyRenderer implements GLSurfaceView.Renderer {
             (rom, fullReload) -> mManagersToReload.add(new ManagerReloadData(rom, fullReload));
     private final SkyBox mSkyBox;
     private final OverlayManager mOverlayManager;
+    // Maps an integer indicating render order to a list of objects at that level.  The managers
+    // will be rendered in order, with the lowest number coming first.
+    private final TreeMap<Integer, Set<RendererObjectManager>> mLayersToManagersMap;
     private Matrix4x4 mProjectionMatrix;
     private Matrix4x4 mViewMatrix;
     // Indicates whether the transformation matrix has changed since the last
     // time we started rendering
     private boolean mMustUpdateView = true;
     private boolean mMustUpdateProjection = true;
-    // Maps an integer indicating render order to a list of objects at that level.  The managers
-    // will be rendered in order, with the lowest number coming first.
-    private final TreeMap<Integer, Set<RendererObjectManager>> mLayersToManagersMap;
 
     public SkyRenderer(Resources res) {
         mRenderState.setResources(res);

@@ -10,8 +10,8 @@ import java.util.regex.Pattern;
 /**
  * Stores equatorial coordinates and contains some utilities to convert decimal degrees to strings and vice-versa.
  */
-@SuppressWarnings({"ConstantConditions"})
-public class Coordinates {
+@SuppressWarnings("ConstantConditions")
+public class CatalogCoordinates {
 
     /**
      * Right ascension in arcsec
@@ -28,7 +28,7 @@ public class Coordinates {
      * @param ra  Right ascension (string).
      * @param dec Declination (string).
      */
-    public Coordinates(String ra, String dec) {
+    public CatalogCoordinates(String ra, String dec) {
         this.ra = convertRa(ra.trim());
         this.dec = convertDec(dec.trim());
     }
@@ -39,7 +39,7 @@ public class Coordinates {
      * @param ra  Right ascension (decimal degrees).
      * @param dec Declination (decimal degrees).
      */
-    public Coordinates(double ra, double dec) {
+    public CatalogCoordinates(double ra, double dec) {
         this.ra = ra;
         this.dec = dec;
     }

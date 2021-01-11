@@ -1,4 +1,4 @@
-package io.github.marcocipriani01.telescopetouch;
+package io.github.marcocipriani01.telescopetouch.views;
 
 import android.content.Context;
 import android.hardware.Sensor;

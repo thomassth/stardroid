@@ -31,9 +31,10 @@ import io.github.marcocipriani01.telescopetouch.activities.MainActivity;
 import io.github.marcocipriani01.telescopetouch.layers.LayerManager;
 
 /**
- * The main Stardroid Application class.
+ * The main application class.
  *
  * @author John Taylor
+ * @author marcocipriani01
  */
 public class TelescopeTouchApp extends Application {
 
@@ -164,7 +165,6 @@ public class TelescopeTouchApp extends Application {
         // {@link DefaultValues} for more details.
         PreferenceManager.setDefaultValues(this, R.xml.preference_screen, false);
         performFeatureCheck();
-        Log.d(TAG, "StardroidApplication: -onCreate");
         context = getApplicationContext();
         if (connectionManager == null) {
             connectionManager = new ConnectionManager();
