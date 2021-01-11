@@ -1,4 +1,4 @@
-<img align="left" width="100" height="100" src="docs/icon.svg">
+<img align="left" width="100" height="100" src="res/icon.svg">
 
 # Telescope.Touch: the definitive mobile planetarium
 
