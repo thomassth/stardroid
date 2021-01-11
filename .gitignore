@@ -13,3 +13,6 @@ app/src/gms/google-services.json
 app/src/gms/google-services.json*
 app/gen/
 *.keystore
+app/release/app-release.apk
+app/release/output-metadata.json
+/app/release/
