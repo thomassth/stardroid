@@ -74,18 +74,13 @@
     <string name="time_travel_hour_speed_back" translation_description="Label showing rate of travel through time">Reiser &lt; @ 1 time/sek</string>
     <string name="time_travel_day_speed_back" translation_description="Label showing rate of travel through time">Reiser &lt; @ 1 døgn/sek</string>
     <string name="time_travel_week_speed_back" translation_description="Label showing rate of travel through time">Reiser &lt; @ 1 uke/sek</string>
-
     <string name="gallery_image_search_btn">Finn på himmelen</string>
     <string name="gallery_image_back_btn">Tilbake til galleri</string>
     <string name="hubble_image_gallery_title">Sky Map Galleri</string>
-    <!--  TODO(johntaylor): currently unused -->
-
     <string name="search_overlay_title" translation_description="title for search overlay">Beveg telefonen din i pilretning</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">Ser etter:</string>
     <string name="sun_wont_set_message">Solen går ikke ned i løpet av de neste 24 timene på ditt nåværende sted.</string>
-
     <string name="missing_label" translation_description="Used to indicate to the developer that they've added a resource with no translation.">MISSING_LBL</string>
-
     <string name="sun">Solen</string>
     <string name="moon">Månen</string>
     <string name="mercury">Merkur</string>
@@ -111,11 +106,8 @@
     <string name="v838_mon" translation_description="hubble object">V838 Monocerotis</string>
     <string name="hubble_deep_field" translation_description="hubble object">Hubble Deep Field</string>
     <string name="menu_diagnostics">Diagnostikk</string>
-    <!-- TODO(johntaylor): the following might be deleted in favor of an icon -->
-
     <string name="north_pole">NP</string>
     <string name="south_pole">SP</string>
-
     <string name="andromeda" translation_description="Name of the Andromeda constellation">Andromeda</string>
     <string name="aquarius" translation_description="Name of the Aquarius constellation">Vannmannen</string>
     <string name="aquila" translation_description="Name of the Aquila constellation">Ørnen</string>

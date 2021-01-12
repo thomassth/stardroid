@@ -78,7 +78,6 @@
     <string name="gallery_image_search_btn">Εντοπισμός στον ουρανό</string>
     <string name="gallery_image_back_btn">Πίσω</string>
     <string name="hubble_image_gallery_title">Συλλογή του Sky Map</string>
-    <!--  TODO(johntaylor): currently unused -->
 
     <string name="search_overlay_title" translation_description="title for search overlay">Μετακινήστε τη συσκευή σας προς το βέλος</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">Αναζήτηση για:</string>
@@ -109,11 +108,8 @@
     <string name="v838_mon" translation_description="hubble object">V838 Monocerotis</string>
     <string name="hubble_deep_field" translation_description="hubble object">Hubble Deep Field</string>
     <string name="menu_diagnostics">Διαγνωστικά</string>
-    <!-- TODO(johntaylor): the following might be deleted in favor of an icon -->
-
     <string name="north_pole">ΒΠ</string>
     <string name="south_pole">ΝΠ</string>
-
     <string name="andromeda" translation_description="Name of the Andromeda constellation">Ανδρομέδα</string>
     <string name="aquarius" translation_description="Name of the Aquarius constellation">Υδροχόος</string>
     <string name="aquila" translation_description="Name of the Aquila constellation">Αετός</string>
@@ -190,7 +186,7 @@
     <string name="shaula" translation_description="Name of the Star Shaula">Σάουλα</string>
     <string name="alnath" translation_description="Name of the Star Alnath">Ελ Ναθ</string>
     <string name="alnilam" translation_description="Name of the Star Alnilam">Αλνιλάμ</string>
-    <string name="alnair" translation_description="Name of the Star Alnair">Alnair</string> <!-- TODO: No sources -->
+    <string name="alnair" translation_description="Name of the Star Alnair">Alnair</string>
     <string name="alioth" translation_description="Name of the Star Alioth">Άλιοθ</string>
     <string name="mirphak" translation_description="Name of the Star Mirphak">Μιρφάκ</string>
     <string name="kaus_australis" translation_description="Name of the Star Kaus Australis">Κάους Αουστράλις</string>
@@ -201,8 +197,8 @@
     <string name="polaris" translation_description="Name of the Star Polaris">Πολικός Αστέρας</string>
     <string name="alphard" translation_description="Name of the Star Alphard">Αλφάρντ</string>
     <string name="hamal" translation_description="Name of the Star Hamal">Χαμάλ</string>
-    <string name="algieba" translation_description="Name of the Star Algieba">Algieba</string> <!-- TODO: only 2 sources for Αλτζήμπα -->
-    <string name="diphda" translation_description="Name of the Star Diphda">Diphda</string> <!-- TODO: No sources -->
+    <string name="algieba" translation_description="Name of the Star Algieba">Algieba</string>
+    <string name="diphda" translation_description="Name of the Star Diphda">Diphda</string>
     <string name="nunki" translation_description="Name of the Star Nunki">Νούνκι</string>
     <string name="mirach" translation_description="Name of the Star Mirach">Μιράχ</string>
     <string name="alpheratz" translation_description="Name of the Star Alpheratz">Αλφεράτζ</string>

@@ -36,18 +36,19 @@ import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
 public class ControlPanelFragment extends Fragment
-        implements INDIServerConnectionListener, SearchView.OnQueryTextListener {
+        implements INDIServerConnectionListener, SearchView.OnQueryTextListener, View.OnClickListener, SearchView.OnCloseListener {
 
     private static final String KEY_VIEWPAGER_STATE = "DevicesViewPagerState";
     private static Bundle viewPagerBundle;
     private final ArrayList<INDIDevice> devices = new ArrayList<>();
-    private final HashMap<Integer, Fragment> fragmentsMap = new HashMap<>();
+    private final HashMap<Integer, DeviceControlFragment> fragmentsMap = new HashMap<>();
     private ConnectionManager connectionManager;
     private DevicesFragmentAdapter fragmentAdapter;
     private LinearLayout controlLayout;
     private TextView noDevicesText;
     private ViewPager2 viewPager;
     private TabLayout tabLayout;
+    private TabLayoutMediator tabLayoutMediator;
     private Context context;
     private MenuItem searchMenu;
 
@@ -63,12 +64,10 @@ public class ControlPanelFragment extends Fragment
         controlLayout = rootView.findViewById(R.id.indi_control_layout);
         noDevicesText = rootView.findViewById(R.id.no_devices_label);
         viewPager = rootView.findViewById(R.id.indi_control_pager);
-        fragmentAdapter = new DevicesFragmentAdapter(this);
-        viewPager.setAdapter(fragmentAdapter);
         viewPager.setOffscreenPageLimit(5);
         tabLayout = rootView.findViewById(R.id.indi_control_tabs);
-        new TabLayoutMediator(tabLayout, viewPager,
-                (tab, position) -> tab.setText(devices.get(position).getName())).attach();
+        tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager,
+                (tab, position) -> tab.setText(devices.get(position).getName()));
         setHasOptionsMenu(true);
         return rootView;
     }
@@ -101,6 +100,9 @@ public class ControlPanelFragment extends Fragment
                 devices();
             }
         }
+        fragmentAdapter = new DevicesFragmentAdapter(this);
+        viewPager.setAdapter(fragmentAdapter);
+        tabLayoutMediator.attach();
     }
 
     @Override
@@ -113,6 +115,7 @@ public class ControlPanelFragment extends Fragment
     @Override
     public void onStop() {
         super.onStop();
+        tabLayoutMediator.detach();
         viewPager.setAdapter(null);
     }
 
@@ -130,6 +133,8 @@ public class ControlPanelFragment extends Fragment
         searchMenu.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         SearchView searchView = new SearchView(context);
         searchView.setMaxWidth(Integer.MAX_VALUE);
+        searchView.setOnSearchClickListener(this);
+        searchView.setOnCloseListener(this);
         searchView.setOnQueryTextListener(this);
         searchMenu.setActionView(searchView);
         super.onCreateOptionsMenu(menu, inflater);
@@ -137,9 +142,8 @@ public class ControlPanelFragment extends Fragment
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        Fragment fragment = fragmentsMap.get(viewPager.getCurrentItem());
-        if (fragment instanceof DeviceControlFragment)
-            ((DeviceControlFragment) fragment).findPref(newText);
+        DeviceControlFragment fragment = fragmentsMap.get(viewPager.getCurrentItem());
+        if (fragment != null) fragment.findPref(newText);
         return false;
     }
 
@@ -198,6 +202,17 @@ public class ControlPanelFragment extends Fragment
     @Override
     public void newMessage(INDIServerConnection connection, Date timestamp, String message) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        tabLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public boolean onClose() {
+        tabLayout.setVisibility(View.VISIBLE);
+        return false;
     }
 
     private class DevicesFragmentAdapter extends FragmentStateAdapter {
