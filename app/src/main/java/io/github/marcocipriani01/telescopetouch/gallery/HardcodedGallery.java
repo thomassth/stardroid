@@ -48,8 +48,7 @@ public class HardcodedGallery implements Gallery {
      * Note, that for this to work the internationalized name _must_ be in the
      * search index.
      */
-    private void add(ArrayList<GalleryImage> images, int imageId,
-                     int nameId, int searchTermId) {
+    private void add(ArrayList<GalleryImage> images, int imageId, int nameId, int searchTermId) {
         images.add(new GalleryImage(imageId, getString(nameId), getString(searchTermId)));
     }
 
@@ -76,7 +75,7 @@ public class HardcodedGallery implements Gallery {
         add(galleryImages, R.drawable.hubble_m104, R.string.sombrero_galaxy, R.string.sombrero_galaxy);
         add(galleryImages, R.drawable.hubble_catseyenebula, R.string.cats_eye_nebula, R.string.cats_eye_nebula);
         add(galleryImages, R.drawable.hubble_omegacentauri, R.string.omega_centauri, R.string.omega_centauri);
-        add(galleryImages, R.drawable.hubble_orion, R.string.orion_nebula, R.string.orion_nebula);
+        add(galleryImages, R.drawable.hubble_orion, R.string.orion_nebula, R.string.m42);
         add(galleryImages, R.drawable.hubble_ultra_deep_field, R.string.hubble_deep_field, R.string.hubble_deep_field);
         add(galleryImages, R.drawable.hubble_v838, R.string.v838_mon, R.string.v838_mon);
         return galleryImages;

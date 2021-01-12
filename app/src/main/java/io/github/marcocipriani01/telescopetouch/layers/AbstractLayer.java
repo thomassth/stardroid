@@ -274,10 +274,8 @@ public abstract class AbstractLayer implements Layer {
         Log.d(TAG, "Search planets layer for " + name);
         List<SearchResult> matches = new ArrayList<>();
         SearchResult searchResult = searchIndex.get(name.toLowerCase());
-        if (searchResult != null) {
-            matches.add(searchResult);
-        }
-        Log.d(TAG, getLayerName() + " provided " + matches.size() + "results for " + name);
+        if (searchResult != null) matches.add(searchResult);
+        Log.d(TAG, getLayerName() + " provided " + matches.size() + " results for " + name);
         return matches;
     }
 

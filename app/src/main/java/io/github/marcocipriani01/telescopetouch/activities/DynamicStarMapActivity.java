@@ -242,7 +242,7 @@ public class DynamicStarMapActivity extends InjectableActivity
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.skymap, menu);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.menu_item_search).getActionView();
+        SearchView searchView = (SearchView) menu.findItem(R.id.menu_skymap_search).getActionView();
         searchView.setMaxWidth(Integer.MAX_VALUE);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         return true;
@@ -287,18 +287,18 @@ public class DynamicStarMapActivity extends InjectableActivity
         int itemId = item.getItemId();
         if (itemId == android.R.id.home) {
             onBackPressed();
-        } else if (itemId == R.id.menu_item_search) {
+        } else if (itemId == R.id.menu_skymap_search) {
             Log.d(TAG, "Search");
             onSearchRequested();
-        } else if (itemId == R.id.menu_item_settings) {
+        } else if (itemId == R.id.menu_skymap_settings) {
             Log.d(TAG, "Settings");
             startActivity(new Intent(this, EditSettingsActivity.class));
-        } else if (itemId == R.id.menu_item_dim) {
+        } else if (itemId == R.id.menu_skymap_red) {
             Log.d(TAG, "Toggling nightmode");
             nightMode = !nightMode;
             sharedPreferences.edit().putString(ActivityLightLevelManager.LIGHT_MODE_KEY,
                     nightMode ? "NIGHT" : "DAY").apply();
-        } else if (itemId == R.id.menu_item_time) {
+        } else if (itemId == R.id.menu_skymap_time_travel) {
             Log.d(TAG, "Starting Time Dialog from menu");
             if (!timePlayerUI.isShown()) {
                 Log.d(TAG, "Resetting time in time travel dialog.");
@@ -307,15 +307,15 @@ public class DynamicStarMapActivity extends InjectableActivity
                 Log.d(TAG, "Resuming current time travel dialog.");
             }
             timeTravelDialogFragment.show(fragmentManager, "Time Travel");
-        } else if (itemId == R.id.menu_item_gallery) {
+        } else if (itemId == R.id.menu_skymap_gallery) {
             Log.d(TAG, "Loading gallery");
             startActivity(new Intent(this, ImageGalleryActivity.class));
-        } else if (itemId == R.id.menu_item_calibrate) {
+        } else if (itemId == R.id.menu_skymap_calibrate) {
             Log.d(TAG, "Loading Calibration");
             Intent intent = new Intent(this, CompassCalibrationActivity.class);
             intent.putExtra(CompassCalibrationActivity.HIDE_CHECKBOX, true);
             startActivity(intent);
-        } else if (itemId == R.id.menu_item_diagnostics) {
+        } else if (itemId == R.id.menu_skymap_diagnostics) {
             Log.d(TAG, "Loading Diagnostics");
             startActivity(new Intent(this, DiagnosticActivity.class));
         } else {
