@@ -514,21 +514,17 @@ public class MountControlFragment extends Fragment implements INDIServerConnecti
     public void propertyChanged(final INDIProperty<?> property) {
         switch (property.getName()) {
             case "TELESCOPE_MOTION_NS": {
-                if (btnMoveN != null) {
+                if (btnMoveN != null)
                     btnMoveN.post(() -> btnMoveN.setPressed(telescopeMotionNE.getValue() == Constants.SwitchStatus.ON));
-                }
-                if (btnMoveS != null) {
+                if (btnMoveS != null)
                     btnMoveS.post(() -> btnMoveS.setPressed(telescopeMotionSE.getValue() == Constants.SwitchStatus.ON));
-                }
                 break;
             }
             case "TELESCOPE_MOTION_WE": {
-                if (btnMoveE != null) {
+                if (btnMoveE != null)
                     btnMoveE.post(() -> btnMoveE.setPressed(telescopeMotionEE.getValue() == Constants.SwitchStatus.ON));
-                }
-                if (btnMoveW != null) {
+                if (btnMoveW != null)
                     btnMoveW.post(() -> btnMoveW.setPressed(telescopeMotionWE.getValue() == Constants.SwitchStatus.ON));
-                }
                 break;
             }
             case "TELESCOPE_SLEW_RATE": {

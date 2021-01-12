@@ -16,7 +16,6 @@
     <string name="location_long_pref">طول جغرافیایی</string>
     <string name="degrees" translation_description="angular degrees">درجه</string>
     <string name="preferences">تنظیمات</string>
-    <string name="location_no_auto">دسترسی خودکار به موقعیت مکانی در گوشی‌تان غیرفعال شده است. شما می‌توانید مکان را به صورت دستی در تنظیمات وارد کنید. بدون تعیین موقعیت، نقشه آسمان درست نمایش داده نمی‌شود.</string>
     <string name="location_offer_to_enable">تشخیص خودکار مکان غیرفعال شده. می‌خواهید فعالش کنید؟</string>
     <string name="location_offer_to_enable_gps_title">تشخیص خودکار مکان، غیرفعال شده است</string>
     <string name="location_set_auto">مکان از %1$s به %2$s تنظیم شد</string>
@@ -38,7 +37,6 @@
     <string name="sensor_prefs">تنظیمات حسگرها (پیشرفته)</string>
     <string name="ecliptic">دایرة البروج</string>
     <string name="malformed_loc_error">طول و عرض جغرافیایی باید عدد (با ارقام انگلیسی) باشند</string>
-    <string name="dialog_ok_button">باشه</string>
     <string name="set_manual">رفتن به حالت دستی</string>
     <string name="set_auto">رفتن به حالت خودکار</string>
     <string name="menu_toggle_dim">تغییر حالت شب</string>

@@ -28,7 +28,6 @@ import org.indilib.i4j.client.INDIServerConnection;
 import org.indilib.i4j.client.INDIServerConnectionListener;
 import org.indilib.i4j.client.INDISwitchElement;
 import org.indilib.i4j.client.INDISwitchProperty;
-import org.indilib.i4j.client.INDIValueException;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -212,7 +211,7 @@ public class GoToFragment extends ListFragment
                     new PropUpdater(telescopeCoordP).start();
                     Toast.makeText(context, context.getString(R.string.slew_ok), Toast.LENGTH_LONG).show();
                     requireActivity().finish();
-                } catch (INDIValueException e) {
+                } catch (Exception e) {
                     Toast.makeText(context, context.getString(R.string.sync_slew_error), Toast.LENGTH_LONG).show();
                 }
             });
@@ -228,13 +227,13 @@ public class GoToFragment extends ListFragment
                     new PropUpdater(telescopeCoordP).start();
                     Toast.makeText(context, context.getString(R.string.sync_ok), Toast.LENGTH_LONG).show();
                     requireActivity().finish();
-                } catch (INDIValueException e) {
+                } catch (Exception e) {
                     Toast.makeText(context, context.getString(R.string.sync_slew_error), Toast.LENGTH_LONG).show();
                 }
             });
         }
         builder.setNegativeButton(R.string.cancel, null);
-        builder.create().show();
+        builder.show();
     }
 
     // ------ Listener functions from INDI ------
@@ -319,7 +318,7 @@ public class GoToFragment extends ListFragment
 
     @Override
     public void onLoaded(boolean success) {
-        requireActivity().runOnUiThread(() -> {
+        new Handler(Looper.getMainLooper()).post(() -> {
             if (success) {
                 searchMenu.setVisible(true);
                 entriesAdapter.reloadCatalog();

@@ -3,7 +3,6 @@ package io.github.marcocipriani01.telescopetouch.activities.dialogs;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -34,10 +33,7 @@ public class NoSearchResultsDialogFragment extends DialogFragment {
 
         return new AlertDialog.Builder(parentActivity)
                 .setTitle(R.string.no_search_title).setMessage(R.string.no_search_results_text)
-                .setNegativeButton(android.R.string.ok, (dialog1, whichButton) -> {
-                    Log.d(TAG, "No search results Dialog closed");
-                    dialog1.dismiss();
-                }).create();
+                .setNegativeButton(android.R.string.ok, null).create();
     }
 
     public interface ActivityComponent {

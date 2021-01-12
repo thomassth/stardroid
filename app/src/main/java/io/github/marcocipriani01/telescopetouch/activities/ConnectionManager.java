@@ -8,7 +8,6 @@ import org.indilib.i4j.client.INDIProperty;
 import org.indilib.i4j.client.INDIServerConnection;
 import org.indilib.i4j.client.INDIServerConnectionListener;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.HashSet;
 
@@ -75,7 +74,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
                     connection.askForDevices();
                     TelescopeTouchApp.log(resources.getString(R.string.connected));
                     TelescopeTouchApp.setState(TelescopeTouchApp.ConnectionState.CONNECTED);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     TelescopeTouchApp.log(e.getLocalizedMessage());
                     TelescopeTouchApp.setState(TelescopeTouchApp.ConnectionState.DISCONNECTED);
                 }
@@ -90,7 +89,14 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
      */
     public void disconnect() {
         if (isConnected()) {
-            new Thread(() -> connection.disconnect()).start();
+            new Thread(() -> {
+                try {
+                    connection.disconnect();
+                } catch (Exception e) {
+                    TelescopeTouchApp.log(e.getLocalizedMessage());
+                    TelescopeTouchApp.setState(TelescopeTouchApp.ConnectionState.DISCONNECTED);
+                }
+            }).start();
         } else {
             TelescopeTouchApp.log("Not connected!");
         }

@@ -161,11 +161,10 @@ public class EditSettingsActivity extends AppCompatActivity {
 
     private void showNotFoundDialog(String place) {
         String message = String.format(getString(R.string.location_not_found), place);
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this)
+        new AlertDialog.Builder(this)
                 .setTitle(R.string.location_not_found_title)
                 .setMessage(message)
-                .setPositiveButton(android.R.string.ok, (dialog1, which) -> dialog1.dismiss());
-        dialog.show();
+                .setPositiveButton(android.R.string.ok, null).show();
     }
 
     public static class MyPreferenceFragment extends PreferenceFragmentCompat {

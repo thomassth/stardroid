@@ -69,13 +69,13 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minWidth="100dp"
             android:layout_below="@id/compass_calib_activity_donotshow"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4dp"
+            android:minWidth="100dp"
             android:nestedScrollingEnabled="false"
             android:onClick="onOkClicked"
-            android:layout_marginTop="4dp"
-            android:text="@string/ok" />
+            android:text="@android:string/ok" />
     </RelativeLayout>
 </androidx.core.widget.NestedScrollView>

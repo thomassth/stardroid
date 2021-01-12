@@ -16,7 +16,6 @@
     <string name="location_long_pref">Longitud</string>
     <string name="degrees" translation_description="angular degrees">Grados</string>
     <string name="preferences">preferencias</string>
-    <string name="location_no_auto">El permiso de ubicación automática está desactivado en tu teléfono. Puedes ajustar la ubicación manualmente en las preferencias. Hasta entonces, el mapa será incorrecto.</string>
     <string name="location_offer_to_enable">Ubicación automática desactivada. ¿Te gustaría habilitarla?</string>
     <string name="location_offer_to_enable_gps_title">Ubicación automática desactivada</string>
     <string name="location_set_auto">Ubicación definida de %1$s a %2$s</string>
@@ -38,7 +37,6 @@
     <string name="sensor_prefs">Ajustes del sensor</string>
     <string name="ecliptic">Eclíptica</string>
     <string name="malformed_loc_error">El ajuste de lat/long no es un número.</string>
-    <string name="dialog_ok_button">OK</string>
     <string name="set_manual">Cambiando al modo manual</string>
     <string name="set_auto">Cambiando al modo automático</string>
     <string name="menu_toggle_dim">Alternar visión nocturna</string>

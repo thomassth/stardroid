@@ -15,7 +15,6 @@
     <string name="location_long_pref">Долгота</string>
     <string name="degrees">Градусы</string>
     <string name="preferences">настройки</string>
-    <string name="location_no_auto">Телефон не поддерживает автоопределение местоположения. Его можно задать вручную в настройках.</string>
     <string name="location_offer_to_enable">Автоопределение местоположения откл. Включить?</string>
     <string name="location_offer_to_enable_gps_title">Автоопред. м/п откл.</string>
     <string name="location_set_auto">М/п изменено с %1$s на %2$s</string>

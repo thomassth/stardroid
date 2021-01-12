@@ -16,7 +16,6 @@
     <string name="location_long_pref">Longitude</string>
     <string name="degrees" translation_description="angular degrees">Degrees</string>
     <string name="preferences">preferences</string>
-    <string name="location_no_auto">Auto-location permission is disabled on your phone.   You can set the location manually in preferences.  Until then the map will be incorrect.</string>
     <string name="location_offer_to_enable">Auto-location is disabled.  Would you like to enable it?</string>
     <string name="location_offer_to_enable_gps_title">Auto-location disabled</string>
     <string name="location_set_auto">Location set from %1$s to %2$s</string>
@@ -38,7 +37,6 @@
     <string name="sensor_prefs">Sensor Settings (experts)</string>
     <string name="ecliptic">Ecliptic</string>
     <string name="malformed_loc_error">Latitude or longitude setting isn\'t a number.</string>
-    <string name="dialog_ok_button">OK</string>
     <string name="set_manual">Switching to manual mode</string>
     <string name="set_auto">Switching to automatic mode</string>
     <string name="menu_toggle_dim">Toggle night mode</string>
@@ -447,7 +445,6 @@
     <string name="BLOB_not_supported">Not supported</string>
     <string name="try_to_connect">Try to connect to\u0020</string>
     <string name="connection_lost">Connection lost</string>
-    <string name="ok">OK</string>
     <string name="search_hint">Search an object</string>
     <string name="go_to">Go to</string>
     <string name="sync">Sync</string>
@@ -546,4 +543,7 @@
     <string name="shortcuts_not_supported">Your launcher does not support shortcuts.</string>
     <string name="add_sky_map_shortcut">Add Sky Map shortcut</string>
     <string name="deep_sky">Deep sky</string>
+    <string name="location_no_auto">Sky Map can\'t access your location, which is needed to calculate the position of the stars. You can enable the location permission in the phone\'s settings.</string>
+    <string name="warning">Warning</string>
+    <string name="take_me_there">Take me there</string>
 </resources>

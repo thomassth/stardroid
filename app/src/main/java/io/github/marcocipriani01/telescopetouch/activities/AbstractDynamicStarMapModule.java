@@ -13,7 +13,6 @@ import dagger.Module;
 import dagger.Provides;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
-import io.github.marcocipriani01.telescopetouch.activities.dialogs.LocationPermissionRationaleFragment;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.MultipleSearchResultsDialogFragment;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.NoSearchResultsDialogFragment;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.NoSensorsDialogFragment;
@@ -93,11 +92,5 @@ public class AbstractDynamicStarMapModule {
     @PerActivity
     FragmentManager provideFragmentManager() {
         return activity.getSupportFragmentManager();
-    }
-
-    @Provides
-    @PerActivity
-    LocationPermissionRationaleFragment provideLocationFragment() {
-        return new LocationPermissionRationaleFragment();
     }
 }
