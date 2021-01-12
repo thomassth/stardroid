@@ -1,8 +1,6 @@
 package io.github.marcocipriani01.telescopetouch.catalog;
 
-import android.content.Context;
 import android.content.res.Resources;
-import android.text.Spannable;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -73,38 +71,6 @@ public class Catalog {
      */
     public List<CatalogEntry> getEntries() {
         return entries;
-    }
-
-    /**
-     * Performs a search in the entries.
-     *
-     * @param query what to look for.
-     * @return the first index corresponding to the given query.
-     */
-    public int searchIndex(final String query) {
-        int index = Collections.binarySearch(entries, new CatalogEntry() {
-            @Override
-            public CatalogCoordinates getCoordinates() {
-                return null;
-            }
-
-            @Override
-            public String getName() {
-                return query;
-            }
-
-            @Override
-            public Spannable createDescription(Context ctx) {
-                return null;
-            }
-
-            @Override
-            public Spannable createSummary(Context ctx) {
-                return null;
-            }
-        });
-        if (index < 0) index = -index - 1;
-        return index;
     }
 
     public interface CatalogLoadingListener {
