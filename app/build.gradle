@@ -9,28 +9,19 @@ android {
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
+        multiDexEnabled true
     }
-
+    buildTypes {
+        release {
+            //debuggable true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
+        }
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
-    buildTypes {
-        release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
-        }
-    }
-
-    lintOptions {
-        // Lint complains because of missing translations.
-        // (Missing translations now removed)
-        abortOnError false
-    }
-
-    flavorDimensions "default"
 }
 
 dependencies {
@@ -49,7 +40,4 @@ dependencies {
     annotationProcessor 'com.google.dagger:dagger-compiler:2.30.1'
     implementation 'com.github.woxthebox:draglistview:1.7.2'
     implementation 'com.google.code.gson:gson:2.8.6'
-}
-repositories {
-    mavenCentral()
 }
