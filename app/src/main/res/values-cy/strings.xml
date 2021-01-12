@@ -36,8 +36,6 @@
     <string name="ecliptic">Ecliptig</string>
     <!-- Just in case we decide to have such a layer for the 4/24 launch -->
     <string name="malformed_loc_error">Nid yw gosodiad lledred na hydred yn rif.</string>
-    <string name="set_manual">Yn newid i\'r modd llaw</string>
-    <string name="set_auto">Yn newid i\'r modd awtomatig</string>
     <string name="menu_toggle_dim">Toglo modd nos</string>
     <string name="zenith">ANTERTH</string>
     <string name="nadir">NADIR</string>

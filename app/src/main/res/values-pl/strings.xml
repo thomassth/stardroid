@@ -32,8 +32,6 @@
     <string name="sensor_prefs">Ustawienia czujnika</string>
     <string name="ecliptic">Ekliptyka</string>
     <string name="malformed_loc_error">Ustawienie szerokości lub długości geograficznej nie jest liczbą.</string>
-    <string name="set_manual">Przełączanie do trybu ręcznego</string>
-    <string name="set_auto">Przełączanie do trybu automatycznego</string>
     <string name="menu_toggle_dim">Przełącz tryb nocny</string>
     <string name="zenith">ZENIT</string>
     <string name="nadir">NADIR</string>

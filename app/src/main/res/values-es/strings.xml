@@ -36,8 +36,6 @@
     <string name="sensor_prefs">Ajustes del sensor</string>
     <string name="ecliptic">Eclíptica</string>
     <string name="malformed_loc_error">El ajuste de lat/long no es un número.</string>
-    <string name="set_manual">Cambiando al modo manual</string>
-    <string name="set_auto">Cambiando al modo automático</string>
     <string name="menu_toggle_dim">Alternar visión nocturna</string>
     <string name="zenith">CENIT</string>
     <string name="nadir">NADIR</string>

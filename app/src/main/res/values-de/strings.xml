@@ -32,8 +32,6 @@
     <string name="sensor_prefs">Sensoreinstellungen</string>
     <string name="ecliptic">Ekliptik</string>
     <string name="malformed_loc_error">Längen- oder Breitengrad ist keine Zahl.</string>
-    <string name="set_manual">Wechsel in manuellen Modus</string>
-    <string name="set_auto">Wechsel in automatischen Modus</string>
     <string name="menu_toggle_dim">Nachtmodus ein/aus</string>
     <string name="zenith">ZENIT</string>
     <string name="nadir">NADIR</string>

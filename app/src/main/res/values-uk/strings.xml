@@ -32,8 +32,6 @@
     <string name="sensor_prefs">Налаштування матриці</string>
     <string name="ecliptic">Екліптика</string>
     <string name="malformed_loc_error">Значення широти або довготи не є числом.</string>
-    <string name="set_manual">Перехід в ручний режим</string>
-    <string name="set_auto">Перехід в авт. режим</string>
     <string name="menu_toggle_dim">Нічний режим ввімкн./вимкн.</string>
     <string name="zenith">ЗЕНІТ</string>
     <string name="nadir">НАДІР</string>
