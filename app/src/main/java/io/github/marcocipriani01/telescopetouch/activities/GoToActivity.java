@@ -22,7 +22,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 /**
  * Needed by the Android Manifest.
@@ -34,21 +33,15 @@ public class GoToActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
         }
-
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentByTag("GoToFragment");
-        if (fragment == null) {
-            FragmentTransaction ft = fm.beginTransaction();
-            fragment = new GoToFragment();
-            ft.add(android.R.id.content, fragment, "GoToFragment");
-            ft.commit();
-        }
+        if (fragment == null)
+            fm.beginTransaction().add(android.R.id.content, new GoToFragment(), "GoToFragment").commit();
     }
 
     @Override

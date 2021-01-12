@@ -90,9 +90,7 @@ public class LayerManager implements OnSharedPreferenceChangeListener {
     public List<SearchResult> searchByObjectName(String name) {
         List<SearchResult> all = new ArrayList<>();
         for (Layer layer : layers) {
-            if (isLayerVisible(layer)) {
-                all.addAll(layer.searchByObjectName(name));
-            }
+            if (isLayerVisible(layer)) all.addAll(layer.searchByObjectName(name));
         }
         Log.d(TAG, "Got " + all.size() + " results in total for " + name);
         return all;

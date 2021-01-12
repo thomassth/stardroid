@@ -6,11 +6,13 @@
             android:checkable="true"
             android:checked="true"
             android:title="@string/stars" />
+
         <item
             android:id="@+id/menu_filter_dso"
             android:checkable="true"
             android:checked="true"
             android:title="@string/deep_sky" />
+
         <item
             android:id="@+id/menu_filter_planets"
             android:checkable="true"
