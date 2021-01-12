@@ -27,7 +27,7 @@
     <string name="location_place_found">Lugar encontrado. Ajustando latitud %1$f y longitud %2$f</string>
     <string name="use_magnetic_correction">Usar corrección magnética</string>
     <!-- This string is too long and currently unused -->
-    <string name="show_stars_pref">Estrellas</string>
+    <string name="stars">Estrellas</string>
     <string name="show_constellations_pref">Constelaciones</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Objetos Messier</string>
     <string name="show_grid_pref">Cuadrícula AR/Dec</string>

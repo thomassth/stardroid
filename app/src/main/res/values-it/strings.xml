@@ -25,7 +25,7 @@
     <string name="location_long_lat">Longitudine:%1$f, latitudine:%2$f</string>
     <string name="location_place_found">Luogo trovato. Impostazione latitudine %1$f e longitudine %2$f</string>
     <string name="use_magnetic_correction">Usa correzione magnetica</string>
-    <string name="show_stars_pref">Stelle</string>
+    <string name="stars">Stelle</string>
     <string name="show_constellations_pref">Costellazioni</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Oggetti Messier</string>
     <string name="show_grid_pref">Griglia RA/Dec</string>
@@ -381,8 +381,8 @@
     <string name="entry_triStar">Stella tripla</string>
     <string name="entry_doubleStar">Stella doppia</string>
     <string name="entry_uncertain">Incerto</string>
-    <string name="entry_blank">Non identificato al dato posto, o tipo sconosciuto</string>
-    <string name="entry_minus">Oggetto non esistente in NGC</string>
+    <string name="entry_blank">Non identificato o di tipo sconosciuto</string>
+    <string name="entry_minus">Oggetto segnalato come non esistente nel catalogo</string>
     <string name="entry_short_Gx">Galassia</string>
     <string name="entry_short_OC">Ammasso aperto</string>
     <string name="entry_short_Gb">Ammasso globulare</string>
@@ -456,4 +456,6 @@
     <string name="hdf">Campo profondo Hubble (HDF)</string>
     <string name="shortcuts_not_supported">Il tuo dispositivo non supporta le scorciatoie.</string>
     <string name="add_sky_map_shortcut">Aggiungi scorciatoia alla mappa stellare</string>
+    <string name="deep_sky">Cielo profondo</string>
+    <string name="solar_system">Sistema solare</string>
 </resources>

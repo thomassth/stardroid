@@ -25,7 +25,7 @@
     <string name="location_long_lat">Lengtegraad:%1$f, breedtegraad:%2$f</string>
     <string name="location_place_found">Plaats gevonden. Breedtegraad %1$f en lengtegraad %2$f worden ingesteld</string>
     <string name="use_magnetic_correction">Magnetische correctie gebruiken</string>
-    <string name="show_stars_pref">Sterren</string>
+    <string name="stars">Sterren</string>
     <string name="show_constellations_pref">Sterrenbeelden</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Messier-objecten</string>
     <string name="show_grid_pref">RK/declinatieraster</string>

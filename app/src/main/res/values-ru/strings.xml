@@ -25,7 +25,7 @@
     <string name="location_long_lat">Долгота:%1$f, широта:%2$f</string>
     <string name="location_place_found">Место найдено. Уст. широта %1$f и долгота %2$f</string>
     <string name="use_magnetic_correction">Исп. поправку на магн. склон.</string>
-    <string name="show_stars_pref">Звезды</string>
+    <string name="stars">Звезды</string>
     <string name="show_constellations_pref">Созвездия</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Объекты Мессье</string>
     <string name="show_grid_pref">Сетка прям. восх./скл.</string>

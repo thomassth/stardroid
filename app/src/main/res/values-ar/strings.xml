@@ -29,7 +29,7 @@
     <string name="location_place_found">Place found.  Setting latitude %1$f and longitude %2$f</string>
     <string name="use_magnetic_correction">Use magnetic correction</string>
     <!-- This string is too long and currently unused -->
-    <string name="show_stars_pref">النجوم</string>
+    <string name="stars">النجوم</string>
     <string name="show_constellations_pref">المجموعات النجمية</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Messier Objects</string>
     <string name="show_grid_pref">RA/Dec Grid</string>

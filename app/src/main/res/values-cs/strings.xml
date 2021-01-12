@@ -25,7 +25,7 @@
     <string name="location_long_lat">Zeměpisná délka:%1$f, Zeměpisná šířka:%2$f</string>
     <string name="location_place_found">Místo nalezeno. Nastavení šířky %1$f a délky %2$f</string>
     <string name="use_magnetic_correction">Použít magnetickou korekci</string>
-    <string name="show_stars_pref">Hvězdy</string>
+    <string name="stars">Hvězdy</string>
     <string name="show_constellations_pref">Souhvězdí</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Messierovy objekty</string>
     <string name="show_grid_pref">Síť RA/Dec</string>

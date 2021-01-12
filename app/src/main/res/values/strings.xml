@@ -26,8 +26,7 @@
     <string name="location_long_lat">Longitude:%1$f, Latitude:%2$f</string>
     <string name="location_place_found">Place found.  Setting latitude %1$f and longitude %2$f</string>
     <string name="use_magnetic_correction">Use magnetic correction</string>
-    <!-- This string is too long and currently unused -->
-    <string name="show_stars_pref">Stars</string>
+    <string name="stars">Stars</string>
     <string name="show_constellations_pref">Constellations</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Messier Objects</string>
     <string name="solar_system">Solar System</string>
@@ -473,9 +472,8 @@
     <string name="entry_triStar">Triple star</string>
     <string name="entry_doubleStar">Double star</string>
     <string name="entry_uncertain">Uncertain type or may not exist</string>
-    <string name="entry_blank">Unidentified at the place given, or type unknown</string>
-    <!-- TODO: what does it mean exactly? -->
-    <string name="entry_minus">Object called nonexistent in the RNGC</string>
+    <string name="entry_blank">Unidentified or type unknown</string>
+    <string name="entry_minus">Nonexistent object in the NGC catalog</string>
     <string name="entry_PD">Photographic plate defect</string>
     <string name="entry_short_Gx">Galaxy</string>
     <string name="entry_short_OC">Open cluster</string>
@@ -547,4 +545,5 @@
     <string name="compass">Compass</string>
     <string name="shortcuts_not_supported">Your launcher does not support shortcuts.</string>
     <string name="add_sky_map_shortcut">Add Sky Map shortcut</string>
+    <string name="deep_sky">Deep sky</string>
 </resources>

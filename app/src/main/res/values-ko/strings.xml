@@ -25,7 +25,7 @@
     <string name="location_long_lat">경도:%1$f, 위도:%2$f</string>
     <string name="location_place_found">위치를 찾았습니다. 위도(%1$f)와 경도(%2$f)를 설정합니다.</string>
     <string name="use_magnetic_correction">자기 수정 사용</string>
-    <string name="show_stars_pref">별</string>
+    <string name="stars">별</string>
     <string name="show_constellations_pref">별자리</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">메시에 천체 목록</string>
     <string name="show_grid_pref">적경/적위 그리드</string>

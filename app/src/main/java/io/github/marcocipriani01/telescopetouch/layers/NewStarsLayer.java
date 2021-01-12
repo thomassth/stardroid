@@ -25,7 +25,7 @@ public class NewStarsLayer extends AbstractFileBasedLayer {
 
     @Override
     protected int getLayerNameId() {
-        return R.string.show_stars_pref;  // TODO(johntaylor): rename this Id
+        return R.string.stars;
     }
 
     // TODO(brent): Remove this.
