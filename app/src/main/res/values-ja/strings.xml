@@ -25,7 +25,7 @@
     <string name="location_long_lat">経度: %1$f、緯度: %2$f</string>
     <string name="location_place_found">場所が見つかりました。緯度: %1$f、経度: %2$f</string>
     <string name="use_magnetic_correction">磁気補正機能を使用</string>
-    <string name="show_stars_pref">恒星</string>
+    <string name="stars">恒星</string>
     <string name="show_constellations_pref">星座</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">メシエ天体</string>
     <string name="show_grid_pref">赤経/赤緯グリッド</string>

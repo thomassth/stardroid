@@ -9,10 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -47,6 +44,7 @@ import io.github.marcocipriani01.telescopetouch.catalog.DSOEntry;
 import io.github.marcocipriani01.telescopetouch.catalog.StarEntry;
 import io.github.marcocipriani01.telescopetouch.prop.PropUpdater;
 import io.github.marcocipriani01.telescopetouch.util.AstroTimeUtils;
+import io.github.marcocipriani01.telescopetouch.views.CatalogArrayAdapter;
 
 /**
  * Allows the user to look for an astronomical object and slew the telescope.
@@ -56,7 +54,7 @@ public class GoToFragment extends ListFragment
         INDIServerConnectionListener, INDIPropertyListener, INDIDeviceListener {
 
     private static final Catalog catalog = new Catalog();
-    private static ArrayAdapter<CatalogEntry> entriesAdapter;
+    private static CatalogArrayAdapter entriesAdapter;
     private ConnectionManager connectionManager;
     private Context context;
     private MenuItem searchMenu;
@@ -80,21 +78,7 @@ public class GoToFragment extends ListFragment
         super.onActivityCreated(savedInstanceState);
         setEmptyText(getString(R.string.empty_catalog));
         setHasOptionsMenu(true);
-        List<CatalogEntry> entries = catalog.getEntries();
-        entriesAdapter = new ArrayAdapter<CatalogEntry>(context,
-                android.R.layout.simple_list_item_2, android.R.id.text1, entries) {
-            @NonNull
-            @Override
-            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
-                ((TextView) view.findViewById(android.R.id.text1))
-                        .setText(entries.get(position).getName());
-                ((TextView) view.findViewById(android.R.id.text2))
-                        .setText(entries.get(position).createSummary(context));
-                return view;
-            }
-        };
-        setListAdapter(entriesAdapter);
+        setListAdapter(entriesAdapter = new CatalogArrayAdapter(context, catalog));
         if (catalog.isReady()) {
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 if (searchMenu != null) searchMenu.setVisible(true);
@@ -130,15 +114,37 @@ public class GoToFragment extends ListFragment
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, @NonNull MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.database_filter, menu);
         searchMenu = menu.add(R.string.mount_goto);
         searchMenu.setIcon(R.drawable.search);
         searchMenu.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         searchMenu.setVisible(false);
         SearchView searchView = new SearchView(context);
+        searchView.setMaxWidth(Integer.MAX_VALUE);
         searchView.setOnQueryTextListener(this);
         searchMenu.setActionView(searchView);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.isCheckable()) {
+            int itemId = item.getItemId();
+            boolean checked = !item.isChecked();
+            if (itemId == R.id.menu_filter_stars) {
+                entriesAdapter.setShowStars(checked);
+            } else if (itemId == R.id.menu_filter_dso) {
+                entriesAdapter.setShowDso(checked);
+            } else if (itemId == R.id.menu_filter_planets) {
+                entriesAdapter.setShowPlanets(checked);
+            } else {
+                return super.onOptionsItemSelected(item);
+            }
+            item.setChecked(checked);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -183,11 +189,10 @@ public class GoToFragment extends ListFragment
 
     @Override
     public void onListItemClick(@NonNull ListView l, @NonNull View v, int position, long id) {
-        List<CatalogEntry> entries = catalog.getEntries();
-        final CatalogEntry selectedEntry = entries.get(position);
+        final CatalogEntry selectedEntry = entriesAdapter.getItem(position);
         final CatalogCoordinates coord = selectedEntry.getCoordinates();
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage(entries.get(position).createDescription(context)).setTitle(entries.get(position).getName());
+        builder.setMessage(selectedEntry.createDescription(context)).setTitle(selectedEntry.getName());
         // Only display buttons if the telescope is ready
         if ((telescopeCoordP != null) && (telescopeOnCoordSetP != null)) {
             builder.setPositiveButton(R.string.go_to, (dialog, which) -> {
@@ -317,7 +322,7 @@ public class GoToFragment extends ListFragment
         requireActivity().runOnUiThread(() -> {
             if (success) {
                 searchMenu.setVisible(true);
-                entriesAdapter.notifyDataSetChanged();
+                entriesAdapter.reloadCatalog();
                 if (isResumed()) {
                     setListShown(true);
                 } else {

@@ -27,7 +27,7 @@
     <string name="location_place_found">已找到地點，正在設定緯度%1$f與經度%2$f</string>
     <string name="use_magnetic_correction">使用地磁校正</string>
     <!-- This string is too long and currently unused -->
-    <string name="show_stars_pref">星體</string>
+    <string name="stars">星體</string>
     <string name="show_constellations_pref">星座</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">梅西耶天體</string>
     <string name="show_grid_pref">赤道座標線</string>

@@ -129,6 +129,7 @@ public class ControlPanelFragment extends Fragment
         searchMenu.setIcon(R.drawable.search);
         searchMenu.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         SearchView searchView = new SearchView(context);
+        searchView.setMaxWidth(Integer.MAX_VALUE);
         searchView.setOnQueryTextListener(this);
         searchMenu.setActionView(searchView);
         super.onCreateOptionsMenu(menu, inflater);

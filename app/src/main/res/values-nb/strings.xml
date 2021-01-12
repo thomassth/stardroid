@@ -27,7 +27,7 @@
     <string name="location_place_found">Sted funnet. Breddegrad %1$f og lengdegrad %2$f</string>
     <string name="use_magnetic_correction">Bruk magnetisk korrigering</string>
     <!-- This string is too long and currently unused -->
-    <string name="show_stars_pref">Stjerner</string>
+    <string name="stars">Stjerner</string>
     <string name="show_constellations_pref">Stjernebilder</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Messier-objekter</string>
     <string name="show_grid_pref">RA/Dec-rutenett</string>

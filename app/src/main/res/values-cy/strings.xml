@@ -27,7 +27,7 @@
     <string name="location_place_found">Wedi canfod lleoliad. Yn gosod lledred %1$f a hydred %2$f</string>
     <string name="use_magnetic_correction">Defnyddio cywiriad magnetig</string>
     <!-- This string is too long and currently unused -->
-    <string name="show_stars_pref">Sêr</string>
+    <string name="stars">Sêr</string>
     <string name="show_constellations_pref">Cytser</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Gwrthrychau Messier</string>
     <string name="show_grid_pref">Grid RA/Dec</string>

@@ -27,7 +27,7 @@
     <string name="location_place_found">Η τοποθεσία βρέθηκε.  Ορίστηκε γεωγ. πλάτος %1$f και γεωγ. μήκος %2$f</string>
     <string name="use_magnetic_correction">Χρήση μαγνητικής διόρθωσης</string>
     <!-- This string is too long and currently unused -->
-    <string name="show_stars_pref">Αστέρια</string>
+    <string name="stars">Αστέρια</string>
     <string name="show_constellations_pref">Αστερισμοί</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Αντικείμενα Μεσιέ</string>
     <string name="show_grid_pref">Πλέγμα RA/Dec</string>

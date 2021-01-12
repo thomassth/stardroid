@@ -25,7 +25,7 @@
     <string name="location_long_lat">Längengrad:%1$f, Breitengrad:%2$f</string>
     <string name="location_place_found">Ort gefunden. Breitengrad %1$f und Längengrad %2$f</string>
     <string name="use_magnetic_correction">Magnetische Korrektur verwenden</string>
-    <string name="show_stars_pref">Sterne</string>
+    <string name="stars">Sterne</string>
     <string name="show_constellations_pref">Konstellationen</string>
     <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Messier-Objekte</string>
     <string name="show_grid_pref">Rektaszension/Deklination</string>
