@@ -95,7 +95,7 @@ public class ServersActivity extends AppCompatActivity implements ServersReloadL
 
         new AlertDialog.Builder(context)
                 .setTitle(R.string.host_prompt_text).setView(layout).setCancelable(false)
-                .setPositiveButton(context.getString(android.R.string.ok), (dialog12, id) -> {
+                .setPositiveButton(android.R.string.ok, (dialog12, id) -> {
                     inputMethodManager.hideSoftInputFromWindow(input.getWindowToken(), 0);
                     String server = input.getText().toString();
                     if (!server.equals("")) {
@@ -113,7 +113,7 @@ public class ServersActivity extends AppCompatActivity implements ServersReloadL
                         Toast.makeText(context, context.getString(R.string.empty_host), Toast.LENGTH_SHORT).show();
                     }
                 })
-                .setNegativeButton(context.getString(R.string.cancel), null).show();
+                .setNegativeButton(android.R.string.cancel, null).show();
         input.requestFocus();
         inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
     }
@@ -191,7 +191,7 @@ public class ServersActivity extends AppCompatActivity implements ServersReloadL
                         .setTitle(R.string.sure)
                         .setMessage(R.string.remove_server)
                         .setCancelable(false)
-                        .setPositiveButton(getString(android.R.string.ok), (dialog, id) -> {
+                        .setPositiveButton(android.R.string.ok, (dialog, id) -> {
                             List<String> list = getItemList();
                             for (int i = 0; i < list.size(); i++) {
                                 if (list.get(i) == view.getText()) {
@@ -200,7 +200,7 @@ public class ServersActivity extends AppCompatActivity implements ServersReloadL
                                 }
                             }
                         })
-                        .setNegativeButton(getString(R.string.cancel), null).show();
+                        .setNegativeButton(android.R.string.cancel, null).show();
             }
         }, false);
     }

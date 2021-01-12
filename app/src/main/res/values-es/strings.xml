@@ -3,7 +3,6 @@
 <resources>
     <string name="menu_settings">Ajustes</string>
     <string name="menu_search">Buscar</string>
-    <string name="cancel">Cancelar</string>
     <string name="go">Ir</string>
     <string name="location_prefs">Ajustes de ubicación</string>
     <string name="force_gps_pref">Usar GPS siempre</string>

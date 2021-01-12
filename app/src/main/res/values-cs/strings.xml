@@ -2,7 +2,6 @@
 <resources>
     <string name="menu_settings">Nastavení</string>
     <string name="menu_search">Hledat</string>
-    <string name="cancel">Storno</string>
     <string name="go">Hledat!</string>
     <string name="location_prefs">Nastavení polohy</string>
     <string name="force_gps_pref">Vždy používat GPS</string>

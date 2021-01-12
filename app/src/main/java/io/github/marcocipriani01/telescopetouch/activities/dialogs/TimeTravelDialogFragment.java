@@ -61,7 +61,7 @@ public class TimeTravelDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity)
                 .setView(root).setTitle(R.string.menu_time)
                 .setPositiveButton(R.string.go, (dialog, which) -> parentActivity.setTimeTravelMode(calendar.getTime()))
-                .setNegativeButton(R.string.cancel, null);
+                .setNegativeButton(android.R.string.cancel, null);
         dateTimeReadout = root.findViewById(R.id.dateDisplay);
 
         root.findViewById(R.id.pickDate).setOnClickListener(v -> {

@@ -147,7 +147,7 @@ public class NumberPropPref extends PropPref<INDINumberElement> {
                     }
                     propPref.sendChanges();
                 });
-                builder.setNegativeButton(R.string.cancel_request, null);
+                builder.setNegativeButton(android.R.string.cancel, null);
             } else {
                 builder.setNegativeButton(R.string.back_request, null);
             }

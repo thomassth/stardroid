@@ -2,7 +2,6 @@
 <resources>
     <string name="menu_settings">Налаштування</string>
     <string name="menu_search">Пошук</string>
-    <string name="cancel">Відміна</string>
     <string name="go">Вперед!</string>
     <string name="location_prefs">Параметри розташування</string>
     <string name="force_gps_pref">Завжди викор. GPS</string>

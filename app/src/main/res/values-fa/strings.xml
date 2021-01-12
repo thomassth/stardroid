@@ -3,7 +3,6 @@
 <resources>
     <string name="menu_settings">تنظیمات</string>
     <string name="menu_search">جستجو</string>
-    <string name="cancel">لغو</string>
     <string name="go">برو!</string>
     <string name="location_prefs">تنظیمات مکان</string>
     <string name="force_gps_pref">همیشه از سنسور مکان استفاده کن</string>
