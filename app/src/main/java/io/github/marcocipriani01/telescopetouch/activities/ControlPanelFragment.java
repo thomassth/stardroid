@@ -207,11 +207,15 @@ public class ControlPanelFragment extends Fragment
     @Override
     public void onClick(View v) {
         tabLayout.setVisibility(View.GONE);
+        viewPager.setUserInputEnabled(false);
     }
 
     @Override
     public boolean onClose() {
         tabLayout.setVisibility(View.VISIBLE);
+        viewPager.setUserInputEnabled(true);
+        DeviceControlFragment fragment = fragmentsMap.get(viewPager.getCurrentItem());
+        if (fragment != null) fragment.stopSearch();
         return false;
     }
 
