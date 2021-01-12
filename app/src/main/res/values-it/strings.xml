@@ -2,7 +2,6 @@
 <resources>
     <string name="menu_settings">Impostazioni</string>
     <string name="menu_search">Cerca</string>
-    <string name="cancel">Annulla</string>
     <string name="go">Vai!</string>
     <string name="location_prefs">Impostazioni località</string>
     <string name="force_gps_pref">Usa sempre GPS</string>
@@ -351,7 +350,6 @@
     <string name="mount_goto">Cerca</string>
     <string name="unavailable">Non disponibile</string>
     <string name="send_request">Invia</string>
-    <string name="cancel_request">Annulla</string>
     <string name="back_request">Indietro</string>
     <string name="BLOB_not_supported">Non supportato</string>
     <string name="try_to_connect">"Tentativo di connessione a "</string>

@@ -2,7 +2,6 @@
 <resources>
     <string name="menu_settings">Instellingen</string>
     <string name="menu_search">Zoeken</string>
-    <string name="cancel">Annuleren</string>
     <string name="go">Ga!</string>
     <string name="location_prefs">Locatie-instellingen</string>
     <string name="force_gps_pref">Altijd GPS gebruiken</string>

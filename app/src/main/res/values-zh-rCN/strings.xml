@@ -3,7 +3,6 @@
 <resources>
     <string name="menu_settings">设置</string>
     <string name="menu_search">搜索</string>
-    <string name="cancel">取消</string>
     <string name="go">开始！</string>
     <string name="location_prefs">位置设置</string>
     <string name="force_gps_pref">一律使用 GPS</string>

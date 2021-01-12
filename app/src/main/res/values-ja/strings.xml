@@ -2,7 +2,6 @@
 <resources>
     <string name="menu_settings">設定</string>
     <string name="menu_search">検索</string>
-    <string name="cancel">キャンセル</string>
     <string name="go">Go!</string>
     <string name="location_prefs">位置の設定</string>
     <string name="force_gps_pref">常にGPSを使用</string>

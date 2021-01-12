@@ -232,7 +232,7 @@ public class GoToFragment extends ListFragment
                 }
             });
         }
-        builder.setNegativeButton(R.string.cancel, null);
+        builder.setNegativeButton(android.R.string.cancel, null);
         builder.show();
     }
 

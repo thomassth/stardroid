@@ -3,7 +3,6 @@
 <resources>
     <string name="menu_settings">Gosodiadau</string>
     <string name="menu_search">Chwilio</string>
-    <string name="cancel">Diddymu</string>
     <string name="go">Mynd!</string>
     <string name="location_prefs">Gosodiadau Lleoliad</string>
     <string name="force_gps_pref">Defnyddio GPS o hyd</string>

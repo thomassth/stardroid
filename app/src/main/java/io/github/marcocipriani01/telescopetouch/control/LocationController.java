@@ -96,7 +96,7 @@ public class LocationController extends AbstractController implements LocationLi
                             .setTitle(R.string.warning)
                             .setCancelable(false)
                             .setMessage(R.string.location_no_auto)
-                            .setNegativeButton(R.string.cancel, null)
+                            .setNegativeButton(android.R.string.cancel, null)
                             .setPositiveButton(R.string.take_me_there, (dialog, which) -> {
                                 Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

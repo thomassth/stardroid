@@ -2,7 +2,6 @@
 <resources>
     <string name="menu_settings">Ustawienia</string>
     <string name="menu_search">Szukaj</string>
-    <string name="cancel">Anuluj</string>
     <string name="go">Przejdź</string>
     <string name="location_prefs">Ustawienia lokalizacji</string>
     <string name="force_gps_pref">Zawsze używaj odbiornika GPS</string>

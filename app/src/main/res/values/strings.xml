@@ -3,7 +3,6 @@
     <string name="app_name" translatable="false" translation_description="Application Title">Telescope.Touch</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_search">Search</string>
-    <string name="cancel">Cancel</string>
     <string name="go">Go!</string>
     <string name="location_prefs">Location Settings</string>
     <string name="force_gps_pref">Always use GPS</string>
@@ -440,7 +439,6 @@
     <string name="mount_goto">Goto</string>
     <string name="unavailable">Unavailable</string>
     <string name="send_request">Send</string>
-    <string name="cancel_request">Cancel</string>
     <string name="back_request">Back</string>
     <string name="BLOB_not_supported">Not supported</string>
     <string name="try_to_connect">Try to connect to\u0020</string>
