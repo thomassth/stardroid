@@ -8,6 +8,12 @@ and mobile sky chart functionality, with a completely renewed user interface and
 
 The source code is available on [GitHub](https://github.com/marcocipriani01/Telescope.Touch)
 
+### Screenshots
+
+<img align="left" width="250" src="res/Connection.png">
+<img align="center" width="250" src="res/Mount.png">
+<img align="right" width="250" src="res/Control.png">
+
 ## Features
 
 - Mobile planetarium derived from the [Sky Map](https://github.com/sky-map-team/stardroid) project
