@@ -171,7 +171,7 @@ public class GoToFragment extends ListFragment
      */
     @Override
     public boolean onQueryTextChange(String newText) {
-        if (catalog.isReady()) setSelection(catalog.searchIndex(newText));
+        if (catalog.isReady()) entriesAdapter.filter(newText);
         return false;
     }
 

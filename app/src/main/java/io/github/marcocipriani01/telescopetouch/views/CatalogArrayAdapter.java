@@ -48,14 +48,30 @@ public class CatalogArrayAdapter extends ArrayAdapter<CatalogEntry> {
         setNotifyOnChange(false);
         clear();
         for (CatalogEntry entry : entries) {
-            if ((showStars && (entry instanceof StarEntry)) ||
-                    (showDso && (entry instanceof DSOEntry)) ||
-                    (showPlanets && (entry instanceof PlanetEntry))) {
+            if (isVisible(entry)) {
                 setNotifyOnChange(false);
                 add(entry);
             }
         }
         notifyDataSetChanged();
+    }
+
+    public void filter(String string) {
+        setNotifyOnChange(false);
+        clear();
+        for (CatalogEntry entry : entries) {
+            if (isVisible(entry) && entry.getName().toLowerCase().contains(string.toLowerCase())) {
+                setNotifyOnChange(false);
+                add(entry);
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+    private boolean isVisible(CatalogEntry entry) {
+        return ((showStars && (entry instanceof StarEntry)) ||
+                (showDso && (entry instanceof DSOEntry)) ||
+                (showPlanets && (entry instanceof PlanetEntry)));
     }
 
     @NonNull
