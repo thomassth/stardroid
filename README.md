@@ -74,3 +74,20 @@ with a renewed user interface and high-definition planet thumbnails.
 - [Material icons](https://material.io/resources/icons/), Apache 2.0 license
 - [Telescope icon](https://www.flaticon.com/free-icon/telescope_1086070?term=telescope&page=1&position=81&related_item_id=1086070), Flaticon License
 - [Touch icon](https://www.flaticon.com/free-icon/touch_941563?term=touch&page=1&position=6&related_item_id=941563), Flaticon License
+
+### License notice
+
+This project is licensed under two licenses:
+
+- The GNU General Public License v3, for the following parts:
+  - The overall project and the telescope control part, which derive from the [IPARCOS project](https://github.com/INDIForJava/IPARCOS/) (a GPL-licensed project)
+- The Apache 2.0 license:
+  - The "Sky Map core" of the application , which means all the classes and code derived from the [Sky Map](https://github.com/sky-map-team/stardroid) project
+  - The app's assets: icons, images, strings, menu, xml resources and animations
+  - The `tools` and `datamodel` modules
+  - Every build scripts
+
+This double-license approach ensures that the contributions of the Telescope.Touch project could
+be used in other Android apps, and in particular to the Sky Map application.
+To avoid ambiguity, every Java class in the `app` module states which license it is
+subject to, and its copyright holder. Read mode in the `LICENSE.md` file.
