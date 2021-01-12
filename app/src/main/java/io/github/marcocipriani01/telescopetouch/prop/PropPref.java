@@ -51,6 +51,10 @@ public abstract class PropPref<Element extends INDIElement> extends Preference i
         return null;
     }
 
+    public INDIProperty<Element> getProp() {
+        return prop;
+    }
+
     @Override
     public void onBindViewHolder(PreferenceViewHolder holder) {
         super.onBindViewHolder(holder);

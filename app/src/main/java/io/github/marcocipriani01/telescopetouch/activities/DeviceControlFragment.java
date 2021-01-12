@@ -8,7 +8,6 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
@@ -104,14 +103,30 @@ public class DeviceControlFragment extends PreferenceFragmentCompat implements I
         this.device = device;
     }
 
+    public void stopSearch() {
+        for (PropPref<?> pref : preferencesMap.values()) {
+            PreferenceCategory group = groups.get(pref.getProp().getGroup());
+            if (group != null) {
+                prefScreen.addPreference(group);
+                group.addPreference(pref);
+            }
+        }
+    }
+
     public void findPref(String newText) {
-        for (int i = 0; i < prefScreen.getPreferenceCount(); i++) {
-            PreferenceCategory group = ((PreferenceCategory) prefScreen.getPreference(i));
-            for (int j = 0; j < group.getPreferenceCount(); j++) {
-                Preference preference = group.getPreference(j);
-                if (preference.getTitle().toString().toLowerCase().startsWith(newText.toLowerCase())) {
-                    scrollToPreference(preference);
-                    return;
+        newText = newText.toLowerCase();
+        for (PropPref<?> pref : preferencesMap.values()) {
+            PreferenceCategory group = groups.get(pref.getProp().getGroup());
+            if (group != null) {
+                if (pref.getTitle().toString().toLowerCase().contains(newText)) {
+                    group.addPreference(pref);
+                } else {
+                    group.removePreference(pref);
+                }
+                if (group.getPreferenceCount() == 0) {
+                    prefScreen.removePreference(group);
+                } else {
+                    prefScreen.addPreference(group);
                 }
             }
         }
