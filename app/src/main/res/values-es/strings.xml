@@ -78,8 +78,6 @@
     <string name="gallery_image_search_btn">Buscar en el cielo</string>
     <string name="gallery_image_back_btn">Volver a la galería</string>
     <string name="hubble_image_gallery_title">Galería de Sky Map</string>
-    <!--  TODO(johntaylor): currently unused -->
-
     <string name="search_overlay_title" translation_description="title for search overlay">Apunta tu teléfono hacia la flecha</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">Buscando:</string>
     <string name="sun_wont_set_message">El sol no se pondrá durante las próximas 24 horas en tu ubicación actual.</string>
@@ -111,11 +109,8 @@
     <string name="v838_mon" translation_description="hubble object">V838 Monocerotis</string>
     <string name="hubble_deep_field" translation_description="hubble object">Campo Profundo del Hubble</string>
     <string name="menu_diagnostics">Diagnósticos</string>
-    <!-- TODO(johntaylor): the following might be deleted in favor of an icon -->
-
     <string name="north_pole">PN</string>
     <string name="south_pole">PS</string>
-
     <string name="andromeda" translation_description="Name of the Andromeda constellation">Andrómeda</string>
     <string name="aquarius" translation_description="Name of the Aquarius constellation">Acuario</string>
     <string name="aquila" translation_description="Name of the Aquila constellation">Águila</string>

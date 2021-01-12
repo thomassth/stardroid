@@ -74,18 +74,13 @@
     <string name="time_travel_hour_speed_back" translation_description="Label showing rate of travel through time">سفر با سرعت &lt; @ 1 hour/sec</string>
     <string name="time_travel_day_speed_back" translation_description="Label showing rate of travel through time">سفر با سرعت &lt; @ 1 day/sec</string>
     <string name="time_travel_week_speed_back" translation_description="Label showing rate of travel through time">سفر با سرعت &lt; @ 1 week/sec</string>
-
     <string name="gallery_image_search_btn">جستجو در آسمان</string>
     <string name="gallery_image_back_btn">بازگشت به آلبوم</string>
     <string name="hubble_image_gallery_title">آلبوم برنامه</string>
-    <!--  TODO(johntaylor): currently unused -->
-
     <string name="search_overlay_title" translation_description="title for search overlay">تلفن خود را به سمت فلش قرار دهید</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">جستجو برای:</string>
     <string name="sun_wont_set_message">در مکان انتخابی شما، خورشید تا ۲۴ ساعت آینده غروب نمی‌کند.</string>
-
     <string name="missing_label" translation_description="Used to indicate to the developer that they've added a resource with no translation.">MISSING_LBL</string>
-
     <string name="sun">خورشید</string>
     <string name="moon">ماه</string>
     <string name="mercury">عطارد</string>
@@ -111,8 +106,6 @@
     <string name="v838_mon" translation_description="hubble object">تکشاخ وی۸۳۸</string>
     <string name="hubble_deep_field" translation_description="hubble object">زمینه ژرف هابل</string>
     <string name="menu_diagnostics">عیب یابی</string>
-    <!-- TODO(johntaylor): the following might be deleted in favor of an icon -->
-
     <string name="north_pole">شمال</string>
     <string name="south_pole">جنوب</string>
 

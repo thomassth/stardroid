@@ -78,8 +78,6 @@
     <string name="gallery_image_search_btn">Canfod yn yr awyr</string>
     <string name="gallery_image_back_btn">Nôl i\'r oriel</string>
     <string name="hubble_image_gallery_title">Oriel Sky Map</string>
-    <!--  TODO(johntaylor): currently unused -->
-
     <string name="search_overlay_title" translation_description="title for search overlay">Pwyntia dy ddyfais tua\'r saeth</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">Yn chwilio am:</string>
     <string name="sun_wont_set_message">Dyw\'r haul ddim yn machlud o fewn y 24 awr nesaf yn dy leoliad cyfredol.</string>
@@ -109,12 +107,8 @@
     <string name="v838_mon" translation_description="hubble object">V838 Monocerotis</string>
     <string name="hubble_deep_field" translation_description="hubble object">Maes Dwfn Hubble</string>
     <string name="menu_diagnostics">Diagnosteg</string>
-    <!-- TODO(johntaylor): the following might be deleted in favor of an icon -->
-    <string name="control_panel_btn" translation_description="Label for the control panel button">Panel Rheolaeth</string>
-
     <string name="north_pole">PyG</string>
     <string name="south_pole">PyD</string>
-
     <string name="andromeda" translation_description="Name of the Andromeda constellation">Andromeda</string>
     <string name="aquarius" translation_description="Name of the Aquarius constellation">Aquarius</string>
     <string name="aquila" translation_description="Name of the Aquila constellation">Aquila</string>

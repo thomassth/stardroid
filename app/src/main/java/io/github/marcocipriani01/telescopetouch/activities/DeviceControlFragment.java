@@ -110,8 +110,7 @@ public class DeviceControlFragment extends PreferenceFragmentCompat implements I
             for (int j = 0; j < group.getPreferenceCount(); j++) {
                 Preference preference = group.getPreference(j);
                 if (preference.getTitle().toString().toLowerCase().startsWith(newText.toLowerCase())) {
-                    RecyclerView.LayoutManager layoutManager = getListView().getLayoutManager();
-                    if (layoutManager != null) layoutManager.scrollToPosition(j);
+                    scrollToPreference(preference);
                     return;
                 }
             }
