@@ -10,6 +10,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -47,10 +48,6 @@ public class LocationController extends AbstractController implements LocationLi
 
     private final Context context;
     private final LocationManager locationManager;
-    /**
-     * Last known provider;
-     */
-    private String currentProvider = "unknown";
 
     @Inject
     public LocationController(Context context, LocationManager locationManager) {
@@ -66,10 +63,7 @@ public class LocationController extends AbstractController implements LocationLi
     @Override
     public void start() {
         Log.d(TAG, "LocationController start");
-        boolean noAutoLocate = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(NO_AUTO_LOCATE, false);
-        boolean forceGps = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(FORCE_GPS, false);
-
-        if (noAutoLocate) {
+        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(NO_AUTO_LOCATE, false)) {
             Log.d(TAG, "User has elected to set location manually.");
             setLocationFromPrefs();
             Log.d(TAG, "LocationController -start");
@@ -78,14 +72,14 @@ public class LocationController extends AbstractController implements LocationLi
 
         try {
             if (locationManager == null) {
-                // TODO(johntaylor): find out under what circumstances this can happen.
                 Log.e(TAG, "Location manager was null - using preferences");
                 setLocationFromPrefs();
                 return;
             }
 
             Criteria locationCriteria = new Criteria();
-            locationCriteria.setAccuracy(forceGps ? Criteria.ACCURACY_FINE : Criteria.ACCURACY_COARSE);
+            locationCriteria.setAccuracy(PreferenceManager.getDefaultSharedPreferences(context).getBoolean(FORCE_GPS, false) ?
+                    Criteria.ACCURACY_FINE : Criteria.ACCURACY_COARSE);
             locationCriteria.setAltitudeRequired(false);
             locationCriteria.setBearingRequired(false);
             locationCriteria.setCostAllowed(true);
@@ -98,17 +92,37 @@ public class LocationController extends AbstractController implements LocationLi
                 String possibleLocationProvider = locationManager.getBestProvider(locationCriteria, false);
                 if (possibleLocationProvider == null) {
                     Log.i(TAG, "No location provider is even available");
-                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-                    alertDialogBuilder
-                            .setTitle("Warning")
+                    new AlertDialog.Builder(context)
+                            .setTitle(R.string.warning)
+                            .setCancelable(false)
                             .setMessage(R.string.location_no_auto)
-                            .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss())
-                            .create();
+                            .setNegativeButton(R.string.cancel, null)
+                            .setPositiveButton(R.string.take_me_there, (dialog, which) -> {
+                                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.setData(Uri.fromParts("package", context.getPackageName(), null));
+                                context.startActivity(intent);
+                            }).show();
                     setLocationFromPrefs();
-                    return;
+                } else {
+                    new AlertDialog.Builder(context)
+                            .setTitle(R.string.location_offer_to_enable_gps_title)
+                            .setMessage(R.string.location_offer_to_enable)
+                            .setCancelable(false)
+                            .setPositiveButton(android.R.string.ok, (dialog12, which) -> {
+                                Log.d(TAG, "Sending to editor location prefs page");
+                                context.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                            })
+                            .setNegativeButton(android.R.string.cancel, (dialog1, which) -> {
+                                Log.d(TAG, "User doesn't want to enable location.");
+                                Toast.makeText(context, "Switching manual location on...", Toast.LENGTH_SHORT).show();
+                                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                                Editor editor = prefs.edit();
+                                editor.putBoolean(NO_AUTO_LOCATE, true);
+                                editor.apply();
+                                setLocationFromPrefs();
+                            }).show();
                 }
-                AlertDialog.Builder alertDialog = getSwitchOnGPSDialog();
-                alertDialog.show();
                 return;
             } else {
                 Log.d(TAG, "Got location provider " + locationProvider);
@@ -123,13 +137,10 @@ public class LocationController extends AbstractController implements LocationLi
                 LatLong myLocation = new LatLong(location.getLatitude(), location.getLongitude());
                 setLocationInModel(myLocation, location.getProvider());
             }
-
         } catch (SecurityException securityException) {
             Log.d(TAG, "Caught " + securityException);
             Log.d(TAG, "Most likely user has not enabled this permission");
         }
-
-        Log.d(TAG, "LocationController -start");
     }
 
     private void setLocationInModel(LatLong location, String provider) {
@@ -140,36 +151,11 @@ public class LocationController extends AbstractController implements LocationLi
         } else {
             Log.d(TAG, "Location not changed sufficiently to tell the user");
         }
-        currentProvider = provider;
         model.setLocation(location);
-    }
-
-    public String getCurrentProvider() {
-        return currentProvider;
     }
 
     public LatLong getCurrentLocation() {
         return model.getLocation();
-    }
-
-    private AlertDialog.Builder getSwitchOnGPSDialog() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-        dialog.setTitle(R.string.location_offer_to_enable_gps_title);
-        dialog.setMessage(R.string.location_offer_to_enable);
-        dialog.setPositiveButton(android.R.string.ok, (dialog12, which) -> {
-            Log.d(TAG, "Sending to editor location prefs page");
-            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            context.startActivity(intent);
-        });
-        dialog.setNegativeButton(android.R.string.cancel, (dialog1, which) -> {
-            Log.d(TAG, "User doesn't want to enable location.");
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-            Editor editor = prefs.edit();
-            editor.putBoolean(NO_AUTO_LOCATE, true);
-            editor.apply();
-            setLocationFromPrefs();
-        });
-        return dialog;
     }
 
     private void setLocationFromPrefs() {

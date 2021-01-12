@@ -132,9 +132,7 @@ public class TelescopeTouchApp extends Application {
      * @param state the new state of the Connection button.
      */
     public static void setState(ConnectionState state) {
-        if (uiUpdater != null) {
-            uiUpdater.setConnectionState(state);
-        }
+        if (uiUpdater != null) uiUpdater.setConnectionState(state);
     }
 
     /**
@@ -148,7 +146,6 @@ public class TelescopeTouchApp extends Application {
 
     @Override
     public void onCreate() {
-        Log.d(TAG, "StardroidApplication: onCreate");
         super.onCreate();
 
         component = DaggerApplicationComponent.builder()
@@ -156,15 +153,12 @@ public class TelescopeTouchApp extends Application {
                 .build();
         component.inject(this);
 
-        Log.i(TAG, "OS Version: " + android.os.Build.VERSION.RELEASE
-                + "(" + android.os.Build.VERSION.SDK_INT + ")");
-        String versionName = getVersionName();
-        Log.i(TAG, "Sky Map version " + versionName + " build " + getVersion());
-
         // This populates the default values from the preferences XML file. See
         // {@link DefaultValues} for more details.
         PreferenceManager.setDefaultValues(this, R.xml.preference_screen, false);
+
         performFeatureCheck();
+
         context = getApplicationContext();
         if (connectionManager == null) {
             connectionManager = new ConnectionManager();
@@ -179,7 +173,6 @@ public class TelescopeTouchApp extends Application {
      * Returns the version string for Sky Map.
      */
     public String getVersionName() {
-        // TODO(jontayler): update to use the info created by gradle.
         PackageManager packageManager = getPackageManager();
         try {
             PackageInfo info = packageManager.getPackageInfo(this.getPackageName(), 0);
@@ -190,9 +183,6 @@ public class TelescopeTouchApp extends Application {
         }
     }
 
-    /**
-     * Returns the build number for Sky Map.
-     */
     public long getVersion() {
         PackageManager packageManager = getPackageManager();
         try {

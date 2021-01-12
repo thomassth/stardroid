@@ -49,7 +49,6 @@ public class NoSensorsDialogFragment extends DialogFragment {
                             preferences.edit().putBoolean(
                                     ApplicationConstants.NO_WARN_ABOUT_MISSING_SENSORS,
                                     ((CheckBox) view.findViewById(R.id.no_show_dialog_again)).isChecked()).apply();
-                            dialog.dismiss();
                         }).create();
     }
 

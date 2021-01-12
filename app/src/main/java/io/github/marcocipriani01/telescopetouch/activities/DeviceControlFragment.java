@@ -1,8 +1,9 @@
 package io.github.marcocipriani01.telescopetouch.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -119,7 +120,7 @@ public class DeviceControlFragment extends PreferenceFragmentCompat implements I
 
     @Override
     public void newProperty(INDIDevice device, final INDIProperty<?> property) {
-        ((Activity) context).runOnUiThread(() -> {
+        new Handler(Looper.getMainLooper()).post(() -> {
             String group = property.getGroup();
             PreferenceCategory prefGroup = groups.get(group);
             if (prefGroup == null) {
@@ -139,20 +140,22 @@ public class DeviceControlFragment extends PreferenceFragmentCompat implements I
     }
 
     @Override
-    public void removeProperty(INDIDevice device, INDIProperty<?> property) {
-        PropPref<?> pref = preferencesMap.get(property);
-        if (pref != null) {
-            String group = property.getGroup();
-            PreferenceCategory prefGroup = groups.get(group);
-            if (prefGroup != null) {
-                prefGroup.removePreference(pref);
-                if (prefGroup.getPreferenceCount() == 0) {
-                    prefScreen.removePreference(prefGroup);
-                    groups.remove(group);
+    public void removeProperty(INDIDevice device, final INDIProperty<?> property) {
+        new Handler(Looper.getMainLooper()).post(() -> {
+            PropPref<?> pref = preferencesMap.get(property);
+            if (pref != null) {
+                String group = property.getGroup();
+                PreferenceCategory prefGroup = groups.get(group);
+                if (prefGroup != null) {
+                    prefGroup.removePreference(pref);
+                    if (prefGroup.getPreferenceCount() == 0) {
+                        prefScreen.removePreference(prefGroup);
+                        groups.remove(group);
+                    }
                 }
+                preferencesMap.remove(property);
             }
-            preferencesMap.remove(property);
-        }
+        });
     }
 
     @Override

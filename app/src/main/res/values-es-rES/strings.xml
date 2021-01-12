@@ -15,7 +15,6 @@
     <string name="location_long_pref">Longitud</string>
     <string name="degrees">Grados</string>
     <string name="preferences">preferencias</string>
-    <string name="location_no_auto">Tu teléfono no es compatible con la ubicación automática. Puedes configurarla de forma manual en las preferencias.</string>
     <string name="location_offer_to_enable">Ubicación automática inhabilitada. ¿Deseas habilitarla?</string>
     <string name="location_offer_to_enable_gps_title">Ubicación automática inhabilitada</string>
     <string name="location_set_auto">Ubicación establecida de %1$s a %2$s</string>

@@ -57,12 +57,11 @@ public class TimeTravelDialogFragment extends DialogFragment {
         // Activities using this dialog MUST implement this interface.  Obviously.
         ((HasComponent<ActivityComponent>) requireActivity()).getComponent().inject(this);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity);
         View root = View.inflate(parentActivity, R.layout.time_dialog, null);
-        builder.setView(root);
-        builder.setTitle(R.string.menu_time);
-        builder.setPositiveButton(R.string.go, (dialog, which) -> parentActivity.setTimeTravelMode(calendar.getTime()));
-        builder.setNegativeButton(R.string.cancel, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity)
+                .setView(root).setTitle(R.string.menu_time)
+                .setPositiveButton(R.string.go, (dialog, which) -> parentActivity.setTimeTravelMode(calendar.getTime()))
+                .setNegativeButton(R.string.cancel, null);
         dateTimeReadout = root.findViewById(R.id.dateDisplay);
 
         root.findViewById(R.id.pickDate).setOnClickListener(v -> {

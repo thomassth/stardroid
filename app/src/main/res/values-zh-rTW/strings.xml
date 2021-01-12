@@ -16,7 +16,6 @@
     <string name="location_long_pref">經度</string>
     <string name="degrees">度</string>
     <string name="preferences">偏好設定</string>
-    <string name="location_no_auto">您的手機不支援自動定位功能，您可以在偏好設定中手動設定位置。</string>
     <string name="location_offer_to_enable">自動定位功能已關閉，是否要予以啟用？</string>
     <string name="location_offer_to_enable_gps_title">已關閉自動定位</string>
     <string name="location_set_auto">已將地點設定由%1$s改為%2$s</string>
@@ -38,7 +37,6 @@
     <string name="sensor_prefs">感應器設定</string>
     <string name="ecliptic">黃道</string>
     <string name="malformed_loc_error">經緯度設定值並非數字。</string>
-    <string name="dialog_ok_button">OK</string>
     <string name="set_manual">正在切換至手動模式</string>
     <string name="set_auto">正在切換至自動模式</string>
     <string name="menu_toggle_dim">切換至夜間模式</string>

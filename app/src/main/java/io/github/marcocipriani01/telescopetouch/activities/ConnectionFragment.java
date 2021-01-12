@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -177,7 +179,7 @@ public class ConnectionFragment extends Fragment implements ServersReloadListene
     @Override
     public void setConnectionState(TelescopeTouchApp.ConnectionState state) {
         ConnectionFragment.state = state;
-        refreshUi();
+        new Handler(Looper.getMainLooper()).post(this::refreshUi);
     }
 
     private void refreshUi() {

@@ -131,8 +131,7 @@ public class NumberPropPref extends PropPref<INDINumberElement> {
 
             ScrollView scrollView = new ScrollView(context);
             scrollView.addView(layout);
-            builder.setView(scrollView);
-            builder.setTitle(prop.getLabel());
+            builder.setView(scrollView).setTitle(prop.getLabel());
 
             if (prop.getPermission() != Constants.PropertyPermissions.RO) {
                 builder.setPositiveButton(R.string.send_request, (dialog, id) -> {

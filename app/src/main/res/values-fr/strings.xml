@@ -15,7 +15,6 @@
     <string name="location_long_pref">Longitude</string>
     <string name="degrees">Degrés</string>
     <string name="preferences">préférences</string>
-    <string name="location_no_auto">Position auto indisponible sur votre téléphone. Définissez manuellement la position dans les préférences.</string>
     <string name="location_offer_to_enable">Position auto désactivée. Voulez-vous l\'activer ?</string>
     <string name="location_offer_to_enable_gps_title">Position auto désactivée</string>
     <string name="location_set_auto">Position %1$s remplacée par %2$s</string>
@@ -356,7 +355,6 @@
     <string name="BLOB_not_supported">Non supporté</string>
     <string name="try_to_connect">Tentative de connexion à\u0020</string>
     <string name="connection_lost">Connexion perdue</string>
-    <string name="ok">OK</string>
     <string name="connected">Connecté</string>
     <string name="search_hint">Rechercher un objet</string>
     <string name="go_to">Pointer</string>

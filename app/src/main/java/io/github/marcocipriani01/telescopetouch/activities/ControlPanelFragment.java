@@ -187,8 +187,11 @@ public class ControlPanelFragment extends Fragment
         int index = devices.indexOf(device);
         if (index != -1) {
             devices.remove(device);
-            if (devices.isEmpty()) noDevices();
-            viewPager.post(() -> fragmentAdapter.notifyItemRemoved(index));
+            if (devices.isEmpty()) {
+                noDevices();
+            } else {
+                viewPager.post(() -> fragmentAdapter.notifyItemRemoved(index));
+            }
         }
     }
 

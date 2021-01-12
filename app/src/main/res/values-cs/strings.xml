@@ -15,7 +15,6 @@
     <string name="location_long_pref">Zeměpisná délka</string>
     <string name="degrees">Stupně</string>
     <string name="preferences">předvolby</string>
-    <string name="location_no_auto">Váš telefon nepodporuje automatické určení polohy. Polohu můžete nastavit ručně v nastavení.</string>
     <string name="location_offer_to_enable">Automatické určení polohy je deaktivováno. Chce je aktivovat?</string>
     <string name="location_offer_to_enable_gps_title">Automatické určení polohy deaktivováno</string>
     <string name="location_set_auto">Poloha nastavena pomocí %1$s na %2$s</string>
@@ -346,7 +345,6 @@
     <string name="permission_disabled">Povolení odmítnuto</string>
     <string name="sensor_absent">Senzor chybí</string>
     <string name="diagnostics_activity_rotation_matrix">Rotační matrice</string>
-    <string name="dialog_ok_button">OK</string>
     <string name="disconnected">Odpojeno</string>
     <string name="aquariids" translation_description="Meteor Shower">Éta Aquaridy</string>
     <string name="warning_dialog_title">Špatné správy</string>

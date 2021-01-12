@@ -16,7 +16,6 @@
     <string name="location_long_pref">Γεωγραφικό μήκος</string>
     <string name="degrees" translation_description="angular degrees">Μοίρες</string>
     <string name="preferences">προτιμήσεις</string>
-    <string name="location_no_auto">Το δικαίωμα αυτόματης τοποθεσίας είναι απενεργοποιημένο στη συσκευή σας.   Μπορείτε να ορίσετε την τοποθεσία χειροκίνητα στις ρυθμίσεις.  Μέχρι τότε ο χάρτης θα είναι λανθασμένος.</string>
     <string name="location_offer_to_enable">Η αυτόματη τοποθεσία είναι απενεργοποιημένη. Θέλετε να την ενεργοποιήσετε;</string>
     <string name="location_offer_to_enable_gps_title">Αυτόματη τοποθεσία απενεργοποιημένη</string>
     <string name="location_set_auto">Η τοποθεσία ορίστηκε από %1$s σε %2$s</string>
@@ -38,7 +37,6 @@
     <string name="ecliptic">Εκλειπτική</string>
     <!-- Just in case we decide to have such a layer for the 4/24 launch -->
     <string name="malformed_loc_error">Το γεωγραφικό μήκος ή πλάτος πρέπει να είναι αριθμός.</string>
-    <string name="dialog_ok_button">OK</string>
     <string name="set_manual">Αλλαγή σε χειροκίνητη λειτουργία</string>
     <string name="set_auto">Αλλαγή σε αυτόματη λειτουργία</string>
     <string name="menu_toggle_dim">Εναλλαγή λειτουργίας νύχτας</string>

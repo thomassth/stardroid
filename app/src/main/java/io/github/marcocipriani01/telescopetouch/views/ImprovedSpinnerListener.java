@@ -1,7 +1,6 @@
 package io.github.marcocipriani01.telescopetouch.views;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
