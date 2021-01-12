@@ -36,8 +36,6 @@
     <string name="sensor_prefs">感應器設定</string>
     <string name="ecliptic">黃道</string>
     <string name="malformed_loc_error">經緯度設定值並非數字。</string>
-    <string name="set_manual">正在切換至手動模式</string>
-    <string name="set_auto">正在切換至自動模式</string>
     <string name="menu_toggle_dim">切換至夜間模式</string>
     <string name="zenith">天頂</string>
     <string name="nadir">天底</string>

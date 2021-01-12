@@ -32,8 +32,6 @@
     <string name="sensor_prefs">Sensorinstellingen</string>
     <string name="ecliptic">Ecliptica</string>
     <string name="malformed_loc_error">De ingestelde breedte- of lengtegraad is geen getal.</string>
-    <string name="set_manual">Schakelen naar handmatige modus</string>
-    <string name="set_auto">Schakelen naar automatische modus</string>
     <string name="menu_toggle_dim">Nachtmodus schakelen</string>
     <string name="zenith">ZENIT</string>
     <string name="nadir">NADIR</string>

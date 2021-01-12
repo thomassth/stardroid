@@ -32,8 +32,6 @@
     <string name="sensor_prefs">센서 설정</string>
     <string name="ecliptic">단주기 혜성</string>
     <string name="malformed_loc_error">위도 또는 경도 설정은 숫자가 아닙니다.</string>
-    <string name="set_manual">수동 모드로 전환</string>
-    <string name="set_auto">자동 모드로 전환</string>
     <string name="menu_toggle_dim">야간 모드 전환</string>
     <string name="zenith">천정</string>
     <string name="nadir">NADIR</string>

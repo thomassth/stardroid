@@ -32,8 +32,6 @@
     <string name="sensor_prefs">Impostazioni sensori</string>
     <string name="ecliptic">Eclittica</string>
     <string name="malformed_loc_error">Il valore di lat./long. non è un numero.</string>
-    <string name="set_manual">Passaggio a modalità manuale</string>
-    <string name="set_auto">Passaggio a modalità automatica</string>
     <string name="menu_toggle_dim">Modalità notturna</string>
     <string name="zenith">ZENIT</string>
     <string name="nadir">NADIR</string>

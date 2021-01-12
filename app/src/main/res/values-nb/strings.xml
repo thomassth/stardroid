@@ -36,8 +36,6 @@
     <string name="sensor_prefs">Sensorinnstillinger (eksperter)</string>
     <string name="ecliptic">Ekliptikken</string>
     <string name="malformed_loc_error">Bredde- eller lengdegradinnstilling er ikke et tall.</string>
-    <string name="set_manual">Skifter til manuell modus</string>
-    <string name="set_auto">Skifter til automatisk modus</string>
     <string name="menu_toggle_dim">Nattmodus av/på</string>
     <string name="zenith">SENIT</string>
     <string name="nadir">NADIR</string>

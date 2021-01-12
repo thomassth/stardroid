@@ -36,8 +36,6 @@
     <string name="ecliptic">Εκλειπτική</string>
     <!-- Just in case we decide to have such a layer for the 4/24 launch -->
     <string name="malformed_loc_error">Το γεωγραφικό μήκος ή πλάτος πρέπει να είναι αριθμός.</string>
-    <string name="set_manual">Αλλαγή σε χειροκίνητη λειτουργία</string>
-    <string name="set_auto">Αλλαγή σε αυτόματη λειτουργία</string>
     <string name="menu_toggle_dim">Εναλλαγή λειτουργίας νύχτας</string>
     <string name="zenith">ΖΕΝΙΘ</string>
     <string name="nadir">ΝΑΔΙΡ</string>

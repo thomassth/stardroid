@@ -36,8 +36,6 @@
     <string name="sensor_prefs">Sensor Settings (experts)</string>
     <string name="ecliptic">Ecliptic</string>
     <string name="malformed_loc_error">Latitude or longitude setting isn\'t a number.</string>
-    <string name="set_manual">Switching to manual mode</string>
-    <string name="set_auto">Switching to automatic mode</string>
     <string name="menu_toggle_dim">Toggle night mode</string>
     <string name="zenith">ZENITH</string>
     <string name="nadir">NADIR</string>

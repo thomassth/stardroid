@@ -36,8 +36,6 @@
     <string name="sensor_prefs">تنظیمات حسگرها (پیشرفته)</string>
     <string name="ecliptic">دایرة البروج</string>
     <string name="malformed_loc_error">طول و عرض جغرافیایی باید عدد (با ارقام انگلیسی) باشند</string>
-    <string name="set_manual">رفتن به حالت دستی</string>
-    <string name="set_auto">رفتن به حالت خودکار</string>
     <string name="menu_toggle_dim">تغییر حالت شب</string>
     <string name="zenith">سمت الرأس</string>
     <string name="nadir">پاسو</string>

@@ -32,8 +32,6 @@
     <string name="sensor_prefs">Paramètres du capteur</string>
     <string name="ecliptic">Écliptique</string>
     <string name="malformed_loc_error">Indiquez un nombre pour la latitude/longitude.</string>
-    <string name="set_manual">Activation du mode manuel</string>
-    <string name="set_auto">Activation du mode automatique</string>
     <string name="menu_toggle_dim">Activer/Dés. mode nuit</string>
     <string name="zenith">ZÉNITH</string>
     <string name="nadir">NADIR</string>

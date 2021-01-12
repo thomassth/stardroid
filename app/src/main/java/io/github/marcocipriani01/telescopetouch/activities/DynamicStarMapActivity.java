@@ -375,21 +375,10 @@ public class DynamicStarMapActivity extends InjectableActivity
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.d(TAG, "Preferences changed: key=" + key);
-        switch (key) {
-            case ApplicationConstants.AUTO_MODE_PREF_KEY:
-                boolean autoMode = sharedPreferences.getBoolean(key, true);
-                Log.d(TAG, "Automode is set to " + autoMode);
-                if (!autoMode) {
-                    Log.d(TAG, "Switching to manual control");
-                    Toast.makeText(DynamicStarMapActivity.this, R.string.set_manual, Toast.LENGTH_SHORT).show();
-                } else {
-                    Log.d(TAG, "Switching to sensor control");
-                    Toast.makeText(DynamicStarMapActivity.this, R.string.set_auto, Toast.LENGTH_SHORT).show();
-                }
-                setAutoMode(autoMode);
-                break;
-            case ApplicationConstants.ROTATE_HORIZON_PREFKEY:
-                model.setHorizontalRotation(sharedPreferences.getBoolean(key, false));
+        if (ApplicationConstants.AUTO_MODE_PREF_KEY.equals(key)) {
+            setAutoMode(sharedPreferences.getBoolean(key, true));
+        } else if (ApplicationConstants.ROTATE_HORIZON_PREFKEY.equals(key)) {
+            model.setHorizontalRotation(sharedPreferences.getBoolean(key, false));
         }
     }
 

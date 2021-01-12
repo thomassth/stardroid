@@ -38,8 +38,6 @@
     <string name="ecliptic">Ecliptic</string>
     <!-- Just in case we decide to have such a layer for the 4/24 launch -->
     <string name="malformed_loc_error">Latitude or longitude setting isn\'t a number.</string>
-    <string name="set_manual">التحويل إلى الوضع اليدوي</string>
-    <string name="set_auto">التحويل إلى الوضع التلقائي</string>
     <string name="menu_toggle_dim">تفعيل الوضع الليلي</string>
     <string name="zenith">سمت الرأس</string>
     <string name="nadir">النظير</string>

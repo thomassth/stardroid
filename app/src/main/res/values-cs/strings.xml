@@ -32,8 +32,6 @@
     <string name="sensor_prefs">Nastavení čidel</string>
     <string name="ecliptic">Ekliptika</string>
     <string name="malformed_loc_error">Nastavená šířka nebo délka není číslo.</string>
-    <string name="set_manual">Přepnout na manuální režim</string>
-    <string name="set_auto">Přepnout na automatický režim</string>
     <string name="menu_toggle_dim">Přepnout noční/denní režim</string>
     <string name="zenith">ZENIT</string>
     <string name="nadir">NADIR</string>
