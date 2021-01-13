@@ -76,7 +76,6 @@ public class ImageDisplayActivity extends InjectableActivity {
         selectedImage = GalleryFactory.getGallery(getResources()).getGalleryImages().get(position);
         this.<ImageView>findViewById(R.id.gallery_image).setImageResource(selectedImage.imageId);
         this.<TextView>findViewById(R.id.gallery_image_title).setText(selectedImage.name);
-        this.<Button>findViewById(R.id.gallery_image_back_btn).setOnClickListener(source -> finish());
         this.<Button>findViewById(R.id.gallery_image_search_btn).setOnClickListener(source -> {
             Log.d(TAG, "Do Search");
             // We must ensure that all the relevant layers are actually visible or the search might
