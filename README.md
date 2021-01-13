@@ -70,6 +70,7 @@ with a renewed user interface and high-definition planet thumbnails.
 - The [Sky Map](https://github.com/sky-map-team/stardroid) project, Apache 2.0 license
 - [INDIForJava](https://github.com/INDIForJava/INDIForJava), LGPL v3 license
 - [DragListView](https://github.com/woxblom/DragListView), Apache 2.0 license
+- [PhotoView](https://github.com/chrisbanes/PhotoView), Apache 2.0 license
 - [Google Gson](https://github.com/google/gson), Apache 2.0 license
 - [Material icons](https://material.io/resources/icons/), Apache 2.0 license
 - [Telescope icon](https://www.flaticon.com/free-icon/telescope_1086070?term=telescope&page=1&position=81&related_item_id=1086070), Flaticon License

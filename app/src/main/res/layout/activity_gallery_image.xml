@@ -37,13 +37,6 @@
         tools:ignore="ButtonStyle">
 
         <Button
-            android:id="@+id/gallery_image_back_btn"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/gallery_image_back_btn" />
-
-        <Button
             android:id="@+id/gallery_image_search_btn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
