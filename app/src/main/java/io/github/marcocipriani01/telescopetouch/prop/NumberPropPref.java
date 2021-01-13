@@ -67,10 +67,10 @@ public class NumberPropPref extends PropPref<INDINumberElement> {
             int i;
             stringBuilder.append(elements.get(0).getLabel()).append(": ");
             for (i = 0; i < count - 1; i++) {
-                stringBuilder.append(elements.get(i).getValueAsString()).append(", ")
+                stringBuilder.append(elements.get(i).getValueAsString().trim()).append(", ")
                         .append(elements.get(i + 1).getLabel()).append(": ");
             }
-            stringBuilder.append(elements.get(i).getValueAsString());
+            stringBuilder.append(elements.get(i).getValueAsString().trim());
             return new SpannableString(stringBuilder.toString());
         } else {
             return new SpannableString(getContext().getString(R.string.no_indi_elements));
@@ -122,7 +122,7 @@ public class NumberPropPref extends PropPref<INDINumberElement> {
                 textView.setPadding(padding, padding, padding, 0);
                 layout.addView(textView, layoutParams);
                 editText = new EditText(context);
-                editText.setText(element.getValueAsString());
+                editText.setText(element.getValueAsString().trim());
                 editText.setPadding(padding, padding, padding, padding);
                 editText.setEnabled(prop.getPermission() != Constants.PropertyPermissions.RO);
                 editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);

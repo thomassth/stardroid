@@ -15,6 +15,7 @@
 package io.github.marcocipriani01.telescopetouch.prop;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -84,17 +85,18 @@ public abstract class PropPref<Element extends INDIElement> extends Preference i
     protected Spannable createTitle() {
         Spannable titleText = new SpannableString(prop.getLabel());
         int color;
+        Resources resources = getContext().getResources();
         switch (prop.getState()) {
             case ALERT: {
-                color = TelescopeTouchApp.getContext().getResources().getColor(R.color.light_red);
+                color = resources.getColor(R.color.light_red);
                 break;
             }
             case BUSY: {
-                color = TelescopeTouchApp.getContext().getResources().getColor(R.color.light_yellow);
+                color = resources.getColor(R.color.light_yellow);
                 break;
             }
             case OK: {
-                color = TelescopeTouchApp.getContext().getResources().getColor(R.color.light_green);
+                color = resources.getColor(R.color.light_green);
                 break;
             }
             default: {
