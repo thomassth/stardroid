@@ -68,9 +68,11 @@ public class GoToFragment extends ListFragment
 
     private static final Catalog catalog = new Catalog();
     private static CatalogArrayAdapter entriesAdapter;
+    private static String intentSearch = null;
     private ConnectionManager connectionManager;
     private Context context;
     private MenuItem searchMenu;
+    private SearchView searchView;
     // INDI properties
     private INDINumberProperty telescopeCoordP = null;
     private INDINumberElement telescopeCoordRA = null;
@@ -79,6 +81,10 @@ public class GoToFragment extends ListFragment
     private INDISwitchElement telescopeOnCoordSetSync = null;
     private INDISwitchElement telescopeOnCoordSetSlew = null;
     private INDISwitchElement telescopeOnCoordSetTrack = null;
+
+    public static void setIntentSearch(String search) {
+        intentSearch = search;
+    }
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -92,11 +98,7 @@ public class GoToFragment extends ListFragment
         setEmptyText(getString(R.string.empty_catalog));
         setHasOptionsMenu(true);
         setListAdapter(entriesAdapter = new CatalogArrayAdapter(context, catalog));
-        if (catalog.isReady()) {
-            new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                if (searchMenu != null) searchMenu.setVisible(true);
-            }, 50);
-        } else {
+        if (!catalog.isReady()) {
             // List loading
             setListShown(false);
             catalog.setListener(this);
@@ -124,6 +126,7 @@ public class GoToFragment extends ListFragment
         } else {
             clearVars();
         }
+        maybeStartIntentSearch();
     }
 
     @Override
@@ -132,12 +135,22 @@ public class GoToFragment extends ListFragment
         searchMenu = menu.add(R.string.mount_goto);
         searchMenu.setIcon(R.drawable.search);
         searchMenu.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        searchMenu.setVisible(false);
-        SearchView searchView = new SearchView(context);
+        searchMenu.setVisible(catalog.isReady());
+        searchView = new SearchView(context);
         searchView.setMaxWidth(Integer.MAX_VALUE);
         searchView.setOnQueryTextListener(this);
         searchMenu.setActionView(searchView);
         super.onCreateOptionsMenu(menu, inflater);
+        maybeStartIntentSearch();
+    }
+
+    private void maybeStartIntentSearch() {
+        Log.e("GoToFragment", "hello", new RuntimeException());
+        if (catalog.isReady() && (intentSearch != null) && (searchView != null) && isVisible()) {
+            searchView.setIconified(false);
+            searchView.setQuery(intentSearch, false);
+            searchView.clearFocus();
+        }
     }
 
     @Override
@@ -186,6 +199,11 @@ public class GoToFragment extends ListFragment
     @Override
     public boolean onQueryTextChange(String newText) {
         if (catalog.isReady()) entriesAdapter.filter(newText);
+        if (intentSearch != null) {
+            if (entriesAdapter.getCount() == 1)
+                onListItemClick(null, null, 0, -1);
+            intentSearch = null;
+        }
         return false;
     }
 
@@ -334,10 +352,11 @@ public class GoToFragment extends ListFragment
     public void onLoaded(boolean success) {
         new Handler(Looper.getMainLooper()).post(() -> {
             if (success) {
-                searchMenu.setVisible(true);
+                if (searchMenu != null) searchMenu.setVisible(true);
                 entriesAdapter.reloadCatalog();
                 if (isResumed()) {
                     setListShown(true);
+                    maybeStartIntentSearch();
                 } else {
                     setListShownNoAnimation(true);
                 }

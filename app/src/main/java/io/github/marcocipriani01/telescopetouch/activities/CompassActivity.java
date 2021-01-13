@@ -24,12 +24,12 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.views.Compass;
+import io.github.marcocipriani01.telescopetouch.views.CompassHelper;
 
 public class CompassActivity extends AppCompatActivity {
 
     private static final String TAG = "CompassActivity";
-    private Compass compass;
+    private CompassHelper compass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,7 @@ public class CompassActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
         }
-        compass = new Compass(this);
+        compass = new CompassHelper(this);
         compass.arrowView = findViewById(R.id.compass_arrow_view);
     }
 

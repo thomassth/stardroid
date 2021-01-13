@@ -455,4 +455,7 @@
     <string name="location_no_auto">Sky Map non riesce a rilevare la tua posizione, che è necessaria per calcolare la posizione delle stelle. Puoi abilitare il permesso alla geolocalizzazione nelle impostazioni del dispositivo.</string>
     <string name="warning">Attenzione</string>
     <string name="take_me_there">Portami lì</string>
+    <string name="point_telescope">Punta telescopio</string>
+    <string name="connect_telescope_first">Connettere il telescopio prima.</string>
+    <string name="gallery_copyright">Immagini di NASA (dominio pubblico), ESO (CC BY 4.0) e Adam Evans (CC BY 2.0)</string>
 </resources>

@@ -41,7 +41,7 @@
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTop"
             android:screenOrientation="fullUser"
             android:theme="@style/AppThemeNoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
@@ -58,7 +58,7 @@
             android:name="io.github.marcocipriani01.telescopetouch.activities.DynamicStarMapActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/sky_map"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:screenOrientation="userPortrait"
             android:theme="@style/FullscreenTheme">
             <meta-data
@@ -84,11 +84,8 @@
         <activity
             android:name="io.github.marcocipriani01.telescopetouch.activities.ImageGalleryActivity"
             android:label="@string/menu_gallery"
-            android:screenOrientation="fullUser">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.DynamicStarMapActivity" />
-        </activity>
+            android:launchMode="singleTop"
+            android:screenOrientation="fullUser" />
         <activity
             android:name="io.github.marcocipriani01.telescopetouch.activities.ImageDisplayActivity"
             android:label="@string/menu_gallery"
@@ -116,11 +113,7 @@
         <activity
             android:name=".activities.AboutActivity"
             android:label="@string/menu_about"
-            android:screenOrientation="fullUser">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
-        </activity>
+            android:screenOrientation="fullUser" />
         <activity
             android:name=".activities.ServersActivity"
             android:label="@string/host_manage"

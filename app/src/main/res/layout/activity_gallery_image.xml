@@ -18,7 +18,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         tools:ignore="HardcodedText" />
 
-    <ImageView
+    <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/gallery_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -39,15 +39,22 @@
         <Button
             android:id="@+id/gallery_image_back_btn"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/gallery_image_back_btn" />
 
         <Button
             android:id="@+id/gallery_image_search_btn"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/gallery_image_search_btn" />
+
+        <Button
+            android:id="@+id/gallery_point_telescope"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/point_telescope" />
     </LinearLayout>
 </RelativeLayout>

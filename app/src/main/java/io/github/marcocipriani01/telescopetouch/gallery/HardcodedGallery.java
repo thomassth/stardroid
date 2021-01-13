@@ -52,32 +52,36 @@ public class HardcodedGallery implements Gallery {
         images.add(new GalleryImage(imageId, getString(nameId), getString(searchTermId)));
     }
 
+    private void add(ArrayList<GalleryImage> images, int imageId, int nameId, int searchTermId, String gotoName) {
+        images.add(new GalleryImage(imageId, getString(nameId), getString(searchTermId), gotoName));
+    }
+
     private ArrayList<GalleryImage> createImages() {
         ArrayList<GalleryImage> galleryImages = new ArrayList<>();
         // Note the internationalized names in places.  Be sure that if the
         // search term is internationalized in the search index then it is here too.
-        add(galleryImages, R.drawable.messenger_11_07_39, R.string.mercury, R.string.mercury);
-        add(galleryImages, R.drawable.hubble_venus_clouds_tops, R.string.venus, R.string.venus);
-        add(galleryImages, R.drawable.hubble_mars, R.string.mars, R.string.mars);
-        add(galleryImages, R.drawable.hubble_jupiter, R.string.jupiter, R.string.jupiter);
-        add(galleryImages, R.drawable.hubble_saturn, R.string.saturn, R.string.saturn);
-        add(galleryImages, R.drawable.hubble_uranus, R.string.uranus, R.string.uranus);
-        add(galleryImages, R.drawable.hubble_neptune, R.string.neptune, R.string.neptune);
-        add(galleryImages, R.drawable.nh_pluto_in_false_color, R.string.pluto, R.string.pluto);
-        add(galleryImages, R.drawable.hubble_m1, R.string.crab_nebula, R.string.crab_nebula);
-        add(galleryImages, R.drawable.hubble_m13, R.string.hercules_gc, R.string.hercules_gc);
-        add(galleryImages, R.drawable.hubble_m16, R.string.eagle_nebula, R.string.eagle_nebula);
-        add(galleryImages, R.drawable.kennett_m31, R.string.andromeda_galaxy, R.string.andromeda_galaxy);
-        add(galleryImages, R.drawable.hubble_m45, R.string.pleiades, R.string.pleiades);
-        add(galleryImages, R.drawable.hubble_m51a, R.string.whirlpool_galaxy, R.string.whirlpool_galaxy);
-        add(galleryImages, R.drawable.hubble_m57, R.string.ring_nebula, R.string.ring_nebula);
-        add(galleryImages, R.drawable.hubble_m101, R.string.pinwheel_galaxy, R.string.pinwheel_galaxy);
-        add(galleryImages, R.drawable.hubble_m104, R.string.sombrero_galaxy, R.string.sombrero_galaxy);
-        add(galleryImages, R.drawable.hubble_catseyenebula, R.string.cats_eye_nebula, R.string.cats_eye_nebula);
-        add(galleryImages, R.drawable.hubble_omegacentauri, R.string.omega_centauri, R.string.omega_centauri);
-        add(galleryImages, R.drawable.hubble_orion, R.string.orion_nebula, R.string.m42);
-        add(galleryImages, R.drawable.hubble_ultra_deep_field, R.string.hubble_deep_field, R.string.hubble_deep_field);
-        add(galleryImages, R.drawable.hubble_v838, R.string.v838_mon, R.string.v838_mon);
+        add(galleryImages, R.drawable.gallery_mercury, R.string.mercury, R.string.mercury);
+        add(galleryImages, R.drawable.gallery_venus, R.string.venus, R.string.venus);
+        add(galleryImages, R.drawable.gallery_mars, R.string.mars, R.string.mars);
+        add(galleryImages, R.drawable.gallery_jupiter, R.string.jupiter, R.string.jupiter);
+        add(galleryImages, R.drawable.gallery_saturn, R.string.saturn, R.string.saturn);
+        add(galleryImages, R.drawable.gallery_uranus, R.string.uranus, R.string.uranus);
+        add(galleryImages, R.drawable.gallery_neptune, R.string.neptune, R.string.neptune);
+        add(galleryImages, R.drawable.gallery_pluto, R.string.pluto, R.string.pluto);
+        add(galleryImages, R.drawable.gallery_crab, R.string.crab_nebula, R.string.crab_nebula, "m1");
+        add(galleryImages, R.drawable.gallery_m13, R.string.hercules_gc, R.string.hercules_gc, "m13");
+        add(galleryImages, R.drawable.gallery_eagle, R.string.eagle_nebula, R.string.eagle_nebula, "m16");
+        add(galleryImages, R.drawable.gallery_andromeda, R.string.andromeda_galaxy, R.string.andromeda_galaxy, "m31");
+        add(galleryImages, R.drawable.gallery_pleiades, R.string.pleiades, R.string.pleiades, "m45");
+        add(galleryImages, R.drawable.gallery_m51, R.string.whirlpool_galaxy, R.string.whirlpool_galaxy, "m51");
+        add(galleryImages, R.drawable.gallery_ring_nebula, R.string.ring_nebula, R.string.ring_nebula, "m57");
+        add(galleryImages, R.drawable.gallery_pinwheel, R.string.pinwheel_galaxy, R.string.pinwheel_galaxy, "m101");
+        add(galleryImages, R.drawable.gallery_sombrero, R.string.sombrero_galaxy, R.string.sombrero_galaxy, "m104");
+        add(galleryImages, R.drawable.gallery_cats_eye, R.string.cats_eye_nebula, R.string.cats_eye_nebula, "ngc6543");
+        add(galleryImages, R.drawable.gallery_omega_centauri, R.string.omega_centauri, R.string.omega_centauri, "ngc5139");
+        add(galleryImages, R.drawable.gallery_m42, R.string.orion_nebula, R.string.m42, "m42");
+        add(galleryImages, R.drawable.gallery_hdf, R.string.hubble_deep_field, R.string.hubble_deep_field, "?");
+        add(galleryImages, R.drawable.gallery_v838_mon, R.string.v838_mon, R.string.v838_mon, "?");
         return galleryImages;
     }
 

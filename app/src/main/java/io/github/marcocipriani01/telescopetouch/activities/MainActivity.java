@@ -137,6 +137,12 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(MainActivity.this, getString(R.string.shortcuts_not_supported), Toast.LENGTH_SHORT).show();
             }
             return true;
+        } else if (itemId == R.id.menu_skymap_gallery) {
+            startActivity(new Intent(this, ImageGalleryActivity.class));
+            return true;
+        } else if (itemId == R.id.menu_goto) {
+            startActivity(new Intent(this, GoToActivity.class));
+            return true;
         }
         return false;
     }
