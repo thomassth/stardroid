@@ -23,16 +23,14 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.preference.PreferenceManager;
-
-import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
@@ -58,6 +56,12 @@ public class ImageDisplayActivity extends InjectableActivity {
         super.onCreate(icicle);
         getApplicationComponent().inject(this);
         setContentView(R.layout.activity_gallery_image);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
+
         activityLightLevelManager = new ActivityLightLevelManager(
                 new ActivityLightLevelChanger(this, null),
                 PreferenceManager.getDefaultSharedPreferences(this));
@@ -69,22 +73,45 @@ public class ImageDisplayActivity extends InjectableActivity {
             finish();
         }
 
-        List<GalleryImage> galleryImages = GalleryFactory.getGallery(getResources()).getGalleryImages();
-        selectedImage = galleryImages.get(position);
-        ImageView imageView = findViewById(R.id.gallery_image);
-        imageView.setImageResource(selectedImage.imageId);
-        TextView label = findViewById(R.id.gallery_image_title);
-        label.setText(selectedImage.name);
-        Button backButton = findViewById(R.id.gallery_image_back_btn);
-        backButton.setOnClickListener(this::goBack);
-        Button searchButton = findViewById(R.id.gallery_image_search_btn);
-        searchButton.setOnClickListener(this::doSearch);
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
-        }
+        selectedImage = GalleryFactory.getGallery(getResources()).getGalleryImages().get(position);
+        this.<ImageView>findViewById(R.id.gallery_image).setImageResource(selectedImage.imageId);
+        this.<TextView>findViewById(R.id.gallery_image_title).setText(selectedImage.name);
+        this.<Button>findViewById(R.id.gallery_image_back_btn).setOnClickListener(source -> finish());
+        this.<Button>findViewById(R.id.gallery_image_search_btn).setOnClickListener(source -> {
+            Log.d(TAG, "Do Search");
+            // We must ensure that all the relevant layers are actually visible or the search might
+            // fail.  This is rather hacky.
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            Editor editor = sharedPreferences.edit();
+            String[] keys = {"source_provider.0",  // Stars
+                    "source_provider.2",  // Messier
+                    "source_provider.3"};  // Planets
+            for (String key : keys) {
+                if (!sharedPreferences.getBoolean(key, false)) {
+                    editor.putBoolean(key, true);
+                }
+            }
+            editor.apply();
+            Intent queryIntent = new Intent();
+            queryIntent.setAction(Intent.ACTION_SEARCH);
+            queryIntent.putExtra(SearchManager.QUERY, selectedImage.searchTerm);
+            queryIntent.setClass(this, DynamicStarMapActivity.class);
+            startActivity(queryIntent);
+        });
+        Button gotoButton = this.findViewById(R.id.gallery_point_telescope);
+        String gotoName = selectedImage.getGotoName();
+        gotoButton.setEnabled(!gotoName.equals("?"));
+        gotoButton.setOnClickListener(source -> {
+            if (TelescopeTouchApp.getConnectionManager().isConnected()) {
+                GoToFragment.setIntentSearch(gotoName);
+                Intent gotoIntent = new Intent(this, GoToActivity.class);
+                gotoIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(gotoIntent);
+            } else {
+                Toast.makeText(this, R.string.connect_telescope_first, Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, MainActivity.class));
+            }
+        });
     }
 
     @Override
@@ -106,33 +133,5 @@ public class ImageDisplayActivity extends InjectableActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public void doSearch(View source) {
-        Log.d(TAG, "Do Search");
-        // We must ensure that all the relevant layers are actually visible or the search might
-        // fail.  This is rather hacky.
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        Editor editor = sharedPreferences.edit();
-        String[] keys = {"source_provider.0",  // Stars
-                "source_provider.2",  // Messier
-                "source_provider.3"};  // Planets
-        for (String key : keys) {
-            if (!sharedPreferences.getBoolean(key, false)) {
-                editor.putBoolean(key, true);
-            }
-        }
-        editor.apply();
-
-        Intent queryIntent = new Intent();
-        queryIntent.setAction(Intent.ACTION_SEARCH);
-        queryIntent.putExtra(SearchManager.QUERY, selectedImage.searchTerm);
-        queryIntent.setClass(ImageDisplayActivity.this, DynamicStarMapActivity.class);
-        startActivity(queryIntent);
-    }
-
-    public void goBack(View source) {
-        Log.d(TAG, "Go back");
-        finish();
     }
 }

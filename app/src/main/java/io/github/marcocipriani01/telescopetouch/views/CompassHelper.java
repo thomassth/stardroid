@@ -26,7 +26,7 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 
-public class Compass implements SensorEventListener {
+public class CompassHelper implements SensorEventListener {
 
     private static final String TAG = "Compass";
     private final SensorManager sensorManager;
@@ -38,7 +38,7 @@ public class Compass implements SensorEventListener {
     private float azimuth = 0f;
     private float correctAzimuth = 0;
 
-    public Compass(Context context) {
+    public CompassHelper(Context context) {
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         gSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);

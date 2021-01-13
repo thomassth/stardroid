@@ -318,6 +318,8 @@ public class DynamicStarMapActivity extends InjectableActivity
         } else if (itemId == R.id.menu_skymap_diagnostics) {
             Log.d(TAG, "Loading Diagnostics");
             startActivity(new Intent(this, DiagnosticActivity.class));
+        } else if (itemId == R.id.menu_about) {
+            startActivity(new Intent(this, AboutActivity.class));
         } else {
             return false;
         }

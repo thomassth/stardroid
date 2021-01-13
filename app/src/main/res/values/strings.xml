@@ -542,4 +542,7 @@
     <string name="location_no_auto">Sky Map can\'t access your location, which is needed to calculate the position of the stars. You can enable the location permission in the phone\'s settings.</string>
     <string name="warning">Warning</string>
     <string name="take_me_there">Take me there</string>
+    <string name="point_telescope">Point telescope</string>
+    <string name="connect_telescope_first">Please connect the telescope first.</string>
+    <string name="gallery_copyright">Images by NASA (public domain), ESO (CC BY 4.0) and Adam Evans (CC BY 2.0)</string>
 </resources>

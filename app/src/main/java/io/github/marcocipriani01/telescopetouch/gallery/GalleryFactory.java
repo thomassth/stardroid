@@ -35,9 +35,7 @@ public class GalleryFactory {
      * Returns the gallery.  This will usually be a singleton.
      */
     public static synchronized Gallery getGallery(Resources resources) {
-        if (gallery == null) {
-            gallery = new HardcodedGallery(resources);
-        }
+        if (gallery == null) gallery = new HardcodedGallery(resources);
         return gallery;
     }
 }

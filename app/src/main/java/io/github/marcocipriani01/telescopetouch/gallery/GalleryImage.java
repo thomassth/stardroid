@@ -26,10 +26,23 @@ public class GalleryImage {
     public final int imageId;
     public final String name;
     public final String searchTerm;
+    private final String gotoName;
 
     public GalleryImage(int imageId, String name, String searchTerm) {
         this.imageId = imageId;
         this.name = name;
         this.searchTerm = searchTerm;
+        this.gotoName = null;
+    }
+
+    public GalleryImage(int imageId, String name, String searchTerm, String gotoName) {
+        this.imageId = imageId;
+        this.name = name;
+        this.searchTerm = searchTerm;
+        this.gotoName = gotoName;
+    }
+
+    public String getGotoName() {
+        return (gotoName == null) ? searchTerm : gotoName;
     }
 }

@@ -14,6 +14,7 @@
 
 package io.github.marcocipriani01.telescopetouch.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -22,6 +23,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+
+import io.github.marcocipriani01.telescopetouch.R;
 
 /**
  * Needed by the Android Manifest.
@@ -46,8 +49,12 @@ public class GoToActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
+        int itemId = item.getItemId();
+        if (itemId == android.R.id.home) {
             onBackPressed();
+            return true;
+        } else if (itemId == R.id.menu_skymap_gallery) {
+            startActivity(new Intent(this, ImageGalleryActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);

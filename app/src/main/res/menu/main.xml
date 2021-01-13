@@ -7,17 +7,30 @@
         android:icon="@drawable/info"
         android:orderInCategory="0"
         android:title="@string/menu_about"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_goto"
+        android:icon="@drawable/location"
+        android:orderInCategory="1"
+        android:title="@string/mount_goto"
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/menu_compass"
+        android:id="@+id/menu_skymap_gallery"
         android:orderInCategory="1"
+        android:title="@string/menu_gallery"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_compass"
+        android:orderInCategory="2"
         android:title="@string/compass"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/menu_skymap_shortcut"
-        android:orderInCategory="2"
+        android:orderInCategory="3"
         android:title="@string/add_sky_map_shortcut"
         app:showAsAction="never" />
 </menu>
