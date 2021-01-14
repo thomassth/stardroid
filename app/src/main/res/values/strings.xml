@@ -546,4 +546,5 @@
     <string name="point_telescope">Point telescope</string>
     <string name="connect_telescope_first">Please connect the telescope first.</string>
     <string name="gallery_copyright">Images by NASA (public domain), ESO (CC BY 4.0) and Adam Evans (CC BY 2.0)</string>
+    <string name="show_discovered_services">Show discovered services</string>
 </resources>

@@ -43,6 +43,7 @@ import io.github.marcocipriani01.telescopetouch.activities.ConnectionFragment;
 import io.github.marcocipriani01.telescopetouch.activities.ConnectionManager;
 import io.github.marcocipriani01.telescopetouch.activities.MainActivity;
 import io.github.marcocipriani01.telescopetouch.layers.LayerManager;
+import io.github.marcocipriani01.telescopetouch.util.NSDHelper;
 
 /**
  * The main application class.
@@ -66,6 +67,7 @@ public class TelescopeTouchApp extends Application {
      * Global connection manager.
      */
     private static ConnectionManager connectionManager;
+    private static NSDHelper serviceDiscoveryHelper;
     private static Runnable goToConnection;
     @Inject
     SharedPreferences preferences;
@@ -82,6 +84,10 @@ public class TelescopeTouchApp extends Application {
      */
     public static String getSafeNameForSensor(Sensor sensor) {
         return "Sensor type: " + sensor.getStringType() + ": " + sensor.getType();
+    }
+
+    public static NSDHelper getServiceDiscoveryHelper() {
+        return serviceDiscoveryHelper;
     }
 
     /**
@@ -137,7 +143,7 @@ public class TelescopeTouchApp extends Application {
         Log.i("GlobalLog", message);
         if (uiUpdater != null) {
             Date now = new Date();
-            uiUpdater.appendLog(message, DateFormat.getDateFormat(context).format(now) + " " +
+            uiUpdater.addLog(message, DateFormat.getDateFormat(context).format(now) + " " +
                     DateFormat.getTimeFormat(context).format(now));
         }
     }
@@ -161,22 +167,24 @@ public class TelescopeTouchApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        context = getApplicationContext();
 
         component = DaggerApplicationComponent.builder()
-                .applicationModule(new ApplicationModule(this))
-                .build();
+                .applicationModule(new ApplicationModule(this)).build();
         component.inject(this);
-
         // This populates the default values from the preferences XML file. See
         // {@link DefaultValues} for more details.
         PreferenceManager.setDefaultValues(this, R.xml.preference_screen, false);
-
         performFeatureCheck();
 
-        context = getApplicationContext();
-        if (connectionManager == null) {
-            connectionManager = new ConnectionManager();
-        }
+        if (connectionManager == null) connectionManager = new ConnectionManager();
+        if (serviceDiscoveryHelper == null) serviceDiscoveryHelper = new NSDHelper(this);
+    }
+
+    @Override
+    public void onTerminate() {
+        if (serviceDiscoveryHelper != null) serviceDiscoveryHelper.terminate();
+        super.onTerminate();
     }
 
     public ApplicationComponent getApplicationComponent() {
@@ -287,7 +295,7 @@ public class TelescopeTouchApp extends Application {
         /**
          * Appends a log to the Log TextView.
          */
-        void appendLog(final String msg, final String timestamp);
+        void addLog(final String msg, final String timestamp);
 
         /**
          * @param state a new state for the Connection button.
