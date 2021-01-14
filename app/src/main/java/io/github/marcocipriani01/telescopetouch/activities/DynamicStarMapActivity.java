@@ -38,6 +38,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -137,6 +138,8 @@ public class DynamicStarMapActivity extends InjectableActivity
     private DragRotateZoomGestureDetector dragZoomRotateDetector;
     private ActivityLightLevelManager activityLightLevelManager;
     private boolean isSkyMapOnly;
+    private SearchView searchView;
+    private MenuItem searchMenuItem;
 
     @Override
     public DynamicStarMapComponent getComponent() {
@@ -185,6 +188,17 @@ public class DynamicStarMapActivity extends InjectableActivity
                 startActivity(new Intent(this, MainActivity.class));
             } else {
                 onBackPressed();
+            }
+        });
+        this.<Button>findViewById(R.id.search_in_database).setOnClickListener(v -> {
+            if (TelescopeTouchApp.getConnectionManager().isConnected()) {
+                GoToFragment.setIntentSearch(searchTargetName);
+                Intent gotoIntent = new Intent(DynamicStarMapActivity.this, GoToActivity.class);
+                gotoIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(gotoIntent);
+            } else {
+                Toast.makeText(DynamicStarMapActivity.this, R.string.connect_telescope_first, Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(DynamicStarMapActivity.this, MainActivity.class));
             }
         });
 
@@ -242,7 +256,8 @@ public class DynamicStarMapActivity extends InjectableActivity
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.skymap, menu);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.menu_skymap_search).getActionView();
+        searchMenuItem = menu.findItem(R.id.menu_skymap_search);
+        searchView = (SearchView) searchMenuItem.getActionView();
         searchView.setMaxWidth(Integer.MAX_VALUE);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         return true;
@@ -607,6 +622,10 @@ public class DynamicStarMapActivity extends InjectableActivity
 
     public void activateSearchTarget(GeocentricCoordinates target, final String searchTerm) {
         Log.d(TAG, "Item " + searchTerm + " selected");
+        searchView.clearFocus();
+        searchView.setIconified(true);
+        searchMenuItem.collapseActionView();
+        searchView.onActionViewCollapsed();
         // Store these for later.
         searchTarget = target;
         searchTargetName = searchTerm;
