@@ -459,4 +459,5 @@
     <string name="point_telescope">Punta telescopio</string>
     <string name="connect_telescope_first">Connettere il telescopio prima.</string>
     <string name="gallery_copyright">Immagini di NASA (dominio pubblico), ESO (CC BY 4.0) e Adam Evans (CC BY 2.0)</string>
+    <string name="show_discovered_services">Mostra servizi in LAN</string>
 </resources>

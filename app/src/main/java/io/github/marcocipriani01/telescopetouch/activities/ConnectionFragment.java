@@ -24,6 +24,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -41,9 +44,11 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
+import io.github.marcocipriani01.telescopetouch.util.NSDHelper;
 import io.github.marcocipriani01.telescopetouch.views.ImprovedSpinner;
 import io.github.marcocipriani01.telescopetouch.views.ImprovedSpinnerListener;
 
@@ -53,18 +58,21 @@ import io.github.marcocipriani01.telescopetouch.views.ImprovedSpinnerListener;
  * @author Romain Fafet
  * @author marcocipriani01
  */
-public class ConnectionFragment extends Fragment implements ServersReloadListener, TelescopeTouchApp.UIUpdater {
+public class ConnectionFragment extends Fragment implements ServersReloadListener,
+        TelescopeTouchApp.UIUpdater, NSDHelper.NSDListener {
 
     /**
      * All the logs.
      */
     private final static ArrayList<LogItem> logs = new ArrayList<>();
     private static final String INDI_PORT_PREF = "INDI_PORT_PREF";
+    private static final String NSD_PREF = "NSD_PREF";
     private static TelescopeTouchApp.ConnectionState state = TelescopeTouchApp.ConnectionState.DISCONNECTED;
     /**
      * The last position of the spinner (to restore the Fragment's state)
      */
     private static int selectedSpinnerItem = 0;
+    private SharedPreferences preferences;
     private Context context;
     private Button connectionButton;
     private ImprovedSpinner serversSpinner;
@@ -80,6 +88,7 @@ public class ConnectionFragment extends Fragment implements ServersReloadListene
             }
         }
     };
+    private NSDHelper nsdHelper;
     private EditText portEditText;
     /**
      * The original position of the floating action button.
@@ -88,6 +97,7 @@ public class ConnectionFragment extends Fragment implements ServersReloadListene
     private FloatingActionButton clearLogsButton;
     private ListView logsList;
     private LogAdapter logAdapter;
+    private boolean showNsd = true;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -96,14 +106,9 @@ public class ConnectionFragment extends Fragment implements ServersReloadListene
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) loadServers(ServersActivity.getServers(context));
-    }
-
-    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_connection, container, false);
+        setHasOptionsMenu(true);
         logsList = rootView.findViewById(R.id.logsList);
         logAdapter = new LogAdapter(context);
         logsList.setAdapter(logAdapter);
@@ -123,11 +128,10 @@ public class ConnectionFragment extends Fragment implements ServersReloadListene
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                clearLogsButton.animate().cancel();
                 if (firstVisibleItem >= visibleItemCount) {
-                    clearLogsButton.animate().cancel();
                     clearLogsButton.animate().translationYBy(250);
                 } else {
-                    clearLogsButton.animate().cancel();
                     clearLogsButton.animate().translationY(fabPosY);
                 }
             }
@@ -135,13 +139,18 @@ public class ConnectionFragment extends Fragment implements ServersReloadListene
 
         connectionButton = rootView.findViewById(R.id.connectionButton);
         serversSpinner = rootView.findViewById(R.id.spinnerHost);
-        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        showNsd = preferences.getBoolean(NSD_PREF, true);
+        nsdHelper = TelescopeTouchApp.getServiceDiscoveryHelper();
         loadServers(ServersActivity.getServers(preferences));
         portEditText = rootView.findViewById(R.id.port_edittext);
         portEditText.setText(String.valueOf(preferences.getInt(INDI_PORT_PREF, 7624)));
         connectionButton.setOnClickListener(v -> {
-            // Retrieve Hostname and port number
             String host = String.valueOf(serversSpinner.getSelectedItem());
+            if (host.contains("@")) {
+                String[] split = host.split("@");
+                if (split.length == 2) host = split[1];
+            }
             String portStr = portEditText.getText().toString();
             int port;
             if (portStr.equals("")) {
@@ -154,7 +163,6 @@ public class ConnectionFragment extends Fragment implements ServersReloadListene
                     port = 7624;
                 }
             }
-            // Connect or disconnect
             ConnectionManager connectionManager = TelescopeTouchApp.getConnectionManager();
             if (state == TelescopeTouchApp.ConnectionState.DISCONNECTED) {
                 if (host.equals(getResources().getString(R.string.host_add))) {
@@ -173,13 +181,62 @@ public class ConnectionFragment extends Fragment implements ServersReloadListene
         });
         serversSpinner.setSelection(selectedSpinnerItem);
         spinnerListener.attach(serversSpinner);
+
         refreshUi();
         TelescopeTouchApp.setUiUpdater(this);
+
+        nsdHelper.setListener(this);
+        if (!nsdHelper.isAvailable()) TelescopeTouchApp.log("NSD not available.");
         return rootView;
     }
 
     @Override
-    public void appendLog(final String msg, final String timestamp) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.nsd, menu);
+        MenuItem item = menu.findItem(R.id.menu_nsd);
+        item.setEnabled(nsdHelper.isAvailable());
+        item.setChecked(showNsd);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.menu_nsd) {
+            showNsd = !item.isChecked();
+            item.setChecked(showNsd);
+            loadServers(ServersActivity.getServers(preferences));
+            preferences.edit().putBoolean(NSD_PREF, showNsd).apply();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        selectedSpinnerItem = serversSpinner.getSelectedItemPosition();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) loadServers(ServersActivity.getServers(context));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        nsdHelper.setListener(null);
+    }
+
+    @Override
+    public void setConnectionState(TelescopeTouchApp.ConnectionState state) {
+        ConnectionFragment.state = state;
+        new Handler(Looper.getMainLooper()).post(this::refreshUi);
+    }
+
+    @Override
+    public void addLog(final String msg, final String timestamp) {
         logsList.post(() -> {
             logs.add(new LogItem(msg, timestamp));
             logAdapter.notifyDataSetChanged();
@@ -188,12 +245,6 @@ public class ConnectionFragment extends Fragment implements ServersReloadListene
                 clearLogsButton.animate().translationY(fabPosY);
             }
         });
-    }
-
-    @Override
-    public void setConnectionState(TelescopeTouchApp.ConnectionState state) {
-        ConnectionFragment.state = state;
-        new Handler(Looper.getMainLooper()).post(this::refreshUi);
     }
 
     private void refreshUi() {
@@ -229,19 +280,25 @@ public class ConnectionFragment extends Fragment implements ServersReloadListene
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        selectedSpinnerItem = serversSpinner.getSelectedItemPosition();
-    }
-
-    @Override
     public void loadServers(ArrayList<String> servers) {
         Resources resources = context.getResources();
+        if (showNsd) {
+            HashMap<String, String> services = nsdHelper.getDiscoveredServices();
+            for (String name : services.keySet()) {
+                String ip = services.get(name);
+                if (ip != null) servers.add(name.replace("@", "") + "@" + ip);
+            }
+        }
         servers.add(resources.getString(R.string.host_add));
         servers.add(resources.getString(R.string.host_manage));
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, servers);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         serversSpinner.setAdapter(dataAdapter);
+    }
+
+    @Override
+    public void onNSDChange() {
+        new Handler(Looper.getMainLooper()).post(() -> loadServers(ServersActivity.getServers(preferences)));
     }
 
     /**
