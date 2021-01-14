@@ -171,13 +171,17 @@ public class ControlPanelFragment extends Fragment
         noDevicesText.post(() -> noDevicesText.setVisibility(View.VISIBLE));
         controlLayout.post(() -> controlLayout.setVisibility(View.GONE));
         viewPager.post(() -> fragmentAdapter.notifyDataSetChanged());
-        new Handler(Looper.getMainLooper()).post(() -> searchMenu.setVisible(false));
+        new Handler(Looper.getMainLooper()).post(() -> {
+            if (searchMenu != null) searchMenu.setVisible(false);
+        });
     }
 
     private void devices() {
         noDevicesText.post(() -> noDevicesText.setVisibility(View.GONE));
         controlLayout.post(() -> controlLayout.setVisibility(View.VISIBLE));
-        new Handler(Looper.getMainLooper()).post(() -> searchMenu.setVisible(true));
+        new Handler(Looper.getMainLooper()).post(() -> {
+            if (searchMenu != null) searchMenu.setVisible(true);
+        });
     }
 
     @Override
