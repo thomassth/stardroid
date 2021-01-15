@@ -14,7 +14,11 @@
 
 package io.github.marcocipriani01.telescopetouch.activities;
 
+import android.content.Context;
 import android.content.res.Resources;
+import android.text.format.DateFormat;
+
+import androidx.annotation.NonNull;
 
 import org.indilib.i4j.client.INDIDevice;
 import org.indilib.i4j.client.INDIDeviceListener;
@@ -22,12 +26,12 @@ import org.indilib.i4j.client.INDIProperty;
 import org.indilib.i4j.client.INDIServerConnection;
 import org.indilib.i4j.client.INDIServerConnectionListener;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
-
 
 /**
  * Manages an {@link INDIServerConnection} object, listens to INDI messages and notifies listeners.
@@ -37,26 +41,56 @@ import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 public class ConnectionManager implements INDIServerConnectionListener, INDIDeviceListener {
 
     /**
+     * All the logs.
+     */
+    private final ArrayList<LogItem> logs = new ArrayList<>();
+    /**
      * A list to re-add the listener when the connection is destroyed and recreated.
      */
     private final HashSet<INDIServerConnectionListener> listeners;
+    private final java.text.DateFormat dateFormat;
+    private final java.text.DateFormat timeFormat;
     /**
      * The connection to the INDI server.
      */
     private INDIServerConnection connection;
+    /**
+     * UI updater
+     */
+    private UIUpdater uiUpdater = null;
+    private boolean busy = false;
 
     /**
      * Class constructor.
      */
-    public ConnectionManager() {
+    public ConnectionManager(Context appContext) {
         listeners = new HashSet<>();
+        dateFormat = DateFormat.getDateFormat(appContext);
+        timeFormat = DateFormat.getTimeFormat(appContext);
+    }
+
+    public ArrayList<LogItem> getLogs() {
+        return logs;
+    }
+
+    public void clearLogs() {
+        logs.clear();
+    }
+
+    public ConnectionState getState() {
+        return busy ? ConnectionState.BUSY :
+                (((connection != null) && connection.isConnected()) ? ConnectionState.CONNECTED : ConnectionState.DISCONNECTED);
+    }
+
+    public boolean isConnected() {
+        return (!busy) && (connection != null) && connection.isConnected();
     }
 
     /**
-     * @return the current state of this connection manager (connected or not).
+     * @param state the new state of the Connection button.
      */
-    public boolean isConnected() {
-        return (connection != null) && (connection.isConnected());
+    public void updateState(ConnectionState state) {
+        if (uiUpdater != null) uiUpdater.updateConnectionState(state);
     }
 
     /**
@@ -74,9 +108,10 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
      */
     public void connect(String host, int port) {
         final Resources resources = TelescopeTouchApp.getAppResources();
-        if (!isConnected()) {
-            TelescopeTouchApp.setState(TelescopeTouchApp.ConnectionState.CONNECTING);
-            TelescopeTouchApp.log(resources.getString(R.string.try_to_connect) + host + ":" + port);
+        if (getState() == ConnectionState.DISCONNECTED) {
+            updateState(ConnectionState.BUSY);
+            busy = true;
+            log(resources.getString(R.string.try_to_connect) + host + ":" + port);
             new Thread(() -> {
                 try {
                     connection = new INDIServerConnection(host, port);
@@ -86,33 +121,59 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
                     }
                     connection.connect();
                     connection.askForDevices();
-                    TelescopeTouchApp.log(resources.getString(R.string.connected));
-                    TelescopeTouchApp.setState(TelescopeTouchApp.ConnectionState.CONNECTED);
+                    busy = false;
+                    updateState(ConnectionState.CONNECTED);
+                    log(resources.getString(R.string.connected));
                 } catch (Exception e) {
-                    TelescopeTouchApp.log(e.getLocalizedMessage());
-                    TelescopeTouchApp.setState(TelescopeTouchApp.ConnectionState.DISCONNECTED);
+                    busy = false;
+                    updateState(ConnectionState.DISCONNECTED);
+                    log(e.getLocalizedMessage());
                 }
             }).start();
         } else {
-            TelescopeTouchApp.log("Already connected!");
+            log("Already connected or busy!"); //TODO resource
         }
+    }
+
+    /**
+     * Add the given message to the logs.
+     *
+     * @param message a new log.
+     */
+    public void log(String message) {
+        Date now = new Date();
+        LogItem log = new LogItem(message, dateFormat.format(now) + " " + timeFormat.format(now));
+        logs.add(log);
+        if (uiUpdater != null) {
+            uiUpdater.addLog(log);
+        }
+    }
+
+    /**
+     * @param u a new {@link UIUpdater}
+     */
+    public void setUiUpdater(UIUpdater u) {
+        uiUpdater = u;
     }
 
     /**
      * Breaks the connection.
      */
     public void disconnect() {
-        if (isConnected()) {
+        if (getState() == ConnectionState.CONNECTED) {
             new Thread(() -> {
+                busy = true;
                 try {
                     connection.disconnect();
                 } catch (Exception e) {
-                    TelescopeTouchApp.log(e.getLocalizedMessage());
-                    TelescopeTouchApp.setState(TelescopeTouchApp.ConnectionState.DISCONNECTED);
+                    log(e.getLocalizedMessage());
                 }
+                connection = null;
+                busy = false;
+                updateState(ConnectionState.DISCONNECTED);
             }).start();
         } else {
-            TelescopeTouchApp.log("Not connected!");
+            log("Not connected or busy!"); //TODO resource
         }
     }
 
@@ -123,11 +184,8 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
      * @param connectionListener the listener
      */
     public void addListener(INDIServerConnectionListener connectionListener) {
-        if (connection != null) {
-            if (listeners.add(connectionListener)) {
-                connection.addINDIServerConnectionListener(connectionListener);
-            }
-        }
+        if (listeners.add(connectionListener) && (connection != null))
+            connection.addINDIServerConnectionListener(connectionListener);
     }
 
     /**
@@ -136,35 +194,33 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
      * @param connectionListener the listener
      */
     public void removeListener(INDIServerConnectionListener connectionListener) {
-        if (connection != null) {
-            listeners.remove(connectionListener);
-            connection.removeINDIServerConnectionListener(connectionListener);
-        }
+        listeners.remove(connectionListener);
+        if (connection != null) connection.removeINDIServerConnectionListener(connectionListener);
     }
 
     @Override
     public void newDevice(INDIServerConnection connection, INDIDevice device) {
         device.addINDIDeviceListener(this);
-        TelescopeTouchApp.log("New device: " + device.getName());
+        log("New device: " + device.getName()); // TODO resource
     }
 
     @Override
     public void removeDevice(INDIServerConnection connection, INDIDevice device) {
         device.removeINDIDeviceListener(this);
-        TelescopeTouchApp.log("Device removed: " + device.getName());
+        log("Device removed: " + device.getName()); // TODO resource
     }
 
     @Override
     public void connectionLost(INDIServerConnection connection) {
-        Resources resources = TelescopeTouchApp.getAppResources();
-        TelescopeTouchApp.log(resources.getString(R.string.connection_lost));
-        TelescopeTouchApp.setState(TelescopeTouchApp.ConnectionState.DISCONNECTED);
-        TelescopeTouchApp.goToConnectionTab();
+        busy = false;
+        this.connection = null;
+        updateState(ConnectionState.DISCONNECTED);
+        log(TelescopeTouchApp.getAppResources().getString(R.string.connection_lost));
     }
 
     @Override
     public void newMessage(INDIServerConnection connection, Date timestamp, String message) {
-        TelescopeTouchApp.log(message);
+        log(message);
     }
 
     @Override
@@ -179,6 +235,58 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
 
     @Override
     public void messageChanged(INDIDevice device) {
-        TelescopeTouchApp.log(device.getName() + ": " + device.getLastMessage());
+        log(device.getName() + ": " + device.getLastMessage());
+    }
+
+    public enum ConnectionState {
+        DISCONNECTED, CONNECTED, BUSY
+    }
+
+    /**
+     * This class offers a safe way to update the UI statically instead of keeping in memory Android Widgets,
+     * which implement the class {@link Context}.
+     *
+     * @author marcocipriani01
+     */
+    public interface UIUpdater {
+        /**
+         * Appends a log to the Log TextView.
+         */
+        void addLog(final LogItem log);
+
+        void updateConnectionState(ConnectionState state);
+    }
+
+    /**
+     * Represents a single log with its timestamp.
+     *
+     * @author marcocipriani01
+     */
+    public static class LogItem {
+
+        private final String log;
+        private final String timestamp;
+
+        /**
+         * Class constructor.
+         */
+        LogItem(@NonNull String log, @NonNull String timestamp) {
+            this.log = log;
+            this.timestamp = timestamp;
+        }
+
+        /**
+         * @return the log text.
+         */
+        String getLog() {
+            return log;
+        }
+
+        /**
+         * @return the timestamp string.
+         */
+        String getTimestamp() {
+            return timestamp;
+        }
     }
 }

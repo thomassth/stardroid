@@ -104,7 +104,7 @@ public class TextPropPref extends PropPref<INDITextElement> {
             layout.setOrientation(LinearLayout.VERTICAL);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            int padding = TelescopeTouchApp.getAppResources().getDimensionPixelSize(R.dimen.padding_medium);
+            int padding = context.getResources().getDimensionPixelSize(R.dimen.padding_medium);
             layoutParams.setMargins(padding, 0, padding, 0);
 
             for (INDITextElement element : elements) {
@@ -132,7 +132,7 @@ public class TextPropPref extends PropPref<INDITextElement> {
                         }
                     } catch (INDIValueException | IllegalArgumentException e) {
                         Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-                        TelescopeTouchApp.log(TelescopeTouchApp.getAppResources().getString(R.string.error) + e.getLocalizedMessage());
+                        TelescopeTouchApp.getConnectionManager().log(context.getResources().getString(R.string.error) + e.getLocalizedMessage());
                     }
                     propPref.sendChanges();
                 });

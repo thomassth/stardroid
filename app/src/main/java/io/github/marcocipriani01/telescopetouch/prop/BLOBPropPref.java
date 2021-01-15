@@ -29,6 +29,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import org.indilib.i4j.client.INDIBLOBElement;
 import org.indilib.i4j.client.INDIBLOBProperty;
 import org.indilib.i4j.client.INDIProperty;
@@ -36,7 +38,6 @@ import org.indilib.i4j.client.INDIProperty;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
 public class BLOBPropPref extends PropPref<INDIBLOBElement> {
 
@@ -98,7 +99,7 @@ public class BLOBPropPref extends PropPref<INDIBLOBElement> {
             layout.setOrientation(LinearLayout.VERTICAL);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            int padding = TelescopeTouchApp.getAppResources().getDimensionPixelSize(R.dimen.padding_medium);
+            int padding = context.getResources().getDimensionPixelSize(R.dimen.padding_medium);
             layoutParams.setMargins(padding, 0, padding, 0);
             for (INDIBLOBElement element : elements) {
                 TextView textView = new TextView(context);

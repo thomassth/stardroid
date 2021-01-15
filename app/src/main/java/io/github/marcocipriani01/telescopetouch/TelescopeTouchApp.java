@@ -26,22 +26,18 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.text.format.DateFormat;
 import android.util.Log;
 
 import androidx.core.content.pm.PackageInfoCompat;
 import androidx.preference.PreferenceManager;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
 
-import io.github.marcocipriani01.telescopetouch.activities.ConnectionFragment;
 import io.github.marcocipriani01.telescopetouch.activities.ConnectionManager;
-import io.github.marcocipriani01.telescopetouch.activities.MainActivity;
 import io.github.marcocipriani01.telescopetouch.layers.LayerManager;
 import io.github.marcocipriani01.telescopetouch.util.NSDHelper;
 
@@ -60,15 +56,10 @@ public class TelescopeTouchApp extends Application {
     @SuppressLint("StaticFieldLeak")
     private static Context context;
     /**
-     * UI updater
-     */
-    private static UIUpdater uiUpdater = null;
-    /**
      * Global connection manager.
      */
     private static ConnectionManager connectionManager;
     private static NSDHelper serviceDiscoveryHelper;
-    private static Runnable goToConnection;
     @Inject
     SharedPreferences preferences;
     // We keep a reference to this just to start it initializing.
@@ -112,56 +103,10 @@ public class TelescopeTouchApp extends Application {
     }
 
     /**
-     * @param u a new {@link UIUpdater}
-     */
-    public static void setUiUpdater(UIUpdater u) {
-        uiUpdater = u;
-    }
-
-    /**
-     * Sets the action to fire to go back to the connection tab.
-     *
-     * @param runnable the action.
-     */
-    public static void setGoToConnectionTab(Runnable runnable) {
-        goToConnection = runnable;
-    }
-
-    /**
      * @return the context of the whole app.
      */
     public static Context getContext() {
         return context;
-    }
-
-    /**
-     * Add the given message to the logs.
-     *
-     * @param message a new log.
-     */
-    public static void log(String message) {
-        Log.i("GlobalLog", message);
-        if (uiUpdater != null) {
-            Date now = new Date();
-            uiUpdater.addLog(message, DateFormat.getDateFormat(context).format(now) + " " +
-                    DateFormat.getTimeFormat(context).format(now));
-        }
-    }
-
-    /**
-     * @param state the new state of the Connection button.
-     */
-    public static void setState(ConnectionState state) {
-        if (uiUpdater != null) uiUpdater.setConnectionState(state);
-    }
-
-    /**
-     * Makes {@link MainActivity} change the current fragment to {@link ConnectionFragment}.
-     */
-    public static void goToConnectionTab() {
-        if (goToConnection != null) {
-            goToConnection.run();
-        }
     }
 
     @Override
@@ -177,7 +122,7 @@ public class TelescopeTouchApp extends Application {
         PreferenceManager.setDefaultValues(this, R.xml.preference_screen, false);
         performFeatureCheck();
 
-        if (connectionManager == null) connectionManager = new ConnectionManager();
+        if (connectionManager == null) connectionManager = new ConnectionManager(context);
         if (serviceDiscoveryHelper == null) serviceDiscoveryHelper = new NSDHelper(this);
     }
 
@@ -279,27 +224,5 @@ public class TelescopeTouchApp extends Application {
                 dummy, sensor, SensorManager.SENSOR_DELAY_UI);
         sensorManager.unregisterListener(dummy);
         return success;
-    }
-
-    public enum ConnectionState {
-        DISCONNECTED, CONNECTED, CONNECTING
-    }
-
-    /**
-     * This class offers a safe way to update the UI statically instead of keeping in memory Android Widgets,
-     * which implement the class {@link Context}.
-     *
-     * @author marcocipriani01
-     */
-    public interface UIUpdater {
-        /**
-         * Appends a log to the Log TextView.
-         */
-        void addLog(final String msg, final String timestamp);
-
-        /**
-         * @param state a new state for the Connection button.
-         */
-        void setConnectionState(ConnectionState state);
     }
 }

@@ -129,14 +129,9 @@ public class ControlPanelFragment extends Fragment
     @Override
     public void onStop() {
         super.onStop();
+        noDevices();
         tabLayoutMediator.detach();
         viewPager.setAdapter(null);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        noDevices();
         connectionManager.removeListener(this);
     }
 
@@ -187,8 +182,6 @@ public class ControlPanelFragment extends Fragment
     @Override
     public void connectionLost(INDIServerConnection connection) {
         noDevices();
-        // Move to the connection tab
-        TelescopeTouchApp.goToConnectionTab();
     }
 
     @Override
