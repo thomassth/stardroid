@@ -141,7 +141,7 @@ public class SwitchPropPref extends PropPref<INDISwitchElement> {
                         }
                     } catch (INDIValueException | IllegalArgumentException e) {
                         Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-                        TelescopeTouchApp.log(TelescopeTouchApp.getAppResources().getString(R.string.error) + e.getLocalizedMessage());
+                        TelescopeTouchApp.getConnectionManager().log(context.getResources().getString(R.string.error) + e.getLocalizedMessage());
                     }
                     propPref.sendChanges();
                 });

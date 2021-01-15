@@ -59,19 +59,15 @@ import io.github.marcocipriani01.telescopetouch.views.ImprovedSpinnerListener;
  * @author marcocipriani01
  */
 public class ConnectionFragment extends Fragment implements ServersReloadListener,
-        TelescopeTouchApp.UIUpdater, NSDHelper.NSDListener {
+        ConnectionManager.UIUpdater, NSDHelper.NSDListener {
 
-    /**
-     * All the logs.
-     */
-    private final static ArrayList<LogItem> logs = new ArrayList<>();
     private static final String INDI_PORT_PREF = "INDI_PORT_PREF";
     private static final String NSD_PREF = "NSD_PREF";
-    private static TelescopeTouchApp.ConnectionState state = TelescopeTouchApp.ConnectionState.DISCONNECTED;
     /**
      * The last position of the spinner (to restore the Fragment's state)
      */
     private static int selectedSpinnerItem = 0;
+    private ConnectionManager connectionManager;
     private SharedPreferences preferences;
     private Context context;
     private Button connectionButton;
@@ -109,17 +105,21 @@ public class ConnectionFragment extends Fragment implements ServersReloadListene
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_connection, container, false);
         setHasOptionsMenu(true);
+        connectionManager = TelescopeTouchApp.getConnectionManager();
         logsList = rootView.findViewById(R.id.logsList);
         logAdapter = new LogAdapter(context);
+        logAdapter.addAll(connectionManager.getLogs());
         logsList.setAdapter(logAdapter);
         clearLogsButton = rootView.findViewById(R.id.clearLogsButton);
         clearLogsButton.setOnClickListener(v -> {
-            logs.clear();
+            connectionManager.clearLogs();
+            logAdapter.clear();
             logAdapter.notifyDataSetChanged();
             clearLogsButton.animate().translationY(250);
         });
         fabPosY = clearLogsButton.getScrollY();
-        if (logs.size() == 0) clearLogsButton.animate().setDuration(0).translationXBy(250);
+        if (connectionManager.getLogs().size() == 0)
+            clearLogsButton.animate().setDuration(0).translationXBy(250);
         logsList.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -163,8 +163,8 @@ public class ConnectionFragment extends Fragment implements ServersReloadListene
                     port = 7624;
                 }
             }
-            ConnectionManager connectionManager = TelescopeTouchApp.getConnectionManager();
-            if (state == TelescopeTouchApp.ConnectionState.DISCONNECTED) {
+            ConnectionManager.ConnectionState state = connectionManager.getState();
+            if (state == ConnectionManager.ConnectionState.DISCONNECTED) {
                 if (host.equals(getResources().getString(R.string.host_add))) {
                     serversSpinner.post(() -> serversSpinner.setSelection(0));
                     ServersActivity.addServer(context, ConnectionFragment.this);
@@ -173,7 +173,7 @@ public class ConnectionFragment extends Fragment implements ServersReloadListene
                 } else {
                     connectionManager.connect(host, port);
                 }
-            } else if (state == TelescopeTouchApp.ConnectionState.CONNECTED) {
+            } else if (state == ConnectionManager.ConnectionState.CONNECTED) {
                 connectionManager.disconnect();
             }
             ((InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE))
@@ -182,11 +182,11 @@ public class ConnectionFragment extends Fragment implements ServersReloadListene
         serversSpinner.setSelection(selectedSpinnerItem);
         spinnerListener.attach(serversSpinner);
 
-        refreshUi();
-        TelescopeTouchApp.setUiUpdater(this);
+        refreshUi(connectionManager.getState());
+        connectionManager.setUiUpdater(this);
 
         nsdHelper.setListener(this);
-        if (!nsdHelper.isAvailable()) TelescopeTouchApp.log("NSD not available.");
+        if (!nsdHelper.isAvailable()) connectionManager.log("NSD not available.");
         return rootView;
     }
 
@@ -230,24 +230,25 @@ public class ConnectionFragment extends Fragment implements ServersReloadListene
     }
 
     @Override
-    public void setConnectionState(TelescopeTouchApp.ConnectionState state) {
-        ConnectionFragment.state = state;
-        new Handler(Looper.getMainLooper()).post(this::refreshUi);
+    public void updateConnectionState(ConnectionManager.ConnectionState state) {
+        new Handler(Looper.getMainLooper()).post(() -> refreshUi(state));
     }
 
     @Override
-    public void addLog(final String msg, final String timestamp) {
-        logsList.post(() -> {
-            logs.add(new LogItem(msg, timestamp));
-            logAdapter.notifyDataSetChanged();
-            if (logs.size() == 1) {
-                clearLogsButton.animate().cancel();
-                clearLogsButton.animate().translationY(fabPosY);
-            }
-        });
+    public void addLog(final ConnectionManager.LogItem log) {
+        if (logsList != null) {
+            logsList.post(() -> {
+                logAdapter.add(log);
+                logAdapter.notifyDataSetChanged();
+                if (connectionManager.getLogs().size() == 1) {
+                    clearLogsButton.animate().cancel();
+                    clearLogsButton.animate().translationY(fabPosY);
+                }
+            });
+        }
     }
 
-    private void refreshUi() {
+    private void refreshUi(ConnectionManager.ConnectionState state) {
         switch (state) {
             case CONNECTED: {
                 connectionButton.post(() -> {
@@ -267,7 +268,7 @@ public class ConnectionFragment extends Fragment implements ServersReloadListene
                 portEditText.post(() -> portEditText.setEnabled(true));
                 break;
             }
-            case CONNECTING: {
+            case BUSY: {
                 connectionButton.post(() -> {
                     connectionButton.setText(getString(R.string.connecting));
                     connectionButton.setEnabled(false);
@@ -302,58 +303,16 @@ public class ConnectionFragment extends Fragment implements ServersReloadListene
     }
 
     /**
-     * {@code ViewHolder} for the {@code ListView} that stores logs.
-     *
-     * @author marcocipriani01
-     */
-    private static class ViewHolder {
-        TextView log, timestamp;
-    }
-
-    /**
-     * Represents a single log with its timestamp.
-     *
-     * @author marcocipriani01
-     */
-    private static class LogItem {
-
-        private final String log;
-        private final String timestamp;
-
-        /**
-         * Class constructor.
-         */
-        LogItem(@NonNull String log, @NonNull String timestamp) {
-            this.log = log;
-            this.timestamp = timestamp;
-        }
-
-        /**
-         * @return the log text.
-         */
-        String getLog() {
-            return log;
-        }
-
-        /**
-         * @return the timestamp string.
-         */
-        String getTimestamp() {
-            return timestamp;
-        }
-    }
-
-    /**
      * {@code ArrayAdapter} for logs.
      *
      * @author marcocipriani01
      */
-    private static class LogAdapter extends ArrayAdapter<LogItem> {
+    private static class LogAdapter extends ArrayAdapter<ConnectionManager.LogItem> {
 
         private final LayoutInflater inflater;
 
         private LogAdapter(Context context) {
-            super(context, R.layout.logs_item, logs);
+            super(context, R.layout.logs_item);
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
@@ -370,12 +329,21 @@ public class ConnectionFragment extends Fragment implements ServersReloadListene
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            LogItem item = getItem(position);
+            ConnectionManager.LogItem item = getItem(position);
             if (item != null) {
                 holder.log.setText(item.getLog());
                 holder.timestamp.setText(item.getTimestamp());
             }
             return convertView;
+        }
+
+        /**
+         * {@code ViewHolder} for the {@code ListView} that stores logs.
+         *
+         * @author marcocipriani01
+         */
+        private static class ViewHolder {
+            TextView log, timestamp;
         }
     }
 }

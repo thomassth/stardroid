@@ -186,8 +186,8 @@ public class FocuserFragment extends Fragment implements INDIServerConnectionLis
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onStop() {
+        super.onStop();
         connectionManager.removeListener(this);
     }
 
@@ -358,8 +358,6 @@ public class FocuserFragment extends Fragment implements INDIServerConnectionLis
         updateStepsText();
         updatePositionText();
         enableUi();
-        // Move to the connection tab
-        TelescopeTouchApp.goToConnectionTab();
     }
 
     @Override

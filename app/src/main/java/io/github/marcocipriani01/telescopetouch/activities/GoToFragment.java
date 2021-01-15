@@ -174,8 +174,8 @@ public class GoToFragment extends ListFragment
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onStop() {
+        super.onStop();
         catalog.setListener(null);
         connectionManager.removeListener(this);
     }
@@ -200,8 +200,7 @@ public class GoToFragment extends ListFragment
     public boolean onQueryTextChange(String newText) {
         if (catalog.isReady()) entriesAdapter.filter(newText);
         if (intentSearch != null) {
-            if (entriesAdapter.getCount() == 1)
-                onListItemClick(null, null, 0, -1);
+            if (entriesAdapter.getCount() == 1) onListItemClick0(0);
             intentSearch = null;
         }
         return false;
@@ -220,6 +219,10 @@ public class GoToFragment extends ListFragment
 
     @Override
     public void onListItemClick(@NonNull ListView l, @NonNull View v, int position, long id) {
+        onListItemClick0(position);
+    }
+
+    private void onListItemClick0(int position) {
         final CatalogEntry selectedEntry = entriesAdapter.getItem(position);
         final CatalogCoordinates coord = selectedEntry.getCoordinates();
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -339,8 +342,6 @@ public class GoToFragment extends ListFragment
     @Override
     public void connectionLost(INDIServerConnection connection) {
         clearVars();
-        // Move to the connection tab
-        TelescopeTouchApp.goToConnectionTab();
     }
 
     @Override

@@ -182,8 +182,8 @@ public class MountControlFragment extends Fragment implements INDIServerConnecti
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onStop() {
+        super.onStop();
         connectionManager.removeListener(this);
     }
 
@@ -390,8 +390,6 @@ public class MountControlFragment extends Fragment implements INDIServerConnecti
         clearVars();
         enableUi();
         initSlewRate();
-        // Move to the connection tab
-        TelescopeTouchApp.goToConnectionTab();
     }
 
     @Override
