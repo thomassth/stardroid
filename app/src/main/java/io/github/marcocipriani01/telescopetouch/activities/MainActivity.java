@@ -15,49 +15,33 @@
 package io.github.marcocipriani01.telescopetouch.activities;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.pm.ShortcutInfoCompat;
 import androidx.core.content.pm.ShortcutManagerCompat;
 import androidx.core.graphics.drawable.IconCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.github.chrisbanes.photoview.PhotoView;
-import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 
-import org.indilib.i4j.Constants;
-import org.indilib.i4j.INDIBLOBValue;
-import org.indilib.i4j.client.INDIBLOBElement;
-import org.indilib.i4j.client.INDIBLOBProperty;
 import org.indilib.i4j.client.INDIDevice;
-import org.indilib.i4j.client.INDIDeviceListener;
-import org.indilib.i4j.client.INDIElement;
-import org.indilib.i4j.client.INDIProperty;
-import org.indilib.i4j.client.INDIPropertyListener;
 import org.indilib.i4j.client.INDIServerConnection;
 import org.indilib.i4j.client.INDIServerConnectionListener;
 
-import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
@@ -67,32 +51,27 @@ import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
  *
  * @author marcocipriani01
  */
-public class MainActivity extends AppCompatActivity
-        implements BottomNavigationView.OnNavigationItemSelectedListener, INDIServerConnectionListener, INDIDeviceListener, INDIPropertyListener {
+public class MainActivity extends AppCompatActivity implements INDIServerConnectionListener,
+        NavigationView.OnNavigationItemSelectedListener, Toolbar.OnMenuItemClickListener {
 
-    /**
-     * Last open page.
-     */
-    private final ArrayList<INDIBLOBProperty> blobProps = new ArrayList<>();
-    private final boolean blobEnabled = true;
     private Pages currentPage = Pages.CONNECTION;
     private ConnectionManager connectionManager;
-    private AppBarLayout appBarLayout;
     private FragmentManager fragmentManager;
-    private BottomNavigationView navigation;
+    private BottomAppBar bottomBar;
+    private FloatingActionButton fab;
     private boolean visible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        appBarLayout = findViewById(R.id.appbar_layout);
-        setSupportActionBar(findViewById(R.id.app_toolbar));
+        bottomBar = findViewById(R.id.bottom_app_bar);
+        setSupportActionBar(bottomBar);
+        bottomBar.setOnMenuItemClickListener(this);
         fragmentManager = getSupportFragmentManager();
+        bottomBar.setNavigationOnClickListener(v -> new MainBottomNavigation(this).show());
         fragmentManager.beginTransaction().replace(R.id.content_frame, new ConnectionFragment()).commit();
-        navigation = findViewById(R.id.navigation);
-        navigation.setSelectedItemId(R.id.menu_connection);
-        navigation.setOnNavigationItemSelectedListener(this);
+        fab = findViewById(R.id.main_fab);
         connectionManager = TelescopeTouchApp.getConnectionManager();
     }
 
@@ -100,18 +79,6 @@ public class MainActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         connectionManager.addListener(this);
-        if (connectionManager.isConnected()) {
-            INDIServerConnection connection = connectionManager.getConnection();
-            List<INDIDevice> list = connection.getDevicesAsList();
-            if (list != null) {
-                for (INDIDevice device : list) {
-                    newDevice(connection, device);
-                    for (INDIProperty<?> property : device.getPropertiesAsList()) {
-                        newProperty(device, property);
-                    }
-                }
-            }
-        }
     }
 
     @Override
@@ -149,7 +116,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onMenuItemClick(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_about) {
             startActivity(new Intent(this, AboutActivity.class));
@@ -186,14 +153,16 @@ public class MainActivity extends AppCompatActivity
         if (newPage == Pages.SKY_MAP) {
             startActivity(new Intent(this, DynamicStarMapActivity.class));
         } else if (newPage != currentPage) {
-            if (newPage == Pages.CONTROL_PANEL) {
-                appBarLayout.setElevation(0);
-            } else {
-                appBarLayout.setElevation(8);
-            }
+            Fragment fragment = Pages.values()[newPage.ordinal()].instance;
             fragmentManager.beginTransaction()
                     .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out)
-                    .replace(R.id.content_frame, Pages.values()[newPage.ordinal()].instance).commit();
+                    .replace(R.id.content_frame, fragment).commit();
+            if (fragment instanceof ActionFragment) {
+                fab.setImageResource(((ActionFragment) fragment).getActionDrawable());
+                fab.show();
+            } else {
+                fab.hide();
+            }
             currentPage = newPage;
             return true;
         }
@@ -202,10 +171,6 @@ public class MainActivity extends AppCompatActivity
 
     private void goToConnectionTab() {
         currentPage = Pages.CONNECTION;
-        appBarLayout.setElevation(8);
-        navigation.setOnNavigationItemSelectedListener(null);
-        navigation.setSelectedItemId(currentPage.itemId);
-        navigation.setOnNavigationItemSelectedListener(this);
         try {
             fragmentManager.beginTransaction()
                     .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out)
@@ -217,166 +182,24 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void newDevice(INDIServerConnection indiServerConnection, INDIDevice device) {
-        device.addINDIDeviceListener(this);
-        if (blobEnabled) {
-            new Thread(() -> {
-                try {
-                    device.blobsEnable(Constants.BLOBEnables.ALSO);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }).start();
-        }
+
     }
 
     @Override
     public void removeDevice(INDIServerConnection indiServerConnection, INDIDevice device) {
-        device.removeINDIDeviceListener(this);
+
     }
 
     @Override
     public void connectionLost(INDIServerConnection indiServerConnection) {
         runOnUiThread(() -> {
-            if (visible && (navigation != null) && (fragmentManager != null)) goToConnectionTab();
+            if (visible && (bottomBar != null) && (fragmentManager != null)) goToConnectionTab();
         });
     }
 
     @Override
     public void newMessage(INDIServerConnection indiServerConnection, Date date, String s) {
 
-    }
-
-    @Override
-    public void newProperty(INDIDevice device, INDIProperty<?> property) {
-        if (blobEnabled && (property instanceof INDIBLOBProperty)) {
-            property.addINDIPropertyListener(this);
-            new Thread(() -> {
-                try {
-                    device.blobsEnable(Constants.BLOBEnables.ALSO, property);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }).start();
-        }
-    }
-
-    @Override
-    public void removeProperty(INDIDevice device, INDIProperty<?> property) {
-        property.removeINDIPropertyListener(this);
-    }
-
-    @Override
-    public void messageChanged(INDIDevice device) {
-
-    }
-
-    @Override
-    public void propertyChanged(INDIProperty<?> property) {
-        if (blobEnabled && (property instanceof INDIBLOBProperty)) {
-            runOnUiThread(() -> Snackbar.make(findViewById(R.id.main_coordinator), "Image received", Snackbar.LENGTH_LONG).setAction("View", (a) -> {
-                try {
-                    showBlob(property);
-                } catch (Exception e) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setMessage("The received image is unsupported or invalid.");
-                    builder.setTitle(property.getDevice().getName());
-                    builder.setPositiveButton(android.R.string.ok, null);
-                    builder.show();
-                } catch (Error e) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setMessage("Out of memory! The image is too big.");
-                    builder.setTitle(property.getDevice().getName());
-                    builder.setPositiveButton(android.R.string.ok, null);
-                    builder.show();
-                }
-            }).show());
-        }
-    }
-
-    private void showBlob(INDIProperty<?> property) {
-        for (INDIElement element : property.getElementsAsList()) {
-            INDIBLOBValue value = ((INDIBLOBElement) element).getValue();
-            String format = value.getFormat();
-            if (format.equals(".fits")) {
-                ByteArrayInputStream inputStream = new ByteArrayInputStream(value.getBlobData());
-                int read, axis = 0, bitPerPix = 0, width = 0, height = 0;
-                byte[] headerBuffer = new byte[80];
-                while (inputStream.read(headerBuffer, 0, 80) != -1) {
-                    String chunk = new String(headerBuffer);
-                    if (chunk.contains("BITPIX")) {
-                        bitPerPix = findFITSLineValue(chunk);
-                    } else if (chunk.contains("NAXIS1")) {
-                        width = findFITSLineValue(chunk);
-                    } else if (chunk.contains("NAXIS2")) {
-                        height = findFITSLineValue(chunk);
-                    } else if (chunk.contains("NAXIS")) {
-                        axis = findFITSLineValue(chunk);
-                    } else if (chunk.startsWith("END ")) {
-                        break;
-                    }
-                }
-                if (axis != 2) throw new UnsupportedOperationException();
-                if ((width <= 0) || (height <= 0) || ((bitPerPix != 8) && (bitPerPix != 16)))
-                    throw new IllegalStateException();
-                short[][] img = new short[width][height];
-                int bytesPerPix = bitPerPix / 8;
-                byte[] imgBuffer = new byte[bytesPerPix];
-                int min = -1, max = -1;
-                widthLoop:
-                for (int h = 0; h < height; h++) {
-                    for (int w = 0; w < width; w++) {
-                        read = inputStream.read(imgBuffer, 0, bytesPerPix);
-                        if (read == -1) break widthLoop;
-                        short val;
-                        if (bytesPerPix == 2) {
-                            if (imgBuffer[1] < 0) {
-                                val = (short) ((imgBuffer[0] * 256) + (256 + imgBuffer[1]));
-                            } else {
-                                val = (short) ((imgBuffer[0] * 256) + imgBuffer[1]);
-                            }
-                        } else {
-                            val = (short) (imgBuffer[0] & 0xFF);
-                        }
-                        img[w][h] = val;
-                        if ((max == -1) || (max < val)) max = val;
-                        if ((min == -1) || (min > val)) min = val;
-                    }
-                }
-                final Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-                double logMin = Math.log10(min), multiplier = 255.0 / (Math.log10(max) - logMin);
-                for (int w = 0; w < width; w++) {
-                    for (int h = 0; h < height; h++) {
-                        int interpolation = (int) ((Math.log10(img[w][h]) - logMin) * multiplier);
-                        bitmap.setPixel(w, h, Color.rgb(interpolation, interpolation, interpolation));
-                    }
-                }
-                ImageView photoView = new PhotoView(this);
-                photoView.setImageBitmap(bitmap);
-                photoView.setScaleType(ImageView.ScaleType.FIT_XY);
-                photoView.setAdjustViewBounds(true);
-                new AlertDialog.Builder(this).setView(photoView)
-                        .setPositiveButton(android.R.string.ok, (v, e) -> bitmap.recycle()).show();
-            } else if (format.equals(".jpg") || format.equals(".jpeg") || format.equals(".png")) {
-                ByteArrayInputStream inputStream = new ByteArrayInputStream(value.getBlobData());
-                final Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                PhotoView photoView = new PhotoView(this);
-                photoView.setImageBitmap(bitmap);
-                photoView.setScaleType(ImageView.ScaleType.FIT_XY);
-                photoView.setAdjustViewBounds(true);
-                new AlertDialog.Builder(this).setView(photoView)
-                        .setTitle(property.getDevice().getName())
-                        .setPositiveButton(android.R.string.ok, (v, e) -> bitmap.recycle()).show();
-            }
-        }
-    }
-
-    private int findFITSLineValue(String in) {
-        if (in.contains("=")) in = in.split("=")[1];
-        Matcher matcher = Pattern.compile("[0-9]+").matcher(in);
-        if (matcher.find()) {
-            return Integer.parseInt(matcher.group());
-        }
-        return -1;
     }
 
     /**
@@ -402,6 +225,28 @@ public class MainActivity extends AppCompatActivity
                 if (p.itemId == id) return p;
             }
             return null;
+        }
+    }
+
+    public static class MainBottomNavigation extends BottomSheetDialog {
+
+        private final NavigationView.OnNavigationItemSelectedListener listener;
+
+        public MainBottomNavigation(@NonNull MainActivity activity) {
+            super(activity);
+            this.listener = activity;
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.bottom_drawer);
+            getWindow().getAttributes().width = WindowManager.LayoutParams.MATCH_PARENT;
+            NavigationView navigation = findViewById(R.id.navigation_view);
+            if (navigation != null) navigation.setNavigationItemSelectedListener(item -> {
+                dismiss();
+                return listener.onNavigationItemSelected(item);
+            });
         }
     }
 }
