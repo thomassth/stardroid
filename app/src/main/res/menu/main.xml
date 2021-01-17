@@ -25,18 +25,6 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/menu_compass"
-        android:orderInCategory="3"
-        android:title="@string/compass"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/menu_skymap_gallery"
-        android:orderInCategory="4"
-        android:title="@string/menu_gallery"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/menu_skymap_shortcut"
         android:orderInCategory="5"
         android:title="@string/add_sky_map_shortcut"

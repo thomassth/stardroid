@@ -41,10 +41,6 @@ import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 public class ConnectionManager implements INDIServerConnectionListener, INDIDeviceListener {
 
     /**
-     * All the logs.
-     */
-    private final ArrayList<LogItem> logs = new ArrayList<>();
-    /**
      * A list to re-add the listener when the connection is destroyed and recreated.
      */
     private final HashSet<INDIServerConnectionListener> listeners;
@@ -67,14 +63,6 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
         listeners = new HashSet<>();
         dateFormat = DateFormat.getDateFormat(appContext);
         timeFormat = DateFormat.getTimeFormat(appContext);
-    }
-
-    public ArrayList<LogItem> getLogs() {
-        return logs;
-    }
-
-    public void clearLogs() {
-        logs.clear();
     }
 
     public ConnectionState getState() {
@@ -141,10 +129,9 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
      * @param message a new log.
      */
     public void log(String message) {
-        Date now = new Date();
-        LogItem log = new LogItem(message, dateFormat.format(now) + " " + timeFormat.format(now));
-        logs.add(log);
         if (uiUpdater != null) {
+            Date now = new Date();
+            LogItem log = new LogItem(message, dateFormat.format(now) + " " + timeFormat.format(now));
             uiUpdater.addLog(log);
         }
     }

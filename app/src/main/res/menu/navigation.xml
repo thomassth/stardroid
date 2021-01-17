@@ -1,27 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/menu_skymap"
-        android:icon="@drawable/map"
-        android:title="@string/sky_map"/>
+    <group
+        android:id="@+id/menu_group_telescope"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/menu_connection"
+            android:icon="@drawable/connect"
+            android:title="@string/menu_connection" />
 
-    <item
-        android:id="@+id/menu_connection"
-        android:icon="@drawable/connect"
-        android:title="@string/menu_connection"/>
+        <item
+            android:id="@+id/menu_move"
+            android:icon="@drawable/move"
+            android:title="@string/menu_motion" />
 
-    <item
-        android:id="@+id/menu_move"
-        android:icon="@drawable/move"
-        android:title="@string/menu_motion"/>
+        <item
+            android:id="@+id/menu_view_images"
+            android:icon="@drawable/received_images"
+            android:title="Images" />
 
-    <item
-        android:id="@+id/menu_focuser"
-        android:icon="@drawable/focuser"
-        android:title="@string/menu_focuser"/>
+        <item
+            android:id="@+id/menu_focuser"
+            android:icon="@drawable/focuser"
+            android:title="@string/menu_focuser" />
 
-    <item
-        android:id="@+id/menu_generic"
-        android:icon="@drawable/control_panel"
-        android:title="@string/menu_control_panel" />
+        <item
+            android:id="@+id/menu_generic"
+            android:icon="@drawable/control_panel"
+            android:title="@string/menu_control_panel" />
+    </group>
+
+    <group
+        android:id="@+id/menu_group_skympa"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/menu_skymap"
+            android:icon="@drawable/map"
+            android:title="@string/sky_map" />
+
+        <item
+            android:id="@+id/menu_skymap_gallery"
+            android:icon="@drawable/images"
+            android:title="@string/menu_gallery" />
+    </group>
+
+    <group android:id="@+id/menu_group_compass">
+        <item
+            android:id="@+id/menu_compass"
+            android:icon="@drawable/compass"
+            android:title="@string/compass" />
+    </group>
 </menu>

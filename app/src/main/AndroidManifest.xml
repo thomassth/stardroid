@@ -34,7 +34,7 @@
         android:required="false" />
 
     <application
-        android:name="io.github.marcocipriani01.telescopetouch.TelescopeTouchApp"
+        android:name=".TelescopeTouchApp"
         android:allowBackup="false"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/app_icon"
@@ -55,11 +55,12 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name="io.github.marcocipriani01.telescopetouch.activities.DynamicStarMapActivity"
+            android:name=".activities.DynamicStarMapActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/sky_map"
             android:launchMode="singleTop"
@@ -74,11 +75,12 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name="io.github.marcocipriani01.telescopetouch.activities.EditSettingsActivity"
+            android:name=".activities.EditSettingsActivity"
             android:label="@string/menu_settings"
             android:screenOrientation="fullUser">
             <meta-data
@@ -86,12 +88,12 @@
                 android:value=".activities.DynamicStarMapActivity" />
         </activity>
         <activity
-            android:name="io.github.marcocipriani01.telescopetouch.activities.ImageGalleryActivity"
+            android:name=".activities.ImageGalleryActivity"
             android:label="@string/menu_gallery"
             android:launchMode="singleTop"
             android:screenOrientation="fullUser" />
         <activity
-            android:name="io.github.marcocipriani01.telescopetouch.activities.ImageDisplayActivity"
+            android:name=".activities.ImageDisplayActivity"
             android:label="@string/menu_gallery"
             android:screenOrientation="fullUser">
             <meta-data
@@ -99,7 +101,7 @@
                 android:value=".activities.ImageGalleryActivity" />
         </activity>
         <activity
-            android:name="io.github.marcocipriani01.telescopetouch.activities.DiagnosticActivity"
+            android:name=".activities.DiagnosticActivity"
             android:label="@string/title_activity_diagnostic"
             android:screenOrientation="fullUser">
             <meta-data
@@ -107,7 +109,7 @@
                 android:value=".activities.DynamicStarMapActivity" />
         </activity>
         <activity
-            android:name="io.github.marcocipriani01.telescopetouch.activities.CompassCalibrationActivity"
+            android:name=".activities.CompassCalibrationActivity"
             android:label="@string/menu_calibrate"
             android:launchMode="singleTop">
             <meta-data
@@ -149,9 +151,18 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
+        <activity
+            android:name=".activities.BLOBViewerActivity"
+            android:label="Image viewer"
+            android:launchMode="singleTop"
+            android:screenOrientation="fullUser">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
+        </activity>
 
         <provider
-            android:name="io.github.marcocipriani01.telescopetouch.search.SearchTermsProvider"
+            android:name=".search.SearchTermsProvider"
             android:authorities="io.github.marcocipriani01.telescopetouch.searchterms"
             android:exported="false"
             android:syncable="false" />

@@ -1,5 +1,4 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -23,7 +22,9 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/port_edittext"
         android:layout_alignParentStart="true"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
+        android:layout_toStartOf="@+id/port_edittext"
         android:prompt="@string/host_prompt" />
 
     <EditText
@@ -48,30 +49,19 @@
 
     <TextView
         android:id="@+id/LogSection"
-        style="@android:style/TextAppearance.DeviceDefault.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/connectionButton"
         android:layout_alignParentStart="true"
         android:layout_marginTop="8dp"
-        android:text="@string/log" />
+        android:text="@string/log"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-    <ListView
-        android:id="@+id/logsList"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/logs_listview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/LogSection"
         android:layout_alignParentStart="true"
         android:layout_marginTop="8dp" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/clearLogsButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:contentDescription="@string/clear_logs"
-        app:srcCompat="@drawable/clear" />
 </RelativeLayout>
