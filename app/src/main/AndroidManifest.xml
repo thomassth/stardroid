@@ -117,20 +117,8 @@
                 android:value=".activities.DynamicStarMapActivity" />
         </activity>
         <activity
-            android:name=".activities.AboutActivity"
-            android:label="@string/menu_about"
-            android:screenOrientation="fullUser" />
-        <activity
             android:name=".activities.ServersActivity"
             android:label="@string/host_manage"
-            android:screenOrientation="fullUser">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
-        </activity>
-        <activity
-            android:name=".activities.CompassActivity"
-            android:label="@string/compass"
             android:screenOrientation="fullUser">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -152,7 +140,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".activities.BLOBViewerActivity"
+            android:name=".activities.BLOBViewerFragment"
             android:label="Image viewer"
             android:launchMode="singleTop"
             android:screenOrientation="fullUser">

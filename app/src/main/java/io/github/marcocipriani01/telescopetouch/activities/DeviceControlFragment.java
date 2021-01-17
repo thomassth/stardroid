@@ -108,9 +108,10 @@ public class DeviceControlFragment extends PreferenceFragmentCompat implements I
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        device.removeINDIDeviceListener(this);
+    public void onDestroy() {
+        super.onDestroy();
+        if (device != null)
+            device.removeINDIDeviceListener(this);
     }
 
     public void setDevice(INDIDevice device) {

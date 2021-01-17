@@ -2,6 +2,7 @@
     <color name="colorPrimary">#e53935</color>
     <color name="colorPrimaryDark">#ab000d</color>
     <color name="colorAccent">#ff6f00</color>
+    <color name="navBarColor">#121212</color>
 
     <color name="black_overlay">#66000000</color>
     <color name="high_accuracy">#8BC34A</color>

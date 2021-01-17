@@ -5,6 +5,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="searchViewStyle">@style/SearchViewStyle</item>
+        <item name="android:navigationBarColor">@color/navBarColor</item>
     </style>
 
     <style name="AppThemeNoActionBar" parent="Theme.MaterialComponents.NoActionBar.Bridge">
@@ -12,6 +13,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="searchViewStyle">@style/SearchViewStyle</item>
+        <item name="android:navigationBarColor">@color/navBarColor</item>
     </style>
 
     <style name="FullscreenTheme" parent="AppTheme">

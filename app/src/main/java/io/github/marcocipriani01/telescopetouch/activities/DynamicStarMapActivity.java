@@ -334,7 +334,7 @@ public class DynamicStarMapActivity extends InjectableActivity
             Log.d(TAG, "Loading Diagnostics");
             startActivity(new Intent(this, DiagnosticActivity.class));
         } else if (itemId == R.id.menu_about) {
-            startActivity(new Intent(this, AboutActivity.class));
+            startActivity(new Intent(this, AboutFragment.class));
         } else {
             return false;
         }
