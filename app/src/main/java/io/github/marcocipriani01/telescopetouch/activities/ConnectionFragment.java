@@ -65,18 +65,6 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
     private SharedPreferences preferences;
     private Button connectionButton;
     private ImprovedSpinner serversSpinner;
-    private final ImprovedSpinnerListener spinnerListener = new ImprovedSpinnerListener() {
-        @Override
-        protected void onImprovedItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-            String selected = parent.getItemAtPosition(pos).toString();
-            if (selected.equals(getResources().getString(R.string.host_add))) {
-                serversSpinner.post(() -> serversSpinner.setSelection(0));
-                ServersActivity.addServer(context, ConnectionFragment.this);
-            } else if (selected.equals(getResources().getString(R.string.host_manage))) {
-                startActivityForResult(new Intent(context, ServersActivity.class), 1);
-            }
-        }
-    };
     private NSDHelper nsdHelper;
     private EditText portEditText;
     private RecyclerView logsList;
@@ -136,7 +124,18 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
                     .hideSoftInputFromWindow(portEditText.getWindowToken(), 0);
         });
         serversSpinner.setSelection(selectedSpinnerItem);
-        spinnerListener.attach(serversSpinner);
+        new ImprovedSpinnerListener() {
+            @Override
+            protected void onImprovedItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                String selected = parent.getItemAtPosition(pos).toString();
+                if (selected.equals(getResources().getString(R.string.host_add))) {
+                    serversSpinner.post(() -> serversSpinner.setSelection(0));
+                    ServersActivity.addServer(context, ConnectionFragment.this);
+                } else if (selected.equals(getResources().getString(R.string.host_manage))) {
+                    startActivityForResult(new Intent(context, ServersActivity.class), 1);
+                }
+            }
+        }.attach(serversSpinner);
 
         refreshUi(connectionManager.getState());
         connectionManager.setUiUpdater(this);
@@ -192,7 +191,10 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
 
     @Override
     public void addLog(final ConnectionManager.LogItem log) {
-        if (logsList != null) logsList.post(() -> logAdapter.addLog(log));
+        if (logsList != null) new Handler(Looper.getMainLooper()).post(() -> {
+            logAdapter.addLog(log);
+            setActionEnabled(true);
+        });
     }
 
     private void refreshUi(ConnectionManager.ConnectionState state) {
@@ -256,7 +258,8 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
 
     @Override
     public void run() {
-        logAdapter.clear();
+        if (logAdapter != null) logAdapter.clear();
+        setActionEnabled(false);
     }
 
     /**
@@ -281,10 +284,6 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
         void clear() {
             logs.clear();
             notifyDataSetChanged();
-        }
-
-        int size() {
-            return logs.size();
         }
 
         @NonNull

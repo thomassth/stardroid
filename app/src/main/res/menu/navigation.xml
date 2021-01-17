@@ -5,18 +5,24 @@
         android:checkableBehavior="none">
         <item
             android:id="@+id/menu_connection"
+            android:checked="true"
             android:icon="@drawable/connect"
             android:title="@string/menu_connection" />
 
         <item
             android:id="@+id/menu_move"
             android:icon="@drawable/move"
-            android:title="@string/menu_motion" />
+            android:title="Telescope control" />
 
         <item
-            android:id="@+id/menu_view_images"
+            android:id="@+id/menu_goto_fragment"
+            android:icon="@drawable/location"
+            android:title="Go-to database" />
+
+        <item
+            android:id="@+id/menu_ccd_images"
             android:icon="@drawable/received_images"
-            android:title="Images" />
+            android:title="CCD images" />
 
         <item
             android:id="@+id/menu_focuser"
@@ -26,11 +32,11 @@
         <item
             android:id="@+id/menu_generic"
             android:icon="@drawable/control_panel"
-            android:title="@string/menu_control_panel" />
+            android:title="INDI control panel" />
     </group>
 
     <group
-        android:id="@+id/menu_group_skympa"
+        android:id="@+id/menu_group_skympap"
         android:checkableBehavior="none">
         <item
             android:id="@+id/menu_skymap"
@@ -43,10 +49,21 @@
             android:title="@string/menu_gallery" />
     </group>
 
-    <group android:id="@+id/menu_group_compass">
+    <group
+        android:id="@+id/menu_group_compass"
+        android:checkableBehavior="none">
         <item
             android:id="@+id/menu_compass"
             android:icon="@drawable/compass"
             android:title="@string/compass" />
+    </group>
+
+    <group
+        android:id="@+id/menu_group_about"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/menu_about"
+            android:icon="@drawable/info"
+            android:title="@string/menu_about" />
     </group>
 </menu>

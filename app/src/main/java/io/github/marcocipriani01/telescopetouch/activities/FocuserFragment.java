@@ -60,8 +60,7 @@ import io.github.marcocipriani01.telescopetouch.views.LongPressHandler;
  * @author marcocipriani01
  */
 public class FocuserFragment extends Fragment implements INDIServerConnectionListener, INDIPropertyListener,
-        INDIDeviceListener, View.OnClickListener, SeekBar.OnSeekBarChangeListener,
-        TextWatcher {
+        INDIDeviceListener, View.OnClickListener, SeekBar.OnSeekBarChangeListener, TextWatcher {
 
     private ConnectionManager connectionManager;
     // Properties and elements associated to the buttons

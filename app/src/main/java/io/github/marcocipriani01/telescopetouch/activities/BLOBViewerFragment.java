@@ -4,8 +4,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.indilib.i4j.INDIBLOBValue;
 import org.indilib.i4j.client.INDIBLOBElement;
@@ -18,7 +22,7 @@ import java.util.regex.Pattern;
 
 import io.github.marcocipriani01.telescopetouch.R;
 
-public class BLOBViewerActivity extends AppCompatActivity {
+public class BLOBViewerFragment extends ActionFragment {
 
     private static int findFITSLineValue(String in) {
         if (in.contains("=")) in = in.split("=")[1];
@@ -29,10 +33,11 @@ public class BLOBViewerActivity extends AppCompatActivity {
         return -1;
     }
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_blob_viewer);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_blob_viewer, container, false);
+        return rootView;
     }
 
     private Bitmap loadBlob(INDIBLOBElement element, boolean stretch) throws IOException {
@@ -114,5 +119,15 @@ public class BLOBViewerActivity extends AppCompatActivity {
         } else {
             return BitmapFactory.decodeByteArray(blobValue.getBlobData(), 0, blobValue.getSize());
         }
+    }
+
+    @Override
+    public int getActionDrawable() {
+        return R.drawable.save;
+    }
+
+    @Override
+    public void run() {
+
     }
 }

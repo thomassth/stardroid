@@ -20,16 +20,14 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
@@ -58,7 +56,6 @@ public class ControlPanelFragment extends Fragment
     private final HashMap<Integer, DeviceControlFragment> fragmentsMap = new HashMap<>();
     private ConnectionManager connectionManager;
     private DevicesFragmentAdapter fragmentAdapter;
-    private LinearLayout controlLayout;
     private TextView noDevicesText;
     private ViewPager2 viewPager;
     private TabLayout tabLayout;
@@ -75,14 +72,21 @@ public class ControlPanelFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_control_panel, container, false);
-        controlLayout = rootView.findViewById(R.id.indi_control_layout);
         noDevicesText = rootView.findViewById(R.id.no_devices_label);
         viewPager = rootView.findViewById(R.id.indi_control_pager);
         viewPager.setOffscreenPageLimit(5);
         tabLayout = rootView.findViewById(R.id.indi_control_tabs);
         tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager,
                 (tab, position) -> tab.setText(devices.get(position).getName()));
-        setHasOptionsMenu(true);
+        searchMenu = rootView.<Toolbar>findViewById(R.id.control_panel_toolbar).getMenu().add(R.string.search);
+        searchMenu.setIcon(R.drawable.search);
+        searchMenu.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        SearchView searchView = new SearchView(context);
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+        searchView.setOnSearchClickListener(this);
+        searchView.setOnCloseListener(this);
+        searchView.setOnQueryTextListener(this);
+        searchMenu.setActionView(searchView);
         return rootView;
     }
 
@@ -136,20 +140,6 @@ public class ControlPanelFragment extends Fragment
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, @NonNull MenuInflater inflater) {
-        searchMenu = menu.add(R.string.search);
-        searchMenu.setIcon(R.drawable.search);
-        searchMenu.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        SearchView searchView = new SearchView(context);
-        searchView.setMaxWidth(Integer.MAX_VALUE);
-        searchView.setOnSearchClickListener(this);
-        searchView.setOnCloseListener(this);
-        searchView.setOnQueryTextListener(this);
-        searchMenu.setActionView(searchView);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
     public boolean onQueryTextChange(String newText) {
         DeviceControlFragment fragment = fragmentsMap.get(viewPager.getCurrentItem());
         if (fragment != null) fragment.findPref(newText);
@@ -164,8 +154,10 @@ public class ControlPanelFragment extends Fragment
     private void noDevices() {
         devices.clear();
         noDevicesText.post(() -> noDevicesText.setVisibility(View.VISIBLE));
-        controlLayout.post(() -> controlLayout.setVisibility(View.GONE));
-        viewPager.post(() -> fragmentAdapter.notifyDataSetChanged());
+        viewPager.post(() -> {
+            fragmentAdapter.notifyDataSetChanged();
+            viewPager.setVisibility(View.GONE);
+        });
         new Handler(Looper.getMainLooper()).post(() -> {
             if (searchMenu != null) searchMenu.setVisible(false);
         });
@@ -173,7 +165,10 @@ public class ControlPanelFragment extends Fragment
 
     private void devices() {
         noDevicesText.post(() -> noDevicesText.setVisibility(View.GONE));
-        controlLayout.post(() -> controlLayout.setVisibility(View.VISIBLE));
+        viewPager.post(() -> {
+            fragmentAdapter.notifyDataSetChanged();
+            viewPager.setVisibility(View.VISIBLE);
+        });
         new Handler(Looper.getMainLooper()).post(() -> {
             if (searchMenu != null) searchMenu.setVisible(true);
         });
