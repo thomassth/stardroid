@@ -24,11 +24,11 @@ The source code is available on [GitHub](https://github.com/marcocipriani01/Tele
 
 ## Installing Telescope.Touch
 
-- Minimum Android version: 5.0
-- From Google Play: coming soon
+- **From Google Play: [play.google.com/store/apps/details?id=io.github.marcocipriani01.telescopetouch](https://play.google.com/store/apps/details?id=io.github.marcocipriani01.telescopetouch)**
 - From the .apk file:
   - Allow apps from unknown sources in the Android settings (Settings → Security → Unknown sources)
-  - Download and install the latest release from the GitHub project page
+  - Download and install the latest release from GitHub
+- Minimum Android version: 5.0
 
 ## Telescope control usage
 
