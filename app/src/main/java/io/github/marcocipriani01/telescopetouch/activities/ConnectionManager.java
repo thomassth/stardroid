@@ -17,12 +17,9 @@ package io.github.marcocipriani01.telescopetouch.activities;
 import android.content.Context;
 import android.content.res.Resources;
 import android.text.format.DateFormat;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import org.indilib.i4j.Constants;
-import org.indilib.i4j.client.INDIBLOBProperty;
 import org.indilib.i4j.client.INDIDevice;
 import org.indilib.i4j.client.INDIDeviceListener;
 import org.indilib.i4j.client.INDIProperty;
@@ -49,35 +46,10 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
     private java.text.DateFormat timeFormat = null;
     private INDIServerConnection indiConnection;
     private boolean busy = false;
-    private boolean blobEnabled = false;
 
     public void initFormatters(Context appContext) {
         dateFormat = DateFormat.getDateFormat(appContext);
         timeFormat = DateFormat.getTimeFormat(appContext);
-    }
-
-    public boolean isBlobEnabled() {
-        return blobEnabled;
-    }
-
-    public void setBlobEnabled(boolean b) {
-        this.blobEnabled = b;
-        new Thread(() -> {
-            try {
-                if (isConnected()) {
-                    Constants.BLOBEnables blobEnables = this.blobEnabled ? Constants.BLOBEnables.ALSO : Constants.BLOBEnables.NEVER;
-                    for (INDIDevice device : indiConnection.getDevicesAsList()) {
-                        device.blobsEnable(blobEnables);
-                        for (INDIProperty<?> property : device.getPropertiesAsList()) {
-                            if (property instanceof INDIBLOBProperty)
-                                device.blobsEnable(blobEnables, property);
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                Log.e("ConnectionManager", e.getLocalizedMessage(), e);
-            }
-        }).start();
     }
 
     public ConnectionState getState() {
@@ -136,7 +108,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
                 }
             }).start();
         } else {
-            log("Already connected or busy!"); //TODO resource
+            log(TelescopeTouchApp.getAppResources().getString(R.string.connection_busy_2));
         }
     }
 
@@ -186,7 +158,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
                 updateState(ConnectionState.DISCONNECTED);
             }).start();
         } else {
-            log("Not connected or busy!"); //TODO resource
+            log(TelescopeTouchApp.getAppResources().getString(R.string.connection_busy));
         }
     }
 
@@ -215,20 +187,13 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
     @Override
     public void newDevice(INDIServerConnection connection, INDIDevice device) {
         device.addINDIDeviceListener(this);
-        log("New device: " + device.getName()); // TODO resource
-        new Thread(() -> {
-            try {
-                device.blobsEnable(this.blobEnabled ? Constants.BLOBEnables.ALSO : Constants.BLOBEnables.NEVER);
-            } catch (Exception e) {
-                Log.e("ConnectionManager", e.getLocalizedMessage(), e);
-            }
-        }).start();
+        log(TelescopeTouchApp.getAppResources().getString(R.string.new_device) + device.getName());
     }
 
     @Override
     public void removeDevice(INDIServerConnection connection, INDIDevice device) {
         device.removeINDIDeviceListener(this);
-        log("Device removed: " + device.getName()); // TODO resource
+        log(TelescopeTouchApp.getAppResources().getString(R.string.device_remove) + device.getName());
     }
 
     @Override
@@ -249,14 +214,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
 
     @Override
     public void newProperty(INDIDevice device, INDIProperty<?> property) {
-        new Thread(() -> {
-            try {
-                if (property instanceof INDIBLOBProperty)
-                    device.blobsEnable(this.blobEnabled ? Constants.BLOBEnables.ALSO : Constants.BLOBEnables.NEVER, property);
-            } catch (Exception e) {
-                Log.e("ConnectionManager", e.getLocalizedMessage(), e);
-            }
-        }).start();
+
     }
 
     @Override

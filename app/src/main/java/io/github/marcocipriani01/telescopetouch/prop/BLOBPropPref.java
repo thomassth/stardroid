@@ -29,8 +29,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import org.indilib.i4j.client.INDIBLOBElement;
 import org.indilib.i4j.client.INDIBLOBProperty;
 import org.indilib.i4j.client.INDIProperty;

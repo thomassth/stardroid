@@ -19,6 +19,7 @@ package io.github.marcocipriani01.telescopetouch.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -101,7 +102,7 @@ public class AbstractDynamicStarMapModule {
     @Provides
     @PerActivity
     Handler provideHandler() {
-        return new Handler();
+        return new Handler(Looper.getMainLooper());
     }
 
     @Provides

@@ -60,7 +60,7 @@ import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connect
  *
  * @author marcocipriani01
  */
-public class FocuserFragment extends Fragment implements INDIServerConnectionListener, INDIPropertyListener,
+public class FocuserFragment extends ActionFragment implements INDIServerConnectionListener, INDIPropertyListener,
         INDIDeviceListener, View.OnClickListener, SeekBar.OnSeekBarChangeListener, TextWatcher {
 
     // Properties and elements associated to the buttons
@@ -303,7 +303,7 @@ public class FocuserFragment extends Fragment implements INDIServerConnectionLis
                         absPosElem.setDesiredValue(Double.parseDouble(positionEditText.getText().toString()));
                         new PropUpdater(absPosProp).start();
                     } catch (NumberFormatException e) {
-                        Toast.makeText(getActivity(), "Invalid absolute position!", Toast.LENGTH_SHORT).show();
+                        requestActionSnack(R.string.invalid_abs_position);
                         updatePositionText();
                     }
                 }
@@ -313,7 +313,7 @@ public class FocuserFragment extends Fragment implements INDIServerConnectionLis
                         syncPosElem.setDesiredValue(Double.parseDouble(positionEditText.getText().toString()));
                         new PropUpdater(syncPosProp).start();
                     } catch (NumberFormatException e) {
-                        Toast.makeText(getActivity(), "Invalid absolute position!", Toast.LENGTH_SHORT).show();
+                        requestActionSnack(R.string.invalid_abs_position);
                         updatePositionText();
                     }
                 }
@@ -499,6 +499,21 @@ public class FocuserFragment extends Fragment implements INDIServerConnectionLis
 
     @Override
     public void messageChanged(INDIDevice device) {
+
+    }
+
+    @Override
+    public boolean isActionEnabled() {
+        return false;
+    }
+
+    @Override
+    public int getActionDrawable() {
+        return 0;
+    }
+
+    @Override
+    public void run() {
 
     }
 }

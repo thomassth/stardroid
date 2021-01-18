@@ -19,6 +19,7 @@ package io.github.marcocipriani01.telescopetouch.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 
 import dagger.Module;
 import dagger.Provides;
@@ -51,6 +52,6 @@ public class DiagnosticActivityModule {
     @Provides
     @PerActivity
     Handler provideHandler() {
-        return new Handler();
+        return new Handler(Looper.getMainLooper());
     }
 }

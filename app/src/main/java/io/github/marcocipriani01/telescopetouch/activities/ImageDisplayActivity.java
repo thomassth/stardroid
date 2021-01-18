@@ -106,7 +106,7 @@ public class ImageDisplayActivity extends InjectableActivity {
                 gotoIntent.putExtra(MainActivity.ACTION, MainActivity.ACTION_SEARCH);
             } else {
                 gotoIntent.putExtra(MainActivity.ACTION, MainActivity.ACTION_CONNECT);
-                Toast.makeText(this, R.string.connect_telescope_first, Toast.LENGTH_SHORT).show();
+                gotoIntent.putExtra(MainActivity.MESSAGE, R.string.connect_telescope_first);
             }
             startActivity(gotoIntent);
         });

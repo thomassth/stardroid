@@ -26,8 +26,8 @@ public abstract class ActionFragment extends Fragment implements Runnable {
         if (listener != null) listener.setActionEnabled(isActionEnabled());
     }
 
-    protected void requestActionSnack(String msg) {
-        if (listener != null) listener.actionSnackRequested(msg);
+    protected void requestActionSnack(int msgRes) {
+        if (listener != null) listener.actionSnackRequested(msgRes);
     }
 
     public abstract int getActionDrawable();
@@ -35,6 +35,6 @@ public abstract class ActionFragment extends Fragment implements Runnable {
     public interface ActionListener {
         void setActionEnabled(boolean actionEnabled);
 
-        void actionSnackRequested(String msg);
+        void actionSnackRequested(int msgRes);
     }
 }

@@ -20,6 +20,7 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -53,7 +54,7 @@ public class FullscreenControlsManager {
      * and a change of the status and navigation bar.
      */
     private static final int UI_ANIMATION_DELAY = 300;
-    private final Handler mHideHandler = new Handler();
+    private final Handler mHideHandler = new Handler(Looper.getMainLooper());
     private final Activity mActivity;
     private final View mContentView;
     private final Runnable mHidePart2Runnable = new Runnable() {

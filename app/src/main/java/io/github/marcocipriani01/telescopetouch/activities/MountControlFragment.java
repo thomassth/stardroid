@@ -250,6 +250,14 @@ public class MountControlFragment extends Fragment implements INDIServerConnecti
             slewRateSpinner.post(() -> slewRateSpinner.setEnabled(telescopeSlewRateP != null));
     }
 
+    private void setParkState() {
+        btnPark.setOnCheckedChangeListener(null);
+        boolean b = telescopeParkE.getValue() == Constants.SwitchStatus.ON;
+        btnPark.setChecked(b);
+        btnPark.setSelected(b);
+        btnPark.setOnCheckedChangeListener(this);
+    }
+
     /**
      * Called when a directional button is pressed or released. Send the
      * corresponding order to the driver.
@@ -355,7 +363,7 @@ public class MountControlFragment extends Fragment implements INDIServerConnecti
         new AlertDialog.Builder(context)
                 .setTitle(R.string.telescope_parking)
                 .setMessage(R.string.telescope_parking_confirm)
-                .setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                     try {
                         if (isChecked) {
                             telescopeParkE.setDesiredValue(Constants.SwitchStatus.ON);
@@ -369,14 +377,8 @@ public class MountControlFragment extends Fragment implements INDIServerConnecti
                         Log.e("MotionFragment", e.getLocalizedMessage(), e);
                     }
                 })
-                .setNegativeButton(android.R.string.no, null)
-                .setOnDismissListener(dialog -> {
-                    btnPark.setOnCheckedChangeListener(null);
-                    boolean b = telescopeParkE.getValue() == Constants.SwitchStatus.ON;
-                    btnPark.setChecked(b);
-                    btnPark.setSelected(b);
-                    btnPark.setOnCheckedChangeListener(this);
-                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .setOnDismissListener(dialog -> setParkState())
                 .setIcon(R.drawable.warning)
                 .show();
     }
@@ -453,6 +455,7 @@ public class MountControlFragment extends Fragment implements INDIServerConnecti
                         && ((telescopeUnParkE = (INDISwitchElement) property.getElement(INDIStandardElement.UNPARK)) != null)) {
                     telescopeParkP = (INDISwitchProperty) property;
                     property.addINDIPropertyListener(this);
+                    if (btnPark != null) btnPark.post(this::setParkState);
                 }
                 break;
             }
@@ -538,15 +541,7 @@ public class MountControlFragment extends Fragment implements INDIServerConnecti
                 break;
             }
             case "TELESCOPE_PARK": {
-                if (btnPark != null) {
-                    btnPark.post(() -> {
-                        btnPark.setOnCheckedChangeListener(null);
-                        boolean b = telescopeParkE.getValue() == Constants.SwitchStatus.ON;
-                        btnPark.setChecked(b);
-                        btnPark.setSelected(b);
-                        btnPark.setOnCheckedChangeListener(this);
-                    });
-                }
+                if (btnPark != null) btnPark.post(this::setParkState);
                 break;
             }
         }

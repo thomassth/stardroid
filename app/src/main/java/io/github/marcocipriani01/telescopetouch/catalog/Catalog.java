@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
 /**
@@ -55,7 +56,7 @@ public class Catalog {
             callListener(true);
         } catch (Exception e) {
             Log.e("CatalogManager", "Unable to load catalog!", e);
-            TelescopeTouchApp.connectionManager.log("Catalog loading error.");
+            TelescopeTouchApp.connectionManager.log(resources.getString(R.string.catalog_load_error));
             callListener(false);
         }
     }
