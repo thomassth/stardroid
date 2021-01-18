@@ -147,6 +147,7 @@ public class DynamicStarMapActivity extends InjectableActivity
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onCreate(Bundle icicle) {
         Log.d(TAG, "onCreate at " + System.currentTimeMillis());
         super.onCreate(icicle);
@@ -158,12 +159,22 @@ public class DynamicStarMapActivity extends InjectableActivity
 
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
+
         // Set up full screen mode, hide the system UI etc.
         Window window = getWindow();
+        //if (Build.VERSION.SDK_INT < 30) {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN |
                 View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE);
+        //} else {
+        //    window.setDecorFitsSystemWindows(false);
+        //    WindowInsetsController controller = window.getInsetsController();
+        //    if (controller != null) {
+        //        controller.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
+        //        controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+        //    }
+        //}
 
         initializeModelViewController();
         checkForSensorsAndMaybeWarn();
@@ -191,15 +202,15 @@ public class DynamicStarMapActivity extends InjectableActivity
             }
         });
         this.<Button>findViewById(R.id.search_in_database).setOnClickListener(v -> {
-            if (TelescopeTouchApp.getConnectionManager().isConnected()) {
-                GoToFragment.setIntentSearch(searchTargetName);
-                Intent gotoIntent = new Intent(DynamicStarMapActivity.this, GoToActivity.class);
-                gotoIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(gotoIntent);
+            Intent gotoIntent = new Intent(DynamicStarMapActivity.this, MainActivity.class);
+            if (TelescopeTouchApp.connectionManager.isConnected()) {
+                GoToFragment.setRequestedSearch(searchTargetName);
+                gotoIntent.putExtra(MainActivity.ACTION, MainActivity.ACTION_SEARCH);
             } else {
+                gotoIntent.putExtra(MainActivity.ACTION, MainActivity.ACTION_CONNECT);
                 Toast.makeText(DynamicStarMapActivity.this, R.string.connect_telescope_first, Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(DynamicStarMapActivity.this, MainActivity.class));
             }
+            startActivity(gotoIntent);
         });
 
         // Were we started as the result of a search?
@@ -333,8 +344,6 @@ public class DynamicStarMapActivity extends InjectableActivity
         } else if (itemId == R.id.menu_skymap_diagnostics) {
             Log.d(TAG, "Loading Diagnostics");
             startActivity(new Intent(this, DiagnosticActivity.class));
-        } else if (itemId == R.id.menu_about) {
-            startActivity(new Intent(this, AboutFragment.class));
         } else {
             return false;
         }

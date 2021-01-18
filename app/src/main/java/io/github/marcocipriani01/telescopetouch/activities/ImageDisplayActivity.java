@@ -91,25 +91,24 @@ public class ImageDisplayActivity extends InjectableActivity {
                 }
             }
             editor.apply();
-            Intent queryIntent = new Intent();
+            Intent queryIntent = new Intent(this, DynamicStarMapActivity.class);
             queryIntent.setAction(Intent.ACTION_SEARCH);
             queryIntent.putExtra(SearchManager.QUERY, selectedImage.searchTerm);
-            queryIntent.setClass(this, DynamicStarMapActivity.class);
             startActivity(queryIntent);
         });
         Button gotoButton = this.findViewById(R.id.gallery_point_telescope);
         String gotoName = selectedImage.getGotoName();
         gotoButton.setEnabled(!gotoName.equals("?"));
         gotoButton.setOnClickListener(source -> {
-            if (TelescopeTouchApp.getConnectionManager().isConnected()) {
-                GoToFragment.setIntentSearch(gotoName);
-                Intent gotoIntent = new Intent(this, GoToActivity.class);
-                gotoIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(gotoIntent);
+            Intent gotoIntent = new Intent(this, MainActivity.class);
+            if (TelescopeTouchApp.connectionManager.isConnected()) {
+                GoToFragment.setRequestedSearch(gotoName);
+                gotoIntent.putExtra(MainActivity.ACTION, MainActivity.ACTION_SEARCH);
             } else {
+                gotoIntent.putExtra(MainActivity.ACTION, MainActivity.ACTION_CONNECT);
                 Toast.makeText(this, R.string.connect_telescope_first, Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(this, MainActivity.class));
             }
+            startActivity(gotoIntent);
         });
     }
 

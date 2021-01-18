@@ -54,9 +54,10 @@ import java.util.Date;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.prop.PropUpdater;
 import io.github.marcocipriani01.telescopetouch.views.ImprovedSpinnerListener;
+
+import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 
 /**
  * This fragment shows directional buttons to move a telescope. It also provides
@@ -69,7 +70,6 @@ import io.github.marcocipriani01.telescopetouch.views.ImprovedSpinnerListener;
 public class MountControlFragment extends Fragment implements INDIServerConnectionListener, INDIPropertyListener,
         INDIDeviceListener, OnTouchListener, OnClickListener, CompoundButton.OnCheckedChangeListener {
 
-    private ConnectionManager connectionManager;
     private Context context;
     // Properties and elements associated to the buttons
     private INDISwitchProperty telescopeMotionNSP = null;
@@ -158,12 +158,10 @@ public class MountControlFragment extends Fragment implements INDIServerConnecti
     @Override
     public void onStart() {
         super.onStart();
-        // Set up INDI connection
-        connectionManager = TelescopeTouchApp.getConnectionManager();
-        connectionManager.addListener(this);
+        connectionManager.addINDIListener(this);
         // Enumerate existing properties
         if (connectionManager.isConnected()) {
-            List<INDIDevice> list = connectionManager.getConnection().getDevicesAsList();
+            List<INDIDevice> list = connectionManager.getIndiConnection().getDevicesAsList();
             if (list != null) {
                 for (INDIDevice device : list) {
                     device.addINDIDeviceListener(this);
@@ -184,7 +182,7 @@ public class MountControlFragment extends Fragment implements INDIServerConnecti
     @Override
     public void onStop() {
         super.onStop();
-        connectionManager.removeListener(this);
+        connectionManager.removeINDIListener(this);
     }
 
     private void clearVars() {

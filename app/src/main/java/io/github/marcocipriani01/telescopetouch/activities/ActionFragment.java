@@ -8,10 +8,9 @@ import androidx.fragment.app.Fragment;
 public abstract class ActionFragment extends Fragment implements Runnable {
 
     protected Context context;
-    private volatile ActionFragmentListener listener = null;
-    private boolean actionEnabled = false;
+    private volatile ActionListener listener = null;
 
-    public void setActionEnabledListener(ActionFragmentListener listener) {
+    public void setActionEnabledListener(ActionListener listener) {
         this.listener = listener;
     }
 
@@ -21,18 +20,21 @@ public abstract class ActionFragment extends Fragment implements Runnable {
         this.context = context;
     }
 
-    public boolean isActionEnabled() {
-        return actionEnabled;
+    public abstract boolean isActionEnabled();
+
+    protected void notifyActionChange() {
+        if (listener != null) listener.setActionEnabled(isActionEnabled());
     }
 
-    protected void setActionEnabled(boolean actionEnabled) {
-        this.actionEnabled = actionEnabled;
-        if (listener != null) listener.setActionEnabled(actionEnabled);
+    protected void requestActionSnack(String msg) {
+        if (listener != null) listener.actionSnackRequested(msg);
     }
 
     public abstract int getActionDrawable();
 
-    public interface ActionFragmentListener {
+    public interface ActionListener {
         void setActionEnabled(boolean actionEnabled);
+
+        void actionSnackRequested(String msg);
     }
 }

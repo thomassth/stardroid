@@ -45,7 +45,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
+
+import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 
 public class ControlPanelFragment extends Fragment
         implements INDIServerConnectionListener, SearchView.OnQueryTextListener, View.OnClickListener, SearchView.OnCloseListener {
@@ -54,7 +55,6 @@ public class ControlPanelFragment extends Fragment
     private static Bundle viewPagerBundle;
     private final ArrayList<INDIDevice> devices = new ArrayList<>();
     private final HashMap<Integer, DeviceControlFragment> fragmentsMap = new HashMap<>();
-    private ConnectionManager connectionManager;
     private DevicesFragmentAdapter fragmentAdapter;
     private TextView noDevicesText;
     private ViewPager2 viewPager;
@@ -93,14 +93,12 @@ public class ControlPanelFragment extends Fragment
     @Override
     public void onStart() {
         super.onStart();
-        // Set up INDI connection
-        connectionManager = TelescopeTouchApp.getConnectionManager();
-        connectionManager.addListener(this);
+        connectionManager.addINDIListener(this);
         // Enumerate existing properties
         if (!connectionManager.isConnected()) {
             noDevices();
         } else {
-            List<INDIDevice> list = connectionManager.getConnection().getDevicesAsList();
+            List<INDIDevice> list = connectionManager.getIndiConnection().getDevicesAsList();
             if (list.isEmpty()) {
                 noDevices();
             } else {
@@ -136,7 +134,7 @@ public class ControlPanelFragment extends Fragment
         noDevices();
         tabLayoutMediator.detach();
         viewPager.setAdapter(null);
-        connectionManager.removeListener(this);
+        connectionManager.removeINDIListener(this);
     }
 
     @Override

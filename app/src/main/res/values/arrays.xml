@@ -7,4 +7,9 @@
         <item>Next full moon</item>
         <item>Apollo 11 moon landing</item>
     </string-array>
+    <string-array name="database_filter_elements">
+        <item>@string/stars</item>
+        <item>@string/deep_sky</item>
+        <item>@string/solar_system</item>
+    </string-array>
 </resources>

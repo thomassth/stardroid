@@ -1,124 +1,111 @@
 package io.github.marcocipriani01.telescopetouch.activities;
 
+import android.annotation.SuppressLint;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
+import android.media.MediaScannerConnection;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.util.Pair;
 
-import org.indilib.i4j.INDIBLOBValue;
-import org.indilib.i4j.client.INDIBLOBElement;
+import com.github.chrisbanes.photoview.PhotoView;
 
-import java.io.ByteArrayInputStream;
+import org.indilib.i4j.client.INDIBLOBProperty;
+import org.indilib.i4j.client.INDIDevice;
+import org.indilib.i4j.client.INDIDeviceListener;
+import org.indilib.i4j.client.INDIProperty;
+import org.indilib.i4j.client.INDIPropertyListener;
+import org.indilib.i4j.client.INDIServerConnection;
+import org.indilib.i4j.client.INDIServerConnectionListener;
+
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
 
-public class BLOBViewerFragment extends ActionFragment {
+import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 
-    private static int findFITSLineValue(String in) {
-        if (in.contains("=")) in = in.split("=")[1];
-        Matcher matcher = Pattern.compile("[0-9]+").matcher(in);
-        if (matcher.find()) {
-            return Integer.parseInt(matcher.group());
-        }
-        return -1;
-    }
+public class BLOBViewerFragment extends ActionFragment implements
+        INDIServerConnectionListener, INDIDeviceListener, INDIPropertyListener, AsyncBlobLoader.LoadListener {
+
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private final AsyncBlobLoader blobLoader = new AsyncBlobLoader(handler);
+    private Bitmap bitmap = null;
+    private boolean bitmapSaved = false;
+    private SwitchCompat blobsEnableSwitch;
+    private SwitchCompat fitsStretchSwitch;
+    private TextView fileSizeText;
+    private TextView dimensionsText;
+    private TextView formatText;
+    private TextView bppText;
+    private TextView errorText;
+    private PhotoView blobViewer;
+    private ProgressBar progressBar;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        blobLoader.setListener(this);
         View rootView = inflater.inflate(R.layout.fragment_blob_viewer, container, false);
+        blobsEnableSwitch = rootView.findViewById(R.id.switch_image_receive);
+        fitsStretchSwitch = rootView.findViewById(R.id.switch_image_stretch);
+        fileSizeText = rootView.findViewById(R.id.blob_size);
+        dimensionsText = rootView.findViewById(R.id.blob_dimensions);
+        formatText = rootView.findViewById(R.id.blob_format);
+        bppText = rootView.findViewById(R.id.blob_bpp);
+        errorText = rootView.findViewById(R.id.blob_error_label);
+        blobViewer = rootView.findViewById(R.id.blob_viewer);
+        progressBar = rootView.findViewById(R.id.blob_loading);
         return rootView;
     }
 
-    private Bitmap loadBlob(INDIBLOBElement element, boolean stretch) throws IOException {
-        INDIBLOBValue blobValue = ((INDIBLOBElement) element).getValue();
-        String format = blobValue.getFormat();
-        if (format.equals(".fits")) {
-            try (ByteArrayInputStream inputStream = new ByteArrayInputStream(blobValue.getBlobData())) {
-                int read, axis = 0, bitPerPix = 0, width = 0, height = 0;
-                byte[] headerBuffer = new byte[80];
-                while (inputStream.read(headerBuffer, 0, 80) != -1) {
-                    String card = new String(headerBuffer);
-                    if (card.contains("BITPIX")) {
-                        bitPerPix = findFITSLineValue(card);
-                    } else if (card.contains("NAXIS1")) {
-                        width = findFITSLineValue(card);
-                    } else if (card.contains("NAXIS2")) {
-                        height = findFITSLineValue(card);
-                    } else if (card.contains("NAXIS")) {
-                        axis = findFITSLineValue(card);
-                    } else if (card.startsWith("END ")) {
-                        break;
-                    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        connectionManager.addINDIListener(this);
+        connectionManager.setBlobEnabled(true); //TODO
+        if (connectionManager.isConnected()) {
+            List<INDIDevice> list = connectionManager.getIndiConnection().getDevicesAsList();
+            for (INDIDevice device : list) {
+                device.addINDIDeviceListener(this);
+                List<INDIProperty<?>> properties = device.getPropertiesAsList();
+                for (INDIProperty<?> property : properties) {
+                    newProperty(device, property);
                 }
-                if ((axis != 2) || (bitPerPix == 32)) throw new UnsupportedOperationException();
-                if ((width <= 0) || (height <= 0) || ((bitPerPix != 8) && (bitPerPix != 16)))
-                    throw new IllegalStateException();
-                int bytesPerPix = bitPerPix / 8;
-                byte[] imgBuffer = new byte[bytesPerPix];
-                Bitmap bitmap;
-                if (stretch) {
-                    int[][] img = new int[width][height];
-                    int min = -1, max = -1;
-                    rowLoop:
-                    for (int h = 0; h < height; h++) {
-                        for (int w = 0; w < width; w++) {
-                            read = inputStream.read(imgBuffer, 0, bytesPerPix);
-                            if (read == -1) break rowLoop;
-                            int val;
-                            if (bytesPerPix == 2) {
-                                val = ((imgBuffer[0] * 256) + imgBuffer[1]);
-                                if (imgBuffer[1] < 0) val += 256;
-                            } else {
-                                val = imgBuffer[0] & 0xFF;
-                            }
-                            img[w][h] = val;
-                            if ((max == -1) || (max < val)) max = val;
-                            if ((min == -1) || (min > val)) min = val;
-                        }
-                    }
-                    bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-                    double logMin = Math.log10(min), multiplier = 255.0 / (Math.log10(max) - logMin);
-                    for (int w = 0; w < width; w++) {
-                        for (int h = 0; h < height; h++) {
-                            int interpolation = (int) ((Math.log10(img[w][h]) - logMin) * multiplier);
-                            bitmap.setPixel(w, h, Color.argb(255, interpolation, interpolation, interpolation));
-                        }
-                    }
-                } else {
-                    bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-                    ByteBuffer.allocate(2);
-                    rowLoop:
-                    for (int h = 0; h < height; h++) {
-                        for (int w = 0; w < width; w++) {
-                            read = inputStream.read(imgBuffer, 0, bytesPerPix);
-                            if (read == -1) break rowLoop;
-                            short val;
-                            if (bytesPerPix == 2) {
-                                val = (short) (((imgBuffer[0] * 256) + imgBuffer[1]) / 65535.0 * 255.0);
-                                if (imgBuffer[1] < 0) val += 256;
-                            } else {
-                                val = (short) (imgBuffer[0] & 0xFF);
-                            }
-                            bitmap.setPixel(w, h, Color.argb(255, val, val, val));
-                        }
-                    }
-                }
-                return bitmap;
             }
-        } else {
-            return BitmapFactory.decodeByteArray(blobValue.getBlobData(), 0, blobValue.getSize());
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        connectionManager.removeINDIListener(this); //TODO
+    }
+
+    @Override
+    public boolean isActionEnabled() {
+        return (bitmap != null) && (!bitmapSaved);
     }
 
     @Override
@@ -127,7 +114,166 @@ public class BLOBViewerFragment extends ActionFragment {
     }
 
     @Override
+    @SuppressLint("SimpleDateFormat")
     public void run() {
+        new Thread(() -> {
+            String msg;
+            if (bitmap != null) {
+                try {
+                    saveImage(context, bitmap, context.getString(R.string.app_name), new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date()));
+                    msg = "Saved!";
+                } catch (Exception e) {
+                    msg = "Saving error!";
+                }
+            } else {
+                msg = "Nothing to save";
+            }
+            bitmapSaved = true;
+            final String postMsg = msg;
+            handler.post(() -> {
+                notifyActionChange();
+                requestActionSnack(postMsg);
+            });
+        }).start();
+    }
+
+    @Override
+    public void onBitmapLoaded(Pair<Bitmap, String[]> result) {
+        recycleBitmap();
+        setBlobInfo(result.second);
+        if (result.first == null) {
+            errorText.setText("Unsupported format.");
+            blobViewer.setVisibility(View.GONE);
+            errorText.setVisibility(View.VISIBLE);
+        } else {
+            bitmap = result.first;
+            blobViewer.setImageBitmap(bitmap);
+            blobViewer.setVisibility(View.VISIBLE);
+            errorText.setVisibility(View.GONE);
+            bitmapSaved = false;
+        }
+        progressBar.setVisibility(View.INVISIBLE);
+        notifyActionChange();
+    }
+
+    @Override
+    public void onBlobException(Throwable e) {
+        Log.e("BLOBViewer", e.getLocalizedMessage(), e);
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    private void loadBlob(INDIBLOBProperty property) {
+        int elementCount = property.getElementCount();
+        if (elementCount == 0) {
+            errorText.setText("Empty property.");
+            clearBitmap();
+            notifyActionChange();
+        } else if (elementCount == 1) {
+            progressBar.setVisibility(View.VISIBLE);
+            blobLoader.loadBitmap(property.getElementsAsList().get(0), fitsStretchSwitch.isChecked());
+        } else {
+            errorText.setText("Unsupported multi-image property.");
+            clearBitmap();
+            notifyActionChange();
+        }
+    }
+
+    private void clearBitmap() {
+        setBlobInfo(null);
+        blobViewer.setVisibility(View.GONE);
+        progressBar.setVisibility(View.INVISIBLE);
+        errorText.setVisibility(View.VISIBLE);
+        recycleBitmap();
+    }
+
+    private void recycleBitmap() {
+        blobViewer.setImageDrawable(null);
+        if (bitmap != null) {
+            bitmap.recycle();
+            bitmap = null;
+        }
+    }
+
+    private void setBlobInfo(String[] info) {
+        if (info == null) {
+            fileSizeText.setText("unknown");
+            dimensionsText.setText("unknown");
+            formatText.setText("unknown");
+            bppText.setText("unknown");
+        } else if (info.length != 4) {
+            throw new IllegalArgumentException();
+        } else {
+            fileSizeText.setText((info[0] == null) ? "unknown" : info[0]);
+            dimensionsText.setText((info[1] == null) ? "unknown" : info[1]);
+            formatText.setText((info[2] == null) ? "unknown" : info[2]);
+            bppText.setText((info[3] == null) ? "unknown" : info[3]);
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    private void saveImage(final Context context, final Bitmap bitmap, @NonNull String folderName, @NonNull String fileName) throws IOException {
+        OutputStream outputStream;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ContentResolver resolver = context.getContentResolver();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);
+            contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
+            contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DCIM + File.separator + folderName);
+            outputStream = resolver.openOutputStream(resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues));
+        } else {
+            String imageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() +
+                    File.separator + folderName;
+            File file = new File(imageDirectory);
+            if (!file.exists()) file.mkdir();
+            outputStream = new FileOutputStream(new File(imageDirectory, fileName + ".jpg"));
+            MediaScannerConnection.scanFile(context, new String[]{file.toString()}, null, null);
+        }
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+        outputStream.flush();
+        outputStream.close();
+    }
+
+    @Override
+    public void newDevice(INDIServerConnection connection, INDIDevice device) {
+        device.addINDIDeviceListener(this);
+    }
+
+    @Override
+    public void removeDevice(INDIServerConnection connection, INDIDevice device) {
+        device.removeINDIDeviceListener(this);
+    }
+
+    @Override
+    public void connectionLost(INDIServerConnection connection) {
+
+    }
+
+    @Override
+    public void newMessage(INDIServerConnection connection, Date date, String s) {
+
+    }
+
+    @Override
+    public void newProperty(INDIDevice device, INDIProperty<?> property) {
+        if (property instanceof INDIBLOBProperty)
+            property.addINDIPropertyListener(this);
+    }
+
+    @Override
+    public void removeProperty(INDIDevice device, INDIProperty<?> property) {
+        if (property instanceof INDIBLOBProperty)
+            property.removeINDIPropertyListener(this);
+    }
+
+    @Override
+    public void propertyChanged(INDIProperty<?> property) {
+        if (property instanceof INDIBLOBProperty) {
+            handler.post(() -> loadBlob((INDIBLOBProperty) property));
+        }
+    }
+
+    @Override
+    public void messageChanged(INDIDevice indiDevice) {
 
     }
 }

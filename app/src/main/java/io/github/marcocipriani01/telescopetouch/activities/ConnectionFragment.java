@@ -49,6 +49,8 @@ import io.github.marcocipriani01.telescopetouch.util.NSDHelper;
 import io.github.marcocipriani01.telescopetouch.views.ImprovedSpinner;
 import io.github.marcocipriani01.telescopetouch.views.ImprovedSpinnerListener;
 
+import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
+
 /**
  * The main screen of the application, which manages the connection.
  *
@@ -56,12 +58,12 @@ import io.github.marcocipriani01.telescopetouch.views.ImprovedSpinnerListener;
  * @author marcocipriani01
  */
 public class ConnectionFragment extends ActionFragment implements ServersReloadListener,
-        ConnectionManager.UIUpdater, NSDHelper.NSDListener {
+        ConnectionManager.ManagerListener, NSDHelper.NSDListener {
 
     private static final String INDI_PORT_PREF = "INDI_PORT_PREF";
     private static final String NSD_PREF = "NSD_PREF";
+    private static final ArrayList<ConnectionManager.LogItem> logs = new ArrayList<>();
     private static int selectedSpinnerItem = 0;
-    private ConnectionManager connectionManager;
     private SharedPreferences preferences;
     private Button connectionButton;
     private ImprovedSpinner serversSpinner;
@@ -75,7 +77,6 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_connection, container, false);
         setHasOptionsMenu(true);
-        connectionManager = TelescopeTouchApp.getConnectionManager();
         logsList = rootView.findViewById(R.id.logs_listview);
         logAdapter = new LogAdapter(context);
         logsList.setAdapter(logAdapter);
@@ -138,7 +139,7 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
         }.attach(serversSpinner);
 
         refreshUi(connectionManager.getState());
-        connectionManager.setUiUpdater(this);
+        connectionManager.addManagerListener(this);
 
         nsdHelper.setListener(this);
         if (!nsdHelper.isAvailable()) connectionManager.log("NSD not available.");
@@ -182,18 +183,24 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
     public void onDestroy() {
         super.onDestroy();
         nsdHelper.setListener(null);
+        connectionManager.removeManagerListener(this);
     }
 
     @Override
     public void updateConnectionState(ConnectionManager.ConnectionState state) {
-        new Handler(Looper.getMainLooper()).post(() -> refreshUi(state));
+        refreshUi(state);
+    }
+
+    @Override
+    public void onConnectionLost() {
+
     }
 
     @Override
     public void addLog(final ConnectionManager.LogItem log) {
         if (logsList != null) new Handler(Looper.getMainLooper()).post(() -> {
             logAdapter.addLog(log);
-            setActionEnabled(true);
+            notifyActionChange();
         });
     }
 
@@ -252,6 +259,11 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
     }
 
     @Override
+    public boolean isActionEnabled() {
+        return !logs.isEmpty();
+    }
+
+    @Override
     public int getActionDrawable() {
         return R.drawable.clear;
     }
@@ -259,7 +271,7 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
     @Override
     public void run() {
         if (logAdapter != null) logAdapter.clear();
-        setActionEnabled(false);
+        notifyActionChange();
     }
 
     /**
@@ -269,7 +281,6 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
      */
     private static class LogAdapter extends RecyclerView.Adapter<LogViewHolder> {
 
-        private static final ArrayList<ConnectionManager.LogItem> logs = new ArrayList<>();
         private final LayoutInflater inflater;
 
         LogAdapter(Context context) {

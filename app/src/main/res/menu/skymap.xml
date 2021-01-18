@@ -46,10 +46,4 @@
         android:orderInCategory="8"
         android:title="@string/menu_diagnostics"
         app:showAsAction="never" />
-
-    <item
-        android:id="@+id/menu_about"
-        android:orderInCategory="9"
-        android:title="@string/menu_about"
-        app:showAsAction="never" />
 </menu>

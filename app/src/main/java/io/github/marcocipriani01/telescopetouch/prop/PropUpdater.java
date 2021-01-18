@@ -32,7 +32,7 @@ public class PropUpdater extends Thread {
                 prop.sendChangesToDriver();
             } catch (Exception e) {
                 Log.e("PropertyUpdater", "Property update error!", e);
-                TelescopeTouchApp.getConnectionManager().log(
+                TelescopeTouchApp.connectionManager.log(
                         TelescopeTouchApp.getContext().getResources().getString(R.string.error) + " " + e.getLocalizedMessage());
             }
         }, "INDI property updater");

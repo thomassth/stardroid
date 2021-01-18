@@ -1,138 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="?android:attr/actionBarSize"
     android:orientation="vertical"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".activities.BLOBViewerFragment">
 
-    <androidx.appcompat.widget.Toolbar
+    <TextView
+        android:id="@+id/blob_experimental_notice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:background="@color/colorPrimary"
-        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.MaterialComponents.Dark"
-        app:title="@string/app_name" />
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:text="Notice: experimental feature"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-    <RelativeLayout
+    <io.github.marcocipriani01.telescopetouch.views.ImprovedSpinner
+        android:id="@+id/spinner_select_image_blob"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin">
+        android:layout_below="@id/blob_experimental_notice"
+        android:layout_marginBottom="8dp" />
 
-        <io.github.marcocipriani01.telescopetouch.views.ImprovedSpinner
-            android:id="@+id/spinner_select_image_blob"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp" />
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switch_image_receive"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/spinner_select_image_blob"
+        android:layout_marginBottom="8dp"
+        android:text="Receive images"
+        app:switchMinWidth="60dp" />
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switch_image_stretch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/spinner_select_image_blob"
-            android:layout_marginBottom="4dp"
-            android:text="FITS image stretching" />
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switch_image_stretch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/switch_image_receive"
+        android:layout_marginBottom="8dp"
+        android:text="FITS image stretching"
+        app:switchMinWidth="60dp" />
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switch_image_stretch_refresh"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/switch_image_stretch"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="8dp"
-            android:text="Calculate parameters only once" />
+    <TextView
+        android:id="@+id/image_info_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/switch_image_stretch"
+        android:text="Image info"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-        <TextView
-            android:id="@+id/image_info_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/switch_image_stretch_refresh"
-            android:text="Image info"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+    <TableLayout
+        android:id="@+id/blob_info_table"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/image_info_label"
+        android:layout_marginStart="16dp"
+        android:layout_toEndOf="@id/image_info_label"
+        android:stretchColumns="*">
 
-        <TableLayout
-            android:id="@+id/blob_info_table"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/image_info_label"
-            android:layout_marginStart="16dp"
-            android:layout_toEndOf="@id/image_info_label"
-            android:stretchColumns="*">
+        <TableRow>
 
-            <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="File size:" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="File size:" />
+            <TextView
+                android:id="@+id/blob_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="unknown" />
+        </TableRow>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0MB" />
-            </TableRow>
+        <TableRow>
 
-            <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dimensions:" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Dimensions:" />
+            <TextView
+                android:id="@+id/blob_dimensions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="unknown" />
+        </TableRow>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0x0" />
-            </TableRow>
+        <TableRow>
 
-            <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Format:" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Format:" />
+            <TextView
+                android:id="@+id/blob_format"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="unknown" />
+        </TableRow>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=".fits" />
-            </TableRow>
+        <TableRow>
 
-            <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bits per pixel:" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Bits per pixel:" />
+            <TextView
+                android:id="@+id/blob_bpp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="unknown" />
+        </TableRow>
+    </TableLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="8" />
-            </TableRow>
-        </TableLayout>
+    <com.github.chrisbanes.photoview.PhotoView
+        android:id="@+id/blob_viewer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/blob_loading"
+        android:layout_below="@id/blob_info_table"
+        android:layout_marginTop="8dp"
+        android:adjustViewBounds="true"
+        android:visibility="gone" />
 
-        <com.github.chrisbanes.photoview.PhotoView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/blob_info_table"
-            android:layout_marginTop="8dp"
-            android:adjustViewBounds="true" />
+    <TextView
+        android:id="@+id/blob_error_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/blob_loading"
+        android:layout_below="@id/blob_info_table"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="Loading error placeholder"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/blob_info_table"
-            android:layout_marginTop="8dp"
-            android:gravity="center"
-            android:text="Loading error placeholder"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-    </RelativeLayout>
-</LinearLayout>
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/blob_loading"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:indeterminate="true"
+        android:visibility="invisible" />
+</RelativeLayout>

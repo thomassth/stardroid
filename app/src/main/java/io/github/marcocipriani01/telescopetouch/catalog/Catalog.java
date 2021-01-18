@@ -55,7 +55,7 @@ public class Catalog {
             callListener(true);
         } catch (Exception e) {
             Log.e("CatalogManager", "Unable to load catalog!", e);
-            TelescopeTouchApp.getConnectionManager().log("Catalog loading error.");
+            TelescopeTouchApp.connectionManager.log("Catalog loading error.");
             callListener(false);
         }
     }

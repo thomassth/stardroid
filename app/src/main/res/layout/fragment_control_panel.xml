@@ -13,9 +13,9 @@
         android:elevation="4dp">
 
         <androidx.appcompat.widget.Toolbar
+            android:id="@+id/control_panel_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/control_panel_toolbar"
             android:background="@color/colorPrimary"
             android:theme="@style/ThemeOverlay.MaterialComponents.ActionBar"
             app:popupTheme="@style/ThemeOverlay.MaterialComponents"

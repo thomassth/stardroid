@@ -15,32 +15,45 @@
 package io.github.marcocipriani01.telescopetouch.views;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.catalog.Catalog;
 import io.github.marcocipriani01.telescopetouch.catalog.CatalogEntry;
 import io.github.marcocipriani01.telescopetouch.catalog.DSOEntry;
 import io.github.marcocipriani01.telescopetouch.catalog.PlanetEntry;
 import io.github.marcocipriani01.telescopetouch.catalog.StarEntry;
 
-public class CatalogArrayAdapter extends ArrayAdapter<CatalogEntry> {
+public class CatalogArrayAdapter extends RecyclerView.Adapter<CatalogArrayAdapter.CatalogEntryHolder> {
 
     private final List<CatalogEntry> entries;
+    private final List<CatalogEntry> shownEntries = new ArrayList<>();
+    private final Context context;
+    private final LayoutInflater inflater;
     private boolean showStars = true;
     private boolean showDso = true;
     private boolean showPlanets = true;
+    private CatalogItemListener listener;
 
-    public CatalogArrayAdapter(@NonNull Context context, Catalog catalog) {
-        super(context, android.R.layout.simple_list_item_2, android.R.id.text1);
+    public CatalogArrayAdapter(Context context, Catalog catalog) {
+        super();
+        this.context = context;
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.entries = catalog.getEntries();
-        if (entries.size() > 0) addAll(entries);
+        if (catalog.isReady()) shownEntries.addAll(entries);
+    }
+
+    public boolean isShowStars() {
+        return showStars;
     }
 
     public void setShowStars(boolean showStars) {
@@ -48,9 +61,17 @@ public class CatalogArrayAdapter extends ArrayAdapter<CatalogEntry> {
         reloadCatalog();
     }
 
+    public boolean isShowDso() {
+        return showDso;
+    }
+
     public void setShowDso(boolean showDso) {
         this.showDso = showDso;
         reloadCatalog();
+    }
+
+    public boolean isShowPlanets() {
+        return showPlanets;
     }
 
     public void setShowPlanets(boolean showPlanets) {
@@ -58,25 +79,43 @@ public class CatalogArrayAdapter extends ArrayAdapter<CatalogEntry> {
         reloadCatalog();
     }
 
+    public void setCatalogItemListener(CatalogItemListener listener) {
+        this.listener = listener;
+    }
+
+    @NonNull
+    @Override
+    public CatalogEntryHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new CatalogEntryHolder(inflater.inflate(R.layout.database_item, parent, false));
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull CatalogEntryHolder holder, int position) {
+        CatalogEntry entry = shownEntries.get(position);
+        holder.text1.setText(entry.getName());
+        holder.text2.setText(entry.createSummary(context));
+    }
+
+    @Override
+    public int getItemCount() {
+        return shownEntries.size();
+    }
+
     public void reloadCatalog() {
-        setNotifyOnChange(false);
-        clear();
+        shownEntries.clear();
         for (CatalogEntry entry : entries) {
             if (isVisible(entry)) {
-                setNotifyOnChange(false);
-                add(entry);
+                shownEntries.add(entry);
             }
         }
         notifyDataSetChanged();
     }
 
     public void filter(String string) {
-        setNotifyOnChange(false);
-        clear();
+        shownEntries.clear();
         for (CatalogEntry entry : entries) {
             if (isVisible(entry) && entry.getName().toLowerCase().contains(string.toLowerCase())) {
-                setNotifyOnChange(false);
-                add(entry);
+                shownEntries.add(entry);
             }
         }
         notifyDataSetChanged();
@@ -88,13 +127,36 @@ public class CatalogArrayAdapter extends ArrayAdapter<CatalogEntry> {
                 (showPlanets && (entry instanceof PlanetEntry)));
     }
 
-    @NonNull
-    @Override
-    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        View view = super.getView(position, convertView, parent);
-        CatalogEntry item = getItem(position);
-        ((TextView) view.findViewById(android.R.id.text1)).setText(item.getName());
-        ((TextView) view.findViewById(android.R.id.text2)).setText(item.createSummary(getContext()));
-        return view;
+    public int visibleItemsCount() {
+        return shownEntries.size();
+    }
+
+    public CatalogEntry getEntryAt(int position) {
+        return shownEntries.get(position);
+    }
+
+    public boolean isEmpty() {
+        return shownEntries.isEmpty();
+    }
+
+    public interface CatalogItemListener {
+        void onCatalogItemClick(View v);
+    }
+
+    public class CatalogEntryHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        TextView text1, text2;
+
+        public CatalogEntryHolder(@NonNull View itemView) {
+            super(itemView);
+            itemView.setOnClickListener(this);
+            text1 = itemView.findViewById(android.R.id.text1);
+            text2 = itemView.findViewById(android.R.id.text2);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (listener != null) listener.onCatalogItemClick(v);
+        }
     }
 }
