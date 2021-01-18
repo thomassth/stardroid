@@ -37,6 +37,7 @@ import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Objects;
@@ -70,9 +71,8 @@ public class MainActivity extends AppCompatActivity implements
         mainCoordinator = findViewById(R.id.main_coordinator);
         fab = findViewById(R.id.main_fab);
         fab.setOnClickListener(v -> {
-            Fragment fragment = MainActivity.currentPage.lastInstance;
-            if ((fragment instanceof ActionFragment) && fragment.isAdded())
-                ((ActionFragment) fragment).run();
+            if (currentPage.lastInstance instanceof ActionFragment)
+                ((ActionFragment) currentPage.lastInstance).run();
         });
         fragmentManager = getSupportFragmentManager();
         BottomAppBar bottomBar = findViewById(R.id.bottom_app_bar);
@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         if (animate)
             transaction.setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out);
-        Fragment fragment = Objects.requireNonNull(currentPage.getInstance());
+        Fragment fragment = Objects.requireNonNull(currentPage.newInstance());
         transaction.replace(R.id.content_frame, fragment).commit();
         if (fragment instanceof ActionFragment) {
             ActionFragment actionFragment = (ActionFragment) fragment;
@@ -204,7 +204,22 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void actionSnackRequested(int msgRes) {
-        Snackbar.make(mainCoordinator, msgRes, Snackbar.LENGTH_SHORT).show();
+        fab.hide();
+        Snackbar.make(mainCoordinator, msgRes, Snackbar.LENGTH_SHORT).addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
+            @Override
+            public void onDismissed(Snackbar transientBottomBar, int event) {
+                super.onDismissed(transientBottomBar, event);
+                if (currentPage.lastInstance instanceof ActionFragment) {
+                    ActionFragment actionFragment = (ActionFragment) currentPage.lastInstance;
+                    actionFragment.setActionEnabledListener(MainActivity.this);
+                    if (actionFragment.isActionEnabled()) {
+                        fab.show();
+                    } else {
+                        fab.hide();
+                    }
+                }
+            }
+        }).show();
     }
 
     @Override
@@ -255,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements
             return null;
         }
 
-        Fragment getInstance() {
+        Fragment newInstance() {
             switch (this) {
                 case CONNECTION:
                     lastInstance = new ConnectionFragment();
