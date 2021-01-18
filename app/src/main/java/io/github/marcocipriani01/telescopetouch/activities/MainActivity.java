@@ -16,7 +16,8 @@ package io.github.marcocipriani01.telescopetouch.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
@@ -25,62 +26,65 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.pm.ShortcutInfoCompat;
 import androidx.core.content.pm.ShortcutManagerCompat;
 import androidx.core.graphics.drawable.IconCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
-import org.indilib.i4j.client.INDIDevice;
-import org.indilib.i4j.client.INDIServerConnection;
-import org.indilib.i4j.client.INDIServerConnectionListener;
-
-import java.util.Date;
 import java.util.Objects;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
 /**
  * The main activity of the application, that manages all the fragments.
  *
  * @author marcocipriani01
  */
-public class MainActivity extends AppCompatActivity implements INDIServerConnectionListener,
-        NavigationView.OnNavigationItemSelectedListener, Toolbar.OnMenuItemClickListener, ActionFragment.ActionFragmentListener {
+public class MainActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener, Toolbar.OnMenuItemClickListener,
+        ActionFragment.ActionListener, ConnectionManager.ManagerListener {
 
+    public static final String ACTION = "MainActivityAction";
+    public static final int ACTION_CONNECT = Pages.CONNECTION.ordinal();
+    public static final int ACTION_SEARCH = Pages.GOTO.ordinal();
     private static Pages currentPage = Pages.CONNECTION;
-    private ConnectionManager connectionManager;
     private FragmentManager fragmentManager;
     private FloatingActionButton fab;
+    private CoordinatorLayout mainCoordinator;
     private boolean visible = false;
+    private boolean doubleBackPressed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Pages.setListeners(this);
+        mainCoordinator = findViewById(R.id.main_coordinator);
+        fab = findViewById(R.id.main_fab);
+        fab.setOnClickListener(v -> {
+            Fragment fragment = MainActivity.currentPage.lastInstance;
+            if ((fragment instanceof ActionFragment) && fragment.isAdded())
+                ((ActionFragment) fragment).run();
+        });
+        fragmentManager = getSupportFragmentManager();
         BottomAppBar bottomBar = findViewById(R.id.bottom_app_bar);
         setSupportActionBar(bottomBar);
         bottomBar.setOnMenuItemClickListener(this);
-        fragmentManager = getSupportFragmentManager();
         bottomBar.setNavigationOnClickListener(v -> new MainBottomNavigation(this).show());
-        fragmentManager.beginTransaction().replace(R.id.content_frame, Pages.CONNECTION.instance).commit();
-        fab = findViewById(R.id.main_fab);
-        fab.hide();
-        fab.setOnClickListener(v -> ((ActionFragment) currentPage.instance).run());
-        connectionManager = TelescopeTouchApp.getConnectionManager();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        connectionManager.addListener(this);
+        int action = getIntent().getIntExtra(ACTION, -1);
+        if (action == -1) {
+            showFragment(currentPage, false);
+        } else {
+            showFragment(Pages.values()[action], false);
+        }
     }
 
     @Override
@@ -96,12 +100,6 @@ public class MainActivity extends AppCompatActivity implements INDIServerConnect
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        connectionManager.removeListener(this);
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.main, menu);
@@ -111,9 +109,15 @@ public class MainActivity extends AppCompatActivity implements INDIServerConnect
     @Override
     public void onBackPressed() {
         if (currentPage == Pages.CONNECTION) {
-            super.onBackPressed();
+            if (doubleBackPressed) {
+                super.onBackPressed();
+            } else {
+                this.doubleBackPressed = true;
+                Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show();
+                new Handler(Looper.getMainLooper()).postDelayed(() -> doubleBackPressed = false, 1000);
+            }
         } else {
-            goToConnectionTab();
+            showFragment(Pages.CONNECTION, true);
         }
     }
 
@@ -121,20 +125,17 @@ public class MainActivity extends AppCompatActivity implements INDIServerConnect
     public boolean onMenuItemClick(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_skymap_shortcut) {
-            if (ShortcutManagerCompat.isRequestPinShortcutSupported(getApplicationContext())) {
-                ShortcutManagerCompat.requestPinShortcut(getApplicationContext(),
-                        new ShortcutInfoCompat.Builder(getApplicationContext(), "skymap_shortcut")
-                                .setIntent(new Intent(getApplicationContext(), DynamicStarMapActivity.class)
+            if (ShortcutManagerCompat.isRequestPinShortcutSupported(this)) {
+                ShortcutManagerCompat.requestPinShortcut(this,
+                        new ShortcutInfoCompat.Builder(this, "skymap_shortcut")
+                                .setIntent(new Intent(this, DynamicStarMapActivity.class)
                                         .setAction(DynamicStarMapActivity.SKY_MAP_INTENT_ACTION))
                                 .setShortLabel(getString(R.string.sky_map))
-                                .setIcon(IconCompat.createWithResource(getApplicationContext(), R.mipmap.map_launcher))
+                                .setIcon(IconCompat.createWithResource(this, R.mipmap.map_launcher))
                                 .build(), null);
             } else {
                 Toast.makeText(MainActivity.this, getString(R.string.shortcuts_not_supported), Toast.LENGTH_SHORT).show();
             }
-            return true;
-        } else if (itemId == R.id.menu_goto) {
-            startActivity(new Intent(this, GoToActivity.class));
             return true;
         }
         return false;
@@ -142,71 +143,39 @@ public class MainActivity extends AppCompatActivity implements INDIServerConnect
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        Pages newPage = Objects.requireNonNull(Pages.fromId(item.getItemId()));
-        if (newPage == Pages.SKY_MAP_GALLERY) {
+        Pages page = Pages.fromId(item.getItemId());
+        if (page == Pages.SKY_MAP_GALLERY) {
             startActivity(new Intent(this, ImageGalleryActivity.class));
             return true;
-        } else if (newPage == Pages.SKY_MAP) {
+        } else if (page == Pages.SKY_MAP) {
             startActivity(new Intent(this, DynamicStarMapActivity.class));
             return true;
-        } else if (newPage != currentPage) {
-            Fragment fragment = Pages.values()[newPage.ordinal()].instance;
-            fragmentManager.beginTransaction()
-                    .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out)
-                    .replace(R.id.content_frame, fragment).commit();
-            if (fragment instanceof ActionFragment) {
-                ActionFragment actionFragment = (ActionFragment) fragment;
-                fab.setImageResource(actionFragment.getActionDrawable());
-                if (actionFragment.isActionEnabled()) {
-                    fab.show();
-                } else {
-                    fab.hide();
-                }
-            } else {
-                fab.hide();
-            }
-            invalidateOptionsMenu();
-            currentPage = newPage;
+        } else if ((page != null) && (page != currentPage)) {
+            showFragment(page, true);
             return true;
         }
         return false;
     }
 
-    private void goToConnectionTab() {
-        currentPage = Pages.CONNECTION;
-        try {
-            ActionFragment instance = (ActionFragment) Pages.CONNECTION.instance;
-            instance.setActionEnabledListener(this);
-            fragmentManager.beginTransaction()
-                    .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out)
-                    .replace(R.id.content_frame, instance).commit();
-            fab.setImageResource(instance.getActionDrawable());
-            setActionEnabled(instance.isActionEnabled());
-        } catch (IllegalStateException e) {
-            Log.e("MainActivity", "FragmentManager error", e);
+    private void showFragment(Pages page, boolean animate) {
+        currentPage = page;
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        if (animate)
+            transaction.setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out);
+        Fragment fragment = Objects.requireNonNull(currentPage.getInstance(this));
+        transaction.replace(R.id.content_frame, fragment).commit();
+        if (fragment instanceof ActionFragment) {
+            ActionFragment actionFragment = (ActionFragment) fragment;
+            fab.setImageResource(actionFragment.getActionDrawable());
+            if (actionFragment.isActionEnabled()) {
+                fab.show();
+            } else {
+                fab.hide();
+            }
+        } else {
+            fab.hide();
         }
-    }
-
-    @Override
-    public void newDevice(INDIServerConnection indiServerConnection, INDIDevice device) {
-
-    }
-
-    @Override
-    public void removeDevice(INDIServerConnection indiServerConnection, INDIDevice device) {
-
-    }
-
-    @Override
-    public void connectionLost(INDIServerConnection indiServerConnection) {
-        runOnUiThread(() -> {
-            if (visible && (fragmentManager != null)) goToConnectionTab();
-        });
-    }
-
-    @Override
-    public void newMessage(INDIServerConnection indiServerConnection, Date date, String s) {
-
+        invalidateOptionsMenu();
     }
 
     @Override
@@ -219,27 +188,51 @@ public class MainActivity extends AppCompatActivity implements INDIServerConnect
         invalidateOptionsMenu();
     }
 
+    @Override
+    public void actionSnackRequested(String msg) {
+        Snackbar.make(mainCoordinator, msg, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onConnectionLost() {
+        runOnUiThread(() -> {
+            if (currentPage != Pages.CONNECTION) {
+                Toast.makeText(this, "Connection lost", Toast.LENGTH_SHORT).show();
+                if (visible && (fragmentManager != null)) showFragment(Pages.CONNECTION, true);
+            }
+        });
+    }
+
+    @Override
+    public void addLog(ConnectionManager.LogItem log) {
+
+    }
+
+    @Override
+    public void updateConnectionState(ConnectionManager.ConnectionState state) {
+
+    }
+
     /**
      * @author marcocipriani01
      */
     private enum Pages {
-        CONNECTION(R.id.menu_connection, new ConnectionFragment()),
-        TELESCOPE(R.id.menu_move, new MountControlFragment()),
-        GOTO(R.id.menu_goto_fragment, new GoToFragment()),
-        BLOB_VIEWER(R.id.menu_ccd_images, new BLOBViewerFragment()),
-        FOCUSER(R.id.menu_focuser, new FocuserFragment()),
-        CONTROL_PANEL(R.id.menu_generic, new ControlPanelFragment()),
-        SKY_MAP(R.id.menu_skymap, null),
-        SKY_MAP_GALLERY(R.id.menu_skymap_gallery, null),
-        COMPASS(R.id.menu_compass, new CompassFragment()),
-        ABOUT(R.id.menu_about, new AboutFragment());
+        CONNECTION(R.id.menu_connection),
+        TELESCOPE(R.id.menu_move),
+        GOTO(R.id.menu_goto_fragment),
+        BLOB_VIEWER(R.id.menu_ccd_images),
+        FOCUSER(R.id.menu_focuser),
+        CONTROL_PANEL(R.id.menu_generic),
+        SKY_MAP(R.id.menu_skymap),
+        SKY_MAP_GALLERY(R.id.menu_skymap_gallery),
+        COMPASS(R.id.menu_compass),
+        ABOUT(R.id.menu_about);
 
         private final int itemId;
-        private final Fragment instance;
+        private Fragment lastInstance;
 
-        Pages(int itemId, Fragment instance) {
+        Pages(int itemId) {
             this.itemId = itemId;
-            this.instance = instance;
         }
 
         private static Pages fromId(int id) {
@@ -249,12 +242,38 @@ public class MainActivity extends AppCompatActivity implements INDIServerConnect
             return null;
         }
 
-        private static void setListeners(ActionFragment.ActionFragmentListener listener) {
-            for (Pages f : values()) {
-                if (f.instance instanceof ActionFragment) {
-                    ((ActionFragment) f.instance).setActionEnabledListener(listener);
-                }
+        Fragment getInstance(ActionFragment.ActionListener listener) {
+            switch (this) {
+                case CONNECTION:
+                    lastInstance = new ConnectionFragment();
+                    break;
+                case TELESCOPE:
+                    lastInstance = new MountControlFragment();
+                    break;
+                case GOTO:
+                    lastInstance = new GoToFragment();
+                    break;
+                case BLOB_VIEWER:
+                    lastInstance = new BLOBViewerFragment();
+                    break;
+                case FOCUSER:
+                    lastInstance = new FocuserFragment();
+                    break;
+                case CONTROL_PANEL:
+                    lastInstance = new ControlPanelFragment();
+                    break;
+                case COMPASS:
+                    lastInstance = new CompassFragment();
+                    break;
+                case ABOUT:
+                    lastInstance = new AboutFragment();
+                    break;
+                default:
+                    return null;
             }
+            if (lastInstance instanceof ActionFragment)
+                ((ActionFragment) lastInstance).setActionEnabledListener(listener);
+            return lastInstance;
         }
     }
 

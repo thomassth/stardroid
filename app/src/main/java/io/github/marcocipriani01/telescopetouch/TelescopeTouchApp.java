@@ -51,14 +51,14 @@ public class TelescopeTouchApp extends Application {
 
     private static final String TAG = getTag(TelescopeTouchApp.class);
     /**
+     * Global connection manager.
+     */
+    public static final ConnectionManager connectionManager = new ConnectionManager();
+    /**
      * The context of the whole app.
      */
     @SuppressLint("StaticFieldLeak")
     private static Context context;
-    /**
-     * Global connection manager.
-     */
-    private static ConnectionManager connectionManager;
     private static NSDHelper serviceDiscoveryHelper;
     @Inject
     SharedPreferences preferences;
@@ -96,13 +96,6 @@ public class TelescopeTouchApp extends Application {
     }
 
     /**
-     * @return the Connection Manager for this application.
-     */
-    public static ConnectionManager getConnectionManager() {
-        return connectionManager;
-    }
-
-    /**
      * @return the context of the whole app.
      */
     public static Context getContext() {
@@ -122,7 +115,7 @@ public class TelescopeTouchApp extends Application {
         PreferenceManager.setDefaultValues(this, R.xml.preference_screen, false);
         performFeatureCheck();
 
-        if (connectionManager == null) connectionManager = new ConnectionManager(context);
+        connectionManager.initFormatters(context);
         if (serviceDiscoveryHelper == null) serviceDiscoveryHelper = new NSDHelper(this);
     }
 

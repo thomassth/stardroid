@@ -49,10 +49,11 @@ import java.util.Date;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.prop.PropUpdater;
 import io.github.marcocipriani01.telescopetouch.views.CounterHandler;
 import io.github.marcocipriani01.telescopetouch.views.LongPressHandler;
+
+import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 
 /**
  * This fragment shows directional buttons to move a focuser.
@@ -62,7 +63,6 @@ import io.github.marcocipriani01.telescopetouch.views.LongPressHandler;
 public class FocuserFragment extends Fragment implements INDIServerConnectionListener, INDIPropertyListener,
         INDIDeviceListener, View.OnClickListener, SeekBar.OnSeekBarChangeListener, TextWatcher {
 
-    private ConnectionManager connectionManager;
     // Properties and elements associated to the buttons
     private INDISwitchProperty directionProp = null;
     private INDISwitchElement inwardDirElem = null;
@@ -161,12 +161,10 @@ public class FocuserFragment extends Fragment implements INDIServerConnectionLis
     @Override
     public void onStart() {
         super.onStart();
-        // Set up INDI connection
-        connectionManager = TelescopeTouchApp.getConnectionManager();
-        connectionManager.addListener(this);
+        connectionManager.addINDIListener(this);
         // Enumerate existing properties
         if (connectionManager.isConnected()) {
-            List<INDIDevice> list = connectionManager.getConnection().getDevicesAsList();
+            List<INDIDevice> list = connectionManager.getIndiConnection().getDevicesAsList();
             for (INDIDevice device : list) {
                 device.addINDIDeviceListener(this);
                 List<INDIProperty<?>> properties = device.getPropertiesAsList();
@@ -187,7 +185,7 @@ public class FocuserFragment extends Fragment implements INDIServerConnectionLis
     @Override
     public void onStop() {
         super.onStop();
-        connectionManager.removeListener(this);
+        connectionManager.removeINDIListener(this);
     }
 
     private void clearVars() {

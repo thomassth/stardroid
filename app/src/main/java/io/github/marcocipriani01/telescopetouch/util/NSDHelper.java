@@ -57,7 +57,7 @@ public class NSDHelper implements ServiceListener {
                 jmdns.addServiceListener(SERVICE_TYPE, this);
                 available = true;
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(TAG, e.getMessage(), e);
             }
         }).start();
     }
@@ -82,7 +82,7 @@ public class NSDHelper implements ServiceListener {
             try {
                 jmdns.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(TAG, e.getMessage(), e);
             }
             jmdns = null;
         }

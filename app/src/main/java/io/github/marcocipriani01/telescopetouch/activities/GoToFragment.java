@@ -14,22 +14,25 @@
 
 package io.github.marcocipriani01.telescopetouch.activities;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
-import androidx.fragment.app.ListFragment;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.indilib.i4j.Constants;
 import org.indilib.i4j.client.INDIDevice;
@@ -49,7 +52,6 @@ import java.util.Date;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.catalog.Catalog;
 import io.github.marcocipriani01.telescopetouch.catalog.CatalogCoordinates;
 import io.github.marcocipriani01.telescopetouch.catalog.CatalogEntry;
@@ -59,20 +61,23 @@ import io.github.marcocipriani01.telescopetouch.prop.PropUpdater;
 import io.github.marcocipriani01.telescopetouch.util.AstroTimeUtils;
 import io.github.marcocipriani01.telescopetouch.views.CatalogArrayAdapter;
 
+import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
+
 /**
  * Allows the user to look for an astronomical object and slew the telescope.
  */
-public class GoToFragment extends ListFragment
+public class GoToFragment extends ActionFragment
         implements SearchView.OnQueryTextListener, Catalog.CatalogLoadingListener,
-        INDIServerConnectionListener, INDIPropertyListener, INDIDeviceListener {
+        INDIServerConnectionListener, INDIPropertyListener, INDIDeviceListener, CatalogArrayAdapter.CatalogItemListener {
 
     private static final Catalog catalog = new Catalog();
-    private static CatalogArrayAdapter entriesAdapter;
-    private static String intentSearch = null;
-    private ConnectionManager connectionManager;
-    private Context context;
+    private static String requestedSearch = null;
+    private CatalogArrayAdapter entriesAdapter;
     private MenuItem searchMenu;
     private SearchView searchView;
+    private RecyclerView list;
+    private ProgressBar progressBar;
+    private TextView emptyLabel;
     // INDI properties
     private INDINumberProperty telescopeCoordP = null;
     private INDINumberElement telescopeCoordRA = null;
@@ -82,39 +87,39 @@ public class GoToFragment extends ListFragment
     private INDISwitchElement telescopeOnCoordSetSlew = null;
     private INDISwitchElement telescopeOnCoordSetTrack = null;
 
-    public static void setIntentSearch(String search) {
-        intentSearch = search;
+    public static void setRequestedSearch(String query) {
+        requestedSearch = query;
     }
 
+    @Nullable
     @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        this.context = context;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        setEmptyText(getString(R.string.empty_catalog));
-        setHasOptionsMenu(true);
-        setListAdapter(entriesAdapter = new CatalogArrayAdapter(context, catalog));
-        if (!catalog.isReady()) {
-            // List loading
-            setListShown(false);
-            catalog.setListener(this);
-            if (!catalog.isLoading()) new Thread(catalog::load).start();
-        }
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_goto, container, false);
+        searchMenu = rootView.<Toolbar>findViewById(R.id.goto_toolbar).getMenu().add(R.string.mount_goto);
+        searchMenu.setIcon(R.drawable.search);
+        searchMenu.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        searchMenu.setVisible(catalog.isReady());
+        searchView = new SearchView(context);
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+        searchView.setOnQueryTextListener(this);
+        searchMenu.setActionView(searchView);
+        list = rootView.findViewById(R.id.goto_database_list);
+        entriesAdapter = new CatalogArrayAdapter(context, catalog);
+        list.setAdapter(entriesAdapter);
+        list.setLayoutManager(new LinearLayoutManager(context));
+        entriesAdapter.setCatalogItemListener(this);
+        emptyLabel = rootView.findViewById(R.id.goto_empy_label);
+        progressBar = rootView.findViewById(R.id.goto_loading);
+        return rootView;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        // Set up INDI connection
-        connectionManager = TelescopeTouchApp.getConnectionManager();
-        connectionManager.addListener(this);
+        connectionManager.addINDIListener(this);
         // Enumerate existing properties
         if (connectionManager.isConnected()) {
-            List<INDIDevice> list = connectionManager.getConnection().getDevicesAsList();
+            List<INDIDevice> list = connectionManager.getIndiConnection().getDevicesAsList();
             if (list != null) {
                 for (INDIDevice device : list) {
                     device.addINDIDeviceListener(this);
@@ -126,58 +131,52 @@ public class GoToFragment extends ListFragment
         } else {
             clearVars();
         }
-        maybeStartIntentSearch();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.database_filter, menu);
-        searchMenu = menu.add(R.string.mount_goto);
-        searchMenu.setIcon(R.drawable.search);
-        searchMenu.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        searchMenu.setVisible(catalog.isReady());
-        searchView = new SearchView(context);
-        searchView.setMaxWidth(Integer.MAX_VALUE);
-        searchView.setOnQueryTextListener(this);
-        searchMenu.setActionView(searchView);
-        super.onCreateOptionsMenu(menu, inflater);
-        maybeStartIntentSearch();
-    }
-
-    private void maybeStartIntentSearch() {
-        Log.e("GoToFragment", "hello", new RuntimeException());
-        if (catalog.isReady() && (intentSearch != null) && (searchView != null) && isVisible()) {
-            searchView.setIconified(false);
-            searchView.setQuery(intentSearch, false);
-            searchView.clearFocus();
+        if (catalog.isReady()) {
+            setListShown(true);
+        } else {
+            setListShown(false);
+            catalog.setListener(this);
+            // List loading
+            if (!catalog.isLoading()) new Thread(catalog::load).start();
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.isCheckable()) {
-            int itemId = item.getItemId();
-            boolean checked = !item.isChecked();
-            if (itemId == R.id.menu_filter_stars) {
-                entriesAdapter.setShowStars(checked);
-            } else if (itemId == R.id.menu_filter_dso) {
-                entriesAdapter.setShowDso(checked);
-            } else if (itemId == R.id.menu_filter_planets) {
-                entriesAdapter.setShowPlanets(checked);
-            } else {
-                return super.onOptionsItemSelected(item);
-            }
-            item.setChecked(checked);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        maybeStartIntentSearch();
     }
 
     @Override
     public void onStop() {
         super.onStop();
         catalog.setListener(null);
-        connectionManager.removeListener(this);
+        connectionManager.removeINDIListener(this);
+    }
+
+    @Override
+    public boolean isActionEnabled() {
+        return catalog.isReady();
+    }
+
+    @Override
+    public int getActionDrawable() {
+        return R.drawable.filter;
+    }
+
+    @Override
+    public void run() {
+        final boolean[] choices = {entriesAdapter.isShowStars(), entriesAdapter.isShowDso(), entriesAdapter.isShowPlanets()};
+        new AlertDialog.Builder(context).setTitle("Database filter")
+                .setMultiChoiceItems(R.array.database_filter_elements, choices,
+                        (dialog, which, isChecked) -> choices[which] = isChecked)
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    entriesAdapter.setShowStars(choices[0]);
+                    entriesAdapter.setShowDso(choices[1]);
+                    entriesAdapter.setShowPlanets(choices[2]);
+                    if (entriesAdapter.isEmpty()) {
+                        emptyLabel.setVisibility(View.VISIBLE);
+                        list.setVisibility(View.GONE);
+                    } else {
+                        list.setVisibility(View.VISIBLE);
+                        emptyLabel.setVisibility(View.GONE);
+                    }
+                }).setNegativeButton(android.R.string.cancel, null).show();
     }
 
     private void clearVars() {
@@ -190,6 +189,20 @@ public class GoToFragment extends ListFragment
         telescopeOnCoordSetSync = null;
     }
 
+    private void setListShown(boolean b) {
+        list.setVisibility(b ? View.VISIBLE : View.GONE);
+        progressBar.setVisibility(b ? View.GONE : View.VISIBLE);
+        notifyActionChange();
+    }
+
+    private void maybeStartIntentSearch() {
+        if (catalog.isReady() && (requestedSearch != null) && (searchView != null) && isVisible()) {
+            searchView.setIconified(false);
+            searchView.setQuery(requestedSearch, false);
+            searchView.clearFocus();
+        }
+    }
+
     /**
      * Called when the user changes the search string.
      *
@@ -199,9 +212,9 @@ public class GoToFragment extends ListFragment
     @Override
     public boolean onQueryTextChange(String newText) {
         if (catalog.isReady()) entriesAdapter.filter(newText);
-        if (intentSearch != null) {
-            if (entriesAdapter.getCount() == 1) onListItemClick0(0);
-            intentSearch = null;
+        if (requestedSearch != null) {
+            if (entriesAdapter.visibleItemsCount() == 1) onListItemClick0(0);
+            requestedSearch = null;
         }
         return false;
     }
@@ -218,12 +231,13 @@ public class GoToFragment extends ListFragment
     }
 
     @Override
-    public void onListItemClick(@NonNull ListView l, @NonNull View v, int position, long id) {
-        onListItemClick0(position);
+    public void onCatalogItemClick(View v) {
+        int position = list.indexOfChild(v);
+        if (position != -1) onListItemClick0(position);
     }
 
     private void onListItemClick0(int position) {
-        final CatalogEntry selectedEntry = entriesAdapter.getItem(position);
+        final CatalogEntry selectedEntry = entriesAdapter.getEntryAt(position);
         final CatalogCoordinates coord = selectedEntry.getCoordinates();
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(selectedEntry.createDescription(context)).setTitle(selectedEntry.getName());
@@ -355,17 +369,13 @@ public class GoToFragment extends ListFragment
             if (success) {
                 if (searchMenu != null) searchMenu.setVisible(true);
                 entriesAdapter.reloadCatalog();
-                if (isResumed()) {
-                    setListShown(true);
-                    maybeStartIntentSearch();
-                } else {
-                    setListShownNoAnimation(true);
-                }
+                setListShown(true);
+                if (isResumed()) maybeStartIntentSearch();
             } else if (isVisible()) {
                 new AlertDialog.Builder(context)
                         .setTitle(R.string.catalog_manager)
                         .setMessage(R.string.catalog_error)
-                        .setNegativeButton(android.R.string.no, null)
+                        .setPositiveButton(android.R.string.ok, null)
                         .setIcon(R.drawable.warning)
                         .show();
             }

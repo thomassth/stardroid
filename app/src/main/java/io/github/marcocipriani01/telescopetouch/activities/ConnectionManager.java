@@ -17,18 +17,21 @@ package io.github.marcocipriani01.telescopetouch.activities;
 import android.content.Context;
 import android.content.res.Resources;
 import android.text.format.DateFormat;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import org.indilib.i4j.Constants;
+import org.indilib.i4j.client.INDIBLOBProperty;
 import org.indilib.i4j.client.INDIDevice;
 import org.indilib.i4j.client.INDIDeviceListener;
 import org.indilib.i4j.client.INDIProperty;
 import org.indilib.i4j.client.INDIServerConnection;
 import org.indilib.i4j.client.INDIServerConnectionListener;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Set;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
@@ -40,52 +43,66 @@ import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
  */
 public class ConnectionManager implements INDIServerConnectionListener, INDIDeviceListener {
 
-    /**
-     * A list to re-add the listener when the connection is destroyed and recreated.
-     */
-    private final HashSet<INDIServerConnectionListener> listeners;
-    private final java.text.DateFormat dateFormat;
-    private final java.text.DateFormat timeFormat;
-    /**
-     * The connection to the INDI server.
-     */
-    private INDIServerConnection connection;
-    /**
-     * UI updater
-     */
-    private UIUpdater uiUpdater = null;
+    private final Set<ManagerListener> managerListeners = new HashSet<>();
+    private final HashSet<INDIServerConnectionListener> indiListeners = new HashSet<>();
+    private java.text.DateFormat dateFormat = null;
+    private java.text.DateFormat timeFormat = null;
+    private INDIServerConnection indiConnection;
     private boolean busy = false;
+    private boolean blobEnabled = false;
 
-    /**
-     * Class constructor.
-     */
-    public ConnectionManager(Context appContext) {
-        listeners = new HashSet<>();
+    public void initFormatters(Context appContext) {
         dateFormat = DateFormat.getDateFormat(appContext);
         timeFormat = DateFormat.getTimeFormat(appContext);
     }
 
+    public boolean isBlobEnabled() {
+        return blobEnabled;
+    }
+
+    public void setBlobEnabled(boolean b) {
+        this.blobEnabled = b;
+        new Thread(() -> {
+            try {
+                if (isConnected()) {
+                    Constants.BLOBEnables blobEnables = this.blobEnabled ? Constants.BLOBEnables.ALSO : Constants.BLOBEnables.NEVER;
+                    for (INDIDevice device : indiConnection.getDevicesAsList()) {
+                        device.blobsEnable(blobEnables);
+                        for (INDIProperty<?> property : device.getPropertiesAsList()) {
+                            if (property instanceof INDIBLOBProperty)
+                                device.blobsEnable(blobEnables, property);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                Log.e("ConnectionManager", e.getLocalizedMessage(), e);
+            }
+        }).start();
+    }
+
     public ConnectionState getState() {
         return busy ? ConnectionState.BUSY :
-                (((connection != null) && connection.isConnected()) ? ConnectionState.CONNECTED : ConnectionState.DISCONNECTED);
+                (((indiConnection != null) && indiConnection.isConnected()) ? ConnectionState.CONNECTED : ConnectionState.DISCONNECTED);
     }
 
     public boolean isConnected() {
-        return (!busy) && (connection != null) && connection.isConnected();
+        return (!busy) && (indiConnection != null) && indiConnection.isConnected();
     }
 
     /**
      * @param state the new state of the Connection button.
      */
     public void updateState(ConnectionState state) {
-        if (uiUpdater != null) uiUpdater.updateConnectionState(state);
+        for (ManagerListener listener : managerListeners) {
+            listener.updateConnectionState(state);
+        }
     }
 
     /**
      * @return the connection. May be {@code null} if the connection doesn't exist.
      */
-    public INDIServerConnection getConnection() {
-        return connection;
+    public INDIServerConnection getIndiConnection() {
+        return indiConnection;
     }
 
     /**
@@ -102,13 +119,13 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
             log(resources.getString(R.string.try_to_connect) + host + ":" + port);
             new Thread(() -> {
                 try {
-                    connection = new INDIServerConnection(host, port);
-                    connection.addINDIServerConnectionListener(this);
-                    for (INDIServerConnectionListener l : listeners) {
-                        connection.addINDIServerConnectionListener(l);
+                    indiConnection = new INDIServerConnection(host, port);
+                    indiConnection.addINDIServerConnectionListener(this);
+                    for (INDIServerConnectionListener l : indiListeners) {
+                        indiConnection.addINDIServerConnectionListener(l);
                     }
-                    connection.connect();
-                    connection.askForDevices();
+                    indiConnection.connect();
+                    indiConnection.askForDevices();
                     busy = false;
                     updateState(ConnectionState.CONNECTED);
                     log(resources.getString(R.string.connected));
@@ -129,18 +146,27 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
      * @param message a new log.
      */
     public void log(String message) {
-        if (uiUpdater != null) {
+        if (timeFormat != null) {
             Date now = new Date();
             LogItem log = new LogItem(message, dateFormat.format(now) + " " + timeFormat.format(now));
-            uiUpdater.addLog(log);
+            for (ManagerListener listener : managerListeners) {
+                listener.addLog(log);
+            }
         }
     }
 
     /**
-     * @param u a new {@link UIUpdater}
+     * @param listener a new {@link ManagerListener}
      */
-    public void setUiUpdater(UIUpdater u) {
-        uiUpdater = u;
+    public void addManagerListener(ManagerListener listener) {
+        managerListeners.add(listener);
+    }
+
+    /**
+     * @param listener a new {@link ManagerListener}
+     */
+    public void removeManagerListener(ManagerListener listener) {
+        managerListeners.remove(listener);
     }
 
     /**
@@ -151,11 +177,11 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
             new Thread(() -> {
                 busy = true;
                 try {
-                    connection.disconnect();
+                    indiConnection.disconnect();
                 } catch (Exception e) {
                     log(e.getLocalizedMessage());
                 }
-                connection = null;
+                indiConnection = null;
                 busy = false;
                 updateState(ConnectionState.DISCONNECTED);
             }).start();
@@ -170,9 +196,9 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
      *
      * @param connectionListener the listener
      */
-    public void addListener(INDIServerConnectionListener connectionListener) {
-        if (listeners.add(connectionListener) && (connection != null))
-            connection.addINDIServerConnectionListener(connectionListener);
+    public void addINDIListener(INDIServerConnectionListener connectionListener) {
+        if (indiListeners.add(connectionListener) && (indiConnection != null))
+            indiConnection.addINDIServerConnectionListener(connectionListener);
     }
 
     /**
@@ -180,15 +206,23 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
      *
      * @param connectionListener the listener
      */
-    public void removeListener(INDIServerConnectionListener connectionListener) {
-        listeners.remove(connectionListener);
-        if (connection != null) connection.removeINDIServerConnectionListener(connectionListener);
+    public void removeINDIListener(INDIServerConnectionListener connectionListener) {
+        indiListeners.remove(connectionListener);
+        if (indiConnection != null)
+            indiConnection.removeINDIServerConnectionListener(connectionListener);
     }
 
     @Override
     public void newDevice(INDIServerConnection connection, INDIDevice device) {
         device.addINDIDeviceListener(this);
         log("New device: " + device.getName()); // TODO resource
+        new Thread(() -> {
+            try {
+                device.blobsEnable(this.blobEnabled ? Constants.BLOBEnables.ALSO : Constants.BLOBEnables.NEVER);
+            } catch (Exception e) {
+                Log.e("ConnectionManager", e.getLocalizedMessage(), e);
+            }
+        }).start();
     }
 
     @Override
@@ -200,9 +234,12 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
     @Override
     public void connectionLost(INDIServerConnection connection) {
         busy = false;
-        this.connection = null;
+        this.indiConnection = null;
         updateState(ConnectionState.DISCONNECTED);
         log(TelescopeTouchApp.getAppResources().getString(R.string.connection_lost));
+        for (ManagerListener listener : managerListeners) {
+            listener.onConnectionLost();
+        }
     }
 
     @Override
@@ -212,7 +249,14 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
 
     @Override
     public void newProperty(INDIDevice device, INDIProperty<?> property) {
-
+        new Thread(() -> {
+            try {
+                if (property instanceof INDIBLOBProperty)
+                    device.blobsEnable(this.blobEnabled ? Constants.BLOBEnables.ALSO : Constants.BLOBEnables.NEVER, property);
+            } catch (Exception e) {
+                Log.e("ConnectionManager", e.getLocalizedMessage(), e);
+            }
+        }).start();
     }
 
     @Override
@@ -235,13 +279,12 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
      *
      * @author marcocipriani01
      */
-    public interface UIUpdater {
-        /**
-         * Appends a log to the Log TextView.
-         */
+    public interface ManagerListener {
         void addLog(final LogItem log);
 
         void updateConnectionState(ConnectionState state);
+
+        void onConnectionLost();
     }
 
     /**
