@@ -11,9 +11,12 @@ import androidx.core.util.Pair;
 import org.indilib.i4j.INDIBLOBValue;
 import org.indilib.i4j.client.INDIBLOBElement;
 
-import java.io.ByteArrayInputStream;
+import java.io.EOFException;
+import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
 public class AsyncBlobLoader {
 
@@ -50,15 +53,16 @@ public class AsyncBlobLoader {
             @Override
             public void run() {
                 try {
-                    INDIBLOBValue blobValue = element.getValue();
-                    String format = blobValue.getFormat();
-                    int blobSize = blobValue.getSize();
-                    String blobSizeString = String.format("%.2f MB", blobSize / 1000000.0);
+                    //INDIBLOBValue blobValue = element.getValue();
+                    //String format = blobValue.getFormat();
+                    //int blobSize = blobValue.getSize();
+                    //String blobSizeString = String.format("%.2f MB", blobSize / 1000000.0);
+                    String blobSizeString = "ciao", format = "ciaone";
                     Bitmap bitmap;
                     checkInterrupted();
-                    if (format.equals(".fits")) {
-                        try (ByteArrayInputStream inputStream = new ByteArrayInputStream(blobValue.getBlobData())) {
-                            int read, width = 0, height = 0;
+                    if (/*format.equals(".fits")*/ true) {
+                        try (InputStream inputStream = TelescopeTouchApp.getContext().getAssets().open("test2.fits")) {
+                            int width = 0, height = 0;
                             byte bitPerPix = 0, axis = 0;
                             byte[] headerBuffer = new byte[80];
                             while (inputStream.read(headerBuffer, 0, 80) != -1) {
@@ -80,12 +84,12 @@ public class AsyncBlobLoader {
                                 throw new UnsupportedOperationException("32 bit FITS are not yet supported.");
                             if (axis != 2)
                                 throw new UnsupportedOperationException("Color FITS are not yet supported.");
-                            if ((width <= 0) || (height <= 0) || ((bitPerPix != 8) && (bitPerPix != 16)))
+                            if ((width <= 0) || (height <= 0))
                                 throw new IllegalStateException("Invalid FITS image");
-                            int bytesPerPix = bitPerPix / 8;
-                            byte[] imgBuffer = new byte[bytesPerPix];
-                            checkInterrupted();
-                            if (stretch) {
+                            //int bytesPerPix = bitPerPix / 8;
+                            //byte[] imgBuffer = new byte[bytesPerPix];
+                            //checkInterrupted();
+                            /*if (stretch) {
                                 int[][] img = new int[width][height];
                                 int min = -1, max = -1;
                                 rowLoop:
@@ -115,29 +119,51 @@ public class AsyncBlobLoader {
                                     }
                                     checkInterrupted();
                                 }
-                            } else {
-                                bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+                            } else {*/
+                            bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+                            /*if (bitPerPix == 16) {
+                                int bytesPerPix = bitPerPix / 8;
+                                byte[] imgBuffer = new byte[bytesPerPix];
                                 rowLoop:
                                 for (int h = 0; h < height; h++) {
                                     for (int w = 0; w < width; w++) {
                                         read = inputStream.read(imgBuffer, 0, bytesPerPix);
                                         if (read == -1) break rowLoop;
-                                        int val;
-                                        if (bytesPerPix == 2) {
-                                            val = ((imgBuffer[0] * 256) + imgBuffer[1]) / 257;
-                                            if (imgBuffer[1] < 0) val += 256;
-                                        } else {
-                                            val = imgBuffer[0] & 0xFF;
-                                        }
+                                        int val = ((imgBuffer[0] * 256) + imgBuffer[1]) / 257;
+                                        if (imgBuffer[1] < 0) val += 256;
                                         bitmap.setPixel(w, h, Color.argb(255, val, val, val));
                                     }
                                     checkInterrupted();
                                 }
+                            } else */
+                            if (bitPerPix == 8) {
+                                for (int h = 0; h < height; h++) {
+                                    for (int w = 0; w < width; w++) {
+                                        int val = inputStream.read();
+                                        if (val == -1) throw new EOFException();
+                                        bitmap.setPixel(w, h, Color.argb(255, val, val, val));
+                                    }
+                                    //checkInterrupted();
+                                }
+                            } else if (bitPerPix == 16) {
+                                for (int h = 0; h < height; h++) {
+                                    for (int w = 0; w < width; w++) {
+                                        byte[] tmp = new byte[2];
+                                        int read = inputStream.read(tmp);
+                                        if (read != 2) throw new EOFException();
+                                        read = ((tmp[0] & 0xFF) << 8) | (tmp[1] & 0xFF);
+                                        read /= 5;
+                                        bitmap.setPixel(w, h, Color.argb(255, read, read, read));
+                                    }
+                                    checkInterrupted();
+                                }
+                            } else {
+                                throw new IllegalStateException("Invalid FITS image");
                             }
-                            checkInterrupted();
+                            //}
                             AsyncBlobLoader.this.callListener(new Pair<>(bitmap, new String[]{blobSizeString, width + "x" + height, format, String.valueOf(bitPerPix)}));
                         }
-                    } else {
+                    } /*else {
                         bitmap = BitmapFactory.decodeByteArray(blobValue.getBlobData(), 0, blobSize);
                         checkInterrupted();
                         if (bitmap == null) {
@@ -145,7 +171,7 @@ public class AsyncBlobLoader {
                         } else {
                             AsyncBlobLoader.this.callListener(new Pair<>(bitmap, new String[]{blobSizeString, bitmap.getWidth() + "x" + bitmap.getHeight(), format, null}));
                         }
-                    }
+                    }*/
                 } catch (InterruptedException ignored) {
 
                 } catch (Throwable e) {

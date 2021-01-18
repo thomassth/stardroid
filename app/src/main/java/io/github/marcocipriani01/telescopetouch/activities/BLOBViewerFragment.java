@@ -95,6 +95,8 @@ public class BLOBViewerFragment extends ActionFragment implements
                 }
             }
         }
+        blobLoader.setListener(this);
+        blobLoader.loadBitmap(null, false);
     }
 
     @Override
