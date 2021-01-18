@@ -63,13 +63,13 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
     private static final String INDI_PORT_PREF = "INDI_PORT_PREF";
     private static final String NSD_PREF = "NSD_PREF";
     private static final ArrayList<ConnectionManager.LogItem> logs = new ArrayList<>();
+    private final Handler handler = new Handler(Looper.getMainLooper());
     private static int selectedSpinnerItem = 0;
     private SharedPreferences preferences;
     private Button connectionButton;
     private ImprovedSpinner serversSpinner;
     private NSDHelper nsdHelper;
     private EditText portEditText;
-    private RecyclerView logsList;
     private LogAdapter logAdapter;
     private boolean showNsd = true;
 
@@ -77,8 +77,8 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_connection, container, false);
         setHasOptionsMenu(true);
-        logsList = rootView.findViewById(R.id.logs_listview);
         logAdapter = new LogAdapter(context);
+        RecyclerView logsList = rootView.findViewById(R.id.logs_listview);
         logsList.setAdapter(logAdapter);
         logsList.setLayoutManager(new LinearLayoutManager(context));
 
@@ -198,8 +198,9 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
 
     @Override
     public void addLog(final ConnectionManager.LogItem log) {
-        if (logsList != null) new Handler(Looper.getMainLooper()).post(() -> {
-            logAdapter.addLog(log);
+        handler.post(() -> {
+            logs.add(log);
+            if (logAdapter != null) logAdapter.notifyItemInserted(logs.indexOf(log));
             notifyActionChange();
         });
     }
@@ -255,7 +256,7 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
 
     @Override
     public void onNSDChange() {
-        new Handler(Looper.getMainLooper()).post(() -> loadServers(ServersActivity.getServers(preferences)));
+        handler.post(() -> loadServers(ServersActivity.getServers(preferences)));
     }
 
     @Override
@@ -270,7 +271,8 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
 
     @Override
     public void run() {
-        if (logAdapter != null) logAdapter.clear();
+        logs.clear();
+        if (logAdapter != null) logAdapter.notifyDataSetChanged();
         notifyActionChange();
     }
 
@@ -285,16 +287,6 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
 
         LogAdapter(Context context) {
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        }
-
-        void addLog(ConnectionManager.LogItem log) {
-            logs.add(log);
-            notifyItemInserted(logs.indexOf(log));
-        }
-
-        void clear() {
-            logs.clear();
-            notifyDataSetChanged();
         }
 
         @NonNull

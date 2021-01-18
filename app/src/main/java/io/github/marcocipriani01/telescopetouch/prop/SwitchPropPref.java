@@ -120,10 +120,10 @@ public class SwitchPropPref extends PropPref<INDISwitchElement> {
             }
 
             Constants.SwitchRules rule = prop.getRule();
-            if ((rule == Constants.SwitchRules.ANY_OF_MANY) || (rule == Constants.SwitchRules.AT_MOST_ONE)) {
+            if (rule == Constants.SwitchRules.ANY_OF_MANY) {
                 builder.setMultiChoiceItems(elementsString, elementsChecked,
                         (dialog, which, isChecked) -> elementsChecked[which] = isChecked);
-            } else if (rule == Constants.SwitchRules.ONE_OF_MANY) {
+            } else if ((rule == Constants.SwitchRules.ONE_OF_MANY) || (rule == Constants.SwitchRules.AT_MOST_ONE)) {
                 builder.setSingleChoiceItems(elementsString, singleCheckedItem,
                         (dialog, which) -> {
                             for (int i = 0; i < elementsChecked.length; i++) {
