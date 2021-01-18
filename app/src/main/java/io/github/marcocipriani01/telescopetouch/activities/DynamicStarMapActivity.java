@@ -202,15 +202,15 @@ public class DynamicStarMapActivity extends InjectableActivity
             }
         });
         this.<Button>findViewById(R.id.search_in_database).setOnClickListener(v -> {
-            Intent gotoIntent = new Intent(DynamicStarMapActivity.this, MainActivity.class);
+            Intent intent = new Intent(DynamicStarMapActivity.this, MainActivity.class);
             if (TelescopeTouchApp.connectionManager.isConnected()) {
                 GoToFragment.setRequestedSearch(searchTargetName);
-                gotoIntent.putExtra(MainActivity.ACTION, MainActivity.ACTION_SEARCH);
+                intent.putExtra(MainActivity.ACTION, MainActivity.ACTION_SEARCH);
             } else {
-                gotoIntent.putExtra(MainActivity.ACTION, MainActivity.ACTION_CONNECT);
+                intent.putExtra(MainActivity.ACTION, MainActivity.ACTION_CONNECT);
                 Toast.makeText(DynamicStarMapActivity.this, R.string.connect_telescope_first, Toast.LENGTH_SHORT).show();
             }
-            startActivity(gotoIntent);
+            startActivity(intent);
         });
 
         // Were we started as the result of a search?

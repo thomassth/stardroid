@@ -21,7 +21,6 @@ import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -56,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements
     public static final String ACTION = "MainActivityAction";
     public static final int ACTION_CONNECT = Pages.CONNECTION.ordinal();
     public static final int ACTION_SEARCH = Pages.GOTO.ordinal();
+    public static final String MESSAGE = "MainActivityMessage";
     private static Pages currentPage = Pages.CONNECTION;
     private FragmentManager fragmentManager;
     private FloatingActionButton fab;
@@ -79,12 +79,25 @@ public class MainActivity extends AppCompatActivity implements
         setSupportActionBar(bottomBar);
         bottomBar.setOnMenuItemClickListener(this);
         bottomBar.setNavigationOnClickListener(v -> new MainBottomNavigation(this).show());
-        int action = getIntent().getIntExtra(ACTION, -1);
+        intentAndFragment(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        intentAndFragment(intent);
+    }
+
+    private void intentAndFragment(Intent intent) {
+        int action = intent.getIntExtra(ACTION, -1);
         if (action == -1) {
             showFragment(currentPage, false);
         } else {
             showFragment(Pages.values()[action], false);
         }
+        int messageRes = intent.getIntExtra(MESSAGE, 0);
+        if (messageRes != 0)
+            actionSnackRequested(messageRes);
     }
 
     @Override
@@ -113,8 +126,8 @@ public class MainActivity extends AppCompatActivity implements
                 super.onBackPressed();
             } else {
                 this.doubleBackPressed = true;
-                Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show();
-                new Handler(Looper.getMainLooper()).postDelayed(() -> doubleBackPressed = false, 1000);
+                actionSnackRequested(R.string.press_back_exit);
+                new Handler(Looper.getMainLooper()).postDelayed(() -> doubleBackPressed = false, 2000);
             }
         } else {
             showFragment(Pages.CONNECTION, true);
@@ -134,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements
                                 .setIcon(IconCompat.createWithResource(this, R.mipmap.map_launcher))
                                 .build(), null);
             } else {
-                Toast.makeText(MainActivity.this, getString(R.string.shortcuts_not_supported), Toast.LENGTH_SHORT).show();
+                actionSnackRequested(R.string.shortcuts_not_supported);
             }
             return true;
         }
@@ -162,10 +175,11 @@ public class MainActivity extends AppCompatActivity implements
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         if (animate)
             transaction.setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out);
-        Fragment fragment = Objects.requireNonNull(currentPage.getInstance(this));
+        Fragment fragment = Objects.requireNonNull(currentPage.getInstance());
         transaction.replace(R.id.content_frame, fragment).commit();
         if (fragment instanceof ActionFragment) {
             ActionFragment actionFragment = (ActionFragment) fragment;
+            actionFragment.setActionEnabledListener(this);
             fab.setImageResource(actionFragment.getActionDrawable());
             if (actionFragment.isActionEnabled()) {
                 fab.show();
@@ -189,15 +203,15 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void actionSnackRequested(String msg) {
-        Snackbar.make(mainCoordinator, msg, Snackbar.LENGTH_SHORT).show();
+    public void actionSnackRequested(int msgRes) {
+        Snackbar.make(mainCoordinator, msgRes, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void onConnectionLost() {
         runOnUiThread(() -> {
             if (currentPage != Pages.CONNECTION) {
-                Toast.makeText(this, "Connection lost", Toast.LENGTH_SHORT).show();
+                actionSnackRequested(R.string.connection_lost);
                 if (visible && (fragmentManager != null)) showFragment(Pages.CONNECTION, true);
             }
         });
@@ -220,7 +234,6 @@ public class MainActivity extends AppCompatActivity implements
         CONNECTION(R.id.menu_connection),
         TELESCOPE(R.id.menu_move),
         GOTO(R.id.menu_goto_fragment),
-        BLOB_VIEWER(R.id.menu_ccd_images),
         FOCUSER(R.id.menu_focuser),
         CONTROL_PANEL(R.id.menu_generic),
         SKY_MAP(R.id.menu_skymap),
@@ -242,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements
             return null;
         }
 
-        Fragment getInstance(ActionFragment.ActionListener listener) {
+        Fragment getInstance() {
             switch (this) {
                 case CONNECTION:
                     lastInstance = new ConnectionFragment();
@@ -252,9 +265,6 @@ public class MainActivity extends AppCompatActivity implements
                     break;
                 case GOTO:
                     lastInstance = new GoToFragment();
-                    break;
-                case BLOB_VIEWER:
-                    lastInstance = new BLOBViewerFragment();
                     break;
                 case FOCUSER:
                     lastInstance = new FocuserFragment();
@@ -271,8 +281,6 @@ public class MainActivity extends AppCompatActivity implements
                 default:
                     return null;
             }
-            if (lastInstance instanceof ActionFragment)
-                ((ActionFragment) lastInstance).setActionEnabledListener(listener);
             return lastInstance;
         }
     }

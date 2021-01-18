@@ -547,4 +547,14 @@
     <string name="connect_telescope_first">Please connect the telescope first.</string>
     <string name="gallery_copyright">Images by NASA (public domain), ESO (CC BY 4.0) and Adam Evans (CC BY 2.0)</string>
     <string name="show_discovered_services">LAN discovery</string>
+    <string name="go_to_database">Go-to database</string>
+    <string name="indi_control_panel">INDI control panel</string>
+    <string name="device_remove">\"Device removed: \"</string>
+    <string name="new_device">\"New device: \"</string>
+    <string name="connection_busy">Not connected or busy!</string>
+    <string name="connection_busy_2">Already connected or busy!</string>
+    <string name="press_back_exit">Press back again to exit</string>
+    <string name="invalid_abs_position">Invalid absolute position!</string>
+    <string name="nsd_not_available">Network discovery unavailable</string>
+    <string name="catalog_load_error">Catalog loading error!</string>
 </resources>

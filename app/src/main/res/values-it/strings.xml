@@ -460,4 +460,21 @@
     <string name="connect_telescope_first">Connettere il telescopio prima.</string>
     <string name="gallery_copyright">Immagini di NASA (dominio pubblico), ESO (CC BY 4.0) e Adam Evans (CC BY 2.0)</string>
     <string name="show_discovered_services">Ricerca in LAN</string>
+    <string name="telescope_control">Controllo telescopio</string>
+    <string name="go_to_database">Database go-to</string>
+    <string name="indi_control_panel">Pannello di controllo INDI</string>
+    <string name="device_remove">\"Dispositivo rimosso: \"</string>
+    <string name="new_device">\"Nuovo dispositivo: \"</string>
+    <string name="connection_busy">Non connesso o occupato!</string>
+    <string name="connection_busy_2">Già connesso o occupato!</string>
+    <string name="disconnected">Disconnesso</string>
+    <string name="compass">Bussola</string>
+    <string name="sky_map">Mappa stellare</string>
+    <string name="menu_calibrate">Calibra</string>
+    <string name="disable_gyro_preference_title">Disabilita giroscopio</string>
+    <string name="rotate_horizon_preference_title">Ruota orizzonte</string>
+    <string name="press_back_exit">Premi ancora per uscire</string>
+    <string name="invalid_abs_position">Posizione assoluta non valida!</string>
+    <string name="nsd_not_available">Ricerca in LAN non disponibile.</string>
+    <string name="catalog_load_error">Errore di caricamento del catalogo</string>
 </resources>

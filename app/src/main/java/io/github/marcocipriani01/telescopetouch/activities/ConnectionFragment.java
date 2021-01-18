@@ -142,7 +142,7 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
         connectionManager.addManagerListener(this);
 
         nsdHelper.setListener(this);
-        if (!nsdHelper.isAvailable()) connectionManager.log("NSD not available.");
+        if (!nsdHelper.isAvailable()) connectionManager.log(getString(R.string.nsd_not_available));
         return rootView;
     }
 

@@ -258,10 +258,10 @@ public class GoToFragment extends ActionFragment
                         telescopeCoordDE.setDesiredValue(coord.getDeStr());
                     }
                     new PropUpdater(telescopeCoordP).start();
-                    Toast.makeText(context, context.getString(R.string.slew_ok), Toast.LENGTH_LONG).show();
+                    requestActionSnack(R.string.slew_ok);
                     requireActivity().finish();
                 } catch (Exception e) {
-                    Toast.makeText(context, context.getString(R.string.sync_slew_error), Toast.LENGTH_LONG).show();
+                    requestActionSnack(R.string.sync_slew_error);
                 }
             });
             builder.setNeutralButton(R.string.sync, (dialog, which) -> {
@@ -274,10 +274,10 @@ public class GoToFragment extends ActionFragment
                     telescopeCoordRA.setDesiredValue(precessed.getRaStr());
                     telescopeCoordDE.setDesiredValue(precessed.getDeStr());
                     new PropUpdater(telescopeCoordP).start();
-                    Toast.makeText(context, context.getString(R.string.sync_ok), Toast.LENGTH_LONG).show();
+                    requestActionSnack(R.string.sync_ok);
                     requireActivity().finish();
                 } catch (Exception e) {
-                    Toast.makeText(context, context.getString(R.string.sync_slew_error), Toast.LENGTH_LONG).show();
+                    requestActionSnack(R.string.sync_slew_error);
                 }
             });
         }

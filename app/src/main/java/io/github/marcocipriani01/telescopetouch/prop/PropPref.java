@@ -36,7 +36,6 @@ import org.indilib.i4j.client.INDISwitchProperty;
 import org.indilib.i4j.client.INDITextProperty;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
 public abstract class PropPref<Element extends INDIElement> extends Preference implements INDIPropertyListener {
 
