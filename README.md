@@ -6,7 +6,13 @@ Telescope.Touch was born as an attempt of merging [Sky Map](https://github.com/s
 [IPARCOS](https://github.com/INDIForJava/IPARCOS), an INDI client for Android. It features full telescope control
 and mobile sky chart functionality, with a completely renewed user interface and base code.
 
-The source code is available on [GitHub](https://github.com/marcocipriani01/Telescope.Touch)
+The project's main page is [on GitHub](https://github.com/marcocipriani01/Telescope.Touch)
+
+<a href="https://www.paypal.com/donate?hosted_button_id=P4SBCHY837WMY" target="_blank"><img alt="Donate via PayPal" border="0" src="https://raw.githubusercontent.com/marcocipriani01/Telescope.Touch/master/res/Paypal_donate.png" height="70" align="right"/></a>
+
+### Support the project!
+
+**If you like this app and want to support the development, please consider donating via PayPal. Thank you!**
 
 ### Screenshots
 
