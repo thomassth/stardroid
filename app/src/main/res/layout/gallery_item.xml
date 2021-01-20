@@ -23,7 +23,5 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginStart="10dp"
-        android:text="Image title placeholder"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        tools:ignore="HardcodedText" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 </LinearLayout>
