@@ -43,6 +43,8 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.Objects;
 
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.activities.util.ActionFragment;
+import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
 
 /**
  * The main activity of the application, that manages all the fragments.
@@ -249,6 +251,7 @@ public class MainActivity extends AppCompatActivity implements
         CONNECTION(R.id.menu_connection),
         TELESCOPE(R.id.menu_move),
         GOTO(R.id.menu_goto_fragment),
+        CCD_IMAGES(R.id.menu_ccd_images),
         FOCUSER(R.id.menu_focuser),
         CONTROL_PANEL(R.id.menu_generic),
         SKY_MAP(R.id.menu_skymap),
@@ -280,6 +283,9 @@ public class MainActivity extends AppCompatActivity implements
                     break;
                 case GOTO:
                     lastInstance = new GoToFragment();
+                    break;
+                case CCD_IMAGES:
+                    lastInstance = new BLOBViewerFragment();
                     break;
                 case FOCUSER:
                     lastInstance = new FocuserFragment();

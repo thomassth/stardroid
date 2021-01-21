@@ -51,12 +51,13 @@ import java.util.Date;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.activities.util.ActionFragment;
 import io.github.marcocipriani01.telescopetouch.catalog.Catalog;
 import io.github.marcocipriani01.telescopetouch.catalog.CatalogCoordinates;
 import io.github.marcocipriani01.telescopetouch.catalog.CatalogEntry;
 import io.github.marcocipriani01.telescopetouch.catalog.DSOEntry;
 import io.github.marcocipriani01.telescopetouch.catalog.StarEntry;
-import io.github.marcocipriani01.telescopetouch.prop.PropUpdater;
+import io.github.marcocipriani01.telescopetouch.indi.PropUpdater;
 import io.github.marcocipriani01.telescopetouch.util.AstroTimeUtils;
 import io.github.marcocipriani01.telescopetouch.views.CatalogArrayAdapter;
 

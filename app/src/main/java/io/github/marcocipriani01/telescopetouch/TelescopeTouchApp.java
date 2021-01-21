@@ -37,7 +37,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import io.github.marcocipriani01.telescopetouch.activities.ConnectionManager;
+import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
 import io.github.marcocipriani01.telescopetouch.layers.LayerManager;
 import io.github.marcocipriani01.telescopetouch.util.NSDHelper;
 

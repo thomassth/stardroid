@@ -35,7 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.prop.PropPref;
+import io.github.marcocipriani01.telescopetouch.indi.PropPref;
 
 public class DeviceControlFragment extends PreferenceFragmentCompat implements INDIDeviceListener {
 

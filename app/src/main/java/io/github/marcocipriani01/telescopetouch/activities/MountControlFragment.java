@@ -56,7 +56,7 @@ import java.util.Date;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.prop.PropUpdater;
+import io.github.marcocipriani01.telescopetouch.indi.PropUpdater;
 import io.github.marcocipriani01.telescopetouch.views.ImprovedSpinnerListener;
 
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;

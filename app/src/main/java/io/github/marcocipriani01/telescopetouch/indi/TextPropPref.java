@@ -12,7 +12,7 @@
  * GNU General Public License for more details.
  */
 
-package io.github.marcocipriani01.telescopetouch.prop;
+package io.github.marcocipriani01.telescopetouch.indi;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -23,23 +23,28 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
-import org.indilib.i4j.client.INDIBLOBElement;
-import org.indilib.i4j.client.INDIBLOBProperty;
+import org.indilib.i4j.Constants;
 import org.indilib.i4j.client.INDIProperty;
+import org.indilib.i4j.client.INDITextElement;
+import org.indilib.i4j.client.INDITextProperty;
+import org.indilib.i4j.client.INDIValueException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
-public class BLOBPropPref extends PropPref<INDIBLOBElement> {
+public class TextPropPref extends PropPref<INDITextElement> {
 
-    public BLOBPropPref(Context context, INDIProperty<INDIBLOBElement> prop) {
+    public TextPropPref(Context context, INDIProperty<INDITextElement> prop) {
         super(context, prop);
     }
 
@@ -50,17 +55,17 @@ public class BLOBPropPref extends PropPref<INDIBLOBElement> {
      */
     @Override
     protected Spannable createSummary() {
-        List<INDIBLOBElement> elements = prop.getElementsAsList();
+        List<INDITextElement> elements = prop.getElementsAsList();
         int count = elements.size();
         if (count > 0) {
             StringBuilder stringBuilder = new StringBuilder();
             int i;
             stringBuilder.append(elements.get(0).getLabel()).append(": ");
             for (i = 0; i < count - 1; i++) {
-                stringBuilder.append(elements.get(i).getValueAsString()).append(", ")
+                stringBuilder.append(elements.get(i).getValueAsString().trim()).append(", ")
                         .append(elements.get(i + 1).getLabel()).append(": ");
             }
-            stringBuilder.append(elements.get(i).getValueAsString());
+            stringBuilder.append(elements.get(i).getValueAsString().trim());
             return new SpannableString(stringBuilder.toString());
         } else {
             return new SpannableString(getContext().getString(R.string.no_indi_elements));
@@ -71,15 +76,16 @@ public class BLOBPropPref extends PropPref<INDIBLOBElement> {
     protected void onClick() {
         Context context = getContext();
         if (!getSummary().toString().equals(context.getString(R.string.no_indi_elements))) {
-            BlobViewFragment requestFragment = new BlobViewFragment();
-            requestFragment.setArguments((INDIBLOBProperty) prop);
+            TextRequestFragment requestFragment = new TextRequestFragment();
+            requestFragment.setArguments((INDITextProperty) prop, this);
             requestFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "request");
         }
     }
 
-    public static class BlobViewFragment extends DialogFragment {
+    public static class TextRequestFragment extends DialogFragment {
 
-        private INDIBLOBProperty prop;
+        private INDITextProperty prop;
+        private PropPref<INDITextElement> propPref;
         private Context context;
 
         @Override
@@ -92,33 +98,54 @@ public class BLOBPropPref extends PropPref<INDIBLOBElement> {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            final List<INDIBLOBElement> elements = prop.getElementsAsList();
+            final List<INDITextElement> elements = prop.getElementsAsList();
+            final ArrayList<EditText> editTextViews = new ArrayList<>(elements.size());
             LinearLayout layout = new LinearLayout(context);
             layout.setOrientation(LinearLayout.VERTICAL);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             int padding = context.getResources().getDimensionPixelSize(R.dimen.padding_medium);
             layoutParams.setMargins(padding, 0, padding, 0);
-            for (INDIBLOBElement element : elements) {
+
+            for (INDITextElement element : elements) {
                 TextView textView = new TextView(context);
                 textView.setText(element.getLabel());
                 textView.setPadding(padding, padding, padding, 0);
                 layout.addView(textView, layoutParams);
                 EditText editText = new EditText(context);
-                editText.setText(element.getValueAsString());
+                editText.setText(element.getValueAsString().trim());
                 editText.setPadding(padding, padding, padding, padding);
-                editText.setEnabled(false);
+                editText.setEnabled(prop.getPermission() != Constants.PropertyPermissions.RO);
+                editTextViews.add(editText);
                 layout.addView(editText, layoutParams);
             }
+
             ScrollView scrollView = new ScrollView(context);
             scrollView.addView(layout);
             builder.setView(scrollView).setTitle(prop.getLabel());
-            builder.setNegativeButton(R.string.back_request, null);
+
+            if (prop.getPermission() != Constants.PropertyPermissions.RO) {
+                builder.setPositiveButton(R.string.send_request, (dialog, id) -> {
+                    try {
+                        for (int i = 0; i < elements.size(); i++) {
+                            elements.get(i).setDesiredValue(editTextViews.get(i).getText().toString());
+                        }
+                    } catch (INDIValueException | IllegalArgumentException e) {
+                        Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                        TelescopeTouchApp.connectionManager.log(context.getResources().getString(R.string.error) + e.getLocalizedMessage());
+                    }
+                    propPref.sendChanges();
+                });
+                builder.setNegativeButton(android.R.string.cancel, null);
+            } else {
+                builder.setNegativeButton(R.string.back_request, null);
+            }
             return builder.create();
         }
 
-        private void setArguments(INDIBLOBProperty prop) {
+        private void setArguments(INDITextProperty prop, PropPref<INDITextElement> propPref) {
             this.prop = prop;
+            this.propPref = propPref;
         }
     }
 }

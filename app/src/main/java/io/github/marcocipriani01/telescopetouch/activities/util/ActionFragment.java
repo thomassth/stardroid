@@ -1,4 +1,4 @@
-package io.github.marcocipriani01.telescopetouch.activities;
+package io.github.marcocipriani01.telescopetouch.activities.util;
 
 import android.content.Context;
 
