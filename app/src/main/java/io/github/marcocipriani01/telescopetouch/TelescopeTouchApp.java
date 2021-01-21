@@ -49,11 +49,11 @@ import io.github.marcocipriani01.telescopetouch.util.NSDHelper;
  */
 public class TelescopeTouchApp extends Application {
 
-    private static final String TAG = getTag(TelescopeTouchApp.class);
     /**
      * Global connection manager.
      */
     public static final ConnectionManager connectionManager = new ConnectionManager();
+    private static final String TAG = getTag(TelescopeTouchApp.class);
     /**
      * The context of the whole app.
      */

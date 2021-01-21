@@ -55,6 +55,7 @@ public class ControlPanelFragment extends Fragment
     private static Bundle viewPagerBundle;
     private final ArrayList<INDIDevice> devices = new ArrayList<>();
     private final HashMap<Integer, DeviceControlFragment> fragmentsMap = new HashMap<>();
+    private final Handler handler = new Handler(Looper.getMainLooper());
     private DevicesFragmentAdapter fragmentAdapter;
     private TextView noDevicesText;
     private ViewPager2 viewPager;
@@ -156,7 +157,7 @@ public class ControlPanelFragment extends Fragment
             fragmentAdapter.notifyDataSetChanged();
             viewPager.setVisibility(View.GONE);
         });
-        new Handler(Looper.getMainLooper()).post(() -> {
+        handler.post(() -> {
             if (searchMenu != null) searchMenu.setVisible(false);
         });
     }
@@ -167,7 +168,7 @@ public class ControlPanelFragment extends Fragment
             fragmentAdapter.notifyDataSetChanged();
             viewPager.setVisibility(View.VISIBLE);
         });
-        new Handler(Looper.getMainLooper()).post(() -> {
+        handler.post(() -> {
             if (searchMenu != null) searchMenu.setVisible(true);
         });
     }

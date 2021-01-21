@@ -63,8 +63,8 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
     private static final String INDI_PORT_PREF = "INDI_PORT_PREF";
     private static final String NSD_PREF = "NSD_PREF";
     private static final ArrayList<ConnectionManager.LogItem> logs = new ArrayList<>();
-    private final Handler handler = new Handler(Looper.getMainLooper());
     private static int selectedSpinnerItem = 0;
+    private final Handler handler = new Handler(Looper.getMainLooper());
     private SharedPreferences preferences;
     private Button connectionButton;
     private ImprovedSpinner serversSpinner;

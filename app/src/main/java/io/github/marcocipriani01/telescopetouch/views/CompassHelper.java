@@ -26,9 +26,11 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
+
 public class CompassHelper implements SensorEventListener {
 
-    private static final String TAG = "Compass";
+    private static final String TAG = TelescopeTouchApp.getTag(CompassHelper.class);
     private final SensorManager sensorManager;
     private final Sensor gSensor;
     private final Sensor sensor;

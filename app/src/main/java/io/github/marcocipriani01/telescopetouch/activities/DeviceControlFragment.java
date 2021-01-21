@@ -43,6 +43,7 @@ public class DeviceControlFragment extends PreferenceFragmentCompat implements I
     private static final HashMap<INDIDevice, Bundle> recyclerviewBundles = new HashMap<>();
     private final HashMap<INDIProperty<?>, PropPref<?>> preferencesMap = new HashMap<>();
     private final HashMap<String, PreferenceCategory> groups = new HashMap<>();
+    private final Handler handler = new Handler(Looper.getMainLooper());
     private INDIDevice device = null;
     private PreferenceScreen prefScreen;
     private Context context;
@@ -149,7 +150,7 @@ public class DeviceControlFragment extends PreferenceFragmentCompat implements I
 
     @Override
     public void newProperty(INDIDevice device, final INDIProperty<?> property) {
-        new Handler(Looper.getMainLooper()).post(() -> {
+        handler.post(() -> {
             String group = property.getGroup();
             PreferenceCategory prefGroup = groups.get(group);
             if (prefGroup == null) {
@@ -170,7 +171,7 @@ public class DeviceControlFragment extends PreferenceFragmentCompat implements I
 
     @Override
     public void removeProperty(INDIDevice device, final INDIProperty<?> property) {
-        new Handler(Looper.getMainLooper()).post(() -> {
+        handler.post(() -> {
             PropPref<?> pref = preferencesMap.get(property);
             if (pref != null) {
                 String group = property.getGroup();

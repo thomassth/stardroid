@@ -15,6 +15,8 @@
 package io.github.marcocipriani01.telescopetouch.activities;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -25,10 +27,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 
 import org.indilib.i4j.Constants;
 import org.indilib.i4j.client.INDIDevice;
@@ -63,6 +63,7 @@ import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connect
 public class FocuserFragment extends ActionFragment implements INDIServerConnectionListener, INDIPropertyListener,
         INDIDeviceListener, View.OnClickListener, SeekBar.OnSeekBarChangeListener, TextWatcher {
 
+    private final Handler handler = new Handler(Looper.getMainLooper());
     // Properties and elements associated to the buttons
     private INDISwitchProperty directionProp = null;
     private INDISwitchElement inwardDirElem = null;
@@ -205,47 +206,43 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
     }
 
     private void updateSpeedBar() {
-        if (speedBar != null) {
-            speedBar.post(() -> {
-                if (speedElem != null) {
-                    speedBar.setOnSeekBarChangeListener(null);
-                    double step = speedElem.getStep(), min = speedElem.getMin(), max = speedElem.getMax();
-                    speedBar.setMax((int) ((max - min) / step));
-                    speedBar.setProgress((int) ((speedElem.getValue() - min) / step));
-                    speedBar.setOnSeekBarChangeListener(this);
-                }
-            });
-        }
+        handler.post(() -> {
+            if ((speedBar != null) && (speedElem != null)) {
+                speedBar.setOnSeekBarChangeListener(null);
+                double step = speedElem.getStep(), min = speedElem.getMin(), max = speedElem.getMax();
+                speedBar.setMax((int) ((max - min) / step));
+                speedBar.setProgress((int) ((speedElem.getValue() - min) / step));
+                speedBar.setOnSeekBarChangeListener(this);
+            }
+        });
     }
 
     /**
      * Enables the buttons if the corresponding property was found
      */
     private void enableUi() {
-        if (inButton != null) inButton.post(() -> inButton.setEnabled(inwardDirElem != null));
-        if (outButton != null) outButton.post(() -> outButton.setEnabled(outwardDirElem != null));
-        if (speedUpButton != null)
-            speedUpButton.post(() -> speedUpButton.setEnabled(relPosElem != null));
-        if (speedDownButton != null)
-            speedDownButton.post(() -> speedDownButton.setEnabled(relPosElem != null));
-        if (stepsText != null)
-            stepsText.post(() -> stepsText.setEnabled(relPosElem != null));
-        if (abortButton != null) abortButton.post(() -> abortButton.setEnabled(abortElem != null));
-        if (setAbsPosButton != null)
-            setAbsPosButton.post(() -> setAbsPosButton.setEnabled(absPosElem != null));
-        if (syncPosButton != null)
-            syncPosButton.post(() -> syncPosButton.setEnabled(syncPosElem != null));
-        if (positionEditText != null)
-            positionEditText.post(() -> positionEditText.setEnabled(absPosElem != null));
-        if (speedBar != null) speedBar.post(() -> speedBar.setEnabled(speedElem != null));
+        handler.post(() -> {
+            if (inButton != null) inButton.setEnabled(inwardDirElem != null);
+            if (outButton != null) outButton.setEnabled(outwardDirElem != null);
+            boolean relPosEn = relPosElem != null;
+            if (speedUpButton != null) speedUpButton.setEnabled(relPosEn);
+            if (speedDownButton != null) speedDownButton.setEnabled(relPosEn);
+            if (stepsText != null) stepsText.setEnabled(relPosEn);
+            if (abortButton != null) abortButton.setEnabled(abortElem != null);
+            if (syncPosButton != null) syncPosButton.setEnabled(syncPosElem != null);
+            boolean absPosEn = absPosElem != null;
+            if (setAbsPosButton != null) setAbsPosButton.setEnabled(absPosEn);
+            if (positionEditText != null) positionEditText.setEnabled(absPosEn);
+            if (speedBar != null) speedBar.setEnabled(speedElem != null);
+        });
     }
 
     /**
      * Updates the speed text
      */
     private void updateStepsText() {
-        if (stepsText != null) {
-            stepsText.post(() -> {
+        handler.post(() -> {
+            if (stepsText != null) {
                 if (relPosElem != null) {
                     int steps = (int) (double) relPosElem.getValue();
                     stepsText.setText(String.valueOf(steps));
@@ -253,20 +250,20 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
                 } else {
                     stepsText.setText(R.string.unavailable);
                 }
-            });
-        }
+            }
+        });
     }
 
     private void updatePositionText() {
-        if (positionEditText != null) {
-            positionEditText.post(() -> {
+        handler.post(() -> {
+            if (positionEditText != null) {
                 if (absPosElem != null) {
                     positionEditText.setText(String.valueOf((int) (double) absPosElem.getValue()));
                 } else {
                     positionEditText.setText(R.string.unavailable);
                 }
-            });
-        }
+            }
+        });
     }
 
     @Override
@@ -407,7 +404,10 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
                 if (((inwardDirElem = (INDISwitchElement) property.getElement(INDIStandardElement.FOCUS_INWARD)) != null)
                         && ((outwardDirElem = (INDISwitchElement) property.getElement(INDIStandardElement.FOCUS_OUTWARD)) != null)) {
                     directionProp = (INDISwitchProperty) property;
-                    focuserName.post(() -> focuserName.setText(devName));
+                    handler.post(() -> {
+                        if (focuserName != null)
+                            focuserName.setText(devName);
+                    });
                 }
                 break;
             }
@@ -447,7 +447,10 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
                 inwardDirElem = null;
                 outwardDirElem = null;
                 directionProp = null;
-                focuserName.post(() -> focuserName.setText(R.string.focuser_control));
+                handler.post(() -> {
+                    if (focuserName != null)
+                        focuserName.setText(R.string.focuser_control);
+                });
                 break;
             }
             case "FOCUS_ABORT_MOTION": {
