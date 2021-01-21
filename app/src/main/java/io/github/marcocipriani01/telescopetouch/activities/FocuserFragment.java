@@ -49,7 +49,8 @@ import java.util.Date;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.prop.PropUpdater;
+import io.github.marcocipriani01.telescopetouch.activities.util.ActionFragment;
+import io.github.marcocipriani01.telescopetouch.indi.PropUpdater;
 import io.github.marcocipriani01.telescopetouch.views.CounterHandler;
 import io.github.marcocipriani01.telescopetouch.views.LongPressHandler;
 

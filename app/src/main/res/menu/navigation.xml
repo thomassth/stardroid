@@ -19,6 +19,11 @@
             android:title="@string/go_to_database" />
 
         <item
+            android:id="@+id/menu_ccd_images"
+            android:icon="@drawable/received_images"
+            android:title="@string/ccd_images" />
+
+        <item
             android:id="@+id/menu_focuser"
             android:icon="@drawable/focuser"
             android:title="@string/menu_focuser" />

@@ -12,7 +12,7 @@
  * GNU General Public License for more details.
  */
 
-package io.github.marcocipriani01.telescopetouch.prop;
+package io.github.marcocipriani01.telescopetouch.indi;
 
 import android.content.Context;
 import android.content.res.Resources;

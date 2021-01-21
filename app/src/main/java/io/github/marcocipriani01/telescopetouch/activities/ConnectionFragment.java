@@ -35,6 +35,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -45,6 +46,8 @@ import java.util.HashMap;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
+import io.github.marcocipriani01.telescopetouch.activities.util.ActionFragment;
+import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
 import io.github.marcocipriani01.telescopetouch.util.NSDHelper;
 import io.github.marcocipriani01.telescopetouch.views.ImprovedSpinner;
 import io.github.marcocipriani01.telescopetouch.views.ImprovedSpinnerListener;
@@ -114,7 +117,7 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
                     serversSpinner.post(() -> serversSpinner.setSelection(0));
                     ServersActivity.addServer(context, ConnectionFragment.this);
                 } else if (host.equals(getResources().getString(R.string.host_manage))) {
-                    startActivityForResult(new Intent(context, ServersActivity.class), 1);
+                    openServersActivity();
                 } else {
                     connectionManager.connect(host, port);
                 }
@@ -133,7 +136,7 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
                     serversSpinner.post(() -> serversSpinner.setSelection(0));
                     ServersActivity.addServer(context, ConnectionFragment.this);
                 } else if (selected.equals(getResources().getString(R.string.host_manage))) {
-                    startActivityForResult(new Intent(context, ServersActivity.class), 1);
+                    openServersActivity();
                 }
             }
         }.attach(serversSpinner);
@@ -173,10 +176,13 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
         selectedSpinnerItem = serversSpinner.getSelectedItemPosition();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) loadServers(ServersActivity.getServers(context));
+    private void openServersActivity() {
+        registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK)
+                        loadServers(ServersActivity.getServers(context));
+                }).launch(new Intent(context, ServersActivity.class));
     }
 
     @Override
