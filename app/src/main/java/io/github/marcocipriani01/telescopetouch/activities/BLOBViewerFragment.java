@@ -197,10 +197,10 @@ public class BLOBViewerFragment extends ActionFragment implements
 
     private void setBlobInfo(String[] info) {
         if (info == null) {
-            fileSizeText.setText("unknown");
-            dimensionsText.setText("unknown");
-            formatText.setText("unknown");
-            bppText.setText("unknown");
+            fileSizeText.setText(R.string.unknown);
+            dimensionsText.setText(R.string.unknown);
+            formatText.setText(R.string.unknown);
+            bppText.setText(R.string.unknown);
         } else if (info.length != 4) {
             throw new IllegalArgumentException();
         } else {
@@ -211,7 +211,7 @@ public class BLOBViewerFragment extends ActionFragment implements
         }
     }
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "ResultOfMethodCallIgnored"})
     private void saveImage(final Context context, final Bitmap bitmap, @NonNull String folderName, @NonNull String fileName) throws IOException {
         OutputStream outputStream;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

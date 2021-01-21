@@ -560,4 +560,14 @@
     <string name="catalog_load_error">Catalog loading error!</string>
     <string name="ccd_images">CCD images</string>
     <string name="receive_images">Receive images</string>
+    <string name="unknown">unknown</string>
+    <string name="file_size">File size:</string>
+    <string name="dimensions">Dimensions:</string>
+    <string name="format">Format:</string>
+    <string name="bits_per_pixel">Bits per pixel:</string>
+    <string name="no_incoming_data">No incoming data</string>
+    <string name="fits_image_stretching">FITS image stretching</string>
+    <string name="image_info">Image info</string>
+    <string name="disclaimer_experimental">Disclaimer: experimental feature</string>
+    <string name="blob_supported_files">Supported files: JPG, PNG, 8/16bit grayscale FITS</string>
 </resources>

@@ -16,16 +16,25 @@
         android:id="@+id/blob_experimental_notice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/disclaimer_experimental"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+    <TextView
+        android:id="@+id/blob_experimental_supported"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/blob_experimental_notice"
         android:layout_marginBottom="8dp"
         android:gravity="center"
-        android:text="Notice: experimental feature"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+        android:text="@string/blob_supported_files"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
     <io.github.marcocipriani01.telescopetouch.views.ImprovedSpinner
         android:id="@+id/spinner_select_image_blob"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/blob_experimental_notice"
+        android:layout_below="@id/blob_experimental_supported"
         android:layout_marginBottom="8dp" />
 
     <androidx.appcompat.widget.SwitchCompat
@@ -43,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/switch_image_receive"
         android:layout_marginBottom="8dp"
-        android:text="FITS image stretching"
+        android:text="@string/fits_image_stretching"
         app:switchMinWidth="60dp" />
 
     <TextView
@@ -51,7 +60,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/switch_image_stretch"
-        android:text="Image info"
+        android:text="@string/image_info"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <TableLayout
@@ -68,14 +77,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="File size:" />
+                android:text="@string/file_size" />
 
             <TextView
                 android:id="@+id/blob_size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="unknown" />
+                android:text="@string/unknown" />
         </TableRow>
 
         <TableRow>
@@ -83,14 +92,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Dimensions:" />
+                android:text="@string/dimensions" />
 
             <TextView
                 android:id="@+id/blob_dimensions"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="unknown" />
+                android:text="@string/unknown" />
         </TableRow>
 
         <TableRow>
@@ -98,14 +107,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Format:" />
+                android:text="@string/format" />
 
             <TextView
                 android:id="@+id/blob_format"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="unknown" />
+                android:text="@string/unknown" />
         </TableRow>
 
         <TableRow>
@@ -113,14 +122,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Bits per pixel:" />
+                android:text="@string/bits_per_pixel" />
 
             <TextView
                 android:id="@+id/blob_bpp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="unknown" />
+                android:text="@string/unknown" />
         </TableRow>
     </TableLayout>
 
@@ -142,7 +151,7 @@
         android:layout_below="@id/blob_info_table"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:text="Loading error placeholder"
+        android:text="@string/no_incoming_data"
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
     <androidx.core.widget.ContentLoadingProgressBar
