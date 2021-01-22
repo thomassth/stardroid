@@ -68,7 +68,6 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
 
     private static final String INDI_PORT_PREF = "INDI_PORT_PREF";
     private static final String NSD_PREF = "NSD_PREF";
-    private static final ArrayList<ConnectionManager.LogItem> logs = new ArrayList<>();
     private static int selectedSpinnerItem = 0;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private ActivityResultLauncher<Intent> resultLauncher;
@@ -217,26 +216,15 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
 
     @Override
     public void addLog(final ConnectionManager.LogItem log) {
-        handler.post(() -> {
-            logs.add(log);
-            if (logAdapter != null) logAdapter.notifyItemInserted(logs.indexOf(log));
-            notifyActionChange();
-        });
+        if (logAdapter != null)
+            logAdapter.notifyItemInserted(connectionManager.getLogs().indexOf(log));
+        notifyActionChange();
     }
 
     @Override
     public void deviceLog(final ConnectionManager.LogItem log) {
-        handler.post(() -> {
-            for (int i = 0, logsSize = logs.size(); i < logsSize; i++) {
-                if (logs.get(i).getDevice() == log.getDevice()) {
-                    logs.remove(i);
-                    break;
-                }
-            }
-            logs.add(log);
-            if (logAdapter != null) logAdapter.notifyDataSetChanged();
-            notifyActionChange();
-        });
+        if (logAdapter != null) logAdapter.notifyDataSetChanged();
+        notifyActionChange();
     }
 
     private void refreshUi(ConnectionManager.ConnectionState state) {
@@ -297,7 +285,7 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
 
     @Override
     public boolean isActionEnabled() {
-        return !logs.isEmpty();
+        return !connectionManager.getLogs().isEmpty();
     }
 
     @Override
@@ -307,7 +295,7 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
 
     @Override
     public void run() {
-        logs.clear();
+        connectionManager.getLogs().clear();
         if (logAdapter != null) logAdapter.notifyDataSetChanged();
         notifyActionChange();
     }
@@ -333,14 +321,14 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
 
         @Override
         public void onBindViewHolder(@NonNull LogViewHolder holder, int position) {
-            ConnectionManager.LogItem log = logs.get(position);
+            ConnectionManager.LogItem log = connectionManager.getLogs().get(position);
             holder.log.setText(log.getLog());
             holder.timestamp.setText(log.getTimestamp());
         }
 
         @Override
         public int getItemCount() {
-            return logs.size();
+            return connectionManager.getLogs().size();
         }
     }
 
