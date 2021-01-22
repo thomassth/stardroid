@@ -504,4 +504,5 @@
     <string name="unknown_exception">Errore sconosciuto!</string>
     <string name="view_image">Apri</string>
     <string name="open_photo">Apri foto</string>
+    <string name="blob_open_viewer">Apri il visualizzatore immagini CCD per vedere questa proprietà.</string>
 </resources>

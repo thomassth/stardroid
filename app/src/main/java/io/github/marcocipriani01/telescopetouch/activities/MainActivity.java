@@ -115,12 +115,14 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onStart() {
         super.onStart();
+        connectionManager.addManagerListener(this);
         preferences.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        connectionManager.removeManagerListener(this);
         preferences.registerOnSharedPreferenceChangeListener(this);
     }
 
