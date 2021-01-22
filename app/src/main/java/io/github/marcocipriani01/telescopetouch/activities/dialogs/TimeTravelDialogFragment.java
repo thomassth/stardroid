@@ -113,7 +113,7 @@ public class TimeTravelDialogFragment extends DialogFragment {
         popularDatesMenu = root.findViewById(R.id.popular_dates_spinner);
         ArrayAdapter<?> adapter = ArrayAdapter.createFromResource(
                 this.getContext(), R.array.popular_date_examples, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.timetravel_dropdown_item);
         popularDatesMenu.setAdapter(adapter);
         popularDatesMenu.setSelection(1);
         popularDatesMenu.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
