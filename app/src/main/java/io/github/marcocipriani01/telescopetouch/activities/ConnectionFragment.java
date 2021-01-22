@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -37,6 +38,7 @@ import android.widget.TextView;
 
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -49,8 +51,8 @@ import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.util.ActionFragment;
 import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
 import io.github.marcocipriani01.telescopetouch.util.NSDHelper;
-import io.github.marcocipriani01.telescopetouch.views.ImprovedSpinner;
 import io.github.marcocipriani01.telescopetouch.views.ImprovedSpinnerListener;
+import io.github.marcocipriani01.telescopetouch.views.SameSelectionSpinner;
 
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 
@@ -61,7 +63,7 @@ import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connect
  * @author marcocipriani01
  */
 public class ConnectionFragment extends ActionFragment implements ServersReloadListener,
-        ConnectionManager.ManagerListener, NSDHelper.NSDListener {
+        ConnectionManager.ManagerListener, NSDHelper.NSDListener, Toolbar.OnMenuItemClickListener {
 
     private static final String INDI_PORT_PREF = "INDI_PORT_PREF";
     private static final String NSD_PREF = "NSD_PREF";
@@ -70,7 +72,7 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
     private final Handler handler = new Handler(Looper.getMainLooper());
     private SharedPreferences preferences;
     private Button connectionButton;
-    private ImprovedSpinner serversSpinner;
+    private SameSelectionSpinner serversSpinner;
     private NSDHelper nsdHelper;
     private EditText portEditText;
     private LogAdapter logAdapter;
@@ -113,10 +115,10 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
             }
             ConnectionManager.ConnectionState state = connectionManager.getState();
             if (state == ConnectionManager.ConnectionState.DISCONNECTED) {
-                if (host.equals(getResources().getString(R.string.host_add))) {
+                if (host.equals(getString(R.string.host_add))) {
                     serversSpinner.post(() -> serversSpinner.setSelection(0));
                     ServersActivity.addServer(context, ConnectionFragment.this);
-                } else if (host.equals(getResources().getString(R.string.host_manage))) {
+                } else if (host.equals(getString(R.string.host_manage))) {
                     openServersActivity();
                 } else {
                     connectionManager.connect(host, port);
@@ -151,7 +153,7 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.nsd, menu);
+        inflater.inflate(R.menu.connection, menu);
         MenuItem item = menu.findItem(R.id.menu_nsd);
         item.setEnabled(nsdHelper.isAvailable());
         item.setChecked(showNsd);
@@ -159,12 +161,23 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.menu_nsd) {
+    public boolean onMenuItemClick(MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_nsd) {
             showNsd = !item.isChecked();
             item.setChecked(showNsd);
             loadServers(ServersActivity.getServers(preferences));
             preferences.edit().putBoolean(NSD_PREF, showNsd).apply();
+            return true;
+        } else if (itemId == R.id.menu_open_browser) {
+            String host = String.valueOf(serversSpinner.getSelectedItem());
+            if (host.contains("@")) {
+                String[] split = host.split("@");
+                if (split.length == 2) host = split[1];
+            }
+            if (host.equals(getString(R.string.host_add)) || host.equals(getString(R.string.host_manage)))
+                return super.onOptionsItemSelected(item);
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://" + host)));
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -198,15 +211,25 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
     }
 
     @Override
-    public void onConnectionLost() {
-
-    }
-
-    @Override
     public void addLog(final ConnectionManager.LogItem log) {
         handler.post(() -> {
             logs.add(log);
             if (logAdapter != null) logAdapter.notifyItemInserted(logs.indexOf(log));
+            notifyActionChange();
+        });
+    }
+
+    @Override
+    public void deviceLog(final ConnectionManager.LogItem log) {
+        handler.post(() -> {
+            for (int i = 0, logsSize = logs.size(); i < logsSize; i++) {
+                if (logs.get(i).getDevice() == log.getDevice()) {
+                    logs.remove(i);
+                    break;
+                }
+            }
+            logs.add(log);
+            if (logAdapter != null) logAdapter.notifyDataSetChanged();
             notifyActionChange();
         });
     }

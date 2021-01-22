@@ -489,8 +489,8 @@
     <string name="empty_catalog">Empty catalog</string>
     <string name="menu_about">About this app</string>
     <string name="app_description"><b>Telescope.Touch</b> was born as an attempt of merging the Sky Map app and the IPARCOS project, an INDI client for Android.
-        \nIt features full telescope control and mobile sky chart functionality, with a completely renewed user interface and base code.\n\n
-        The source code is available at github.com/marcocipriani01/Telescope.Touch
+        \nIt features full telescope control and mobile sky chart functionality, with a completely renewed user interface and base code.
+        \n\nThe source code is available at github.com/marcocipriani01/Telescope.Touch
         \nIf you want to support Telescope.Touch\'s development, please consider donating using PayPal! Link in the project\'s page.
         \n\nDeveloped by <b>Marco Cipriani</b> (marcocipriani01)
         \n\n<b>Libraries and credits:</b>\n
@@ -564,10 +564,21 @@
     <string name="file_size">File size:</string>
     <string name="dimensions">Dimensions:</string>
     <string name="format">Format:</string>
-    <string name="bits_per_pixel">Bits per pixel:</string>
+    <string name="bit_depth">Bit depth:</string>
     <string name="no_incoming_data">No incoming data</string>
     <string name="fits_image_stretching">FITS image stretching</string>
     <string name="image_info">Image info</string>
-    <string name="disclaimer_experimental">Disclaimer: experimental feature</string>
-    <string name="blob_supported_files">Supported files: JPG, PNG, 8/16bit grayscale FITS</string>
+    <string name="saved_snackbar">Saved!</string>
+    <string name="saving_error">Saving error!</string>
+    <string name="nothing_to_save">Nothing to save</string>
+    <string name="unsupported_format">Unsupported format.</string>
+    <string name="empty_property">Empty property.</string>
+    <string name="error_multi_image_prop">Unsupported multi-image property.</string>
+    <string name="open_host_in_browser">Open host in browser</string>
+    <string name="out_of_memory">Not enough processing memory!</string>
+    <string name="truncated_file">Truncated file!</string>
+    <string name="unsupported_color_fits">Color FITS are not yet supported.</string>
+    <string name="unsupported_bit_depth">32 bit FITS are not yet supported.</string>
+    <string name="invalid_fits_image">Invalid FITS image!</string>
+    <string name="unknown_exception">Unknown exception!</string>
 </resources>

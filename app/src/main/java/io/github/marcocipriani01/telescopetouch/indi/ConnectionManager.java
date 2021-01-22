@@ -56,10 +56,6 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
         timeFormat = DateFormat.getTimeFormat(appContext);
     }
 
-    public boolean isBlobEnabled() {
-        return blobEnabled;
-    }
-
     public void setBlobEnabled(boolean b) {
         this.blobEnabled = b;
         new Thread(() -> {
@@ -151,6 +147,21 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
             LogItem log = new LogItem(message, dateFormat.format(now) + " " + timeFormat.format(now));
             for (ManagerListener listener : managerListeners) {
                 listener.addLog(log);
+            }
+        }
+    }
+
+    /**
+     * Add the given message to the logs.
+     *
+     * @param message a new log.
+     */
+    public void log(String message, INDIDevice device) {
+        if (timeFormat != null) {
+            Date now = new Date();
+            LogItem log = new LogItem(message, dateFormat.format(now) + " " + timeFormat.format(now), device);
+            for (ManagerListener listener : managerListeners) {
+                listener.deviceLog(log);
             }
         }
     }
@@ -266,7 +277,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
 
     @Override
     public void messageChanged(INDIDevice device) {
-        log(device.getName() + ": " + device.getLastMessage());
+        log(device.getName() + ": " + device.getLastMessage(), device);
     }
 
     public enum ConnectionState {
@@ -280,11 +291,17 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
      * @author marcocipriani01
      */
     public interface ManagerListener {
-        void addLog(final LogItem log);
+        default void addLog(LogItem log) {
+        }
 
-        void updateConnectionState(ConnectionState state);
+        default void deviceLog(LogItem log) {
+        }
 
-        void onConnectionLost();
+        default void updateConnectionState(ConnectionState state) {
+        }
+
+        default void onConnectionLost() {
+        }
     }
 
     /**
@@ -296,13 +313,21 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
 
         private final String log;
         private final String timestamp;
+        private INDIDevice device = null;
 
-        /**
-         * Class constructor.
-         */
         LogItem(@NonNull String log, @NonNull String timestamp) {
             this.log = log;
             this.timestamp = timestamp;
+        }
+
+        LogItem(@NonNull String log, @NonNull String timestamp, INDIDevice device) {
+            this.log = log;
+            this.timestamp = timestamp;
+            this.device = device;
+        }
+
+        public INDIDevice getDevice() {
+            return device;
         }
 
         /**

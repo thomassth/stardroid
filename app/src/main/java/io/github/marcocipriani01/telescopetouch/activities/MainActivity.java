@@ -15,6 +15,7 @@
 package io.github.marcocipriani01.telescopetouch.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -32,8 +33,10 @@ import androidx.core.graphics.drawable.IconCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -46,6 +49,9 @@ import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.util.ActionFragment;
 import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
 
+import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
+import static io.github.marcocipriani01.telescopetouch.activities.BLOBViewerFragment.RECEIVE_BLOB_PREF;
+
 /**
  * The main activity of the application, that manages all the fragments.
  *
@@ -53,23 +59,26 @@ import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
  */
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener, Toolbar.OnMenuItemClickListener,
-        ActionFragment.ActionListener, ConnectionManager.ManagerListener {
+        ActionFragment.ActionListener, ConnectionManager.ManagerListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     public static final String ACTION = "MainActivityAction";
     public static final int ACTION_CONNECT = Pages.CONNECTION.ordinal();
     public static final int ACTION_SEARCH = Pages.GOTO.ordinal();
     public static final String MESSAGE = "MainActivityMessage";
     private static Pages currentPage = Pages.CONNECTION;
+    private SharedPreferences preferences;
     private FragmentManager fragmentManager;
     private FloatingActionButton fab;
     private CoordinatorLayout mainCoordinator;
     private boolean visible = false;
     private boolean doubleBackPressed = false;
+    private MenuItem rcvBlobMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
         mainCoordinator = findViewById(R.id.main_coordinator);
         fab = findViewById(R.id.main_fab);
         fab.setOnClickListener(v -> {
@@ -103,6 +112,18 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        preferences.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        preferences.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         visible = false;
@@ -116,9 +137,10 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+        rcvBlobMenuItem = menu.findItem(R.id.menu_enable_rcv_blob);
+        rcvBlobMenuItem.setChecked(preferences.getBoolean(RECEIVE_BLOB_PREF, false));
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -152,8 +174,22 @@ public class MainActivity extends AppCompatActivity implements
                 actionSnackRequested(R.string.shortcuts_not_supported);
             }
             return true;
+        } else if (itemId == R.id.menu_enable_rcv_blob) {
+            boolean checked = !item.isChecked();
+            item.setChecked(checked);
+            connectionManager.setBlobEnabled(checked);
+            preferences.edit().putBoolean(RECEIVE_BLOB_PREF, checked).apply();
+            return true;
+        } else if (currentPage.lastInstance instanceof Toolbar.OnMenuItemClickListener) {
+            ((Toolbar.OnMenuItemClickListener) currentPage.lastInstance).onMenuItemClick(item);
         }
         return false;
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(RECEIVE_BLOB_PREF) && (rcvBlobMenuItem != null))
+            rcvBlobMenuItem.setChecked(sharedPreferences.getBoolean(RECEIVE_BLOB_PREF, false));
     }
 
     @Override
@@ -234,16 +270,6 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
-    @Override
-    public void addLog(ConnectionManager.LogItem log) {
-
-    }
-
-    @Override
-    public void updateConnectionState(ConnectionManager.ConnectionState state) {
-
-    }
-
     /**
      * @author marcocipriani01
      */
@@ -320,6 +346,7 @@ public class MainActivity extends AppCompatActivity implements
             super.onCreate(savedInstanceState);
             setContentView(R.layout.bottom_drawer);
             getWindow().getAttributes().width = WindowManager.LayoutParams.MATCH_PARENT;
+            getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
             NavigationView navigation = findViewById(R.id.navigation_view);
             if (navigation != null) navigation.setNavigationItemSelectedListener(item -> {
                 dismiss();

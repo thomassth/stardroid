@@ -21,17 +21,17 @@ import android.util.AttributeSet;
 
 import androidx.appcompat.widget.AppCompatSpinner;
 
-public class ImprovedSpinner extends AppCompatSpinner {
+public class SameSelectionSpinner extends AppCompatSpinner {
 
-    public ImprovedSpinner(Context context) {
+    public SameSelectionSpinner(Context context) {
         super(context);
     }
 
-    public ImprovedSpinner(Context context, AttributeSet attrs) {
+    public SameSelectionSpinner(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ImprovedSpinner(Context context, AttributeSet attrs, int defStyle) {
+    public SameSelectionSpinner(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
