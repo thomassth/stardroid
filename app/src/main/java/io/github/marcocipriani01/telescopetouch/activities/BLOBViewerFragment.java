@@ -454,12 +454,12 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            return createView(position, convertView, R.layout.simple_spinner_item);
+            return createView(position, convertView, R.layout.blob_spinner_item);
         }
 
         @Override
         public View getDropDownView(int position, View convertView, ViewGroup parent) {
-            return createView(position, convertView, R.layout.simple_spinner_dropdown_item);
+            return createView(position, convertView, R.layout.blob_spinner_dropdown_item);
         }
 
         @SuppressLint("SetTextI18n")
