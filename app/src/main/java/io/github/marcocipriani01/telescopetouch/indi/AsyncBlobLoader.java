@@ -33,31 +33,40 @@ import java.util.regex.Pattern;
 public class AsyncBlobLoader {
 
     private final Handler handler;
-    private LoadListener listener;
-    private Thread loadingThread = null;
-    private INDIBLOBValue queuedValue = null;
-    private boolean stretch;
+    private volatile LoadListener listener;
+    private volatile Thread loadingThread = null;
+    private volatile INDIBLOBValue queuedValue = null;
+    private volatile boolean stretch;
 
     public AsyncBlobLoader(Handler handler) {
         this.handler = handler;
     }
 
-    public void setListener(LoadListener listener) {
+    private static int findFITSLineValue(String in) {
+        if (in.contains("=")) in = in.split("=")[1];
+        Matcher matcher = Pattern.compile("[0-9]+").matcher(in);
+        if (matcher.find())
+            return Integer.parseInt(matcher.group());
+        return -1;
+    }
+
+    public synchronized void setListener(LoadListener listener) {
         this.listener = listener;
     }
 
     @SuppressLint("DefaultLocale")
-    public void queue(final INDIBLOBElement element) {
-        if (listener == null) throw new NullPointerException("Null listener!");
+    public synchronized boolean queue(final INDIBLOBElement element) {
+        if (listener == null) return false;
         queuedValue = element.getValue();
         if ((loadingThread == null) || (!loadingThread.isAlive())) startProcessing();
+        return true;
     }
 
-    public void setStretch(boolean stretch) {
+    public synchronized void setStretch(boolean stretch) {
         this.stretch = stretch;
     }
 
-    private void onThreadFinish(Bitmap bitmap, String[] metadata) {
+    private synchronized void onThreadFinish(Bitmap bitmap, String[] metadata) {
         handler.post(() -> {
             if (listener != null)
                 listener.onBitmapLoaded(bitmap, metadata);
@@ -65,7 +74,7 @@ public class AsyncBlobLoader {
         if (queuedValue != null) startProcessing();
     }
 
-    private void startProcessing() {
+    private synchronized void startProcessing() {
         loadingThread = new Thread(new LoadingRunnable(queuedValue, stretch));
         loadingThread.start();
         queuedValue = null;
@@ -211,20 +220,13 @@ public class AsyncBlobLoader {
                         onThreadFinish(null, new String[]{blobSizeString, null, format, null});
                     } else {
                         onThreadFinish(bitmap, new String[]{
-                                blobSizeString, bitmap.getWidth() + "x" + bitmap.getHeight(), format, null});
+                                blobSizeString, bitmap.getWidth() + "x" + bitmap.getHeight(), format,
+                                (format.equals(".jpg") || format.equals(".jpeg")) ? "8" : null});
                     }
                 }
             } catch (Throwable e) {
                 handler.post(() -> listener.onBlobException(e));
             }
-        }
-
-        private int findFITSLineValue(String in) {
-            if (in.contains("=")) in = in.split("=")[1];
-            Matcher matcher = Pattern.compile("[0-9]+").matcher(in);
-            if (matcher.find())
-                return Integer.parseInt(matcher.group());
-            return -1;
         }
     }
 }

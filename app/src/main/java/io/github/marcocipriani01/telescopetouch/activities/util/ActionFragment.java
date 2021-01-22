@@ -1,6 +1,7 @@
 package io.github.marcocipriani01.telescopetouch.activities.util;
 
 import android.content.Context;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -30,11 +31,17 @@ public abstract class ActionFragment extends Fragment implements Runnable {
         if (listener != null) listener.actionSnackRequested(msgRes);
     }
 
+    protected void requestActionSnack(int msgRes, int actionName, View.OnClickListener action) {
+        if (listener != null) listener.actionSnackRequested(msgRes, actionName, action);
+    }
+
     public abstract int getActionDrawable();
 
     public interface ActionListener {
         void setActionEnabled(boolean actionEnabled);
 
         void actionSnackRequested(int msgRes);
+
+        void actionSnackRequested(int msgRes, int actionName, View.OnClickListener action);
     }
 }

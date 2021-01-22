@@ -465,8 +465,8 @@
     <string name="telescope_control">Controllo telescopio</string>
     <string name="go_to_database">Database go-to</string>
     <string name="indi_control_panel">Pannello di controllo INDI</string>
-    <string name="device_remove">\"Dispositivo rimosso: \"</string>
-    <string name="new_device">\"Nuovo dispositivo: \"</string>
+    <string name="device_remove">Dispositivo rimosso:</string>
+    <string name="new_device">Nuovo dispositivo:</string>
     <string name="connection_busy">Non connesso o occupato!</string>
     <string name="connection_busy_2">Già connesso o occupato!</string>
     <string name="disconnected">Disconnesso</string>
@@ -502,4 +502,6 @@
     <string name="unsupported_bit_depth">FITS a 32 bit non ancora supportati.</string>
     <string name="invalid_fits_image">Immagine FITS non valida!</string>
     <string name="unknown_exception">Errore sconosciuto!</string>
+    <string name="view_image">Apri</string>
+    <string name="open_photo">Apri foto</string>
 </resources>

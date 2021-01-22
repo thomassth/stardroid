@@ -61,9 +61,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/HostSection"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="24dp"
             android:ems="6"
             android:hint="7624"
+            android:imeOptions="flagNoExtractUi"
             android:inputType="number"
             tools:ignore="Autofill,HardcodedText" />
 
@@ -73,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/spinnerHost"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="24dp"
             android:text="@string/connect" />
     </RelativeLayout>
 </LinearLayout>

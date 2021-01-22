@@ -551,8 +551,8 @@
     <string name="show_discovered_services">LAN discovery</string>
     <string name="go_to_database">Go-to database</string>
     <string name="indi_control_panel">INDI control panel</string>
-    <string name="device_remove">\"Device removed: \"</string>
-    <string name="new_device">\"New device: \"</string>
+    <string name="device_remove">Device removed:</string>
+    <string name="new_device">New device:</string>
     <string name="connection_busy">Not connected or busy!</string>
     <string name="connection_busy_2">Already connected or busy!</string>
     <string name="press_back_exit">Press back again to exit</string>
@@ -582,4 +582,6 @@
     <string name="unsupported_bit_depth">32 bit FITS are not yet supported.</string>
     <string name="invalid_fits_image">Invalid FITS image!</string>
     <string name="unknown_exception">Unknown exception!</string>
+    <string name="view_image">View</string>
+    <string name="open_photo">Open photo</string>
 </resources>
