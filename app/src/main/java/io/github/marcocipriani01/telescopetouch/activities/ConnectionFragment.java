@@ -36,6 +36,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
@@ -70,6 +71,7 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
     private static final ArrayList<ConnectionManager.LogItem> logs = new ArrayList<>();
     private static int selectedSpinnerItem = 0;
     private final Handler handler = new Handler(Looper.getMainLooper());
+    private ActivityResultLauncher<Intent> resultLauncher;
     private SharedPreferences preferences;
     private Button connectionButton;
     private SameSelectionSpinner serversSpinner;
@@ -77,6 +79,17 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
     private EditText portEditText;
     private LogAdapter logAdapter;
     private boolean showNsd = true;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        resultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK)
+                        loadServers(ServersActivity.getServers(context));
+                });
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -119,7 +132,8 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
                     serversSpinner.post(() -> serversSpinner.setSelection(0));
                     ServersActivity.addServer(context, ConnectionFragment.this);
                 } else if (host.equals(getString(R.string.host_manage))) {
-                    openServersActivity();
+                    serversSpinner.post(() -> serversSpinner.setSelection(0));
+                    resultLauncher.launch(new Intent(context, ServersActivity.class));
                 } else {
                     connectionManager.connect(host, port);
                 }
@@ -129,7 +143,6 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
             ((InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE))
                     .hideSoftInputFromWindow(portEditText.getWindowToken(), 0);
         });
-        serversSpinner.setSelection(selectedSpinnerItem);
         new ImprovedSpinnerListener() {
             @Override
             protected void onImprovedItemSelected(AdapterView<?> parent, View view, int pos, long id) {
@@ -138,7 +151,8 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
                     serversSpinner.post(() -> serversSpinner.setSelection(0));
                     ServersActivity.addServer(context, ConnectionFragment.this);
                 } else if (selected.equals(getResources().getString(R.string.host_manage))) {
-                    openServersActivity();
+                    serversSpinner.post(() -> serversSpinner.setSelection(0));
+                    resultLauncher.launch(new Intent(context, ServersActivity.class));
                 }
             }
         }.attach(serversSpinner);
@@ -187,15 +201,6 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
     public void onPause() {
         super.onPause();
         selectedSpinnerItem = serversSpinner.getSelectedItemPosition();
-    }
-
-    private void openServersActivity() {
-        registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK)
-                        loadServers(ServersActivity.getServers(context));
-                }).launch(new Intent(context, ServersActivity.class));
     }
 
     @Override
@@ -278,9 +283,11 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
         }
         servers.add(resources.getString(R.string.host_add));
         servers.add(resources.getString(R.string.host_manage));
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, servers);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        serversSpinner.setAdapter(dataAdapter);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, servers);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        serversSpinner.setAdapter(adapter);
+        if (adapter.getCount() > selectedSpinnerItem)
+            serversSpinner.setSelection(selectedSpinnerItem);
     }
 
     @Override

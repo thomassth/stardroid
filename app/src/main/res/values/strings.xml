@@ -502,7 +502,8 @@
         ★ Google Gson, Apache 2.0 license\n
         ★ Material icons, Apache 2.0 license\n
         ★ Telescope icon, Flaticon license\n
-        ★ Touch icon, Flaticon license
+        ★ Touch icon, Flaticon license\n
+        ★ Compass by iutinvg, MIT License
     </string>
     <string name="error_no_devices">No devices found!</string>
     <string name="error">Error:</string>
