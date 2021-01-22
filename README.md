@@ -81,6 +81,7 @@ with a renewed user interface and high-definition planet thumbnails.
 - [Material icons](https://material.io/resources/icons/), Apache 2.0 license
 - [Telescope icon](https://www.flaticon.com/free-icon/telescope_1086070?term=telescope&page=1&position=81&related_item_id=1086070), Flaticon License
 - [Touch icon](https://www.flaticon.com/free-icon/touch_941563?term=touch&page=1&position=6&related_item_id=941563), Flaticon License
+- [Compass by iutinvg](https://github.com/iutinvg/compass), MIT License
 
 ### License notice
 
