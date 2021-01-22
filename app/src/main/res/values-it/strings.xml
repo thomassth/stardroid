@@ -400,8 +400,8 @@
     <string name="empty_catalog">Catalogo vuoto</string>
     <string name="menu_about">Informazioni</string>
     <string name="app_description"><b>Telescope.Touch</b> è nato come un tentativo di unire l\'app Sky Map e il progetto IPARCOS, un client INDI per Android.
-        \nPermette il controllo completo di un telescopio e la visualizzazione di una mappa stellare, con un\'interfaccia utente completamente rinnovata e un code sorgente moderno.\n\n
-        Il codice sorgente è disponibile alla pagina github.com/marcocipriani01/Telescope.Touch
+        \nPermette il controllo completo di un telescopio e la visualizzazione di una mappa stellare, con un\'interfaccia utente completamente rinnovata e un code sorgente moderno.
+        \n\nIl codice sorgente è disponibile alla pagina github.com/marcocipriani01/Telescope.Touch
         \nSe vuoi sostenere lo sviluppo di Telescope.Touch, invito a donare tramite PayPal! Link nella pagina del progetto.
         \n\nSviluppato da <b>Marco Cipriani</b> (marcocipriani01)
         \n\n<b>Librerie e crediti:</b>\n

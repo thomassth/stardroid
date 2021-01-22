@@ -45,7 +45,7 @@ public class CompassFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_compass, container, false);
         compass = new CompassHelper(context);
-        compass.arrowView = rootView.findViewById(R.id.compass_arrow_view);
+        compass.setArrowView(rootView.findViewById(R.id.compass_arrow_view));
         return rootView;
     }
 
