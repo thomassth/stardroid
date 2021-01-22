@@ -18,9 +18,11 @@ import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -65,6 +67,7 @@ import java.util.Date;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.util.ActionFragment;
 import io.github.marcocipriani01.telescopetouch.indi.AsyncBlobLoader;
 
@@ -77,6 +80,7 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
 
     public static final String RECEIVE_BLOB_PREF = "RECEIVE_BLOB_PREF";
     public static final String STRETCH_FITS_PREF = "STRETCH_FITS_PREF";
+    private static final String TAG = TelescopeTouchApp.getTag(BLOBViewerFragment.class);
     private static int selectedProperty = 0;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final AsyncBlobLoader blobLoader = new AsyncBlobLoader(handler);
@@ -179,23 +183,27 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
     @SuppressLint("SimpleDateFormat")
     public void run() {
         new Thread(() -> {
-            int msg;
-            if (bitmap != null) {
+            if (isActionEnabled()) {
                 try {
-                    saveImage(context, bitmap, context.getString(R.string.app_name), new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date()));
-                    msg = R.string.saved_snackbar;
+                    final Uri uri = saveImage(context, bitmap, context.getString(R.string.app_name),
+                            new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date()));
+                    bitmapSaved = true;
+                    handler.post(() -> {
+                        notifyActionChange();
+                        requestActionSnack(R.string.saved_snackbar, R.string.view_image, v -> {
+                            Intent intent = new Intent();
+                            intent.setDataAndType(uri, "image/*");
+                            intent.setAction(Intent.ACTION_VIEW);
+                            startActivity(Intent.createChooser(intent, getString(R.string.open_photo)));
+                        });
+                    });
                 } catch (Exception e) {
-                    msg = R.string.saving_error;
+                    Log.e(TAG, "Saving error", e);
+                    handler.post(() -> requestActionSnack(R.string.saving_error));
                 }
             } else {
-                msg = R.string.nothing_to_save;
+                handler.post(() -> requestActionSnack(R.string.nothing_to_save));
             }
-            bitmapSaved = true;
-            int finalMsg = msg;
-            handler.post(() -> {
-                notifyActionChange();
-                requestActionSnack(finalMsg);
-            });
         }).start();
     }
 
@@ -249,8 +257,8 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
                 notifyActionChange();
                 break;
             case 1:
-                progressBar.setVisibility(View.VISIBLE);
-                blobLoader.queue(property.getElementsAsList().get(0));
+                if (blobLoader.queue(property.getElementsAsList().get(0)))
+                    progressBar.setVisibility(View.VISIBLE);
                 break;
             default:
                 errorText.setText(R.string.error_multi_image_prop);
@@ -294,26 +302,31 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
     }
 
     @SuppressWarnings({"deprecation", "ResultOfMethodCallIgnored"})
-    private void saveImage(final Context context, final Bitmap bitmap, @NonNull String folderName, @NonNull String fileName) throws IOException {
-        OutputStream outputStream;
+    private Uri saveImage(final Context context, final Bitmap bitmap, @NonNull String folderName, @NonNull String fileName) throws IOException {
+        OutputStream stream;
+        Uri uri;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             ContentResolver resolver = context.getContentResolver();
             ContentValues contentValues = new ContentValues();
             contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);
             contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
             contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DCIM + File.separator + folderName);
-            outputStream = resolver.openOutputStream(resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues));
+            uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+            stream = resolver.openOutputStream(uri);
         } else {
-            String imageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() +
+            String directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() +
                     File.separator + folderName;
-            File file = new File(imageDirectory);
-            if (!file.exists()) file.mkdir();
-            outputStream = new FileOutputStream(new File(imageDirectory, fileName + ".jpg"));
-            MediaScannerConnection.scanFile(context, new String[]{file.toString()}, null, null);
+            File dirFile = new File(directory);
+            if (!dirFile.exists()) dirFile.mkdir();
+            File file = new File(directory, fileName + ".jpg");
+            uri = Uri.fromFile(file);
+            stream = new FileOutputStream(file);
+            MediaScannerConnection.scanFile(context, new String[]{dirFile.toString()}, null, null);
         }
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-        outputStream.flush();
-        outputStream.close();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        stream.flush();
+        stream.close();
+        return uri;
     }
 
     @Override

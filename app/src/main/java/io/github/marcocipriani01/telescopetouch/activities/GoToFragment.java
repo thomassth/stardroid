@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -103,6 +104,7 @@ public class GoToFragment extends ActionFragment
         searchView.setMaxWidth(Integer.MAX_VALUE);
         searchView.setOnQueryTextListener(this);
         searchMenu.setActionView(searchView);
+        searchView.setImeOptions(searchView.getImeOptions() | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         list = rootView.findViewById(R.id.goto_database_list);
         entriesAdapter = new CatalogArrayAdapter(context, catalog);
         list.setAdapter(entriesAdapter);

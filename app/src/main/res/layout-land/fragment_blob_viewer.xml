@@ -22,12 +22,20 @@
         android:stretchColumns="*"
         tools:ignore="RtlSymmetry">
 
+        <androidx.core.widget.ContentLoadingProgressBar
+            android:id="@+id/blob_loading"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:layout_marginBottom="8dp"
+            android:visibility="invisible" />
+
         <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/spinner_select_image_blob"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            android:layout_weight="0"
             tools:ignore="NestedWeights" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -35,7 +43,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_weight="0"
             android:text="@string/receive_images"
             app:switchMinWidth="60dp" />
 
@@ -44,7 +51,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_weight="0"
             android:text="@string/fits_image_stretching"
             app:switchMinWidth="60dp" />
 
@@ -53,7 +59,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_weight="0"
             android:text="@string/image_info"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -116,16 +121,6 @@
                 android:gravity="center"
                 android:text="@string/unknown" />
         </TableRow>
-
-        <androidx.core.widget.ContentLoadingProgressBar
-            android:id="@+id/blob_loading"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:indeterminate="true"
-            android:visibility="invisible"
-            tools:ignore="NestedWeights" />
     </TableLayout>
 
     <FrameLayout

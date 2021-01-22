@@ -51,6 +51,7 @@
             android:layout_alignParentEnd="true"
             android:ems="6"
             android:hint="7624"
+            android:imeOptions="flagNoExtractUi"
             android:inputType="number"
             tools:ignore="Autofill,HardcodedText" />
 

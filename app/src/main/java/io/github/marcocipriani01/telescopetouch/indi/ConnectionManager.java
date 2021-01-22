@@ -226,7 +226,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
     @Override
     public void newDevice(INDIServerConnection connection, INDIDevice device) {
         device.addINDIDeviceListener(this);
-        log(TelescopeTouchApp.getAppResources().getString(R.string.new_device) + device.getName());
+        log(TelescopeTouchApp.getAppResources().getString(R.string.new_device) + " " + device.getName());
         new Thread(() -> {
             try {
                 device.blobsEnable(this.blobEnabled ? Constants.BLOBEnables.ALSO : Constants.BLOBEnables.NEVER);
@@ -239,7 +239,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
     @Override
     public void removeDevice(INDIServerConnection connection, INDIDevice device) {
         device.removeINDIDeviceListener(this);
-        log(TelescopeTouchApp.getAppResources().getString(R.string.device_remove) + device.getName());
+        log(TelescopeTouchApp.getAppResources().getString(R.string.device_remove) + " " + device.getName());
     }
 
     @Override

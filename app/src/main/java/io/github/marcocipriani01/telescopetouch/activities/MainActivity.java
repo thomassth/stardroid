@@ -21,6 +21,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
@@ -243,21 +244,15 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void actionSnackRequested(int msgRes) {
         fab.hide();
-        Snackbar.make(mainCoordinator, msgRes, Snackbar.LENGTH_SHORT).addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
-            @Override
-            public void onDismissed(Snackbar transientBottomBar, int event) {
-                super.onDismissed(transientBottomBar, event);
-                if (currentPage.lastInstance instanceof ActionFragment) {
-                    ActionFragment actionFragment = (ActionFragment) currentPage.lastInstance;
-                    actionFragment.setActionEnabledListener(MainActivity.this);
-                    if (actionFragment.isActionEnabled()) {
-                        fab.show();
-                    } else {
-                        fab.hide();
-                    }
-                }
-            }
-        }).show();
+        Snackbar.make(mainCoordinator, msgRes, Snackbar.LENGTH_SHORT)
+                .addCallback(new SnackBarCallBack()).show();
+    }
+
+    @Override
+    public void actionSnackRequested(int msgRes, int actionName, View.OnClickListener action) {
+        fab.hide();
+        Snackbar.make(mainCoordinator, msgRes, Snackbar.LENGTH_SHORT)
+                .addCallback(new SnackBarCallBack()).setAction(actionName, action).show();
     }
 
     @Override
@@ -352,6 +347,22 @@ public class MainActivity extends AppCompatActivity implements
                 dismiss();
                 return listener.onNavigationItemSelected(item);
             });
+        }
+    }
+
+    private class SnackBarCallBack extends BaseTransientBottomBar.BaseCallback<Snackbar> {
+        @Override
+        public void onDismissed(Snackbar transientBottomBar, int event) {
+            super.onDismissed(transientBottomBar, event);
+            if (currentPage.lastInstance instanceof ActionFragment) {
+                ActionFragment actionFragment = (ActionFragment) currentPage.lastInstance;
+                actionFragment.setActionEnabledListener(MainActivity.this);
+                if (actionFragment.isActionEnabled()) {
+                    fab.show();
+                } else {
+                    fab.hide();
+                }
+            }
         }
     }
 }

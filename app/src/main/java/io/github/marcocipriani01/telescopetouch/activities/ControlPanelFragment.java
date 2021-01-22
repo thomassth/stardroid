@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -87,6 +88,7 @@ public class ControlPanelFragment extends Fragment
         searchView.setOnSearchClickListener(this);
         searchView.setOnCloseListener(this);
         searchView.setOnQueryTextListener(this);
+        searchView.setImeOptions(searchView.getImeOptions() | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         searchMenu.setActionView(searchView);
         return rootView;
     }

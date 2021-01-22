@@ -111,6 +111,7 @@
             android:layout_marginBottom="8dp"
             android:ems="5"
             android:hint="100"
+            android:imeOptions="flagNoExtractUi"
             android:importantForAutofill="no"
             android:inputType="number"
             android:maxEms="8"
@@ -127,6 +128,7 @@
             android:layout_toStartOf="@id/fok_sync_pos_button"
             android:ems="10"
             android:hint="@string/position"
+            android:imeOptions="flagNoExtractUi"
             android:importantForAutofill="no"
             android:inputType="number" />
 

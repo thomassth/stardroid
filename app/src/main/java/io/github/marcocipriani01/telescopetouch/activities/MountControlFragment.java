@@ -245,7 +245,8 @@ public class MountControlFragment extends Fragment implements INDIServerConnecti
             if (btnMoveNW != null) btnMoveNW.setEnabled(moveEnabled);
             if (btnMoveSE != null) btnMoveSE.setEnabled(moveEnabled);
             if (btnMoveSW != null) btnMoveSW.setEnabled(moveEnabled);
-            if (btnStop != null) btnStop.setEnabled(moveEnabled && (telescopeMotionAbort != null));
+            if (btnStop != null) btnStop.setEnabled(
+                    (telescopeMotionWEP != null) || (telescopeMotionNSP != null) || (telescopeMotionAbort != null));
             if (slewRateSpinner != null) slewRateSpinner.setEnabled(telescopeSlewRateP != null);
         });
     }
