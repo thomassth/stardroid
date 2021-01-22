@@ -16,6 +16,8 @@ package io.github.marcocipriani01.telescopetouch.indi;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.format.DateFormat;
 import android.util.Log;
 
@@ -29,6 +31,7 @@ import org.indilib.i4j.client.INDIProperty;
 import org.indilib.i4j.client.INDIServerConnection;
 import org.indilib.i4j.client.INDIServerConnectionListener;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -43,13 +46,19 @@ import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
  */
 public class ConnectionManager implements INDIServerConnectionListener, INDIDeviceListener {
 
+    private final Handler handler = new Handler(Looper.getMainLooper());
     private final Set<ManagerListener> managerListeners = new HashSet<>();
     private final HashSet<INDIServerConnectionListener> indiListeners = new HashSet<>();
+    private final ArrayList<LogItem> logs = new ArrayList<>();
     private java.text.DateFormat dateFormat = null;
     private java.text.DateFormat timeFormat = null;
     private INDIServerConnection indiConnection;
     private boolean busy = false;
     private boolean blobEnabled = false;
+
+    public ArrayList<LogItem> getLogs() {
+        return logs;
+    }
 
     public void initFormatters(Context appContext) {
         dateFormat = DateFormat.getDateFormat(appContext);
@@ -143,11 +152,14 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
      */
     public void log(String message) {
         if (timeFormat != null) {
-            Date now = new Date();
-            LogItem log = new LogItem(message, dateFormat.format(now) + " " + timeFormat.format(now));
-            for (ManagerListener listener : managerListeners) {
-                listener.addLog(log);
-            }
+            handler.post(() -> {
+                Date now = new Date();
+                LogItem log = new LogItem(message, dateFormat.format(now) + " " + timeFormat.format(now));
+                logs.add(log);
+                for (ManagerListener listener : managerListeners) {
+                    listener.addLog(log);
+                }
+            });
         }
     }
 
@@ -158,11 +170,20 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
      */
     public void log(String message, INDIDevice device) {
         if (timeFormat != null) {
-            Date now = new Date();
-            LogItem log = new LogItem(message, dateFormat.format(now) + " " + timeFormat.format(now), device);
-            for (ManagerListener listener : managerListeners) {
-                listener.deviceLog(log);
-            }
+            handler.post(() -> {
+                Date now = new Date();
+                LogItem log = new LogItem(message, dateFormat.format(now) + " " + timeFormat.format(now), device);
+                for (int i = 0, logsSize = logs.size(); i < logsSize; i++) {
+                    if (logs.get(i).getDevice() == log.getDevice()) {
+                        logs.remove(i);
+                        break;
+                    }
+                }
+                logs.add(log);
+                for (ManagerListener listener : managerListeners) {
+                    listener.deviceLog(log);
+                }
+            });
         }
     }
 
