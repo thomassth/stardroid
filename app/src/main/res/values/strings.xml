@@ -584,4 +584,5 @@
     <string name="unknown_exception">Unknown exception!</string>
     <string name="view_image">View</string>
     <string name="open_photo">Open photo</string>
+    <string name="blob_open_viewer">Go to the CCD images viewer to see this property.</string>
 </resources>

@@ -110,6 +110,10 @@ public class BLOBPropPref extends PropPref<INDIBLOBElement> {
                 editText.setEnabled(false);
                 layout.addView(editText, layoutParams);
             }
+            TextView textView = new TextView(context);
+            textView.setText(R.string.blob_open_viewer);
+            textView.setPadding(padding, padding, padding, padding);
+            layout.addView(textView, layoutParams);
             ScrollView scrollView = new ScrollView(context);
             scrollView.addView(layout);
             builder.setView(scrollView).setTitle(prop.getLabel());
