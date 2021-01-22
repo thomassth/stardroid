@@ -498,7 +498,6 @@ public class DynamicStarMapActivity extends InjectableActivity
         controller.setModel(model);
 
         cancelSearchButton = findViewById(R.id.cancel_search_button);
-        // TODO(johntaylor): move to set this in the XML once we don't support 1.5
         cancelSearchButton.setOnClickListener(v1 -> cancelSearch());
 
         ButtonLayerView providerButtons = findViewById(R.id.layer_buttons_control);
@@ -631,10 +630,13 @@ public class DynamicStarMapActivity extends InjectableActivity
 
     public void activateSearchTarget(GeocentricCoordinates target, final String searchTerm) {
         Log.d(TAG, "Item " + searchTerm + " selected");
-        searchView.clearFocus();
-        searchView.setIconified(true);
-        searchMenuItem.collapseActionView();
-        searchView.onActionViewCollapsed();
+        if (searchView != null) {
+            searchView.clearFocus();
+            searchView.setIconified(true);
+            searchView.onActionViewCollapsed();
+        }
+        if (searchMenuItem != null)
+            searchMenuItem.collapseActionView();
         // Store these for later.
         searchTarget = target;
         searchTargetName = searchTerm;
@@ -664,9 +666,8 @@ public class DynamicStarMapActivity extends InjectableActivity
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         Log.w(TAG, "Unhandled request permissions result");
     }
 
