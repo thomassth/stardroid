@@ -507,4 +507,5 @@
     <string name="blob_open_viewer">Apri il visualizzatore immagini CCD per vedere questa proprietà.</string>
     <string name="select_host_first">Seleziona prima un host.</string>
     <string name="database_filter">Filtro database</string>
+    <string name="compass_not_available">Bussola non disponibile!</string>
 </resources>
