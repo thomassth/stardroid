@@ -188,10 +188,12 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
                 String[] split = host.split("@");
                 if (split.length == 2) host = split[1];
             }
-            if (host.equals(getString(R.string.host_add)) || host.equals(getString(R.string.host_manage)))
-                return super.onOptionsItemSelected(item);
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://" + host)));
-            return true;
+            if (host.equals(getString(R.string.host_add)) || host.equals(getString(R.string.host_manage))) {
+                requestActionSnack(R.string.select_host_first);
+            } else {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://" + host)));
+                return true;
+            }
         }
         return super.onOptionsItemSelected(item);
     }

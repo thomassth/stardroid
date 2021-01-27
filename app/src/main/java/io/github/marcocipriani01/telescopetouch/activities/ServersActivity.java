@@ -127,6 +127,7 @@ public class ServersActivity extends AppCompatActivity implements ServersReloadL
                         Toast.makeText(context, context.getString(R.string.empty_host), Toast.LENGTH_SHORT).show();
                     }
                 })
+                .setIcon(R.drawable.edit)
                 .setNegativeButton(android.R.string.cancel, null).show();
         input.requestFocus();
         inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
@@ -203,6 +204,7 @@ public class ServersActivity extends AppCompatActivity implements ServersReloadL
             public void onItemLongClicked(final TextView view) {
                 new AlertDialog.Builder(ServersActivity.this)
                         .setTitle(R.string.sure)
+                        .setIcon(R.drawable.delete)
                         .setMessage(R.string.remove_server)
                         .setCancelable(false)
                         .setPositiveButton(android.R.string.ok, (dialog, id) -> {

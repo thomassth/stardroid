@@ -505,4 +505,6 @@
     <string name="view_image">Apri</string>
     <string name="open_photo">Apri foto</string>
     <string name="blob_open_viewer">Apri il visualizzatore immagini CCD per vedere questa proprietà.</string>
+    <string name="select_host_first">Seleziona prima un host.</string>
+    <string name="database_filter">Filtro database</string>
 </resources>

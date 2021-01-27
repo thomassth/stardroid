@@ -37,7 +37,6 @@ import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
 import io.github.marcocipriani01.telescopetouch.search.SearchResult;
 
 /**
- * End User License agreement dialog.
  * Created by johntaylor on 4/3/16.
  */
 public class MultipleSearchResultsDialogFragment extends DialogFragment {
@@ -67,7 +66,6 @@ public class MultipleSearchResultsDialogFragment extends DialogFragment {
             }
             dialog.dismiss();
         };
-
         return new AlertDialog.Builder(parentActivity)
                 .setTitle(R.string.many_search_results_title)
                 .setNegativeButton(android.R.string.cancel, onClickListener)

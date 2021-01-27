@@ -149,7 +149,7 @@ public class SwitchPropPref extends PropPref<INDISwitchElement> {
             } else {
                 builder.setNegativeButton(R.string.back_request, null);
             }
-            return builder.create();
+            return builder.setIcon(R.drawable.edit).create();
         }
 
         private void setArguments(INDISwitchProperty prop, PropPref<INDISwitchElement> propPref) {

@@ -140,7 +140,7 @@ public class TextPropPref extends PropPref<INDITextElement> {
             } else {
                 builder.setNegativeButton(R.string.back_request, null);
             }
-            return builder.create();
+            return builder.setIcon(R.drawable.edit).create();
         }
 
         private void setArguments(INDITextProperty prop, PropPref<INDITextElement> propPref) {
