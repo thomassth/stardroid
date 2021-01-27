@@ -165,7 +165,7 @@ public class NumberPropPref extends PropPref<INDINumberElement> {
             } else {
                 builder.setNegativeButton(R.string.back_request, null);
             }
-            return builder.create();
+            return builder.setIcon(R.drawable.edit).create();
         }
 
         @Override

@@ -116,9 +116,9 @@ public class BLOBPropPref extends PropPref<INDIBLOBElement> {
             layout.addView(textView, layoutParams);
             ScrollView scrollView = new ScrollView(context);
             scrollView.addView(layout);
-            builder.setView(scrollView).setTitle(prop.getLabel());
-            builder.setNegativeButton(R.string.back_request, null);
-            return builder.create();
+            return builder.setView(scrollView).setTitle(prop.getLabel())
+                    .setNegativeButton(R.string.back_request, null)
+                    .setIcon(R.drawable.edit).create();
         }
 
         private void setArguments(INDIBLOBProperty prop) {

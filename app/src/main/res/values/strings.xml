@@ -585,4 +585,6 @@
     <string name="view_image">View</string>
     <string name="open_photo">Open photo</string>
     <string name="blob_open_viewer">Go to the CCD images viewer to see this property.</string>
+    <string name="select_host_first">Please, select a host first.</string>
+    <string name="database_filter">Database filter</string>
 </resources>

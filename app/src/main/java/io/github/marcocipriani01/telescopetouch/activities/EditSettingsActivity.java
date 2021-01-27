@@ -135,8 +135,8 @@ public class EditSettingsActivity extends AppCompatActivity {
     }
 
     private void enableNonGyroSensorPrefs(boolean enabled) {
-        Objects.<Preference>requireNonNull(preferenceFragment.findPreference(ApplicationConstants.REVERSE_MAGNETIC_Z_PREFKEY))
-                .setEnabled(enabled);
+        Objects.<Preference>requireNonNull(
+                preferenceFragment.findPreference(ApplicationConstants.REVERSE_MAGNETIC_Z_PREFKEY)).setEnabled(enabled);
     }
 
     /**
@@ -156,7 +156,10 @@ public class EditSettingsActivity extends AppCompatActivity {
             return false;
         }
         if (addresses.isEmpty()) {
-            showNotFoundDialog(place);
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.location_not_found_title)
+                    .setMessage(String.format(getString(R.string.location_not_found), place))
+                    .setPositiveButton(android.R.string.ok, null).show();
             return false;
         }
         // TODO(johntaylor) let the user choose, but for now just pick the first.
@@ -173,14 +176,6 @@ public class EditSettingsActivity extends AppCompatActivity {
         String message = String.format(getString(R.string.location_place_found), latitude, longitude);
         Log.d(TAG, message);
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
-
-    private void showNotFoundDialog(String place) {
-        String message = String.format(getString(R.string.location_not_found), place);
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.location_not_found_title)
-                .setMessage(message)
-                .setPositiveButton(android.R.string.ok, null).show();
     }
 
     public static class MyPreferenceFragment extends PreferenceFragmentCompat {

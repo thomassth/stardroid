@@ -164,7 +164,8 @@ public class GoToFragment extends ActionFragment
     @Override
     public void run() {
         final boolean[] choices = {entriesAdapter.isShowStars(), entriesAdapter.isShowDso(), entriesAdapter.isShowPlanets()};
-        new AlertDialog.Builder(context).setTitle("Database filter")
+        new AlertDialog.Builder(context).setTitle(R.string.database_filter)
+                .setIcon(R.drawable.filter)
                 .setMultiChoiceItems(R.array.database_filter_elements, choices,
                         (dialog, which, isChecked) -> choices[which] = isChecked)
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
@@ -240,9 +241,10 @@ public class GoToFragment extends ActionFragment
 
     private void onListItemClick0(int position) {
         final CatalogEntry selectedEntry = entriesAdapter.getEntryAt(position);
-        final CatalogCoordinates coord = selectedEntry.getCoordinates();
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage(selectedEntry.createDescription(context)).setTitle(selectedEntry.getName());
+        final CatalogCoordinates coordinates = selectedEntry.getCoordinates();
+        AlertDialog.Builder builder = new AlertDialog.Builder(context)
+                .setMessage(selectedEntry.createDescription(context))
+                .setTitle(selectedEntry.getName());
         // Only display buttons if the telescope is ready
         if ((telescopeCoordP != null) && (telescopeOnCoordSetP != null)) {
             builder.setPositiveButton(R.string.go_to, (dialog, which) -> {
@@ -252,12 +254,12 @@ public class GoToFragment extends ActionFragment
                     telescopeOnCoordSetSync.setDesiredValue(Constants.SwitchStatus.OFF);
                     new PropUpdater(telescopeOnCoordSetP).start();
                     if ((selectedEntry instanceof StarEntry) || (selectedEntry instanceof DSOEntry)) {
-                        CatalogCoordinates precessed = AstroTimeUtils.precess(Calendar.getInstance(), coord);
+                        CatalogCoordinates precessed = AstroTimeUtils.precess(Calendar.getInstance(), coordinates);
                         telescopeCoordRA.setDesiredValue(precessed.getRaStr());
                         telescopeCoordDE.setDesiredValue(precessed.getDeStr());
                     } else {
-                        telescopeCoordRA.setDesiredValue(coord.getRaStr());
-                        telescopeCoordDE.setDesiredValue(coord.getDeStr());
+                        telescopeCoordRA.setDesiredValue(coordinates.getRaStr());
+                        telescopeCoordDE.setDesiredValue(coordinates.getDeStr());
                     }
                     new PropUpdater(telescopeCoordP).start();
                     requestActionSnack(R.string.slew_ok);
@@ -272,7 +274,7 @@ public class GoToFragment extends ActionFragment
                     telescopeOnCoordSetTrack.setDesiredValue(Constants.SwitchStatus.OFF);
                     telescopeOnCoordSetSlew.setDesiredValue(Constants.SwitchStatus.OFF);
                     new PropUpdater(telescopeOnCoordSetP).start();
-                    CatalogCoordinates precessed = AstroTimeUtils.precess(Calendar.getInstance(), coord);
+                    CatalogCoordinates precessed = AstroTimeUtils.precess(Calendar.getInstance(), coordinates);
                     telescopeCoordRA.setDesiredValue(precessed.getRaStr());
                     telescopeCoordDE.setDesiredValue(precessed.getDeStr());
                     new PropUpdater(telescopeCoordP).start();

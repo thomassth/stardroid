@@ -345,10 +345,11 @@ public class MainActivity extends AppCompatActivity implements
             getWindow().getAttributes().width = WindowManager.LayoutParams.MATCH_PARENT;
             getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
             NavigationView navigation = findViewById(R.id.navigation_view);
-            if (navigation != null) navigation.setNavigationItemSelectedListener(item -> {
+            navigation.setNavigationItemSelectedListener(item -> {
                 dismiss();
                 return listener.onNavigationItemSelected(item);
             });
+            navigation.getMenu().findItem(currentPage.itemId).setChecked(true);
         }
     }
 
