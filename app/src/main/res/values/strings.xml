@@ -587,4 +587,5 @@
     <string name="blob_open_viewer">Go to the CCD images viewer to see this property.</string>
     <string name="select_host_first">Please, select a host first.</string>
     <string name="database_filter">Database filter</string>
+    <string name="compass_not_available">Compass not available!</string>
 </resources>

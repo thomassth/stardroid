@@ -52,9 +52,9 @@ public class CompassHelper implements SensorEventListener {
         this.arrowView = arrowView;
     }
 
-    public void start() {
-        sensorManager.registerListener(this, gSensor, SensorManager.SENSOR_DELAY_GAME);
-        sensorManager.registerListener(this, magneticFieldSensor, SensorManager.SENSOR_DELAY_GAME);
+    public boolean start() {
+        return sensorManager.registerListener(this, gSensor, SensorManager.SENSOR_DELAY_GAME) &&
+                sensorManager.registerListener(this, magneticFieldSensor, SensorManager.SENSOR_DELAY_GAME);
     }
 
     public void stop() {

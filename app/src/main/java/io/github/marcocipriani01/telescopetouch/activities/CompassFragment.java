@@ -24,12 +24,12 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.activities.util.ActionFragment;
 import io.github.marcocipriani01.telescopetouch.views.CompassHelper;
 
-public class CompassFragment extends Fragment {
+public class CompassFragment extends ActionFragment {
 
     private CompassHelper compass;
     private Context context;
@@ -52,12 +52,28 @@ public class CompassFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        compass.start();
+        if (!compass.start())
+            requestActionSnack(R.string.compass_not_available);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         compass.stop();
+    }
+
+    @Override
+    public void run() {
+
+    }
+
+    @Override
+    public boolean isActionEnabled() {
+        return false;
+    }
+
+    @Override
+    public int getActionDrawable() {
+        return 0;
     }
 }
