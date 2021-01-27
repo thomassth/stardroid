@@ -42,8 +42,7 @@ import javax.inject.Inject;
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
-import io.github.marcocipriani01.telescopetouch.activities.util.ActivityLightLevelChanger;
-import io.github.marcocipriani01.telescopetouch.activities.util.ActivityLightLevelManager;
+import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
 
 /**
  * Edit the user's preferences.
@@ -61,19 +60,17 @@ public class EditSettingsActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     private MyPreferenceFragment preferenceFragment;
     private Geocoder geocoder;
-    private ActivityLightLevelManager activityLightLevelManager;
+    private DarkerModeManager darkerModeManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((TelescopeTouchApp) getApplication()).getApplicationComponent().inject(this);
-        activityLightLevelManager = new ActivityLightLevelManager(
-                new ActivityLightLevelChanger(this, null),
-                PreferenceManager.getDefaultSharedPreferences(this));
+        darkerModeManager = new DarkerModeManager(
+                getWindow(), null, PreferenceManager.getDefaultSharedPreferences(this));
         geocoder = new Geocoder(this);
         preferenceFragment = new MyPreferenceFragment();
-        getSupportFragmentManager().beginTransaction().replace(android.R.id.content,
-                preferenceFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(android.R.id.content, preferenceFragment).commit();
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -115,14 +112,14 @@ public class EditSettingsActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        activityLightLevelManager.onResume();
+        darkerModeManager.start();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         updatePreferences();
-        activityLightLevelManager.onPause();
+        darkerModeManager.stop();
     }
 
     @Override

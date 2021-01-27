@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
 import io.github.marcocipriani01.telescopetouch.views.ServersItemAdapter;
 
 /**
@@ -65,6 +66,8 @@ public class ServersActivity extends AppCompatActivity implements ServersReloadL
     final static Type stringArrayType = new TypeToken<ArrayList<String>>() {
     }.getType();
     private DragListView serversListView;
+    private SharedPreferences preferences;
+    private DarkerModeManager darkerModeManager;
 
     /**
      * Asks the user to add a new server.
@@ -115,13 +118,10 @@ public class ServersActivity extends AppCompatActivity implements ServersReloadL
                     if (!server.equals("")) {
                         if (!isIp(server))
                             Toast.makeText(context, context.getString(R.string.not_valid_ip), Toast.LENGTH_SHORT).show();
-                        // Retrieve the list
                         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
                         ArrayList<String> list = getServers(preferences);
                         list.add(0, server);
-                        // Save the list
                         preferences.edit().putString(INDI_SERVERS_PREF, gson.toJson(list, stringArrayType)).apply();
-                        // Update
                         onServersReload.loadServers(list);
                     } else {
                         Toast.makeText(context, context.getString(R.string.empty_host), Toast.LENGTH_SHORT).show();
@@ -131,10 +131,6 @@ public class ServersActivity extends AppCompatActivity implements ServersReloadL
                 .setNegativeButton(android.R.string.cancel, null).show();
         input.requestFocus();
         inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-    }
-
-    public static ArrayList<String> getServers(Context context) {
-        return getServers(PreferenceManager.getDefaultSharedPreferences(context));
     }
 
     public static ArrayList<String> getServers(SharedPreferences preferences) {
@@ -157,6 +153,8 @@ public class ServersActivity extends AppCompatActivity implements ServersReloadL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        darkerModeManager = new DarkerModeManager(getWindow(), null, PreferenceManager.getDefaultSharedPreferences(this));
+        setTheme(darkerModeManager.getPref() ? R.style.DarkerAppTheme : R.style.AppTheme);
         setContentView(R.layout.activity_servers);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -170,7 +168,8 @@ public class ServersActivity extends AppCompatActivity implements ServersReloadL
         serversListView = findViewById(R.id.serversList);
         serversListView.setLayoutManager(new LinearLayoutManager(this));
         serversListView.setCanDragHorizontally(false);
-        loadServers(getServers(this));
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        loadServers(getServers(preferences));
         Toast.makeText(this, R.string.servers_list_toast, Toast.LENGTH_SHORT).show();
     }
 
@@ -185,16 +184,21 @@ public class ServersActivity extends AppCompatActivity implements ServersReloadL
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        darkerModeManager.start();
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         saveFromListView();
+        darkerModeManager.stop();
     }
 
     private void saveFromListView() {
-        PreferenceManager.getDefaultSharedPreferences(this).edit().putString(
-                INDI_SERVERS_PREF,
-                gson.toJson(((ServersItemAdapter) serversListView.getAdapter()).getItemList(), stringArrayType))
-                .apply();
+        preferences.edit().putString(INDI_SERVERS_PREF,
+                gson.toJson(((ServersItemAdapter) serversListView.getAdapter()).getItemList(), stringArrayType)).apply();
     }
 
     @Override
@@ -203,7 +207,7 @@ public class ServersActivity extends AppCompatActivity implements ServersReloadL
             @Override
             public void onItemLongClicked(final TextView view) {
                 new AlertDialog.Builder(ServersActivity.this)
-                        .setTitle(R.string.sure)
+                        .setTitle(R.string.host_manage)
                         .setIcon(R.drawable.delete)
                         .setMessage(R.string.remove_server)
                         .setCancelable(false)

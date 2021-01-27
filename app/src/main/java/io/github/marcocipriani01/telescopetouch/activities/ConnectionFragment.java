@@ -82,11 +82,12 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
         resultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK)
-                        loadServers(ServersActivity.getServers(context));
+                        loadServers(ServersActivity.getServers(preferences));
                 });
     }
 
@@ -101,7 +102,6 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
 
         connectionButton = rootView.findViewById(R.id.connectionButton);
         serversSpinner = rootView.findViewById(R.id.spinnerHost);
-        preferences = PreferenceManager.getDefaultSharedPreferences(context);
         showNsd = preferences.getBoolean(NSD_PREF, true);
         nsdHelper = TelescopeTouchApp.getServiceDiscoveryHelper();
         loadServers(ServersActivity.getServers(preferences));

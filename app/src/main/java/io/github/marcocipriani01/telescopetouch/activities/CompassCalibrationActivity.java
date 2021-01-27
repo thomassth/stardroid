@@ -30,10 +30,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.preference.PreferenceManager;
 
 import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
 import io.github.marcocipriani01.telescopetouch.activities.util.SensorAccuracyDecoder;
 import io.github.marcocipriani01.telescopetouch.util.Toaster;
 
@@ -53,6 +55,7 @@ public class CompassCalibrationActivity extends InjectableActivity implements Se
     private Sensor magneticSensor;
     private CheckBox checkBoxView;
     private boolean accuracyReceived = false;
+    private DarkerModeManager darkerModeManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +63,9 @@ public class CompassCalibrationActivity extends InjectableActivity implements Se
         DaggerCompassCalibrationComponent.builder()
                 .applicationComponent(getApplicationComponent())
                 .compassCalibrationModule(new CompassCalibrationModule(this)).build().inject(this);
+        darkerModeManager = new DarkerModeManager(getWindow(), null, PreferenceManager.getDefaultSharedPreferences(this));
+        setTheme(darkerModeManager.getPref() ? R.style.DarkerAppTheme : R.style.AppTheme);
+        setContentView(R.layout.activity_compass_calibration);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -67,9 +73,7 @@ public class CompassCalibrationActivity extends InjectableActivity implements Se
             actionBar.setDisplayShowHomeEnabled(true);
         }
 
-        setContentView(R.layout.activity_compass_calibration);
-        WebView web = findViewById(R.id.compass_calib_activity_webview);
-        web.loadUrl("file:///android_asset/html/how_to_calibrate.html");
+        this.<WebView>findViewById(R.id.compass_calib_activity_webview).loadUrl("file:///android_asset/html/how_to_calibrate.html");
 
         checkBoxView = findViewById(R.id.compass_calib_activity_donotshow);
         boolean hideCheckbox = getIntent().getBooleanExtra(HIDE_CHECKBOX, false);
@@ -91,6 +95,7 @@ public class CompassCalibrationActivity extends InjectableActivity implements Se
         if (magneticSensor != null) {
             sensorManager.registerListener(this, magneticSensor, SensorManager.SENSOR_DELAY_UI);
         }
+        darkerModeManager.start();
     }
 
     @Override
@@ -100,6 +105,7 @@ public class CompassCalibrationActivity extends InjectableActivity implements Se
         if (checkBoxView.isChecked()) {
             sharedPreferences.edit().putBoolean(DONT_SHOW_CALIBRATION_DIALOG, true).apply();
         }
+        darkerModeManager.stop();
     }
 
     @Override

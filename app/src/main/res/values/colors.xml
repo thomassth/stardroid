@@ -2,7 +2,8 @@
     <color name="colorPrimary">#e53935</color>
     <color name="colorPrimaryDark">#ab000d</color>
     <color name="colorAccent">#ff6f00</color>
-    <color name="navBarColor">#121212</color>
+    <color name="darkColor">#121212</color>
+    <color name="darkerColor">#000000</color>
 
     <color name="black_overlay">#66000000</color>
     <color name="high_accuracy">#8BC34A</color>
@@ -14,6 +15,4 @@
     <color name="light_green">#4CAF50</color>
     <color name="light_red">#F44336</color>
     <color name="light_yellow">#FFEB3B</color>
-    <color name="list_unselected">#303030</color>
-    <color name="list_selected">#424242</color>
 </resources>

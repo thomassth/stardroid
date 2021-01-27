@@ -64,8 +64,7 @@ import io.github.marcocipriani01.telescopetouch.activities.dialogs.MultipleSearc
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.NoSearchResultsDialogFragment;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.NoSensorsDialogFragment;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.TimeTravelDialogFragment;
-import io.github.marcocipriani01.telescopetouch.activities.util.ActivityLightLevelChanger;
-import io.github.marcocipriani01.telescopetouch.activities.util.ActivityLightLevelManager;
+import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
 import io.github.marcocipriani01.telescopetouch.activities.util.FullscreenControlsManager;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.control.ControllerGroup;
@@ -128,7 +127,6 @@ public class DynamicStarMapActivity extends InjectableActivity
     private ImageButton cancelSearchButton;
     private GestureDetector gestureDetector;
     private RendererController rendererController;
-    private boolean nightMode = false;
     private boolean searchMode = false;
     private GeocentricCoordinates searchTarget = GeocentricCoordinates.getInstance(0, 0);
     private GLSurfaceView skyView;
@@ -136,7 +134,7 @@ public class DynamicStarMapActivity extends InjectableActivity
     private View timePlayerUI;
     private DynamicStarMapComponent daggerComponent;
     private DragRotateZoomGestureDetector dragZoomRotateDetector;
-    private ActivityLightLevelManager activityLightLevelManager;
+    private DarkerModeManager darkerModeManager;
     private boolean isSkyMapOnly;
     private SearchView searchView;
     private MenuItem searchMenuItem;
@@ -158,7 +156,6 @@ public class DynamicStarMapActivity extends InjectableActivity
         daggerComponent.inject(this);
 
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-
 
         // Set up full screen mode, hide the system UI etc.
         Window window = getWindow();
@@ -182,10 +179,8 @@ public class DynamicStarMapActivity extends InjectableActivity
         // Search related
         setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
 
-        ActivityLightLevelChanger activityLightLevelChanger = new ActivityLightLevelChanger(this,
-                nightMode1 -> DynamicStarMapActivity.this.rendererController.queueNightVisionMode(nightMode1));
-        activityLightLevelManager = new ActivityLightLevelManager(activityLightLevelChanger,
-                sharedPreferences);
+        darkerModeManager = new DarkerModeManager(
+                window, b -> this.rendererController.queueNightVisionMode(b), sharedPreferences);
 
         String intentAction = getIntent().getAction();
         ActionBar actionBar = getSupportActionBar();
@@ -319,11 +314,8 @@ public class DynamicStarMapActivity extends InjectableActivity
         } else if (itemId == R.id.menu_skymap_settings) {
             Log.d(TAG, "Settings");
             startActivity(new Intent(this, EditSettingsActivity.class));
-        } else if (itemId == R.id.menu_skymap_red) {
-            Log.d(TAG, "Toggling nightmode");
-            nightMode = !nightMode;
-            sharedPreferences.edit().putString(ActivityLightLevelManager.LIGHT_MODE_KEY,
-                    nightMode ? "NIGHT" : "DAY").apply();
+        } else if (itemId == R.id.menu_darker_mode) {
+            item.setIcon(darkerModeManager.toggle() ? R.drawable.light_mode : R.drawable.darker_mode);
         } else if (itemId == R.id.menu_skymap_time_travel) {
             Log.d(TAG, "Starting Time Dialog from menu");
             if (!timePlayerUI.isShown()) {
@@ -358,7 +350,7 @@ public class DynamicStarMapActivity extends InjectableActivity
         skyView.onResume();
         Log.i(TAG, "Starting controller");
         controller.start();
-        activityLightLevelManager.onResume();
+        darkerModeManager.start();
         if (controller.isAutoMode()) {
             sensorAccuracyMonitor.start();
         }
@@ -408,7 +400,7 @@ public class DynamicStarMapActivity extends InjectableActivity
         for (Runnable runnable : onResumeRunnables) {
             handler.removeCallbacks(runnable);
         }
-        activityLightLevelManager.onPause();
+        darkerModeManager.stop();
         controller.stop();
         skyView.onPause();
         Log.d(TAG, "DynamicStarMap -onPause");
@@ -613,7 +605,6 @@ public class DynamicStarMapActivity extends InjectableActivity
             rendererController.queueEnableSearchOverlay(searchTarget, searchTargetName);
             cancelSearchButton.setVisibility(View.VISIBLE);
         }
-        nightMode = icicle.getBoolean(ApplicationConstants.BUNDLE_NIGHT_MODE, false);
     }
 
     @Override
@@ -624,7 +615,6 @@ public class DynamicStarMapActivity extends InjectableActivity
         icicle.putFloat(ApplicationConstants.BUNDLE_Y_TARGET, searchTarget.y);
         icicle.putFloat(ApplicationConstants.BUNDLE_Z_TARGET, searchTarget.z);
         icicle.putString(ApplicationConstants.BUNDLE_TARGET_NAME, searchTargetName);
-        icicle.putBoolean(ApplicationConstants.BUNDLE_NIGHT_MODE, nightMode);
         super.onSaveInstanceState(icicle);
     }
 
@@ -680,8 +670,7 @@ public class DynamicStarMapActivity extends InjectableActivity
         private final RendererController rendererController;
         private final AstronomerModel model;
 
-        public RendererModelUpdateClosure(AstronomerModel model,
-                                          RendererController rendererController, SharedPreferences sharedPreferences) {
+        public RendererModelUpdateClosure(AstronomerModel model, RendererController rendererController, SharedPreferences sharedPreferences) {
             this.model = model;
             this.rendererController = rendererController;
             boolean horizontalRotation = sharedPreferences.getBoolean(ApplicationConstants.ROTATE_HORIZON_PREFKEY, false);

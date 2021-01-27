@@ -468,7 +468,7 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
             if (convertView == null) {
                 holder = new ViewHolder();
                 convertView = inflater.inflate(resourceId, null, false);
-                holder.name = (TextView) convertView.findViewById(android.R.id.text1);
+                holder.name = convertView.findViewById(android.R.id.text1);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();

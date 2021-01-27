@@ -11,8 +11,8 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/menu_skymap_red"
-        android:icon="@drawable/red_mode"
+        android:id="@+id/menu_darker_mode"
+        android:icon="@drawable/darker_mode"
         android:orderInCategory="2"
         android:title="@string/menu_toggle_dim"
         app:showAsAction="ifRoom" />

@@ -34,6 +34,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.preference.PreferenceManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -46,6 +47,7 @@ import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
+import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
 import io.github.marcocipriani01.telescopetouch.activities.util.SensorAccuracyDecoder;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.control.LocationController;
@@ -79,6 +81,7 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
     private Sensor rotationVectorSensor;
     private Sensor lightSensor;
     private boolean continueUpdates;
+    private DarkerModeManager darkerModeManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +89,8 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
         DaggerDiagnosticActivityComponent.builder().applicationComponent(
                 getApplicationComponent()).diagnosticActivityModule(new DiagnosticActivityModule(this))
                 .build().inject(this);
+        darkerModeManager = new DarkerModeManager(getWindow(), null, PreferenceManager.getDefaultSharedPreferences(this));
+        setTheme(darkerModeManager.getPref() ? R.style.DarkerAppTheme : R.style.AppTheme);
         setContentView(R.layout.activity_diagnostic);
 
         ActionBar actionBar = getSupportActionBar();
@@ -124,6 +129,7 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
                 }
             }
         });
+        darkerModeManager.start();
     }
 
     private void onResumeSensors() {
@@ -204,6 +210,7 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
         super.onPause();
         continueUpdates = false;
         sensorManager.unregisterListener(this);
+        darkerModeManager.stop();
     }
 
     @Override
