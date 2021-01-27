@@ -33,8 +33,7 @@ import androidx.preference.PreferenceManager;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
-import io.github.marcocipriani01.telescopetouch.activities.util.ActivityLightLevelChanger;
-import io.github.marcocipriani01.telescopetouch.activities.util.ActivityLightLevelManager;
+import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
 import io.github.marcocipriani01.telescopetouch.gallery.GalleryFactory;
 import io.github.marcocipriani01.telescopetouch.gallery.GalleryImage;
 
@@ -48,12 +47,14 @@ public class ImageDisplayActivity extends InjectableActivity {
     private static final String TAG = TelescopeTouchApp.getTag(ImageDisplayActivity.class);
     private static final int ERROR_MAGIC_NUMBER = -1;
     private GalleryImage selectedImage;
-    private ActivityLightLevelManager activityLightLevelManager;
+    private DarkerModeManager darkerModeManager;
 
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         getApplicationComponent().inject(this);
+        darkerModeManager = new DarkerModeManager(getWindow(), null, PreferenceManager.getDefaultSharedPreferences(this));
+        setTheme(darkerModeManager.getPref() ? R.style.DarkerAppTheme : R.style.AppTheme);
         setContentView(R.layout.activity_gallery_image);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -61,9 +62,6 @@ public class ImageDisplayActivity extends InjectableActivity {
             actionBar.setDisplayShowHomeEnabled(true);
         }
 
-        activityLightLevelManager = new ActivityLightLevelManager(
-                new ActivityLightLevelChanger(this, null),
-                PreferenceManager.getDefaultSharedPreferences(this));
         Intent intent = getIntent();
         Log.d(TAG, intent.toString());
         int position = intent.getIntExtra(ImageGalleryActivity.IMAGE_ID, ERROR_MAGIC_NUMBER);
@@ -114,13 +112,13 @@ public class ImageDisplayActivity extends InjectableActivity {
     @Override
     public void onResume() {
         super.onResume();
-        activityLightLevelManager.onResume();
+        darkerModeManager.start();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        activityLightLevelManager.onPause();
+        darkerModeManager.stop();
     }
 
     @Override

@@ -48,6 +48,7 @@ import java.util.Objects;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.util.ActionFragment;
+import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
 import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
 
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
@@ -59,7 +60,7 @@ import static io.github.marcocipriani01.telescopetouch.activities.BLOBViewerFrag
  * @author marcocipriani01
  */
 public class MainActivity extends AppCompatActivity implements
-        NavigationView.OnNavigationItemSelectedListener, Toolbar.OnMenuItemClickListener,
+        NavigationView.OnNavigationItemSelectedListener, Toolbar.OnMenuItemClickListener, DarkerModeManager.NightModeListener,
         ActionFragment.ActionListener, ConnectionManager.ManagerListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     public static final String ACTION = "MainActivityAction";
@@ -74,12 +75,17 @@ public class MainActivity extends AppCompatActivity implements
     private boolean visible = false;
     private boolean doubleBackPressed = false;
     private MenuItem rcvBlobMenuItem;
+    private DarkerModeManager darkerModeManager;
+    private boolean darkerMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        darkerModeManager = new DarkerModeManager(getWindow(), this, preferences);
+        darkerMode = darkerModeManager.getPref();
+        setTheme(darkerMode ? R.style.DarkerAppThemeNoActionBar : R.style.AppThemeNoActionBar);
+        setContentView(R.layout.activity_main);
         mainCoordinator = findViewById(R.id.main_coordinator);
         fab = findViewById(R.id.main_fab);
         fab.setOnClickListener(v -> {
@@ -90,7 +96,8 @@ public class MainActivity extends AppCompatActivity implements
         BottomAppBar bottomBar = findViewById(R.id.bottom_app_bar);
         setSupportActionBar(bottomBar);
         bottomBar.setOnMenuItemClickListener(this);
-        bottomBar.setNavigationOnClickListener(v -> new MainBottomNavigation(this).show());
+        MainBottomNavigation bottomNavigation = new MainBottomNavigation(this);
+        bottomBar.setNavigationOnClickListener(v -> bottomNavigation.show());
         intentAndFragment(getIntent());
     }
 
@@ -127,15 +134,17 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        visible = false;
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         visible = true;
+        darkerModeManager.start();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        visible = false;
+        darkerModeManager.stop();
     }
 
     @Override
@@ -143,6 +152,7 @@ public class MainActivity extends AppCompatActivity implements
         getMenuInflater().inflate(R.menu.main, menu);
         rcvBlobMenuItem = menu.findItem(R.id.menu_enable_rcv_blob);
         rcvBlobMenuItem.setChecked(preferences.getBoolean(RECEIVE_BLOB_PREF, false));
+        menu.findItem(R.id.menu_darker_mode).setIcon(darkerMode ? R.drawable.light_mode : R.drawable.darker_mode);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -183,6 +193,8 @@ public class MainActivity extends AppCompatActivity implements
             connectionManager.setBlobEnabled(checked);
             preferences.edit().putBoolean(RECEIVE_BLOB_PREF, checked).apply();
             return true;
+        } else if (itemId == R.id.menu_darker_mode) {
+            darkerModeManager.toggle();
         } else if (currentPage.lastInstance instanceof Toolbar.OnMenuItemClickListener) {
             ((Toolbar.OnMenuItemClickListener) currentPage.lastInstance).onMenuItemClick(item);
         }
@@ -265,6 +277,11 @@ public class MainActivity extends AppCompatActivity implements
                 if (visible && (fragmentManager != null)) showFragment(Pages.CONNECTION, true);
             }
         });
+    }
+
+    @Override
+    public void setNightMode(boolean nightMode) {
+        if (nightMode != this.darkerMode) recreate();
     }
 
     /**

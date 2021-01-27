@@ -35,8 +35,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.activities.util.ActivityLightLevelChanger;
-import io.github.marcocipriani01.telescopetouch.activities.util.ActivityLightLevelManager;
+import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
 import io.github.marcocipriani01.telescopetouch.gallery.GalleryFactory;
 import io.github.marcocipriani01.telescopetouch.gallery.GalleryImage;
 
@@ -54,16 +53,15 @@ public class ImageGalleryActivity extends InjectableActivity {
     public static final String IMAGE_ID = "image_id";
 
     private List<GalleryImage> galleryImages;
-    private ActivityLightLevelManager activityLightLevelManager;
+    private DarkerModeManager darkerModeManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getApplicationComponent().inject(this);
+        darkerModeManager = new DarkerModeManager(getWindow(), null, PreferenceManager.getDefaultSharedPreferences(this));
+        setTheme(darkerModeManager.getPref() ? R.style.DarkerAppTheme : R.style.AppTheme);
         setContentView(R.layout.activity_gallery);
-        activityLightLevelManager = new ActivityLightLevelManager(
-                new ActivityLightLevelChanger(this, null),
-                PreferenceManager.getDefaultSharedPreferences(this));
         this.galleryImages = GalleryFactory.getGallery(getResources()).getGalleryImages();
         addImagesToGallery();
 
@@ -82,13 +80,13 @@ public class ImageGalleryActivity extends InjectableActivity {
     @Override
     public void onResume() {
         super.onResume();
-        activityLightLevelManager.onResume();
+        darkerModeManager.start();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        activityLightLevelManager.onPause();
+        darkerModeManager.stop();
     }
 
     @Override
