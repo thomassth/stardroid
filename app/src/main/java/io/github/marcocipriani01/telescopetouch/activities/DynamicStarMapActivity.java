@@ -147,17 +147,15 @@ public class DynamicStarMapActivity extends InjectableActivity
     @Override
     @SuppressWarnings("deprecation")
     public void onCreate(Bundle icicle) {
-        Log.d(TAG, "onCreate at " + System.currentTimeMillis());
         super.onCreate(icicle);
-
         daggerComponent = DaggerDynamicStarMapComponent.builder()
                 .applicationComponent(getApplicationComponent())
                 .dynamicStarMapModule(new DynamicStarMapModule(this)).build();
         daggerComponent.inject(this);
-
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
         // Set up full screen mode, hide the system UI etc.
+        // TODO test the commented code on Android 11
         Window window = getWindow();
         //if (Build.VERSION.SDK_INT < 30) {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
@@ -182,10 +180,11 @@ public class DynamicStarMapActivity extends InjectableActivity
         darkerModeManager = new DarkerModeManager(
                 window, b -> this.rendererController.queueNightVisionMode(b), sharedPreferences);
 
-        String intentAction = getIntent().getAction();
+        Intent intent = getIntent();
+        String intentAction = intent.getAction();
+        isSkyMapOnly = ((intentAction != null) && (intentAction.equals(SKY_MAP_INTENT_ACTION)));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            isSkyMapOnly = ((intentAction != null) && (intentAction.equals(SKY_MAP_INTENT_ACTION)));
             actionBar.setDisplayHomeAsUpEnabled(!isSkyMapOnly);
             actionBar.setDisplayShowHomeEnabled(!isSkyMapOnly);
         }
@@ -197,24 +196,21 @@ public class DynamicStarMapActivity extends InjectableActivity
             }
         });
         this.<Button>findViewById(R.id.search_in_database).setOnClickListener(v -> {
-            Intent intent = new Intent(DynamicStarMapActivity.this, MainActivity.class);
+            Intent mainActivityIntent = new Intent(DynamicStarMapActivity.this, MainActivity.class);
             if (TelescopeTouchApp.connectionManager.isConnected()) {
                 GoToFragment.setRequestedSearch(searchTargetName);
-                intent.putExtra(MainActivity.ACTION, MainActivity.ACTION_SEARCH);
+                mainActivityIntent.putExtra(MainActivity.ACTION, MainActivity.ACTION_SEARCH);
             } else {
-                intent.putExtra(MainActivity.ACTION, MainActivity.ACTION_CONNECT);
+                mainActivityIntent.putExtra(MainActivity.ACTION, MainActivity.ACTION_CONNECT);
+                // TODO from toast to snackbar in mainactivity
                 Toast.makeText(DynamicStarMapActivity.this, R.string.connect_telescope_first, Toast.LENGTH_SHORT).show();
             }
-            startActivity(intent);
+            startActivity(mainActivityIntent);
         });
 
         // Were we started as the result of a search?
-        Intent intent = getIntent();
-        Log.d(TAG, "Intent received: " + intent);
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            Log.d(TAG, "Started as a result of a search");
+        if (Intent.ACTION_SEARCH.equals(intent.getAction()))
             doSearchWithIntent(intent);
-        }
     }
 
     private void checkForSensorsAndMaybeWarn() {
@@ -440,9 +436,7 @@ public class DynamicStarMapActivity extends InjectableActivity
 
     private void doSearchWithIntent(Intent searchIntent) {
         // If we're already in search mode, cancel it.
-        if (searchMode) {
-            cancelSearch();
-        }
+        if (searchMode) cancelSearch();
         Log.d(TAG, "Performing Search");
         final String queryString = searchIntent.getStringExtra(SearchManager.QUERY);
         searchMode = true;
@@ -541,7 +535,7 @@ public class DynamicStarMapActivity extends InjectableActivity
             timeTravelSpeedLabel.setText(controller.getCurrentSpeedTag());
         });
 
-        Runnable displayUpdater = new Runnable() {
+        onResumeRunnables.add(new Runnable() {
             private final TextView timeTravelTimeReadout = findViewById(R.id.time_travel_time_readout);
             private final TextView timeTravelStatusLabel = findViewById(R.id.time_travel_status_label);
             private final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy.MM.dd G  HH:mm:ss z");
@@ -560,8 +554,7 @@ public class DynamicStarMapActivity extends InjectableActivity
                 timeTravelSpeedLabel.setText(controller.getCurrentSpeedTag());
                 handler.postDelayed(this, TIME_DISPLAY_DELAY_MILLIS);
             }
-        };
-        onResumeRunnables.add(displayUpdater);
+        });
     }
 
     private void setAutoMode(boolean auto) {

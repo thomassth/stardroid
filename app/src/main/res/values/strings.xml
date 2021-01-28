@@ -587,4 +587,6 @@
     <string name="select_host_first">Please, select a host first.</string>
     <string name="database_filter">Database filter</string>
     <string name="compass_not_available">Compass not available!</string>
+    <string name="red_screen_light">Red screen light</string>
+    <string name="flashlight_unavailable">Flashlight unavailable</string>
 </resources>

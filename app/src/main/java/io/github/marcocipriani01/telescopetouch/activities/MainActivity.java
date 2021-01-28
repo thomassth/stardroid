@@ -297,6 +297,7 @@ public class MainActivity extends AppCompatActivity implements
         SKY_MAP(R.id.menu_skymap),
         SKY_MAP_GALLERY(R.id.menu_skymap_gallery),
         COMPASS(R.id.menu_compass),
+        FLASHLIGHT(R.id.menu_flashlight),
         ABOUT(R.id.menu_about);
 
         private final int itemId;
@@ -335,6 +336,9 @@ public class MainActivity extends AppCompatActivity implements
                     break;
                 case COMPASS:
                     lastInstance = new CompassFragment();
+                    break;
+                case FLASHLIGHT:
+                    lastInstance = new FlashlightFragment();
                     break;
                 case ABOUT:
                     lastInstance = new AboutFragment();

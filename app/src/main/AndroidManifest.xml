@@ -37,6 +37,7 @@
     <uses-feature
         android:name="android.hardware.touchscreen.multitouch.distinct"
         android:required="false" />
+    <uses-feature android:name="android.hardware.camera.flash" />
 
     <application
         android:name=".TelescopeTouchApp"
@@ -117,8 +118,8 @@
         <activity
             android:name=".activities.CompassCalibrationActivity"
             android:label="@string/menu_calibrate"
-            android:screenOrientation="userPortrait"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:screenOrientation="userPortrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.DynamicStarMapActivity" />
@@ -131,6 +132,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
         </activity>
+        <activity
+            android:name=".activities.ScreenLightActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="Tap screen to exit"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
 
         <provider
             android:name=".search.SearchTermsProvider"
