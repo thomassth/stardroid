@@ -55,6 +55,11 @@
             android:id="@+id/menu_compass"
             android:icon="@drawable/compass"
             android:title="@string/compass" />
+
+        <item
+            android:id="@+id/menu_flashlight"
+            android:icon="@drawable/flashlight"
+            android:title="Flashlight" />
     </group>
 
     <group

@@ -16,7 +16,6 @@
 
 package io.github.marcocipriani01.telescopetouch.activities;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,13 +31,6 @@ import io.github.marcocipriani01.telescopetouch.views.CompassHelper;
 public class CompassFragment extends ActionFragment {
 
     private CompassHelper compass;
-    private Context context;
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        this.context = context;
-    }
 
     @Nullable
     @Override
