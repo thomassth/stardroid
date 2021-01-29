@@ -25,6 +25,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -36,7 +37,8 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
 import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -51,7 +53,6 @@ import androidx.fragment.app.FragmentManager;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -154,25 +155,25 @@ public class DynamicStarMapActivity extends InjectableActivity
         daggerComponent.inject(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
-        // Set up full screen mode, hide the system UI etc.
-        // TODO test the commented code on Android 11
-        Window window = getWindow();
-        //if (Build.VERSION.SDK_INT < 30) {
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN |
-                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE);
-        //} else {
-        //    window.setDecorFitsSystemWindows(false);
-        //    WindowInsetsController controller = window.getInsetsController();
-        //    if (controller != null) {
-        //        controller.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
-        //        controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
-        //    }
-        //}
-
         initializeModelViewController();
         checkForSensorsAndMaybeWarn();
+
+        Window window = getWindow();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE);
+        } else {
+            window.setDecorFitsSystemWindows(false);
+            WindowInsetsController controller = window.getInsetsController();
+            if (controller != null) {
+                controller.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
+                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+            }
+        }
 
         // Search related
         setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
@@ -181,7 +182,7 @@ public class DynamicStarMapActivity extends InjectableActivity
                 window, b -> this.rendererController.queueNightVisionMode(b), sharedPreferences);
 
         Intent intent = getIntent();
-        String intentAction = intent.getAction();
+        String intentAction = intent.getAction(); //TODO duplicate
         isSkyMapOnly = ((intentAction != null) && (intentAction.equals(SKY_MAP_INTENT_ACTION)));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -248,7 +249,7 @@ public class DynamicStarMapActivity extends InjectableActivity
         // created, to briefly hint to the user that UI controls
         // are available.
         if (fullscreenControlsManager != null) {
-            fullscreenControlsManager.flashTheControls();
+            fullscreenControlsManager.flashControls();
         }
     }
 
@@ -300,7 +301,7 @@ public class DynamicStarMapActivity extends InjectableActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
-        fullscreenControlsManager.delayHideTheControls();
+        fullscreenControlsManager.delayedHide();
         int itemId = item.getItemId();
         if (itemId == android.R.id.home) {
             onBackPressed();
@@ -371,9 +372,7 @@ public class DynamicStarMapActivity extends InjectableActivity
     public void setNormalTimeModel() {
         flashTheScreen();
         controller.useRealTime();
-        Toast.makeText(this,
-                R.string.time_travel_close_message,
-                Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.time_travel_close_message, Toast.LENGTH_SHORT).show();
         Log.d(TAG, "Leaving Time Travel mode.");
         timePlayerUI.setVisibility(View.GONE);
     }
@@ -487,21 +486,16 @@ public class DynamicStarMapActivity extends InjectableActivity
         cancelSearchButton.setOnClickListener(v1 -> cancelSearch());
 
         ButtonLayerView providerButtons = findViewById(R.id.layer_buttons_control);
-
         int numChildren = providerButtons.getChildCount();
-        List<View> buttonViews = new ArrayList<>();
-        for (int i = 0; i < numChildren; ++i) {
-            ImageButton button = (ImageButton) providerButtons.getChildAt(i);
-            buttonViews.add(button);
+        View[] buttonViews = new View[numChildren + 1];
+        for (int i = 0; i < numChildren; i++) {
+            buttonViews[i] = (ImageButton) providerButtons.getChildAt(i);
         }
-        buttonViews.add(findViewById(R.id.manual_auto_toggle));
-        ButtonLayerView manualButtonLayer = findViewById(R.id.layer_manual_auto_toggle);
-
-        fullscreenControlsManager = new FullscreenControlsManager(this, findViewById(R.id.main_sky_view),
-                Arrays.asList(manualButtonLayer, providerButtons), buttonViews);
+        buttonViews[numChildren] = findViewById(R.id.manual_auto_toggle);
+        fullscreenControlsManager = new FullscreenControlsManager(this,
+                new View[]{this.<ButtonLayerView>findViewById(R.id.layer_manual_auto_toggle), providerButtons}, buttonViews);
 
         MapMover mapMover = new MapMover(model, controller, this);
-
         gestureDetector = new GestureDetector(this, new GestureInterpreter(fullscreenControlsManager, mapMover));
         dragZoomRotateDetector = new DragRotateZoomGestureDetector(mapMover);
 
