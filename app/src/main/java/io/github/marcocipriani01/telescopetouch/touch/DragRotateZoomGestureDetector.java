@@ -27,6 +27,7 @@ import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
  * @author John Taylor
  */
 public class DragRotateZoomGestureDetector {
+
     private static final String TAG = TelescopeTouchApp.getTag(DragRotateZoomGestureDetector.class);
     private final DragRotateZoomGestureDetectorListener listener;
     private State currentState = State.READY;
@@ -126,8 +127,7 @@ public class DragRotateZoomGestureDetector {
             // Log.d(TAG, "Previous vector: " + vectorBeforeX + ", " + vectorBeforeY);
             // Log.d(TAG, "Current vector: " + vectorCurrentX + ", " + vectorCurrentY);
 
-            float lengthRatio = (float) Math.sqrt(normSquared(vectorCurrentX, vectorCurrentY)
-                    / normSquared(vectorLastX, vectorLastY));
+            float lengthRatio = (float) Math.sqrt(normSquared(vectorCurrentX, vectorCurrentY) / normSquared(vectorLastX, vectorLastY));
             // Log.d(TAG, "Stretching map by ratio " + ratio);
             listener.onStretch(lengthRatio);
             float angleLast = (float) Math.atan2(vectorLastX, vectorLastY);
@@ -145,7 +145,7 @@ public class DragRotateZoomGestureDetector {
             return true;
         }
 
-        if (actionCode == MotionEvent.ACTION_UP && currentState != State.READY) {
+        if (actionCode == MotionEvent.ACTION_UP) {
             // Log.d(TAG, "Up");
             currentState = State.READY;
             return true;
@@ -186,10 +186,10 @@ public class DragRotateZoomGestureDetector {
      * @author John Taylor
      */
     public interface DragRotateZoomGestureDetectorListener {
-        boolean onDrag(float xPixels, float yPixels);
+        void onDrag(float xPixels, float yPixels);
 
-        boolean onStretch(float ratio);
+        void onStretch(float ratio);
 
-        boolean onRotate(float radians);
+        void onRotate(float radians);
     }
 }

@@ -41,8 +41,7 @@ public class ControllerGroup implements Controller {
     private final ManualOrientationController manualDirectionController;
     private final SensorOrientationController sensorOrientationController;
     private final TimeTravelClock timeTravelClock = new TimeTravelClock();
-    private final TransitioningCompositeClock transitioningClock = new TransitioningCompositeClock(
-            timeTravelClock, new RealClock());
+    private final TransitioningCompositeClock transitioningClock = new TransitioningCompositeClock(timeTravelClock, new RealClock());
     private final TeleportingController teleportingController;
     private boolean usingAutoMode = true;
     private AstronomerModel model;

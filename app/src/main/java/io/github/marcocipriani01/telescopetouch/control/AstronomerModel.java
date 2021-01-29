@@ -85,17 +85,7 @@ public interface AstronomerModel {
     Vector3 getPhoneUpDirection();
 
     /**
-     * Sets the acceleration and magnetic field in the phone frame.
-     *
-     * <p>The phone frame has x along the short side of the phone increasing to
-     * the right, y along the long side increasing towards the top of the phone,
-     * and z coming perpendicularly out of the phone increasing towards the user.
-     */
-    void setPhoneSensorValues(Vector3 acceleration, Vector3 magneticField);
-
-    /**
      * Sets the phone's rotation vector from the fused gyro/mag field/accelerometer.
-     * Alternative to {@link #setPhoneSensorValues(Vector3, Vector3)}
      */
     void setPhoneSensorValues(float[] rotationVector);
 

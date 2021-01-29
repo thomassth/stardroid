@@ -17,16 +17,13 @@
 package io.github.marcocipriani01.telescopetouch.control;
 
 import android.hardware.SensorManager;
-import android.util.Log;
 
 import java.util.Calendar;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.LatLong;
 import io.github.marcocipriani01.telescopetouch.units.Matrix33;
-import io.github.marcocipriani01.telescopetouch.units.RaDec;
 import io.github.marcocipriani01.telescopetouch.units.Vector3;
 import io.github.marcocipriani01.telescopetouch.util.Geometry;
 
@@ -67,13 +64,11 @@ import io.github.marcocipriani01.telescopetouch.util.Geometry;
  */
 public class AstronomerModelImpl implements AstronomerModel {
 
-    private static final String TAG = TelescopeTouchApp.getTag(AstronomerModelImpl.class);
     private static final Vector3 POINTING_DIR_IN_PHONE_COORDS = new Vector3(0, 0, -1);
     private static final Vector3 SCREEN_UP_IN_PHONE_COORDS = new Vector3(0, 1, 0);
     private static final Vector3 SCREEN_DOWN_IN_PHONE_COORDS = new Vector3(1, 0, 0);
     private static final Vector3 AXIS_OF_EARTHS_ROTATION = new Vector3(0, 0, 1);
     private static final long MINIMUM_TIME_BETWEEN_CELESTIAL_COORD_UPDATES_MILLIS = 60000L;
-    private static final float TOL = 0.01f;
     /**
      * The pointing comprises a vector into the phone's screen expressed in
      * celestial coordinates combined with a perpendicular vector along the
@@ -92,7 +87,7 @@ public class AstronomerModelImpl implements AstronomerModel {
     private Vector3 screenInPhoneCoords = SCREEN_UP_IN_PHONE_COORDS;
     private MagneticDeclinationCalculator magneticDeclinationCalculator;
     private boolean autoUpdatePointing = true;
-    private float fieldOfView = 45;  // Degrees
+    private float fieldOfView = 70.0f;  // Degrees
     private LatLong location = new LatLong(0f, 0f);
     private Clock clock = new RealClock();
     private long celestialCoordsLastUpdated = -1;
@@ -180,23 +175,9 @@ public class AstronomerModelImpl implements AstronomerModel {
     }
 
     @Override
-    public void setPhoneSensorValues(Vector3 acceleration, Vector3 magneticField) {
-        if (magneticField.length2() < TOL || acceleration.length2() < TOL) {
-            Log.w(TAG, "Invalid sensor values - ignoring");
-            Log.w(TAG, "Mag: " + magneticField);
-            Log.w(TAG, "Accel: " + acceleration);
-            return;
-        }
-        this.acceleration.assign(acceleration);
-        this.magneticField.assign(magneticField);
-        useRotationVector = false;
-    }
-
-    @Override
     public void setPhoneSensorValues(float[] rotationVector) {
         // TODO(jontayler): What checks do we need for this to be valid?
-        // Note on some phones such as the Galaxy S4 this vector is the wrong size and needs to be
-        // truncated to 4.
+        // Note on some phones such as the Galaxy S4 this vector is the wrong size and needs to be truncated to 4.
         System.arraycopy(rotationVector, 0, this.rotationVector, 0, Math.min(rotationVector.length, 4));
         useRotationVector = true;
     }
@@ -210,8 +191,7 @@ public class AstronomerModelImpl implements AstronomerModel {
     @Override
     public GeocentricCoordinates getSouth() {
         calculateLocalNorthAndUpInCelestialCoords(false);
-        return GeocentricCoordinates.getInstanceFromVector3(Geometry.scaleVector(trueNorthCelestial,
-                -1));
+        return GeocentricCoordinates.getInstanceFromVector3(Geometry.scaleVector(trueNorthCelestial, -1));
     }
 
     @Override
@@ -235,8 +215,7 @@ public class AstronomerModelImpl implements AstronomerModel {
     @Override
     public GeocentricCoordinates getWest() {
         calculateLocalNorthAndUpInCelestialCoords(false);
-        return GeocentricCoordinates.getInstanceFromVector3(Geometry.scaleVector(trueEastCelestial,
-                -1));
+        return GeocentricCoordinates.getInstanceFromVector3(Geometry.scaleVector(trueEastCelestial, -1));
     }
 
     @Override
@@ -254,20 +233,18 @@ public class AstronomerModelImpl implements AstronomerModel {
      * {@link #axesPhoneInverseMatrix} are currently up to date.
      */
     private void calculatePointing() {
-        if (!autoUpdatePointing) {
-            return;
+        if (autoUpdatePointing) {
+            calculateLocalNorthAndUpInCelestialCoords(false);
+            calculateLocalNorthAndUpInPhoneCoordsFromSensors();
+
+            Matrix33 transform = Geometry.matrixMultiply(axesMagneticCelestialMatrix, axesPhoneInverseMatrix);
+
+            Vector3 viewInSpaceSpace = Geometry.matrixVectorMultiply(transform, POINTING_DIR_IN_PHONE_COORDS);
+            Vector3 screenUpInSpaceSpace = Geometry.matrixVectorMultiply(transform, screenInPhoneCoords);
+
+            pointing.updateLineOfSight(viewInSpaceSpace);
+            pointing.updatePerpendicular(screenUpInSpaceSpace);
         }
-
-        calculateLocalNorthAndUpInCelestialCoords(false);
-        calculateLocalNorthAndUpInPhoneCoordsFromSensors();
-
-        Matrix33 transform = Geometry.matrixMultiply(axesMagneticCelestialMatrix, axesPhoneInverseMatrix);
-
-        Vector3 viewInSpaceSpace = Geometry.matrixVectorMultiply(transform, POINTING_DIR_IN_PHONE_COORDS);
-        Vector3 screenUpInSpaceSpace = Geometry.matrixVectorMultiply(transform, screenInPhoneCoords);
-
-        pointing.updateLineOfSight(viewInSpaceSpace);
-        pointing.updatePerpendicular(screenUpInSpaceSpace);
     }
 
     /**
@@ -277,33 +254,23 @@ public class AstronomerModelImpl implements AstronomerModel {
     private void calculateLocalNorthAndUpInCelestialCoords(boolean forceUpdate) {
         long currentTime = clock.getTimeInMillisSinceEpoch();
         if (!forceUpdate &&
-                Math.abs(currentTime - celestialCoordsLastUpdated) <
-                        MINIMUM_TIME_BETWEEN_CELESTIAL_COORD_UPDATES_MILLIS) {
+                Math.abs(currentTime - celestialCoordsLastUpdated) < MINIMUM_TIME_BETWEEN_CELESTIAL_COORD_UPDATES_MILLIS)
             return;
-        }
         celestialCoordsLastUpdated = currentTime;
         updateMagneticCorrection();
-        RaDec up = Geometry.calculateRADecOfZenith(getTime(), location);
-        upCelestial = GeocentricCoordinates.getInstance(up);
+        upCelestial = GeocentricCoordinates.getInstance(Geometry.calculateRADecOfZenith(getTime(), location));
         Vector3 z = AXIS_OF_EARTHS_ROTATION;
-        float zDotu = Geometry.scalarProduct(upCelestial, z);
-        trueNorthCelestial = Geometry.addVectors(z, Geometry.scaleVector(upCelestial, -zDotu));
+        trueNorthCelestial = Geometry.addVectors(z, Geometry.scaleVector(upCelestial, -Geometry.scalarProduct(upCelestial, z)));
         trueNorthCelestial.normalize();
         trueEastCelestial = Geometry.vectorProduct(trueNorthCelestial, upCelestial);
 
         // Apply magnetic correction.  Rather than correct the phone's axes for
         // the magnetic declination, it's more efficient to rotate the
         // celestial axes by the same amount in the opposite direction.
-        Matrix33 rotationMatrix = Geometry.calculateRotationMatrix(
-                magneticDeclinationCalculator.getDeclination(), upCelestial);
-
-        Vector3 magneticNorthCelestial = Geometry.matrixVectorMultiply(rotationMatrix,
-                trueNorthCelestial);
+        Matrix33 rotationMatrix = Geometry.calculateRotationMatrix(magneticDeclinationCalculator.getDeclination(), upCelestial);
+        Vector3 magneticNorthCelestial = Geometry.matrixVectorMultiply(rotationMatrix, trueNorthCelestial);
         Vector3 magneticEastCelestial = Geometry.vectorProduct(magneticNorthCelestial, upCelestial);
-
-        axesMagneticCelestialMatrix = new Matrix33(magneticNorthCelestial,
-                upCelestial,
-                magneticEastCelestial);
+        axesMagneticCelestialMatrix = new Matrix33(magneticNorthCelestial, upCelestial, magneticEastCelestial);
     }
 
     // TODO(jontayler): with the switch to using the rotation vector sensor this is rather
