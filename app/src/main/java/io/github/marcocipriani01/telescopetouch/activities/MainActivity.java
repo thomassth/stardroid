@@ -48,6 +48,7 @@ import java.util.Objects;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.AboutFragment;
+import io.github.marcocipriani01.telescopetouch.activities.fragments.ActionFragment;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.BLOBViewerFragment;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.CompassFragment;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.ConnectionFragment;
@@ -56,7 +57,6 @@ import io.github.marcocipriani01.telescopetouch.activities.fragments.FlashlightF
 import io.github.marcocipriani01.telescopetouch.activities.fragments.FocuserFragment;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.GoToFragment;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.MountControlFragment;
-import io.github.marcocipriani01.telescopetouch.activities.fragments.ActionFragment;
 import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
 import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
 
@@ -362,6 +362,7 @@ public class MainActivity extends AppCompatActivity implements
     public static class MainBottomNavigation extends BottomSheetDialog {
 
         private final NavigationView.OnNavigationItemSelectedListener listener;
+        private Menu navigationMenu;
 
         public MainBottomNavigation(@NonNull MainActivity activity) {
             super(activity);
@@ -379,7 +380,22 @@ public class MainActivity extends AppCompatActivity implements
                 dismiss();
                 return listener.onNavigationItemSelected(item);
             });
-            navigation.getMenu().findItem(currentPage.itemId).setChecked(true);
+            navigationMenu = navigation.getMenu();
+            selectNavItem();
+        }
+
+        @Override
+        public void show() {
+            if (navigationMenu != null)
+                selectNavItem();
+            super.show();
+        }
+
+        private void selectNavItem() {
+            for (int i = 0; i < navigationMenu.size(); i++) {
+                MenuItem item = navigationMenu.getItem(i);
+                item.setChecked(currentPage.itemId == item.getItemId());
+            }
         }
     }
 
