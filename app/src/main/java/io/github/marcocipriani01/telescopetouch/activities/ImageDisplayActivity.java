@@ -33,9 +33,9 @@ import androidx.preference.PreferenceManager;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
+import io.github.marcocipriani01.telescopetouch.activities.fragments.GoToFragment;
 import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
-import io.github.marcocipriani01.telescopetouch.gallery.GalleryFactory;
-import io.github.marcocipriani01.telescopetouch.gallery.GalleryImage;
+import io.github.marcocipriani01.telescopetouch.gallery.GalleryImages;
 
 /**
  * Shows an image to the user and allows them to search for it.
@@ -46,7 +46,7 @@ public class ImageDisplayActivity extends InjectableActivity {
 
     private static final String TAG = TelescopeTouchApp.getTag(ImageDisplayActivity.class);
     private static final int ERROR_MAGIC_NUMBER = -1;
-    private GalleryImage selectedImage;
+    private GalleryImages selectedImage;
     private DarkerModeManager darkerModeManager;
 
     @Override
@@ -70,9 +70,9 @@ public class ImageDisplayActivity extends InjectableActivity {
             finish();
         }
 
-        selectedImage = GalleryFactory.getGallery(getResources()).getGalleryImages().get(position);
-        this.<ImageView>findViewById(R.id.gallery_image).setImageResource(selectedImage.imageId);
-        this.<TextView>findViewById(R.id.gallery_image_title).setText(selectedImage.name);
+        selectedImage = GalleryImages.values()[position];
+        this.<ImageView>findViewById(R.id.gallery_image).setImageResource(selectedImage.getImageId());
+        this.<TextView>findViewById(R.id.gallery_image_title).setText(selectedImage.getName(this));
         this.<Button>findViewById(R.id.gallery_image_search_btn).setOnClickListener(source -> {
             Log.d(TAG, "Do Search");
             // We must ensure that all the relevant layers are actually visible or the search might
@@ -90,11 +90,11 @@ public class ImageDisplayActivity extends InjectableActivity {
             editor.apply();
             Intent queryIntent = new Intent(this, DynamicStarMapActivity.class);
             queryIntent.setAction(Intent.ACTION_SEARCH);
-            queryIntent.putExtra(SearchManager.QUERY, selectedImage.searchTerm);
+            queryIntent.putExtra(SearchManager.QUERY, selectedImage.getSearchTerm(this));
             startActivity(queryIntent);
         });
         Button gotoButton = this.findViewById(R.id.gallery_point_telescope);
-        String gotoName = selectedImage.getGotoName();
+        String gotoName = selectedImage.getGotoName(this);
         gotoButton.setEnabled(!gotoName.equals("?"));
         gotoButton.setOnClickListener(source -> {
             Intent gotoIntent = new Intent(this, MainActivity.class);

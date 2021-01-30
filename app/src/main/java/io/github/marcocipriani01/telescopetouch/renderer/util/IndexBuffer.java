@@ -24,6 +24,7 @@ import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
 public class IndexBuffer {
+
     private final GLBuffer mGLBuffer = new GLBuffer(GL11.GL_ELEMENT_ARRAY_BUFFER);
     private ShortBuffer mIndexBuffer = null;
     private int mNumIndices = 0;

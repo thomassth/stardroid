@@ -45,9 +45,9 @@ import javax.inject.Inject;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.DynamicStarMapActivity;
-import io.github.marcocipriani01.telescopetouch.ephemeris.Planet;
+import io.github.marcocipriani01.telescopetouch.astronomy.Planet;
 import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
-import io.github.marcocipriani01.telescopetouch.util.AstroTimeUtils;
+import io.github.marcocipriani01.telescopetouch.util.TimeUtils;
 
 /**
  * Time travel dialog fragment.
@@ -177,7 +177,7 @@ public class TimeTravelDialogFragment extends DialogFragment {
         if (riseSet == null) {
             Toast.makeText(this.getContext(), R.string.sun_wont_set_message, Toast.LENGTH_SHORT).show();
         } else {
-            Log.d(TAG, "Sun rise or set is at: " + AstroTimeUtils.normalizeHours(
+            Log.d(TAG, "Sun rise or set is at: " + TimeUtils.normalizeHours(
                     riseSet.get(Calendar.HOUR_OF_DAY)) + ":" + riseSet.get(Calendar.MINUTE));
             setDate(riseSet);
         }

@@ -65,6 +65,7 @@ import io.github.marcocipriani01.telescopetouch.activities.dialogs.MultipleSearc
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.NoSearchResultsDialogFragment;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.NoSensorsDialogFragment;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.TimeTravelDialogFragment;
+import io.github.marcocipriani01.telescopetouch.activities.fragments.GoToFragment;
 import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
 import io.github.marcocipriani01.telescopetouch.activities.util.FullscreenControlsManager;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
@@ -81,7 +82,7 @@ import io.github.marcocipriani01.telescopetouch.touch.MapMover;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.Vector3;
 import io.github.marcocipriani01.telescopetouch.util.SensorAccuracyMonitor;
-import io.github.marcocipriani01.telescopetouch.views.ButtonLayerView;
+import io.github.marcocipriani01.telescopetouch.activities.views.ButtonLayerView;
 
 /**
  * The main map-rendering Activity.

@@ -32,6 +32,7 @@ import javax.microedition.khronos.opengles.GL11;
  * @author jpowell
  */
 public class GLBuffer {
+
     // TODO(jpowell): This is ugly, we should have a buffer factory which knows
     // this rather than a static constant.  I should refactor this accordingly
     // when I get a chance.

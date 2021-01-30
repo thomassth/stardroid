@@ -116,7 +116,7 @@ public class Geometry {
      */
     public static RaDec calculateRADecOfZenith(Calendar utc, LatLong location) {
         // compute overhead RA in degrees
-        float my_ra = (float) AstroTimeUtils.meanSiderealTime(utc, location.getLongitude());
+        float my_ra = (float) TimeUtils.meanSiderealTime(utc, location.getLongitude());
         float my_dec = location.getLatitude();
         return new RaDec(my_ra, my_dec);
     }

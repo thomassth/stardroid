@@ -23,8 +23,8 @@ import java.util.ArrayList;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
-import io.github.marcocipriani01.telescopetouch.ephemeris.Planet;
-import io.github.marcocipriani01.telescopetouch.ephemeris.PlanetSource;
+import io.github.marcocipriani01.telescopetouch.astronomy.Planet;
+import io.github.marcocipriani01.telescopetouch.astronomy.PlanetSource;
 import io.github.marcocipriani01.telescopetouch.source.AstronomicalSource;
 
 /**

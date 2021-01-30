@@ -28,12 +28,12 @@ import java.util.concurrent.locks.ReentrantLock;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
-import io.github.marcocipriani01.telescopetouch.ephemeris.SolarPositionCalculator;
+import io.github.marcocipriani01.telescopetouch.astronomy.SolarPositionCalculator;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererController;
 import io.github.marcocipriani01.telescopetouch.search.SearchResult;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.RaDec;
-import io.github.marcocipriani01.telescopetouch.util.AstroTimeUtils;
+import io.github.marcocipriani01.telescopetouch.util.TimeUtils;
 
 /**
  * If enabled, keeps the sky gradient up to date.
@@ -44,7 +44,7 @@ import io.github.marcocipriani01.telescopetouch.util.AstroTimeUtils;
 public class SkyGradientLayer implements Layer {
 
     private static final String TAG = TelescopeTouchApp.getTag(SkyGradientLayer.class);
-    private static final long UPDATE_FREQUENCY_MS = 5L * AstroTimeUtils.MILLISECONDS_PER_MINUTE;
+    private static final long UPDATE_FREQUENCY_MS = 5L * TimeUtils.MILLISECONDS_PER_MINUTE;
 
     private final ReentrantLock rendererLock = new ReentrantLock();
     private final AstronomerModel model;

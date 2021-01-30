@@ -31,6 +31,7 @@ import javax.microedition.khronos.opengles.GL10;
 import io.github.marcocipriani01.telescopetouch.util.FixedPoint;
 
 public class LabelMaker {
+
     private final int mStrikeWidth;
     private final boolean mFullColor;
     private int mStrikeHeight;

@@ -27,6 +27,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -37,7 +38,6 @@ import javax.inject.Inject;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
 import io.github.marcocipriani01.telescopetouch.activities.util.SensorAccuracyDecoder;
-import io.github.marcocipriani01.telescopetouch.util.Toaster;
 
 public class CompassCalibrationActivity extends InjectableActivity implements SensorEventListener {
 
@@ -50,8 +50,6 @@ public class CompassCalibrationActivity extends InjectableActivity implements Se
     SensorAccuracyDecoder accuracyDecoder;
     @Inject
     SharedPreferences sharedPreferences;
-    @Inject
-    Toaster toaster;
     private Sensor magneticSensor;
     private CheckBox checkBoxView;
     private boolean accuracyReceived = false;
@@ -132,7 +130,7 @@ public class CompassCalibrationActivity extends InjectableActivity implements Se
         accuracyTextView.setText(accuracyText);
         accuracyTextView.setTextColor(accuracyDecoder.getColorForAccuracy(accuracy));
         if (accuracy == SensorManager.SENSOR_STATUS_ACCURACY_HIGH && getIntent().getBooleanExtra(AUTO_DISMISSABLE, false)) {
-            toaster.toastLong(R.string.sensor_accuracy_high);
+            Toast.makeText(this, R.string.sensor_accuracy_high, Toast.LENGTH_LONG).show();
             this.finish();
         }
     }
