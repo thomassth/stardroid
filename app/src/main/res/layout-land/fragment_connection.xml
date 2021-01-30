@@ -44,7 +44,7 @@
             android:layout_alignParentTop="true"
             android:text="@string/indi_host" />
 
-        <io.github.marcocipriani01.telescopetouch.views.SameSelectionSpinner
+        <io.github.marcocipriani01.telescopetouch.activities.views.SameSelectionSpinner
             android:id="@+id/spinnerHost"
             android:layout_width="186dp"
             android:layout_height="wrap_content"

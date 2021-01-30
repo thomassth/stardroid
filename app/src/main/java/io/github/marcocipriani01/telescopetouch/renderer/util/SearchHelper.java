@@ -20,6 +20,7 @@ import io.github.marcocipriani01.telescopetouch.units.Vector3;
 import io.github.marcocipriani01.telescopetouch.util.Matrix4x4;
 
 public class SearchHelper {
+
     private Vector3 mTarget = new Vector3(0, 0, 0);
     private Vector3 mTransformedPosition = new Vector3(0, 0, 0);
     private float mHalfScreenWidth = 1;

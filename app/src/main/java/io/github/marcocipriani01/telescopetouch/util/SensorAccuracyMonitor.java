@@ -24,9 +24,11 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import javax.inject.Inject;
 
+import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.CompassCalibrationActivity;
 
@@ -38,24 +40,20 @@ public class SensorAccuracyMonitor implements SensorEventListener {
     private static final String TAG = TelescopeTouchApp.getTag(SensorAccuracyMonitor.class);
     private static final String LAST_CALIBRATION_WARNING_PREF_KEY = "Last calibration warning time";
     private static final long MIN_INTERVAL_BETWEEN_WARNINGS =
-            180 * AstroTimeUtils.MILLISECONDS_PER_SECOND;
+            180 * TimeUtils.MILLISECONDS_PER_SECOND;
     private final SensorManager sensorManager;
     private final Sensor compassSensor;
     private final Context context;
     private final SharedPreferences sharedPreferences;
-    private final Toaster toaster;
     private boolean started = false;
     private boolean hasReading = false;
 
     @Inject
-    SensorAccuracyMonitor(
-            SensorManager sensorManager, Context context, SharedPreferences sharedPreferences,
-            Toaster toaster) {
+    SensorAccuracyMonitor(SensorManager sensorManager, Context context, SharedPreferences sharedPreferences) {
         Log.d(TAG, "Creating new accuracy monitor");
         this.sensorManager = sensorManager;
         this.context = context;
         this.sharedPreferences = sharedPreferences;
-        this.toaster = toaster;
         compassSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
     }
 
@@ -94,8 +92,7 @@ public class SensorAccuracyMonitor implements SensorEventListener {
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         hasReading = true;
-        if (accuracy == SensorManager.SENSOR_STATUS_ACCURACY_HIGH
-                || accuracy == SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM) {
+        if (accuracy == SensorManager.SENSOR_STATUS_ACCURACY_HIGH || accuracy == SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM) {
             return;  // OK
         }
         Log.d(TAG, "Compass accuracy insufficient");
@@ -106,10 +103,9 @@ public class SensorAccuracyMonitor implements SensorEventListener {
             return;
         }
         sharedPreferences.edit().putLong(LAST_CALIBRATION_WARNING_PREF_KEY, nowMillis).apply();
-        boolean dontShowDialog = sharedPreferences.getBoolean(
-                CompassCalibrationActivity.DONT_SHOW_CALIBRATION_DIALOG, false);
+        boolean dontShowDialog = sharedPreferences.getBoolean(CompassCalibrationActivity.DONT_SHOW_CALIBRATION_DIALOG, false);
         if (dontShowDialog) {
-            toaster.toastLong("Inaccurate compass - please calibrate");
+            Toast.makeText(context, R.string.inaccurate_compass_warning, Toast.LENGTH_LONG).show();
         } else {
             Intent intent = new Intent(context, CompassCalibrationActivity.class);
             intent.putExtra(CompassCalibrationActivity.HIDE_CHECKBOX, false);

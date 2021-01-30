@@ -47,12 +47,21 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.Objects;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.activities.util.ActionFragment;
+import io.github.marcocipriani01.telescopetouch.activities.fragments.AboutFragment;
+import io.github.marcocipriani01.telescopetouch.activities.fragments.BLOBViewerFragment;
+import io.github.marcocipriani01.telescopetouch.activities.fragments.CompassFragment;
+import io.github.marcocipriani01.telescopetouch.activities.fragments.ConnectionFragment;
+import io.github.marcocipriani01.telescopetouch.activities.fragments.ControlPanelFragment;
+import io.github.marcocipriani01.telescopetouch.activities.fragments.FlashlightFragment;
+import io.github.marcocipriani01.telescopetouch.activities.fragments.FocuserFragment;
+import io.github.marcocipriani01.telescopetouch.activities.fragments.GoToFragment;
+import io.github.marcocipriani01.telescopetouch.activities.fragments.MountControlFragment;
+import io.github.marcocipriani01.telescopetouch.activities.fragments.ActionFragment;
 import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
 import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
 
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
-import static io.github.marcocipriani01.telescopetouch.activities.BLOBViewerFragment.RECEIVE_BLOB_PREF;
+import static io.github.marcocipriani01.telescopetouch.activities.fragments.BLOBViewerFragment.RECEIVE_BLOB_PREF;
 
 /**
  * The main activity of the application, that manages all the fragments.

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_marginBottom="?android:attr/actionBarSize"
     android:orientation="vertical"
-    tools:context="io.github.marcocipriani01.telescopetouch.activities.FocuserFragment">
+    tools:context="io.github.marcocipriani01.telescopetouch.activities.fragments.FocuserFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"

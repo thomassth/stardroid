@@ -35,7 +35,7 @@ import io.github.marcocipriani01.telescopetouch.source.TextSource;
 import io.github.marcocipriani01.telescopetouch.source.impl.LineSourceImpl;
 import io.github.marcocipriani01.telescopetouch.source.impl.TextSourceImpl;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.util.AstroTimeUtils;
+import io.github.marcocipriani01.telescopetouch.util.TimeUtils;
 
 /**
  * Creates a mark at the zenith, nadir and cardinal point and a horizon.
@@ -87,7 +87,7 @@ public class HorizonLayer extends AbstractLayer {
         // colors.
         private static final int LINE_COLOR = Color.argb(120, 86, 176, 245);
         private static final int LABEL_COLOR = Color.argb(120, 245, 176, 86);
-        private static final long UPDATE_FREQ_MS = AstroTimeUtils.MILLISECONDS_PER_SECOND;
+        private static final long UPDATE_FREQ_MS = TimeUtils.MILLISECONDS_PER_SECOND;
 
         private final GeocentricCoordinates zenith = new GeocentricCoordinates(0, 0, 0);
         private final GeocentricCoordinates nadir = new GeocentricCoordinates(0, 0, 0);

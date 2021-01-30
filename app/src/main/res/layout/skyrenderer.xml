@@ -102,7 +102,7 @@
             android:visibility="gone" />
     </LinearLayout>
 
-    <io.github.marcocipriani01.telescopetouch.views.ButtonLayerView
+    <io.github.marcocipriani01.telescopetouch.activities.views.ButtonLayerView
         android:id="@+id/layer_buttons_control"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -112,7 +112,7 @@
         android:padding="8dp"
         stardroid:fade_time="500">
 
-        <io.github.marcocipriani01.telescopetouch.views.PreferencesButton
+        <io.github.marcocipriani01.telescopetouch.activities.views.PreferencesButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#00000000"
@@ -121,7 +121,7 @@
             stardroid:image_on="@drawable/stars_on"
             stardroid:pref_key="source_provider.0" />
 
-        <io.github.marcocipriani01.telescopetouch.views.PreferencesButton
+        <io.github.marcocipriani01.telescopetouch.activities.views.PreferencesButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#00000000"
@@ -130,7 +130,7 @@
             stardroid:image_on="@drawable/constellations_on"
             stardroid:pref_key="source_provider.1" />
 
-        <io.github.marcocipriani01.telescopetouch.views.PreferencesButton
+        <io.github.marcocipriani01.telescopetouch.activities.views.PreferencesButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#00000000"
@@ -139,7 +139,7 @@
             stardroid:image_on="@drawable/galaxy_on"
             stardroid:pref_key="source_provider.2" />
 
-        <io.github.marcocipriani01.telescopetouch.views.PreferencesButton
+        <io.github.marcocipriani01.telescopetouch.activities.views.PreferencesButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#00000000"
@@ -148,7 +148,7 @@
             stardroid:image_on="@drawable/planets_on"
             stardroid:pref_key="source_provider.3" />
 
-        <io.github.marcocipriani01.telescopetouch.views.PreferencesButton
+        <io.github.marcocipriani01.telescopetouch.activities.views.PreferencesButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#00000000"
@@ -157,7 +157,7 @@
             stardroid:image_on="@drawable/meteors_on"
             stardroid:pref_key="source_provider.6" />
 
-        <io.github.marcocipriani01.telescopetouch.views.PreferencesButton
+        <io.github.marcocipriani01.telescopetouch.activities.views.PreferencesButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#00000000"
@@ -166,16 +166,16 @@
             stardroid:image_on="@drawable/grid_on"
             stardroid:pref_key="source_provider.4" />
 
-        <io.github.marcocipriani01.telescopetouch.views.PreferencesButton
+        <io.github.marcocipriani01.telescopetouch.activities.views.PreferencesButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#00000000"
             stardroid:image_off="@drawable/horizon_off"
             stardroid:image_on="@drawable/horizon_on"
             stardroid:pref_key="source_provider.5" />
-    </io.github.marcocipriani01.telescopetouch.views.ButtonLayerView>
+    </io.github.marcocipriani01.telescopetouch.activities.views.ButtonLayerView>
 
-    <io.github.marcocipriani01.telescopetouch.views.ButtonLayerView
+    <io.github.marcocipriani01.telescopetouch.activities.views.ButtonLayerView
         android:id="@+id/layer_manual_auto_toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -185,7 +185,7 @@
         android:padding="8dp"
         stardroid:fade_time="500">
 
-        <io.github.marcocipriani01.telescopetouch.views.PreferencesButton
+        <io.github.marcocipriani01.telescopetouch.activities.views.PreferencesButton
             android:id="@+id/manual_auto_toggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -206,5 +206,5 @@
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/remote" />
-    </io.github.marcocipriani01.telescopetouch.views.ButtonLayerView>
+    </io.github.marcocipriani01.telescopetouch.activities.views.ButtonLayerView>
 </FrameLayout>

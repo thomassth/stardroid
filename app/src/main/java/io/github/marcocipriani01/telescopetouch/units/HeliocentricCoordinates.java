@@ -22,8 +22,8 @@ import androidx.annotation.NonNull;
 
 import java.util.Calendar;
 
-import io.github.marcocipriani01.telescopetouch.ephemeris.OrbitalElements;
-import io.github.marcocipriani01.telescopetouch.ephemeris.Planet;
+import io.github.marcocipriani01.telescopetouch.astronomy.OrbitalElements;
+import io.github.marcocipriani01.telescopetouch.astronomy.Planet;
 import io.github.marcocipriani01.telescopetouch.util.Geometry;
 
 public class HeliocentricCoordinates extends Vector3 {

@@ -32,12 +32,12 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Arrays;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
-import io.github.marcocipriani01.telescopetouch.gallery.GalleryFactory;
-import io.github.marcocipriani01.telescopetouch.gallery.GalleryImage;
+import io.github.marcocipriani01.telescopetouch.gallery.GalleryImages;
 
 /**
  * Displays a series of images to the user.  Selecting an image
@@ -52,7 +52,7 @@ public class ImageGalleryActivity extends InjectableActivity {
      */
     public static final String IMAGE_ID = "image_id";
 
-    private List<GalleryImage> galleryImages;
+    private List<GalleryImages> galleryImages;
     private DarkerModeManager darkerModeManager;
 
     @Override
@@ -62,7 +62,7 @@ public class ImageGalleryActivity extends InjectableActivity {
         darkerModeManager = new DarkerModeManager(getWindow(), null, PreferenceManager.getDefaultSharedPreferences(this));
         setTheme(darkerModeManager.getPref() ? R.style.DarkerAppTheme : R.style.AppTheme);
         setContentView(R.layout.activity_gallery);
-        this.galleryImages = GalleryFactory.getGallery(getResources()).getGalleryImages();
+        this.galleryImages = Arrays.asList(GalleryImages.values());
         addImagesToGallery();
 
         ActionBar actionBar = getSupportActionBar();
@@ -127,8 +127,8 @@ public class ImageGalleryActivity extends InjectableActivity {
 
         @Override
         public void onBindViewHolder(ImageAdapter.MyViewHolder holder, final int position) {
-            holder.galleryImage.setImageResource(galleryImages.get(position).imageId);
-            holder.galleryTitle.setText(galleryImages.get(position).name);
+            holder.galleryImage.setImageResource(galleryImages.get(position).getImageId());
+            holder.galleryTitle.setText(galleryImages.get(position).getName(ImageGalleryActivity.this));
             holder.galleryItemLayout.setOnClickListener(v -> showImage(position));
         }
 

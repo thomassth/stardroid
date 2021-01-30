@@ -45,14 +45,8 @@ import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
-import io.github.marcocipriani01.telescopetouch.views.ServersItemAdapter;
-
-/**
- * @author marcocipriani01
- */
-interface ServersReloadListener {
-    void loadServers(ArrayList<String> servers);
-}
+import io.github.marcocipriani01.telescopetouch.activities.util.ServersReloadListener;
+import io.github.marcocipriani01.telescopetouch.activities.util.ServersItemAdapter;
 
 /**
  * Activity to manage the list of servers.
@@ -74,7 +68,7 @@ public class ServersActivity extends AppCompatActivity implements ServersReloadL
      */
     @SuppressWarnings("SpellCheckingInspection")
     @SuppressLint("SetTextI18n")
-    static void addServer(final Context context, final ServersReloadListener onServersReload) {
+    public static void addServer(final Context context, final ServersReloadListener onServersReload) {
         final EditText input = new EditText(context);
         input.setText("192.168.");
         input.setHint(context.getString(R.string.ip_address));
