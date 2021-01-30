@@ -17,6 +17,9 @@
         tools:ignore="ScopedStorage" />
 
     <uses-feature
+        android:name="android.hardware.location"
+        android:required="false" />
+    <uses-feature
         android:name="android.hardware.location.gps"
         android:required="false" />
     <uses-feature
@@ -37,7 +40,12 @@
     <uses-feature
         android:name="android.hardware.touchscreen.multitouch.distinct"
         android:required="false" />
-    <uses-feature android:name="android.hardware.camera.flash" />
+    <uses-feature
+        android:name="android.hardware.camera.flash"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.screen.portrait"
+        android:required="false" />
 
     <application
         android:name=".TelescopeTouchApp"
