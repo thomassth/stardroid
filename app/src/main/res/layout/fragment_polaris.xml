@@ -23,8 +23,28 @@
         android:layout_height="wrap_content"
         android:layout_weight="1">
 
+        <TextView
+            android:id="@+id/polaris_hour_angle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+        <TextView
+            android:id="@+id/polaris_spot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/polaris_hour_angle"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
         <ImageView
-            android:id="@+id/polaris_reticle"
+            android:id="@+id/polaris_reticle_skywatcher"
             android:layout_width="320dp"
             android:layout_height="320dp"
             android:layout_centerInParent="true"
@@ -36,5 +56,13 @@
             android:layout_height="320dp"
             android:layout_centerInParent="true"
             android:src="@drawable/polaris_crosshair" />
+
+        <ImageView
+            android:id="@+id/polaris_reticle_big_dipper"
+            android:layout_width="320dp"
+            android:layout_height="320dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/reticle_bigdipper"
+            android:visibility="gone" />
     </RelativeLayout>
 </LinearLayout>

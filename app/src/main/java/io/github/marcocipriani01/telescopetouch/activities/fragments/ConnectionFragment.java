@@ -36,10 +36,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentActivity;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -49,6 +48,7 @@ import java.util.HashMap;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
+import io.github.marcocipriani01.telescopetouch.activities.MainActivity;
 import io.github.marcocipriani01.telescopetouch.activities.ServersActivity;
 import io.github.marcocipriani01.telescopetouch.activities.util.ImprovedSpinnerListener;
 import io.github.marcocipriani01.telescopetouch.activities.util.ServersReloadListener;
@@ -71,7 +71,6 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
     private static final String NSD_PREF = "NSD_PREF";
     private static int selectedSpinnerItem = 0;
     private final Handler handler = new Handler(Looper.getMainLooper());
-    private ActivityResultLauncher<Intent> resultLauncher;
     private SharedPreferences preferences;
     private Button connectionButton;
     private SameSelectionSpinner serversSpinner;
@@ -84,12 +83,6 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        resultLauncher = getActivity().registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK)
-                        loadServers(ServersActivity.getServers(preferences));
-                });
     }
 
     @Override
@@ -108,6 +101,7 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
         loadServers(ServersActivity.getServers(preferences));
         portEditText = rootView.findViewById(R.id.port_edittext);
         portEditText.setText(String.valueOf(preferences.getInt(INDI_PORT_PREF, 7624)));
+        final FragmentActivity activity = getActivity();
         connectionButton.setOnClickListener(v -> {
             String host = String.valueOf(serversSpinner.getSelectedItem());
             if (host.contains("@")) {
@@ -133,7 +127,8 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
                     ServersActivity.addServer(context, ConnectionFragment.this);
                 } else if (host.equals(getString(R.string.host_manage))) {
                     serversSpinner.post(() -> serversSpinner.setSelection(0));
-                    resultLauncher.launch(new Intent(context, ServersActivity.class));
+                    if (activity instanceof MainActivity)
+                        ((MainActivity) activity).launchActivityForResult(new Intent(context, ServersActivity.class));
                 } else {
                     connectionManager.connect(host, port);
                 }
@@ -152,7 +147,8 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
                     ServersActivity.addServer(context, ConnectionFragment.this);
                 } else if (selected.equals(getResources().getString(R.string.host_manage))) {
                     serversSpinner.post(() -> serversSpinner.setSelection(0));
-                    resultLauncher.launch(new Intent(context, ServersActivity.class));
+                    if (activity instanceof MainActivity)
+                        ((MainActivity) activity).launchActivityForResult(new Intent(context, ServersActivity.class));
                 }
             }
         }.attach(serversSpinner);
