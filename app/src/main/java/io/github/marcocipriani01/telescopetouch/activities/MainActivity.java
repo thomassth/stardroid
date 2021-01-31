@@ -58,6 +58,7 @@ import io.github.marcocipriani01.telescopetouch.activities.fragments.GoToFragmen
 import io.github.marcocipriani01.telescopetouch.activities.fragments.MountControlFragment;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.ActionFragment;
 import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
+import io.github.marcocipriani01.telescopetouch.astronomy.Polaris;
 import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
 
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
@@ -90,6 +91,11 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Polaris polaris = new Polaris(this);
+        polaris.setLocation(41.902782, 12.496366);
+        System.err.println(polaris.getPolarClockInScopeString());
+
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         darkerModeManager = new DarkerModeManager(getWindow(), this, preferences);
         darkerMode = darkerModeManager.getPref();

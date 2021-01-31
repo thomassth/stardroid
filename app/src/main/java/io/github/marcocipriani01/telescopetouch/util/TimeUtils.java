@@ -123,7 +123,7 @@ public class TimeUtils {
      *
      * @see <a href="https://www.willbell.com/math/mc1.HTM">"Astronomical Algorithms" by Jean Meeus</a>
      */
-    public static CatalogCoordinates precess(Calendar calendar, CatalogCoordinates in) {
+    /*public static CatalogCoordinates precess(Calendar calendar, CatalogCoordinates in) {
         calendar.set(Calendar.HOUR, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
@@ -141,5 +141,5 @@ public class TimeUtils {
                 toDegrees(asin((sinTheta * tmp) + (cosTheta * sin(dec0)))));
         Log.d("AstroUtils", "Result: " + out.toString());
         return out;
-    }
+    }*/
 }
