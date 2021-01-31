@@ -80,6 +80,12 @@ public class MainActivity extends AppCompatActivity implements
     public static final String MESSAGE = "MainActivityMessage";
     private static Pages currentPage = Pages.CONNECTION;
     private SharedPreferences preferences;
+    private final ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if ((result.getResultCode() == Activity.RESULT_OK) && (currentPage.lastInstance instanceof ConnectionFragment))
+                    ((ConnectionFragment) currentPage.lastInstance).loadServers(ServersActivity.getServers(preferences));
+            });
     private FragmentManager fragmentManager;
     private FloatingActionButton fab;
     private CoordinatorLayout mainCoordinator;
@@ -88,12 +94,6 @@ public class MainActivity extends AppCompatActivity implements
     private MenuItem rcvBlobMenuItem;
     private DarkerModeManager darkerModeManager;
     private boolean darkerMode = false;
-    private final ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if ((result.getResultCode() == Activity.RESULT_OK) && (currentPage.lastInstance instanceof ConnectionFragment))
-                    ((ConnectionFragment) currentPage.lastInstance).loadServers(ServersActivity.getServers(preferences));
-            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -216,6 +216,8 @@ public class MainActivity extends AppCompatActivity implements
             return true;
         } else if (itemId == R.id.menu_darker_mode) {
             darkerModeManager.toggle();
+        } else if (itemId == R.id.menu_settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
         } else if (currentPage.lastInstance instanceof Toolbar.OnMenuItemClickListener) {
             ((Toolbar.OnMenuItemClickListener) currentPage.lastInstance).onMenuItemClick(item);
         }

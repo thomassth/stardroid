@@ -8,7 +8,6 @@
     <string name="force_gps_pref">永遠使用 GPS</string>
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">啟用時一律使用 GPS (即使系統可提供網路位置資訊)</string>
     <string name="no_use_gps_pref">手動設定位置</string>
-    <string name="no_use_gps_pref_hint">請在下方輸入地點或經緯度</string>
     <string name="location_placename">地點名稱</string>
     <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">例如，台北市信義區信義路 5 段 7 號</string>
     <string name="location_lat_pref">緯度</string>
@@ -33,7 +32,6 @@
     <string name="show_sky_gradient" translation_description="This is a shading of the color of the sky used for effect">星空漸層色</string>
     <string name="show_meteors_pref">流星雨</string>
     <!-- Just in case we decide to have such a layer for the 4/24 launch -->
-    <string name="sensor_prefs">感應器設定</string>
     <string name="ecliptic">黃道</string>
     <string name="malformed_loc_error">經緯度設定值並非數字。</string>
     <string name="menu_toggle_dim">切換至夜間模式</string>
@@ -416,7 +414,6 @@
     <string name="sensor_reverse_preference_title">磁場反向</string>
     <string name="sensor_reverse_preference_summary">修正手機感應器錯誤 - 需重新開機</string>
     <string name="disable_gyro_preference_title">停用陀螺儀</string>
-    <string name="disable_gyro_preference_summary">不是所有裝置都有陀螺儀 - 如果您的裝置具備陀螺儀，清除這個核取方塊以啟用它，可以得到更好的效果。反之，如果您的裝置沒有陀螺儀卻取消停用，Sky Map 可能無法運作。</string>
     <string name="rotate_horizon_preference_title">地平線旋轉</string>
     <string name="rotate_horizon_preference_summary">地平線旋轉九十度（給橫幅式螢幕裝置，例如智慧眼鏡）</string>
     <string name="hdf">哈伯深場影像</string>

@@ -31,7 +31,9 @@
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            android:gravity="center_horizontal"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/polaris_spot"
@@ -41,26 +43,28 @@
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            android:gravity="center_horizontal"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/polaris_reticle_skywatcher"
-            android:layout_width="320dp"
-            android:layout_height="320dp"
+            android:layout_width="350dp"
+            android:layout_height="350dp"
             android:layout_centerInParent="true"
             android:src="@drawable/reticle_skywatcher" />
 
         <ImageView
             android:id="@+id/polaris_crosshair"
-            android:layout_width="320dp"
-            android:layout_height="320dp"
+            android:layout_width="350dp"
+            android:layout_height="350dp"
             android:layout_centerInParent="true"
             android:src="@drawable/polaris_crosshair" />
 
         <ImageView
             android:id="@+id/polaris_reticle_big_dipper"
-            android:layout_width="320dp"
-            android:layout_height="320dp"
+            android:layout_width="350dp"
+            android:layout_height="350dp"
             android:layout_centerInParent="true"
             android:src="@drawable/reticle_bigdipper"
             android:visibility="gone" />

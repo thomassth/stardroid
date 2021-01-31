@@ -10,7 +10,6 @@
     <string name="force_gps_pref">استخدم الموقع دائما</string>
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">if enabled, even if network location is available</string>
     <string name="no_use_gps_pref">تحديد يدوي للموقع</string>
-    <string name="no_use_gps_pref_hint">Enter a place or a lat/long below</string>
     <string name="location_placename">اسم المكان</string>
     <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">e.g. 1400 West Mars Hill Road, Flagstaff, AZ.</string>
     <string name="location_lat_pref">خط العرض</string>
@@ -34,7 +33,6 @@
     <string name="show_horizon_pref">Horizon</string>
     <string name="show_sky_gradient" translation_description="This is a shading of the color of the sky used for effect">Sky Gradient</string>
     <string name="show_meteors_pref">Meteor Showers</string>
-    <string name="sensor_prefs">Sensor Settings</string>
     <string name="ecliptic">Ecliptic</string>
     <!-- Just in case we decide to have such a layer for the 4/24 launch -->
     <string name="malformed_loc_error">Latitude or longitude setting isn\'t a number.</string>
