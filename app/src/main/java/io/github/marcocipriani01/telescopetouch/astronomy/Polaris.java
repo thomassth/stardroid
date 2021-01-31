@@ -8,10 +8,10 @@ import static io.github.marcocipriani01.telescopetouch.util.TimeUtils.meanSidere
 
 public class Polaris {
 
-    public static final double POLARIS_J2000_RA = 37.954560666666666;     // Should be 30.5303040444
-    public static final double POLARIS_J2000_DEC = 89.26410897222;        // Was       89.26410897222222
-    public static final double SIG_OCT_J2000_RA = 315.14634539559486;     // Was       317.1951809166667
-    public static final double SIG_OCT_J2000_DEC = -88.956503248687222;   // Was       -88.95650324722223
+    public static final double POLARIS_J2000_RA = 37.954560666666666;    // Might be 30.5303040444 (?)
+    public static final double POLARIS_J2000_DEC = 89.26410897222;
+    public static final double SIG_OCT_J2000_RA = 315.14634539559486;
+    public static final double SIG_OCT_J2000_DEC = -88.956503248687222;
     private boolean locationValid = false;
     private boolean autoHemisphereDetection = true;
     private double latitude;
@@ -47,7 +47,7 @@ public class Polaris {
         this.autoHemisphereDetection = autoHemisphereDetection;
     }
 
-    public String getPolarisHourAngleString() {
+    public String getHourAngleString() {
         return angleToString(this.hourAngle / 15.0d, false);
     }
 
@@ -59,8 +59,8 @@ public class Polaris {
         return angleToString(Math.abs(this.longitude), true) + (this.longitude >= 0.0 ? " E" : " W");
     }
 
-    public double getScopePosition() {
-        return this.scopePosition;
+    public float getScopePosition() {
+        return (float) this.scopePosition;
     }
 
     public String getScopePositionString() {

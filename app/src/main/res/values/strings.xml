@@ -591,4 +591,6 @@
     <string name="flashlight_unavailable">Flashlight unavailable</string>
     <string name="inaccurate_compass_warning">Inaccurate compass - please calibrate</string>
     <string name="title_activity_maps">Map</string>
+    <string name="flashlight">Flashlight</string>
+    <string name="polaris_hour_angle">Polaris hour angle</string>
 </resources>

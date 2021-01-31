@@ -31,7 +31,6 @@ import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
 public class CompassHelper implements SensorEventListener {
 
-    private static final String TAG = TelescopeTouchApp.getTag(CompassHelper.class);
     private final SensorManager sensorManager;
     private final Sensor gSensor;
     private final Sensor magneticFieldSensor;
@@ -81,8 +80,8 @@ public class CompassHelper implements SensorEventListener {
                 SensorManager.getOrientation(r, orientation);
                 float azimuth = (float) Math.toDegrees(orientation[0]);
                 azimuth = (azimuth + (display.getRotation() * 90)) % 360;
-                Log.d(TAG, "Azimuth= " + azimuth);
-                Log.d(TAG, "Will set rotation from " + lastAzimuth + " to " + azimuth);
+                //Log.d(TAG, "Azimuth = " + azimuth);
+                //Log.d(TAG, "Rotation from " + lastAzimuth + " to " + azimuth);
                 Animation animation = new RotateAnimation(-lastAzimuth, -azimuth,
                         Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
                 lastAzimuth = azimuth;
