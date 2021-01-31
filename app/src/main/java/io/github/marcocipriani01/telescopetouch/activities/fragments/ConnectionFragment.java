@@ -50,11 +50,11 @@ import java.util.HashMap;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.ServersActivity;
+import io.github.marcocipriani01.telescopetouch.activities.util.ImprovedSpinnerListener;
 import io.github.marcocipriani01.telescopetouch.activities.util.ServersReloadListener;
+import io.github.marcocipriani01.telescopetouch.activities.views.SameSelectionSpinner;
 import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
 import io.github.marcocipriani01.telescopetouch.util.NSDHelper;
-import io.github.marcocipriani01.telescopetouch.activities.util.ImprovedSpinnerListener;
-import io.github.marcocipriani01.telescopetouch.activities.views.SameSelectionSpinner;
 
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 
@@ -84,7 +84,7 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        resultLauncher = registerForActivityResult(
+        resultLauncher = getActivity().registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK)
