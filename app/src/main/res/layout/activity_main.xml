@@ -21,8 +21,6 @@
         app:backgroundTint="@color/colorPrimary"
         app:fabAlignmentMode="end"
         app:hideOnScroll="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:navigationIcon="@drawable/drawer" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

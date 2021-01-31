@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Telescope.Touch.iml" filepath="$PROJECT_DIR$/.idea/modules/Telescope.Touch.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Telescope.Touch.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Telescope.Touch.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/datamodel/Telescope.Touch.datamodel.iml" filepath="$PROJECT_DIR$/.idea/modules/datamodel/Telescope.Touch.datamodel.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tools/Telescope.Touch.tools.iml" filepath="$PROJECT_DIR$/.idea/modules/tools/Telescope.Touch.tools.iml" />
+    </modules>
+  </component>
+</project>

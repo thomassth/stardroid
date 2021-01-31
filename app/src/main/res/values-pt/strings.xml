@@ -7,7 +7,6 @@
     <string name="force_gps_pref">Sempre usar GPS</string>
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">se ativado, mesmo se local de rede estiver disponível</string>
     <string name="no_use_gps_pref">Definir local manualm.</string>
-    <string name="no_use_gps_pref_hint">Insira um lugar ou lat/long abaixo.</string>
     <string name="location_placename">Nome do lugar</string>
     <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">Por exemplo, 1400 West Mars Hill Road, Flagstaff, AZ.</string>
     <string name="location_lat_pref">Latitude</string>
@@ -29,7 +28,6 @@
     <string name="show_grid_pref">Grade AR/Dec</string>
     <string name="show_horizon_pref">Horizonte</string>
     <string name="show_sky_gradient">Gradiente de céu</string>
-    <string name="sensor_prefs">Configurações do sensor</string>
     <string name="ecliptic">Eclíptica</string>
     <string name="malformed_loc_error">A conf. de latitude ou longitude não é um número.</string>
     <string name="menu_toggle_dim">Modo noturno</string>

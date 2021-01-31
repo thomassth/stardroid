@@ -7,7 +7,6 @@
     <string name="force_gps_pref">Zawsze używaj odbiornika GPS</string>
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">jeśli jest włączony, nawet gdy dostępna jest lokalizacja sieciowa</string>
     <string name="no_use_gps_pref">Ustaw lokalizację ręcznie</string>
-    <string name="no_use_gps_pref_hint">Wprowadź poniżej miejsce lub szerokość/długość geograficzną</string>
     <string name="location_placename">Nazwa miejsca</string>
     <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">np. ulica Orla 171, 30-244 Kraków.</string>
     <string name="location_lat_pref">Szerokość geograficzna</string>
@@ -29,7 +28,6 @@
     <string name="show_grid_pref">Siatka RA/Dec</string>
     <string name="show_horizon_pref">Horyzont</string>
     <string name="show_sky_gradient">Gradient nieba</string>
-    <string name="sensor_prefs">Ustawienia czujnika</string>
     <string name="ecliptic">Ekliptyka</string>
     <string name="malformed_loc_error">Ustawienie szerokości lub długości geograficznej nie jest liczbą.</string>
     <string name="menu_toggle_dim">Przełącz tryb nocny</string>

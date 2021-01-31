@@ -8,7 +8,6 @@
     <string name="force_gps_pref">همیشه از سنسور مکان استفاده کن</string>
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">حتی اگر شبکه در دسترس باشد</string>
     <string name="no_use_gps_pref">تنظیم دستی مکان</string>
-    <string name="no_use_gps_pref_hint">نام مکان یا طول/عرض جغرافیایی را وارد کنید</string>
     <string name="location_placename">نام مکان</string>
     <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">مثلا: تهران</string>
     <string name="location_lat_pref">عرض جغرافیایی</string>
@@ -33,7 +32,6 @@
     <string name="show_sky_gradient" translation_description="This is a shading of the color of the sky used for effect">گرادیان آسمان</string>
     <string name="show_meteors_pref">بارش شهابی</string>
     <!-- Just in case we decide to have such a layer for the 4/24 launch -->
-    <string name="sensor_prefs">تنظیمات حسگرها (پیشرفته)</string>
     <string name="ecliptic">دایرة البروج</string>
     <string name="malformed_loc_error">طول و عرض جغرافیایی باید عدد (با ارقام انگلیسی) باشند</string>
     <string name="menu_toggle_dim">تغییر حالت شب</string>
@@ -415,7 +413,6 @@
     <string name="sensor_reverse_preference_title">معکوس کردن حسگر مغناطیسی</string>
     <string name="sensor_reverse_preference_summary">رفع اشکال تلفن‌هایی که حسگرهایشان درست عمل نمی‌کند (نیازمند راه‌اندازی مجدد)</string>
     <string name="disable_gyro_preference_title">غیرفعال کردن ژیروسکوپ</string>
-    <string name="disable_gyro_preference_summary">همه دستگاه‌ها دارای ژیروسکوپ نیستند - اگر گوشی شما دارد، با فعال کردن آن و علامت زدن این کادر، نتایج بهتری خواهید گرفت. اگر دستگاه شما دارای ژیروسکوپ نباشد، اگر علامت این کادر را بردارید، برنامه کار نمی‌کند.</string>
     <string name="rotate_horizon_preference_title">چرخش افق</string>
     <string name="rotate_horizon_preference_summary">چرخش با افق 90 درجه (برای صفحه هایی با چشم انداز اجباری ، مانند عینک های هوشمند)</string>
     <string name="hdf">زمینه ژرف هابل</string>

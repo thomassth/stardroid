@@ -52,7 +52,7 @@ public class SensorOrientationController extends AbstractController implements S
     @Override
     public void start() {
         if (manager != null) {
-            if (sharedPreferences.getBoolean(ApplicationConstants.SHARED_PREFERENCE_DISABLE_GYRO, false)) {
+            if (sharedPreferences.getBoolean(ApplicationConstants.DISABLE_GYRO_PREF, false)) {
                 Log.d(TAG, "Using geomagnetic rotation sensor");
                 manager.registerListener(this, geomagneticRotationSensor, SensorManager.SENSOR_DELAY_FASTEST);
             } else {

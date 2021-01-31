@@ -68,6 +68,7 @@ import io.github.marcocipriani01.telescopetouch.activities.dialogs.TimeTravelDia
 import io.github.marcocipriani01.telescopetouch.activities.fragments.GoToFragment;
 import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
 import io.github.marcocipriani01.telescopetouch.activities.util.FullscreenControlsManager;
+import io.github.marcocipriani01.telescopetouch.activities.views.ButtonLayerView;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.control.ControllerGroup;
 import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
@@ -82,7 +83,6 @@ import io.github.marcocipriani01.telescopetouch.touch.MapMover;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.Vector3;
 import io.github.marcocipriani01.telescopetouch.util.SensorAccuracyMonitor;
-import io.github.marcocipriani01.telescopetouch.activities.views.ButtonLayerView;
 
 /**
  * The main map-rendering Activity.
@@ -91,6 +91,10 @@ public class DynamicStarMapActivity extends InjectableActivity
         implements OnSharedPreferenceChangeListener, HasComponent<DynamicStarMapComponent> {
 
     public static final String SKY_MAP_INTENT_ACTION = "io.github.marcocipriani01.telescopetouch.activities.DynamicStarMapActivity";
+    private static final String BUNDLE_X_TARGET = "bundle_x_target";
+    private static final String BUNDLE_Y_TARGET = "bundle_y_target";
+    private static final String BUNDLE_Z_TARGET = "bundle_z_target";
+    private static final String BUNDLE_SEARCH_MODE = "bundle_search";
     private static final int TIME_DISPLAY_DELAY_MILLIS = 1000;
     private static final float ROTATION_SPEED = 10;
     private static final String TAG = TelescopeTouchApp.getTag(DynamicStarMapActivity.class);
@@ -183,7 +187,7 @@ public class DynamicStarMapActivity extends InjectableActivity
                 window, b -> this.rendererController.queueNightVisionMode(b), sharedPreferences);
 
         Intent intent = getIntent();
-        String intentAction = intent.getAction(); //TODO duplicate
+        String intentAction = intent.getAction();
         isSkyMapOnly = ((intentAction != null) && (intentAction.equals(SKY_MAP_INTENT_ACTION)));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -198,20 +202,19 @@ public class DynamicStarMapActivity extends InjectableActivity
             }
         });
         this.<Button>findViewById(R.id.search_in_database).setOnClickListener(v -> {
-            Intent mainActivityIntent = new Intent(DynamicStarMapActivity.this, MainActivity.class);
+            Intent mainIntent = new Intent(DynamicStarMapActivity.this, MainActivity.class);
             if (TelescopeTouchApp.connectionManager.isConnected()) {
                 GoToFragment.setRequestedSearch(searchTargetName);
-                mainActivityIntent.putExtra(MainActivity.ACTION, MainActivity.ACTION_SEARCH);
+                mainIntent.putExtra(MainActivity.ACTION, MainActivity.ACTION_SEARCH);
             } else {
-                mainActivityIntent.putExtra(MainActivity.ACTION, MainActivity.ACTION_CONNECT);
-                // TODO from toast to snackbar in mainactivity
-                Toast.makeText(DynamicStarMapActivity.this, R.string.connect_telescope_first, Toast.LENGTH_SHORT).show();
+                mainIntent.putExtra(MainActivity.ACTION, MainActivity.ACTION_CONNECT);
+                mainIntent.putExtra(MainActivity.MESSAGE, R.string.connect_telescope_first);
             }
-            startActivity(mainActivityIntent);
+            startActivity(mainIntent);
         });
 
         // Were we started as the result of a search?
-        if (Intent.ACTION_SEARCH.equals(intent.getAction()))
+        if (Intent.ACTION_SEARCH.equals(intentAction))
             doSearchWithIntent(intent);
     }
 
@@ -220,18 +223,18 @@ public class DynamicStarMapActivity extends InjectableActivity
         if (sensorManager != null && sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null
                 && sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null) {
             Log.i(TAG, "Minimum sensors present");
-            sharedPreferences.edit().putBoolean(ApplicationConstants.AUTO_MODE_PREF_KEY, true).apply();
+            sharedPreferences.edit().putBoolean(ApplicationConstants.AUTO_MODE_PREF, true).apply();
             setAutoMode(true);
             return;
         }
         // Missing at least one sensor.  Warn the user.
         handler.post(() -> {
             if (!sharedPreferences
-                    .getBoolean(ApplicationConstants.NO_WARN_ABOUT_MISSING_SENSORS, false)) {
+                    .getBoolean(ApplicationConstants.NO_WARN_MISSING_SENSORS_PREF, false)) {
                 Log.d(TAG, "showing no sensor dialog");
                 noSensorsDialogFragment.show(fragmentManager, "No sensors dialog");
                 // First time, force manual mode.
-                sharedPreferences.edit().putBoolean(ApplicationConstants.AUTO_MODE_PREF_KEY, false)
+                sharedPreferences.edit().putBoolean(ApplicationConstants.AUTO_MODE_PREF, false)
                         .apply();
                 setAutoMode(false);
             } else {
@@ -307,15 +310,12 @@ public class DynamicStarMapActivity extends InjectableActivity
         if (itemId == android.R.id.home) {
             onBackPressed();
         } else if (itemId == R.id.menu_skymap_search) {
-            Log.d(TAG, "Search");
             onSearchRequested();
-        } else if (itemId == R.id.menu_skymap_settings) {
-            Log.d(TAG, "Settings");
-            startActivity(new Intent(this, EditSettingsActivity.class));
+        } else if (itemId == R.id.menu_settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
         } else if (itemId == R.id.menu_darker_mode) {
             item.setIcon(darkerModeManager.toggle() ? R.drawable.light_mode : R.drawable.darker_mode);
         } else if (itemId == R.id.menu_skymap_time_travel) {
-            Log.d(TAG, "Starting Time Dialog from menu");
             if (!timePlayerUI.isShown()) {
                 Log.d(TAG, "Resetting time in time travel dialog.");
                 controller.goTimeTravel(new Date());
@@ -324,15 +324,12 @@ public class DynamicStarMapActivity extends InjectableActivity
             }
             timeTravelDialogFragment.show(fragmentManager, "Time Travel");
         } else if (itemId == R.id.menu_skymap_gallery) {
-            Log.d(TAG, "Loading gallery");
             startActivity(new Intent(this, ImageGalleryActivity.class));
         } else if (itemId == R.id.menu_skymap_calibrate) {
-            Log.d(TAG, "Loading Calibration");
             Intent intent = new Intent(this, CompassCalibrationActivity.class);
             intent.putExtra(CompassCalibrationActivity.HIDE_CHECKBOX, true);
             startActivity(intent);
         } else if (itemId == R.id.menu_skymap_diagnostics) {
-            Log.d(TAG, "Loading Diagnostics");
             startActivity(new Intent(this, DiagnosticActivity.class));
         } else {
             return false;
@@ -405,9 +402,9 @@ public class DynamicStarMapActivity extends InjectableActivity
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.d(TAG, "Preferences changed: key=" + key);
-        if (ApplicationConstants.AUTO_MODE_PREF_KEY.equals(key)) {
+        if (ApplicationConstants.AUTO_MODE_PREF.equals(key)) {
             setAutoMode(sharedPreferences.getBoolean(key, true));
-        } else if (ApplicationConstants.ROTATE_HORIZON_PREFKEY.equals(key)) {
+        } else if (ApplicationConstants.ROTATE_HORIZON_PREF.equals(key)) {
             model.setHorizontalRotation(sharedPreferences.getBoolean(key, false));
         }
     }
@@ -582,10 +579,10 @@ public class DynamicStarMapActivity extends InjectableActivity
         Log.d(TAG, "DynamicStarMap onRestoreInstanceState");
         super.onRestoreInstanceState(icicle);
         if (icicle == null) return;
-        searchMode = icicle.getBoolean(ApplicationConstants.BUNDLE_SEARCH_MODE);
-        float x = icicle.getFloat(ApplicationConstants.BUNDLE_X_TARGET);
-        float y = icicle.getFloat(ApplicationConstants.BUNDLE_Y_TARGET);
-        float z = icicle.getFloat(ApplicationConstants.BUNDLE_Z_TARGET);
+        searchMode = icicle.getBoolean(BUNDLE_SEARCH_MODE);
+        float x = icicle.getFloat(BUNDLE_X_TARGET);
+        float y = icicle.getFloat(BUNDLE_Y_TARGET);
+        float z = icicle.getFloat(BUNDLE_Z_TARGET);
         searchTarget = new GeocentricCoordinates(x, y, z);
         searchTargetName = icicle.getString(ApplicationConstants.BUNDLE_TARGET_NAME);
         if (searchMode) {
@@ -598,10 +595,10 @@ public class DynamicStarMapActivity extends InjectableActivity
     @Override
     protected void onSaveInstanceState(Bundle icicle) {
         Log.d(TAG, "DynamicStarMap onSaveInstanceState");
-        icicle.putBoolean(ApplicationConstants.BUNDLE_SEARCH_MODE, searchMode);
-        icicle.putFloat(ApplicationConstants.BUNDLE_X_TARGET, searchTarget.x);
-        icicle.putFloat(ApplicationConstants.BUNDLE_Y_TARGET, searchTarget.y);
-        icicle.putFloat(ApplicationConstants.BUNDLE_Z_TARGET, searchTarget.z);
+        icicle.putBoolean(BUNDLE_SEARCH_MODE, searchMode);
+        icicle.putFloat(BUNDLE_X_TARGET, searchTarget.x);
+        icicle.putFloat(BUNDLE_Y_TARGET, searchTarget.y);
+        icicle.putFloat(BUNDLE_Z_TARGET, searchTarget.z);
         icicle.putString(ApplicationConstants.BUNDLE_TARGET_NAME, searchTargetName);
         super.onSaveInstanceState(icicle);
     }
@@ -621,7 +618,7 @@ public class DynamicStarMapActivity extends InjectableActivity
         Log.d(TAG, "Searching for target=" + target);
         rendererController.queueViewerUpDirection(model.getZenith().copy());
         rendererController.queueEnableSearchOverlay(target.copy(), searchTerm);
-        boolean autoMode = sharedPreferences.getBoolean(ApplicationConstants.AUTO_MODE_PREF_KEY, true);
+        boolean autoMode = sharedPreferences.getBoolean(ApplicationConstants.AUTO_MODE_PREF, true);
         if (!autoMode) {
             controller.teleport(target);
         }
@@ -661,7 +658,7 @@ public class DynamicStarMapActivity extends InjectableActivity
         public RendererModelUpdateClosure(AstronomerModel model, RendererController rendererController, SharedPreferences sharedPreferences) {
             this.model = model;
             this.rendererController = rendererController;
-            boolean horizontalRotation = sharedPreferences.getBoolean(ApplicationConstants.ROTATE_HORIZON_PREFKEY, false);
+            boolean horizontalRotation = sharedPreferences.getBoolean(ApplicationConstants.ROTATE_HORIZON_PREF, false);
             model.setHorizontalRotation(horizontalRotation);
         }
 

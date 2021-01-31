@@ -5,20 +5,26 @@
     <item
         android:id="@+id/menu_darker_mode"
         android:icon="@drawable/darker_mode"
-        android:orderInCategory="80"
+        android:orderInCategory="0"
         android:title="@string/menu_toggle_dim"
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/menu_settings"
+        android:orderInCategory="70"
+        android:title="@string/menu_settings"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/menu_enable_rcv_blob"
         android:checkable="true"
-        android:orderInCategory="90"
+        android:orderInCategory="80"
         android:title="@string/receive_images"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/menu_skymap_shortcut"
-        android:orderInCategory="99"
+        android:orderInCategory="90"
         android:title="@string/add_sky_map_shortcut"
         app:showAsAction="never" />
 </menu>

@@ -8,7 +8,6 @@
     <string name="force_gps_pref">Πάντα χρήση GPS</string>
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">, ακόμη και αν η τοποθεσία δικτύου είναι διαθέσιμη</string>
     <string name="no_use_gps_pref">Ορισμός τοποθεσίας</string>
-    <string name="no_use_gps_pref_hint">Εισάγετε μια τοποθεσία ή γεωγ. μήκος/πλάτος παρακάτω</string>
     <string name="location_placename">Όνομα τοποθεσίας</string>
     <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">π.χ. Σταμάτη Κριμιζή 42, 82100, Χίος.</string>
     <string name="location_lat_pref">Γεωγραφικό πλάτος</string>
@@ -32,7 +31,6 @@
     <string name="show_horizon_pref">Ορίζοντας</string>
     <string name="show_sky_gradient" translation_description="This is a shading of the color of the sky used for effect">Απόχρωση ουρανού</string>
     <string name="show_meteors_pref">Βροχές διαττόντων</string>
-    <string name="sensor_prefs">Ρυθμίσεις αισθητήρα</string>
     <string name="ecliptic">Εκλειπτική</string>
     <!-- Just in case we decide to have such a layer for the 4/24 launch -->
     <string name="malformed_loc_error">Το γεωγραφικό μήκος ή πλάτος πρέπει να είναι αριθμός.</string>

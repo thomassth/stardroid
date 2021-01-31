@@ -25,7 +25,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import io.github.marcocipriani01.telescopetouch.activities.EditSettingsActivity;
+import io.github.marcocipriani01.telescopetouch.activities.SettingsActivity;
 import io.github.marcocipriani01.telescopetouch.activities.ImageDisplayActivity;
 import io.github.marcocipriani01.telescopetouch.activities.ImageGalleryActivity;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
@@ -65,7 +65,7 @@ public interface ApplicationComponent {
     // Who can we inject
     void inject(TelescopeTouchApp app);
 
-    void inject(EditSettingsActivity activity);
+    void inject(SettingsActivity activity);
 
     void inject(ImageDisplayActivity activity);
 

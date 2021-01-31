@@ -52,6 +52,11 @@
         android:id="@+id/menu_group_compass"
         android:checkableBehavior="none">
         <item
+            android:id="@+id/menu_polaris"
+            android:icon="@drawable/time"
+            android:title="@string/polaris_hour_angle" />
+
+        <item
             android:id="@+id/menu_compass"
             android:icon="@drawable/compass"
             android:title="@string/compass" />
@@ -59,7 +64,7 @@
         <item
             android:id="@+id/menu_flashlight"
             android:icon="@drawable/flashlight"
-            android:title="Flashlight" />
+            android:title="@string/flashlight" />
     </group>
 
     <group

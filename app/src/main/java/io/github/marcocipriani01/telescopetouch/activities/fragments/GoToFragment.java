@@ -49,17 +49,29 @@ import org.indilib.i4j.client.INDISwitchElement;
 import org.indilib.i4j.client.INDISwitchProperty;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.astronomy.StarsPrecession;
 import io.github.marcocipriani01.telescopetouch.catalog.Catalog;
 import io.github.marcocipriani01.telescopetouch.catalog.CatalogArrayAdapter;
 import io.github.marcocipriani01.telescopetouch.catalog.CatalogCoordinates;
 import io.github.marcocipriani01.telescopetouch.catalog.CatalogEntry;
+import io.github.marcocipriani01.telescopetouch.catalog.DSOEntry;
+import io.github.marcocipriani01.telescopetouch.catalog.StarEntry;
 import io.github.marcocipriani01.telescopetouch.indi.PropUpdater;
 
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
+import static io.github.marcocipriani01.telescopetouch.util.TimeUtils.julianDay;
+import static io.github.marcocipriani01.telescopetouch.util.TimeUtils.julianDayToCentury;
+import static java.lang.Math.asin;
+import static java.lang.Math.atan2;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+import static java.lang.Math.toDegrees;
+import static java.lang.Math.toRadians;
 
 /**
  * Allows the user to look for an astronomical object and slew the telescope.
@@ -250,14 +262,14 @@ public class GoToFragment extends ActionFragment
                     telescopeOnCoordSetSlew.setDesiredValue(Constants.SwitchStatus.OFF);
                     telescopeOnCoordSetSync.setDesiredValue(Constants.SwitchStatus.OFF);
                     new PropUpdater(telescopeOnCoordSetP).start();
-                    //if ((selectedEntry instanceof StarEntry) || (selectedEntry instanceof DSOEntry)) {
-                    //    CatalogCoordinates precessed = TimeUtils.precess(Calendar.getInstance(), coordinates);
-                    //    telescopeCoordRA.setDesiredValue(precessed.getRaStr());
-                    //    telescopeCoordDE.setDesiredValue(precessed.getDeStr());
-                    //} else {
-                    telescopeCoordRA.setDesiredValue(coordinates.getRaStr());
-                    telescopeCoordDE.setDesiredValue(coordinates.getDeStr());
-                    //}
+                    if ((selectedEntry instanceof StarEntry) || (selectedEntry instanceof DSOEntry)) {
+                        CatalogCoordinates precessed = StarsPrecession.precess(Calendar.getInstance(), coordinates);
+                        telescopeCoordRA.setDesiredValue(precessed.getRaStr());
+                        telescopeCoordDE.setDesiredValue(precessed.getDeStr());
+                    } else {
+                        telescopeCoordRA.setDesiredValue(coordinates.getRaStr());
+                        telescopeCoordDE.setDesiredValue(coordinates.getDeStr());
+                    }
                     new PropUpdater(telescopeCoordP).start();
                     requestActionSnack(R.string.slew_ok);
                 } catch (Exception e) {
@@ -271,9 +283,9 @@ public class GoToFragment extends ActionFragment
                     telescopeOnCoordSetTrack.setDesiredValue(Constants.SwitchStatus.OFF);
                     telescopeOnCoordSetSlew.setDesiredValue(Constants.SwitchStatus.OFF);
                     new PropUpdater(telescopeOnCoordSetP).start();
-                    //CatalogCoordinates precessed = TimeUtils.precess(Calendar.getInstance(), coordinates);
-                    //telescopeCoordRA.setDesiredValue(precessed.getRaStr());
-                    //telescopeCoordDE.setDesiredValue(precessed.getDeStr());
+                    CatalogCoordinates precessed = StarsPrecession.precess(Calendar.getInstance(), coordinates);
+                    telescopeCoordRA.setDesiredValue(precessed.getRaStr());
+                    telescopeCoordDE.setDesiredValue(precessed.getDeStr());
                     telescopeCoordRA.setDesiredValue(coordinates.getRaStr());
                     telescopeCoordDE.setDesiredValue(coordinates.getDeStr());
                     new PropUpdater(telescopeCoordP).start();

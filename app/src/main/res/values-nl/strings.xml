@@ -7,7 +7,6 @@
     <string name="force_gps_pref">Altijd GPS gebruiken</string>
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">indien ingeschakeld, zelfs als een netwerklocatie beschikbaar is</string>
     <string name="no_use_gps_pref">Locatie handmatig instellen</string>
-    <string name="no_use_gps_pref_hint">Geef hieronder een plaats of lengte-/breedtegraad op</string>
     <string name="location_placename">Plaatsnaam</string>
     <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">Bijvoorbeeld: Oude Hoogeveensedijk 4, Dwingeloo.</string>
     <string name="location_lat_pref">Breedtegraad</string>
@@ -29,7 +28,6 @@
     <string name="show_grid_pref">RK/declinatieraster</string>
     <string name="show_horizon_pref">Horizon</string>
     <string name="show_sky_gradient">Hemelgradiënt</string>
-    <string name="sensor_prefs">Sensorinstellingen</string>
     <string name="ecliptic">Ecliptica</string>
     <string name="malformed_loc_error">De ingestelde breedte- of lengtegraad is geen getal.</string>
     <string name="menu_toggle_dim">Nachtmodus schakelen</string>
