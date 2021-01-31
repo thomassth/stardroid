@@ -91,11 +91,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Polaris polaris = new Polaris(this);
-        polaris.setLocation(41.902782, 12.496366);
-        System.err.println(polaris.getPolarClockInScopeString());
-
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         darkerModeManager = new DarkerModeManager(getWindow(), this, preferences);
         darkerMode = darkerModeManager.getPref();

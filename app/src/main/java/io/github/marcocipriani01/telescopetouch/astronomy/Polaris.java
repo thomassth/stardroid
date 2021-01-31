@@ -1,197 +1,118 @@
 package io.github.marcocipriani01.telescopetouch.astronomy;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.SharedPreferences;
-
-import androidx.preference.PreferenceManager;
 
 import java.util.Calendar;
 
+import static io.github.marcocipriani01.telescopetouch.util.TimeUtils.meanSiderealTime;
+
 public class Polaris {
 
-    private final StarsPrecession northPolarisPrecession = new StarsPrecession(true);
-    private final StarsPrecession southPolarisPrecession = new StarsPrecession(false);
-    private final Context context;
-    private final int utcOffsetMs;
-    private int day;
-    private double deltaJulianDateTime;
-    private long deltaJulianDay;
-    private int hour;
+    public static final double POLARIS_J2000_RA = 37.954560666666666;     // Should be 30.5303040444
+    public static final double POLARIS_J2000_DEC = 89.26410897222;        // Was       89.26410897222222
+    public static final double SIG_OCT_J2000_RA = 315.14634539559486;     // Was       317.1951809166667
+    public static final double SIG_OCT_J2000_DEC = -88.956503248687222;   // Was       -88.95650324722223
     private boolean locationValid = false;
-    private long julianDay;
+    private boolean autoHemisphereDetection = true;
     private double latitude;
     private double longitude;
-    private int minute;
-    private int month;
     private boolean northernHemisphere;
-    private double polarisClock;
-    private double polarisDEC;
-    private double polarisInScope;
-    private double polarisRA;
-    private int second;
-    private double siderealTime;
-    private int year;
+    private double hourAngle = 0.0;
+    private double rightAscension = 0.0;
+    private double declination = 0.0;
+    private double scopePosition;
 
-    public Polaris(Context context) {
-        this.context = context;
-        Calendar calendar = Calendar.getInstance();
-        utcOffsetMs = (calendar.get(Calendar.ZONE_OFFSET) + calendar.get(Calendar.DST_OFFSET));
-        refreshTime();
+    @SuppressLint("DefaultLocale")
+    private static String angleToString(double angle, boolean degOrHourFormat) {
+        int deg = (int) angle;
+        double tmp = (angle % 1.0) * 3600.0;
+        int min = Math.abs((int) (tmp / 60.0));
+        int sec = Math.abs((int) (tmp % 60.0));
+        if (degOrHourFormat) {
+            return String.format("%1$02d°%2$02d'%3$02d\"", deg, min, sec);
+        } else {
+            return String.format("%1$02dh%2$02dm%3$02ds", deg, min, sec);
+        }
     }
 
-    public String getPolarClockTimeString() {
-        return getStringOfDegree(this.polarisClock / 15.0d, false);
+    public boolean isNorthernHemisphere() {
+        return northernHemisphere;
     }
 
-    public String getPolarClockDegSting() {
-        return getStringOfDegree(this.polarisClock, true);
+    public void setNorthernHemisphere(boolean northernHemisphere) {
+        this.northernHemisphere = northernHemisphere;
+    }
+
+    public void setAutoHemisphereDetection(boolean autoHemisphereDetection) {
+        this.autoHemisphereDetection = autoHemisphereDetection;
+    }
+
+    public String getPolarisHourAngleString() {
+        return angleToString(this.hourAngle / 15.0d, false);
     }
 
     public String getLatitudeString() {
-        String str = this.latitude >= 0.0d ? "N " : "S ";
-        return str + getStringOfDegree(Math.abs(this.latitude), true);
+        return angleToString(Math.abs(this.latitude), true) + (this.latitude >= 0.0d ? " N" : " S");
     }
 
     public String getLongitudeString() {
-        String str = this.longitude >= 0.0d ? "E " : "W ";
-        return str + getStringOfDegree(Math.abs(this.longitude), true);
+        return angleToString(Math.abs(this.longitude), true) + (this.longitude >= 0.0 ? " E" : " W");
     }
 
-    public double getPolarisRotation() {
-        return this.polarisInScope;
+    public double getScopePosition() {
+        return this.scopePosition;
     }
 
-    public String getPolarClockInScopeString() {
-        if (this.northernHemisphere) {
-            this.polarisInScope = ((360.0d - this.polarisClock) + 180.0d) % 360.0d;
+    public String getScopePositionString() {
+        return angleToString(this.scopePosition / 30.0, false);
+    }
+
+    public String getPrecessedCoordinates() {
+        if (this.locationValid) {
+            return angleToString(this.rightAscension / 15.0d, false) + " / " + angleToString(this.declination, true);
         } else {
-            this.polarisInScope = (this.polarisClock + 180.0d) % 360.0d;
+            return angleToString(0.0d, false) + " / " + angleToString(0.0d, true);
         }
-        return getStringOfDegree(this.polarisInScope / 30.0d, false);
     }
 
-    public String getSiderealClockTimeString() {
+    public String getStarName() {
+        return this.northernHemisphere ? "Polaris" : "Sigma Octantis";
+    }
+
+    public void refresh() {
         if (this.locationValid) {
-            return getStringOfDegree(this.siderealTime / 15.0d, false);
-        }
-        return getStringOfDegree(0.0d, false);
-    }
-
-    public String getSiderealClockDegString() {
-        if (this.locationValid) {
-            return getStringOfDegree(this.siderealTime, true);
-        }
-        return getStringOfDegree(0.0d, true);
-    }
-
-    public String getPolarisPrecessedCoordsString() {
-        return getPolarisPrecessedRAString() + "/" + getPolarisPrecessedDECString();
-    }
-
-    public String getPolarisOriginCoordsString() {
-        return this.northernHemisphere ? "02h31m49s/89°15'50\"" : "21h08m46s/-88°57'23\"";
-    }
-
-    public String getStarNameString() {
-        return this.northernHemisphere ? "Polaris" : "Sig Oct";
-    }
-
-    private String getPolarisPrecessedRAString() {
-        if (this.locationValid) {
-            return getStringOfDegree(this.polarisRA / 15.0d, false);
-        }
-        return getStringOfDegree(0.0d, false);
-    }
-
-    private String getPolarisPrecessedDECString() {
-        if (this.locationValid) {
-            return getStringOfDegree(this.polarisDEC, true);
-        }
-        return getStringOfDegree(0.0d, true);
-    }
-
-    @SuppressLint("DefaultLocale")
-    private String getStringOfDegree(double d, boolean z) {
-        int i = (int) d;
-        double d2 = (d % 1.0d) * 3600.0d;
-        int abs = Math.abs((int) (d2 / 60.0d));
-        int abs2 = Math.abs((int) (d2 % 60.0d));
-        if (z) {
-            return String.format("%1$02d°%2$02d'%3$02d''", i, abs, abs2);
-        }
-        return String.format("%1$02dh%2$02dm%3$02ds", i, abs, abs2);
-    }
-
-    private void generatePolarClock() {
-        generateSiderealTime();
-        if (this.locationValid) {
-            SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.context);
-            boolean automaticHemisphereDetection = defaultSharedPreferences.getBoolean("hemisphere_autodetect", true);
-            boolean z = automaticHemisphereDetection || !defaultSharedPreferences.getString("manual_hemisphere_selection", "").equals("south");
-            this.polarisRA = this.northPolarisPrecession.getPrecessedRA();
-            this.polarisDEC = this.northPolarisPrecession.getPrecessedDec();
-            this.northernHemisphere = true;
-            if ((!automaticHemisphereDetection && !z) || (automaticHemisphereDetection && this.latitude < 0.0d)) {
-                this.polarisRA = this.southPolarisPrecession.getPrecessedRA();
-                this.polarisDEC = this.southPolarisPrecession.getPrecessedDec();
-                this.northernHemisphere = false;
-            }
-            double siderealTime = this.siderealTime;
-            if (siderealTime > this.polarisRA) {
-                this.polarisClock = siderealTime - this.polarisRA;
+            if (this.autoHemisphereDetection)
+                northernHemisphere = (this.latitude >= 0.0);
+            Calendar calendar = Calendar.getInstance();
+            double[] precession;
+            if (northernHemisphere) {
+                precession = StarsPrecession.precess(calendar, POLARIS_J2000_RA, POLARIS_J2000_DEC);
             } else {
-                this.polarisClock = (siderealTime + 360.0d) - this.polarisRA;
+                precession = StarsPrecession.precess(calendar, SIG_OCT_J2000_RA, SIG_OCT_J2000_DEC);
+            }
+            this.rightAscension = precession[0];
+            this.declination = precession[1];
+
+            double siderealTime = meanSiderealTime(calendar, (float) longitude);
+            if (siderealTime > this.rightAscension) {
+                this.hourAngle = siderealTime - this.rightAscension;
+            } else {
+                this.hourAngle = (siderealTime + 360.0d) - this.rightAscension;
+            }
+            if (northernHemisphere) {
+                this.scopePosition = ((360.0 - this.hourAngle) + 180.0) % 360.0;
+            } else {
+                this.scopePosition = (this.hourAngle + 180.0) % 360.0;
             }
         } else {
-            this.polarisClock = 0.0d;
+            this.hourAngle = 0.0d;
         }
-    }
-
-    private void generateSiderealTime() {
-        double d = this.deltaJulianDateTime;
-        double pow = (360.985647366286d * d) + 99.967794687d + (Math.pow(d, 2.0d) * 2.907879E-13d) + (Math.pow(this.deltaJulianDateTime, 3.0d) * -5.302E-22d) + this.longitude;
-        this.siderealTime = pow;
-        this.siderealTime = pow % 360.0d;
-    }
-
-    private void refreshTime() {
-        Calendar calendar = Calendar.getInstance();
-        this.year = calendar.get(Calendar.YEAR);
-        this.month = calendar.get(Calendar.MONTH) + 1;
-        this.day = calendar.get(Calendar.DATE);
-        this.hour = calendar.get(Calendar.HOUR_OF_DAY);
-        this.minute = calendar.get(Calendar.MINUTE);
-        this.second = calendar.get(Calendar.SECOND);
-        generateJulianDay();
-        generateDeltaJulianDay();
-        generateDeltaJulianDateTime();
-    }
-
-    private void generateDeltaJulianDateTime() {
-        this.deltaJulianDateTime = ((double) this.deltaJulianDay) + ((((((double) this.hour) + (((double) this.minute) / 60.0d)) + (((double) this.second) / 3600.0d)) - ((double) (this.utcOffsetMs / 3600000))) / 24.0d);
-    }
-
-    private void generateDeltaJulianDay() {
-            this.deltaJulianDay = (this.julianDay - 2451544) - 1;
-    }
-
-    private void generateJulianDay() {
-        int i = this.month;
-        int i2 = (14 - i) / 12;
-        int i3 = (this.year + 4800) - i2;
-        this.julianDay = (((((this.day + (((((i + (i2 * 12)) - 3) * 153) + 2) / 5)) + (i3 * 365)) + (i3 / 4)) - (i3 / 100)) + (i3 / 400)) - 32045;
     }
 
     public void setLocation(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
         locationValid = true;
-        refreshTime();
-        generatePolarClock();
-    }
-
-    public boolean northCurrentHemisphere() {
-        return this.northernHemisphere;
+        refresh();
     }
 }
