@@ -16,19 +16,8 @@
 
 package io.github.marcocipriani01.telescopetouch.util;
 
-import android.util.Log;
-
 import java.util.Calendar;
 import java.util.TimeZone;
-
-import io.github.marcocipriani01.telescopetouch.catalog.CatalogCoordinates;
-
-import static java.lang.Math.asin;
-import static java.lang.Math.atan2;
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
-import static java.lang.Math.toDegrees;
-import static java.lang.Math.toRadians;
 
 /**
  * Utilities for working with Dates and times.
@@ -74,7 +63,7 @@ public class TimeUtils {
         int y = calendar.get(Calendar.YEAR);
         int m = calendar.get(Calendar.MONTH) + 1;
         double d = calendar.get(Calendar.DATE) +
-                (calendar.get(Calendar.HOUR) / 24.0) +
+                (calendar.get(Calendar.HOUR_OF_DAY) / 24.0) +
                 (calendar.get(Calendar.MINUTE) / 1440.0) +
                 (calendar.get(Calendar.SECOND) / 86400.0);
         if ((m == 1) || (m == 2)) {
@@ -116,30 +105,4 @@ public class TimeUtils {
         if (remainder < 0) remainder += 24;
         return remainder;
     }
-
-    /**
-     * Equation taken from the book "Astronomical Algorithms" by Jean Meeus
-     * (published by Willmann-Bell, Inc., Richmond, VA). Chapter 21, Precession.
-     *
-     * @see <a href="https://www.willbell.com/math/mc1.HTM">"Astronomical Algorithms" by Jean Meeus</a>
-     */
-    /*public static CatalogCoordinates precess(Calendar calendar, CatalogCoordinates in) {
-        calendar.set(Calendar.HOUR, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        double dec0 = toRadians(in.getDec()),
-                t = julianDayToCentury(julianDay(calendar)),
-                t2 = t * t, t3 = t2 * t,
-                zeta = (0.6406161389 * t) + (0.00008385555556 * t2) + (0.000004999444444 * t3),
-                theta = toRadians((0.5567530278 * t) - (0.0001185138889 * t2) - (0.00001162027778 * t3)),
-                sinTheta = sin(theta),
-                cosTheta = cos(theta),
-                tmp = cos(dec0) * cos(toRadians(in.getRa() + zeta));
-        CatalogCoordinates out = new CatalogCoordinates(toDegrees(
-                atan2(cos(dec0) * sin(toRadians(in.getRa() + zeta)), (cosTheta * tmp) - (sinTheta * sin(dec0)))) +
-                (0.6406161389 * t) + (0.0003040777778 * t2) + (0.000005056388889 * t3),
-                toDegrees(asin((sinTheta * tmp) + (cosTheta * sin(dec0)))));
-        Log.d("AstroUtils", "Result: " + out.toString());
-        return out;
-    }*/
 }
