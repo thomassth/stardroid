@@ -43,6 +43,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
 import io.github.marcocipriani01.telescopetouch.activities.util.ServersReloadListener;
@@ -55,7 +56,6 @@ import io.github.marcocipriani01.telescopetouch.activities.util.ServersItemAdapt
  */
 public class ServersActivity extends AppCompatActivity implements ServersReloadListener {
 
-    public static final String INDI_SERVERS_PREF = "INDI_SERVERS_PREF";
     final static Gson gson = new Gson();
     final static Type stringArrayType = new TypeToken<ArrayList<String>>() {
     }.getType();
@@ -115,7 +115,7 @@ public class ServersActivity extends AppCompatActivity implements ServersReloadL
                         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
                         ArrayList<String> list = getServers(preferences);
                         list.add(0, server);
-                        preferences.edit().putString(INDI_SERVERS_PREF, gson.toJson(list, stringArrayType)).apply();
+                        preferences.edit().putString(ApplicationConstants.INDI_SERVERS_PREF, gson.toJson(list, stringArrayType)).apply();
                         onServersReload.loadServers(list);
                     } else {
                         Toast.makeText(context, context.getString(R.string.empty_host), Toast.LENGTH_SHORT).show();
@@ -128,7 +128,7 @@ public class ServersActivity extends AppCompatActivity implements ServersReloadL
     }
 
     public static ArrayList<String> getServers(SharedPreferences preferences) {
-        String pref = preferences.getString(INDI_SERVERS_PREF, null);
+        String pref = preferences.getString(ApplicationConstants.INDI_SERVERS_PREF, null);
         if (pref == null) return new ArrayList<>();
         ArrayList<String> servers = null;
         try {
@@ -191,7 +191,7 @@ public class ServersActivity extends AppCompatActivity implements ServersReloadL
     }
 
     private void saveFromListView() {
-        preferences.edit().putString(INDI_SERVERS_PREF,
+        preferences.edit().putString(ApplicationConstants.INDI_SERVERS_PREF,
                 gson.toJson(((ServersItemAdapter) serversListView.getAdapter()).getItemList(), stringArrayType)).apply();
     }
 

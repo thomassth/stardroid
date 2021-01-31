@@ -7,7 +7,6 @@
     <string name="force_gps_pref">Vždy používat GPS</string>
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">pokud je aktivované, i když je dostupná síťová poloha</string>
     <string name="no_use_gps_pref">Nastavit polohu manuálně</string>
-    <string name="no_use_gps_pref_hint">Níže zadejte místo nebo šířku/délku</string>
     <string name="location_placename">Název místa</string>
     <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">např. Petřín 205, Praha</string>
     <string name="location_lat_pref">Zeměpisná šířka</string>
@@ -29,7 +28,6 @@
     <string name="show_grid_pref">Síť RA/Dec</string>
     <string name="show_horizon_pref">Horizont</string>
     <string name="show_sky_gradient">Gradient oblohy</string>
-    <string name="sensor_prefs">Nastavení čidel</string>
     <string name="ecliptic">Ekliptika</string>
     <string name="malformed_loc_error">Nastavená šířka nebo délka není číslo.</string>
     <string name="menu_toggle_dim">Přepnout noční/denní režim</string>
@@ -381,7 +379,6 @@
     <string name="title_activity_diagnostic">Diagnostika</string>
     <string name="sensor_reverse_preference_summary">Oprava pro telefony s převráceným senzorem - vyžaduje restart</string>
     <string name="sensor_accuracy_nocontact">Přesnost: Bez kontaktu</string>
-    <string name="disable_gyro_preference_summary">Ne všechny zařízení mají gyroskop - pokud ho vaše zařízení má tak dosáhnete lepších vísledků když je povolen a toto políčko odškrtnuté. Na druhou stranu poku gyroskop vaše zařízení nemá pak Sky nebude fungovat pokud toto políčko odšktnete.</string>
     <string name="disable_gyro_preference_title">Zakázat gyroskop</string>
     <string name="diagnostics_activity_connection">Připojení</string>
     <string name="diagnostics_activity_compass">Kompas</string>

@@ -14,6 +14,7 @@
 
 package io.github.marcocipriani01.telescopetouch.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -24,6 +25,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -44,8 +47,6 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.Objects;
-
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.AboutFragment;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.ActionFragment;
@@ -57,6 +58,7 @@ import io.github.marcocipriani01.telescopetouch.activities.fragments.FlashlightF
 import io.github.marcocipriani01.telescopetouch.activities.fragments.FocuserFragment;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.GoToFragment;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.MountControlFragment;
+import io.github.marcocipriani01.telescopetouch.activities.fragments.PolarisFragment;
 import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
 import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
 
@@ -78,6 +80,12 @@ public class MainActivity extends AppCompatActivity implements
     public static final String MESSAGE = "MainActivityMessage";
     private static Pages currentPage = Pages.CONNECTION;
     private SharedPreferences preferences;
+    private final ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if ((result.getResultCode() == Activity.RESULT_OK) && (currentPage.lastInstance instanceof ConnectionFragment))
+                    ((ConnectionFragment) currentPage.lastInstance).loadServers(ServersActivity.getServers(preferences));
+            });
     private FragmentManager fragmentManager;
     private FloatingActionButton fab;
     private CoordinatorLayout mainCoordinator;
@@ -108,6 +116,10 @@ public class MainActivity extends AppCompatActivity implements
         MainBottomNavigation bottomNavigation = new MainBottomNavigation(this);
         bottomBar.setNavigationOnClickListener(v -> bottomNavigation.show());
         intentAndFragment(getIntent());
+    }
+
+    public void launchActivityForResult(Intent intent) {
+        resultLauncher.launch(intent);
     }
 
     @Override
@@ -204,6 +216,8 @@ public class MainActivity extends AppCompatActivity implements
             return true;
         } else if (itemId == R.id.menu_darker_mode) {
             darkerModeManager.toggle();
+        } else if (itemId == R.id.menu_settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
         } else if (currentPage.lastInstance instanceof Toolbar.OnMenuItemClickListener) {
             ((Toolbar.OnMenuItemClickListener) currentPage.lastInstance).onMenuItemClick(item);
         }
@@ -237,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         if (animate)
             transaction.setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out);
-        Fragment fragment = Objects.requireNonNull(currentPage.newInstance());
+        Fragment fragment = currentPage.newInstance();
         transaction.replace(R.id.content_frame, fragment).commit();
         if (fragment instanceof ActionFragment) {
             ActionFragment actionFragment = (ActionFragment) fragment;
@@ -252,6 +266,11 @@ public class MainActivity extends AppCompatActivity implements
             fab.hide();
         }
         invalidateOptionsMenu();
+    }
+
+    @Override
+    public void onActionDrawableChange(int resource) {
+        fab.setImageResource(resource);
     }
 
     @Override
@@ -305,6 +324,7 @@ public class MainActivity extends AppCompatActivity implements
         CONTROL_PANEL(R.id.menu_generic),
         SKY_MAP(R.id.menu_skymap),
         SKY_MAP_GALLERY(R.id.menu_skymap_gallery),
+        POLARIS(R.id.menu_polaris),
         COMPASS(R.id.menu_compass),
         FLASHLIGHT(R.id.menu_flashlight),
         ABOUT(R.id.menu_about);
@@ -343,6 +363,9 @@ public class MainActivity extends AppCompatActivity implements
                 case CONTROL_PANEL:
                     lastInstance = new ControlPanelFragment();
                     break;
+                case POLARIS:
+                    lastInstance = new PolarisFragment();
+                    break;
                 case COMPASS:
                     lastInstance = new CompassFragment();
                     break;
@@ -352,8 +375,6 @@ public class MainActivity extends AppCompatActivity implements
                 case ABOUT:
                     lastInstance = new AboutFragment();
                     break;
-                default:
-                    return null;
             }
             return lastInstance;
         }

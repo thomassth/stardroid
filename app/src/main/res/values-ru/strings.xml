@@ -7,7 +7,6 @@
     <string name="force_gps_pref">Всегда исп. GPS</string>
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">если вкл., даже при сетевом опр. м/п</string>
     <string name="no_use_gps_pref">Задать м/п вручную</string>
-    <string name="no_use_gps_pref_hint">Введите назв. или шир./длг.</string>
     <string name="location_placename">Название места</string>
     <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">например РФ, Санкт-Петербург, пл. Островского, д. 1/3</string>
     <string name="location_lat_pref">Широта</string>
@@ -29,7 +28,6 @@
     <string name="show_grid_pref">Сетка прям. восх./скл.</string>
     <string name="show_horizon_pref">Горизонт</string>
     <string name="show_sky_gradient">Градиент неба</string>
-    <string name="sensor_prefs">Настройки матрицы</string>
     <string name="ecliptic">эклиптика</string>
     <string name="malformed_loc_error">Значение широты или долготы не явл. числом.</string>
     <string name="menu_toggle_dim">Ночной режим вкл./выкл.</string>
@@ -414,7 +412,6 @@
     <string name="sensor_reverse_preference_title">Обратный магнитный Z</string>
     <string name="sensor_reverse_preference_summary">Исправлено для телефонов с неправильно установленными датчиками - требуется перезагрузка</string>
     <string name="disable_gyro_preference_title">Отключить гироскоп</string>
-    <string name="disable_gyro_preference_summary">Не на всех устройствах есть гироскоп - если у вас есть, то вы получите лучшие результаты, если он включен, а этот флажок снят. С другой стороны, если ваше устройство не имеет гироскопа, Sky Map, вероятно, не будет работать, если вы снимите этот флажок.</string>
     <string name="rotate_horizon_preference_title">Повернуть горизонтально</string>
     <string name="rotate_horizon_preference_summary">Поворот на 90 градусов по горизонтали (для экранов с альбомной ориентацией, таких как умные очки)</string>
     <string name="hdf">Область глубокого обзора Хаббла</string>

@@ -32,10 +32,10 @@ import io.github.marcocipriani01.telescopetouch.units.Vector3;
  * @author Dominic Widdows
  * @author John Taylor
  */
-public class Geometry {
+public final class Geometry {
+
     // Convert Degrees to Radians
     public static final float DEGREES_TO_RADIANS = (float) Math.PI / 180.0f;
-
     // Convert Radians to Degrees
     public static final float RADIANS_TO_DEGREES = 180.0f / (float) Math.PI;
 
@@ -95,8 +95,7 @@ public class Geometry {
 
     public static float cosineSimilarity(Vector3 v1, Vector3 v2) {
         // We might want to optimize this implementation at some point.
-        return (float) (scalarProduct(v1, v2) / Math.sqrt(scalarProduct(v1, v1)
-                * scalarProduct(v2, v2)));
+        return (float) (scalarProduct(v1, v2) / Math.sqrt(scalarProduct(v1, v1) * scalarProduct(v2, v2)));
     }
 
     /**

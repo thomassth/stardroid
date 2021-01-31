@@ -8,7 +8,6 @@
     <string name="force_gps_pref">Bruk alltid GPS</string>
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">hvis aktivert, selv om nettverksposisjonering er tilgjengelig</string>
     <string name="no_use_gps_pref">Still inn sted manuelt</string>
-    <string name="no_use_gps_pref_hint">Angi et sted eller lengde-/breddegrad nedenfor</string>
     <string name="location_placename">Stedsnavn</string>
     <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">f.eks. 1400 West Mars Hill Road, Flagstaff, AZ.</string>
     <string name="location_lat_pref">Breddegrad</string>
@@ -33,7 +32,6 @@
     <string name="show_sky_gradient" translation_description="This is a shading of the color of the sky used for effect">Himmelgradient</string>
     <string name="show_meteors_pref">Meteorsvermer</string>
     <!-- Just in case we decide to have such a layer for the 4/24 launch -->
-    <string name="sensor_prefs">Sensorinnstillinger (eksperter)</string>
     <string name="ecliptic">Ekliptikken</string>
     <string name="malformed_loc_error">Bredde- eller lengdegradinnstilling er ikke et tall.</string>
     <string name="menu_toggle_dim">Nattmodus av/på</string>
@@ -420,7 +418,6 @@
     <string name="sensor_reverse_preference_title">Reverser Magnetisk Z</string>
     <string name="sensor_reverse_preference_summary">Løsning for telefoner med uriktig implementerte sensorer - krever omstart</string>
     <string name="disable_gyro_preference_title">Deaktiver gyroskop</string>
-    <string name="disable_gyro_preference_summary">Ikke alle enheter har gyroskop - hvis din har det vil du få bedre resultater med gyroskop aktivert og denne boksen ikke krysset av.  På den annen side hvis enheten ikke har gyroskop så vil Sky Map sannsynligvis ikke fungere hvis du fjerner avkryssingen av denne boksen.</string>
     <string name="rotate_horizon_preference_title">Roter horisont</string>
     <string name="rotate_horizon_preference_summary">Roter horisont 90 grader (for skjermer med påtvunget landskapsorientering slik som smartbriller)</string>
     <string name="hdf">Hubble Deep Field</string>
