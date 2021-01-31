@@ -18,7 +18,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -119,10 +118,10 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
             }
             ConnectionManager.ConnectionState state = connectionManager.getState();
             if (state == ConnectionManager.ConnectionState.DISCONNECTED) {
-                if (host.equals(getString(R.string.host_add))) {
+                if (host.equals(context.getString(R.string.host_add))) {
                     serversSpinner.post(() -> serversSpinner.setSelection(0));
                     ServersActivity.addServer(context, ConnectionFragment.this);
-                } else if (host.equals(getString(R.string.host_manage))) {
+                } else if (host.equals(context.getString(R.string.host_manage))) {
                     serversSpinner.post(() -> serversSpinner.setSelection(0));
                     if (activity instanceof MainActivity)
                         ((MainActivity) activity).launchActivityForResult(new Intent(context, ServersActivity.class));
@@ -139,10 +138,10 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
             @Override
             protected void onImprovedItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 String selected = parent.getItemAtPosition(pos).toString();
-                if (selected.equals(getResources().getString(R.string.host_add))) {
+                if (selected.equals(context.getString(R.string.host_add))) {
                     serversSpinner.post(() -> serversSpinner.setSelection(0));
                     ServersActivity.addServer(context, ConnectionFragment.this);
-                } else if (selected.equals(getResources().getString(R.string.host_manage))) {
+                } else if (selected.equals(context.getString(R.string.host_manage))) {
                     serversSpinner.post(() -> serversSpinner.setSelection(0));
                     if (activity instanceof MainActivity)
                         ((MainActivity) activity).launchActivityForResult(new Intent(context, ServersActivity.class));
@@ -156,7 +155,7 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
         if (nsdHelper != null) {
             nsdHelper.setListener(this);
             if (!nsdHelper.isAvailable())
-                connectionManager.log(getString(R.string.nsd_not_available));
+                connectionManager.log(context.getString(R.string.nsd_not_available));
         }
         return rootView;
     }
@@ -175,7 +174,7 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
                 String[] split = host.split("@");
                 if (split.length == 2) host = split[1];
             }
-            if (host.equals(getString(R.string.host_add)) || host.equals(getString(R.string.host_manage))) {
+            if (host.equals(context.getString(R.string.host_add)) || host.equals(context.getString(R.string.host_manage))) {
                 requestActionSnack(R.string.select_host_first);
             } else {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://" + host)));
@@ -221,7 +220,7 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
         switch (state) {
             case CONNECTED: {
                 connectionButton.post(() -> {
-                    connectionButton.setText(getString(R.string.disconnect));
+                    connectionButton.setText(context.getString(R.string.disconnect));
                     connectionButton.setEnabled(true);
                 });
                 serversSpinner.post(() -> serversSpinner.setEnabled(false));
@@ -230,7 +229,7 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
             }
             case DISCONNECTED: {
                 connectionButton.post(() -> {
-                    connectionButton.setText(getString(R.string.connect));
+                    connectionButton.setText(context.getString(R.string.connect));
                     connectionButton.setEnabled(true);
                 });
                 serversSpinner.post(() -> serversSpinner.setEnabled(true));
@@ -239,7 +238,7 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
             }
             case BUSY: {
                 connectionButton.post(() -> {
-                    connectionButton.setText(getString(R.string.connecting));
+                    connectionButton.setText(context.getString(R.string.connecting));
                     connectionButton.setEnabled(false);
                 });
                 serversSpinner.post(() -> serversSpinner.setEnabled(false));
@@ -251,7 +250,6 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
 
     @Override
     public void loadServers(ArrayList<String> servers) {
-        Resources resources = context.getResources();
         if (nsdHelper != null) {
             HashMap<String, String> services = nsdHelper.getDiscoveredServices();
             for (String name : services.keySet()) {
@@ -259,8 +257,8 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
                 if (ip != null) servers.add(name.replace("@", "") + "@" + ip);
             }
         }
-        servers.add(resources.getString(R.string.host_add));
-        servers.add(resources.getString(R.string.host_manage));
+        servers.add(context.getString(R.string.host_add));
+        servers.add(context.getString(R.string.host_manage));
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, servers);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         serversSpinner.setAdapter(adapter);

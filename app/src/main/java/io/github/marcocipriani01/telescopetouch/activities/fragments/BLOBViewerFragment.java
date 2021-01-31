@@ -193,7 +193,7 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
                             Intent intent = new Intent();
                             intent.setDataAndType(uri, "image/*");
                             intent.setAction(Intent.ACTION_VIEW);
-                            startActivity(Intent.createChooser(intent, getString(R.string.open_photo)));
+                            startActivity(Intent.createChooser(intent, context.getString(R.string.open_photo)));
                         });
                     });
                 } catch (Exception e) {

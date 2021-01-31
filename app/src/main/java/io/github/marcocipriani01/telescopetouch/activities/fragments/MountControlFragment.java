@@ -106,7 +106,7 @@ public class MountControlFragment extends Fragment implements INDIServerConnecti
         protected void onImprovedItemSelected(AdapterView<?> parent, View view, int pos, long id) {
             try {
                 String selected = ((String) slewRateSpinner.getAdapter().getItem(pos));
-                if ((selected != null) && (!selected.equals(getString(R.string.unavailable)))) {
+                if ((selected != null) && (!selected.equals(context.getString(R.string.unavailable)))) {
                     for (INDISwitchElement element : telescopeSlewRateP.getElementsAsList()) {
                         String label = element.getLabel();
                         if (label.equals(selected)) {
@@ -240,11 +240,11 @@ public class MountControlFragment extends Fragment implements INDIServerConnecti
                 arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 int selectedItem = 0;
                 if (telescopeSlewRateP == null) {
-                    arrayAdapter.add(getString(R.string.unavailable));
+                    arrayAdapter.add(context.getString(R.string.unavailable));
                 } else {
                     List<INDISwitchElement> elements = telescopeSlewRateP.getElementsAsList();
                     if (elements.isEmpty()) {
-                        arrayAdapter.add(getString(R.string.unavailable));
+                        arrayAdapter.add(context.getString(R.string.unavailable));
                     } else {
                         for (int i = 0, elementsSize = elements.size(); i < elementsSize; i++) {
                             INDISwitchElement element = elements.get(i);

@@ -30,8 +30,8 @@ import io.github.marcocipriani01.telescopetouch.source.TextSource;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 
 public abstract class RendererControllerBase {
-    private static final boolean SHOULD_LOG_QUEUE = false;
 
+    private static final boolean SHOULD_LOG_QUEUE = false;
     // TODO(brent): collapse these into a single class?
     private static final boolean SHOULD_LOG_RUN = false;
     private static final boolean SHOULD_LOG_FINISH = false;
@@ -41,8 +41,7 @@ public abstract class RendererControllerBase {
         mRenderer = renderer;
     }
 
-    protected static void queueRunnable(EventQueuer queuer, final String msg,
-                                        final CommandType type, final Runnable r) {
+    protected static void queueRunnable(EventQueuer queuer, final String msg, final CommandType type, final Runnable r) {
         // If we're supposed to log something, then wrap the runnable with the
         // appropriate logging statements.  Otherwise, just queue it.
         if (SHOULD_LOG_QUEUE || SHOULD_LOG_RUN || SHOULD_LOG_FINISH) {
@@ -158,8 +157,6 @@ public abstract class RendererControllerBase {
 
     /**
      * Must be called once to register an object manager to the renderer.
-     *
-     * @param rom
      */
     public <E> void queueAddManager(final RenderManager<E> rom) {
         String msg = "Adding manager: " + rom;
@@ -168,17 +165,15 @@ public abstract class RendererControllerBase {
 
     public void waitUntilFinished() {
         final ConditionVariable cv = new ConditionVariable();
-        String msg = "Waiting until operations have finished";
-        queueRunnable(msg, CommandType.Synchronization, cv::open);
+        queueRunnable("Waiting until operations have finished", CommandType.Synchronization, cv::open);
         cv.block();
     }
 
     abstract protected EventQueuer getQueuer();
 
     protected void queueRunnable(String msg, final CommandType type, final Runnable r) {
-        EventQueuer queuer = getQueuer();
         String fullMessage = toString() + " - " + msg;
-        RendererControllerBase.queueRunnable(queuer, fullMessage, type, r);
+        RendererControllerBase.queueRunnable(getQueuer(), fullMessage, type, r);
     }
 
     // Used only to allow logging different types of events.  The distinction
