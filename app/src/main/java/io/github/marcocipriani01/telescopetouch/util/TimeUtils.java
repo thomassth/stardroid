@@ -74,7 +74,7 @@ public class TimeUtils {
         int y = calendar.get(Calendar.YEAR);
         int m = calendar.get(Calendar.MONTH) + 1;
         double d = calendar.get(Calendar.DATE) +
-                (calendar.get(Calendar.HOUR) / 24.0) +
+                (calendar.get(Calendar.HOUR_OF_DAY) / 24.0) +
                 (calendar.get(Calendar.MINUTE) / 1440.0) +
                 (calendar.get(Calendar.SECOND) / 86400.0);
         if ((m == 1) || (m == 2)) {
