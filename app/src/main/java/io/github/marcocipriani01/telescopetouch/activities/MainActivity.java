@@ -381,6 +381,7 @@ public class MainActivity extends AppCompatActivity implements
     public static class MainBottomNavigation extends BottomSheetDialog {
 
         private final NavigationView.OnNavigationItemSelectedListener listener;
+        private Menu navigationMenu;
 
         public MainBottomNavigation(@NonNull MainActivity activity) {
             super(activity);
@@ -398,7 +399,22 @@ public class MainActivity extends AppCompatActivity implements
                 dismiss();
                 return listener.onNavigationItemSelected(item);
             });
-            navigation.getMenu().findItem(currentPage.itemId).setChecked(true);
+            navigationMenu = navigation.getMenu();
+            selectNavItem();
+        }
+
+        @Override
+        public void show() {
+            if (navigationMenu != null)
+                selectNavItem();
+            super.show();
+        }
+
+        private void selectNavItem() {
+            for (int i = 0; i < navigationMenu.size(); i++) {
+                MenuItem item = navigationMenu.getItem(i);
+                item.setChecked(currentPage.itemId == item.getItemId());
+            }
         }
     }
 
