@@ -97,13 +97,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.EditSettingsActivity"
+            android:name=".activities.SettingsActivity"
             android:label="@string/menu_settings"
-            android:screenOrientation="userPortrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.DynamicStarMapActivity" />
-        </activity>
+            android:screenOrientation="userPortrait" />
         <activity
             android:name=".activities.ImageGalleryActivity"
             android:label="@string/menu_gallery"
@@ -147,10 +143,15 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Tap screen to exit"
             android:screenOrientation="portrait"
-            android:theme="@style/FullscreenTheme" />
+            android:theme="@style/FullscreenTheme">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
+        </activity>
         <activity
             android:name=".activities.MapsActivity"
-            android:label="@string/title_activity_maps" />
+            android:label="@string/pick_location_pref" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

@@ -7,7 +7,6 @@
     <string name="force_gps_pref">항상 GPS 사용</string>
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">네트워크 위치 사용여부에 상관 없이</string>
     <string name="no_use_gps_pref">위치 직접 설정</string>
-    <string name="no_use_gps_pref_hint">아래에 위치 또는 위/경도 입력</string>
     <string name="location_placename">장소 이름</string>
     <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">예: 경기도 양평군 옥천면 신복3리 117-1</string>
     <string name="location_lat_pref">위도</string>
@@ -29,7 +28,6 @@
     <string name="show_grid_pref">적경/적위 그리드</string>
     <string name="show_horizon_pref">지평선</string>
     <string name="show_sky_gradient">스카이 그라데이션</string>
-    <string name="sensor_prefs">센서 설정</string>
     <string name="ecliptic">단주기 혜성</string>
     <string name="malformed_loc_error">위도 또는 경도 설정은 숫자가 아닙니다.</string>
     <string name="menu_toggle_dim">야간 모드 전환</string>

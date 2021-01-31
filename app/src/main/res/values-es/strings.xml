@@ -33,7 +33,6 @@
     <string name="show_sky_gradient" translation_description="This is a shading of the color of the sky used for effect">Gradiente del cielo</string>
     <string name="show_meteors_pref">Lluvias de meteoros</string>
     <!-- Just in case we decide to have such a layer for the 4/24 launch -->
-    <string name="sensor_prefs">Ajustes del sensor</string>
     <string name="ecliptic">Eclíptica</string>
     <string name="malformed_loc_error">El ajuste de lat/long no es un número.</string>
     <string name="menu_toggle_dim">Alternar visión nocturna</string>
@@ -423,7 +422,6 @@
     <string name="sensor_reverse_preference_title">Z magnético inverso</string>
     <string name="sensor_reverse_preference_summary">Solución para teléfonos con sensores implementados incorrectamente: requiere reiniciar</string>
     <string name="disable_gyro_preference_title">Desactivar giroscopio</string>
-    <string name="disable_gyro_preference_summary">No todos los dispositivos tienen un giroscopio; si el tuyo lo tiene, obtendrás mejores resultados con él activado y esta opción sin marcar. Pero, si tu dispositivo no lo tiene, es probable que Sky Map no funcione si desmarca esta opción.</string>
     <string name="rotate_horizon_preference_title">Rotar horizonte</string>
     <string name="rotate_horizon_preference_summary">Girar el horizonte en 90 grados (para pantallas con paisaje forzado, como lentes inteligentes)</string>
     <string name="hdf">Campo Profundo del Hubble</string>

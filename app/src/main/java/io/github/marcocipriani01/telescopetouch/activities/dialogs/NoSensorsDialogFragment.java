@@ -63,7 +63,7 @@ public class NoSensorsDialogFragment extends DialogFragment {
                         (dialog, whichButton) -> {
                             Log.d(TAG, "No Sensor Dialog closed");
                             preferences.edit().putBoolean(
-                                    ApplicationConstants.NO_WARN_ABOUT_MISSING_SENSORS,
+                                    ApplicationConstants.NO_WARN_MISSING_SENSORS_PREF,
                                     ((CheckBox) view.findViewById(R.id.no_show_dialog_again)).isChecked()).apply();
                         }).create();
     }

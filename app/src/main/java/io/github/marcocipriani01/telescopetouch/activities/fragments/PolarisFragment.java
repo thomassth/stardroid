@@ -49,8 +49,8 @@ public class PolarisFragment extends ActionFragment {
         @Override
         public void run() {
             polaris.refresh();
-            spotText.setText(polaris.getScopePositionString());
-            hourAngleText.setText(polaris.getHourAngleString());
+            hourAngleText.setText(String.format(getString(R.string.hour_angle), polaris.getHourAngleString()));
+            spotText.setText(String.format(getString(R.string.in_finder), polaris.getScopePositionString()));
             float rotation = polaris.getScopePosition();
             Animation animation = new RotateAnimation(lastRotation, rotation,
                     Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
@@ -60,7 +60,8 @@ public class PolarisFragment extends ActionFragment {
             reticleCrosshair.startAnimation(animation);
             bigDipperReticle.startAnimation(animation);
             lastRotation = rotation;
-            handler.postDelayed(handlerTask, 1000);
+            if (running)
+                handler.postDelayed(handlerTask, 1000);
         }
     };
 
@@ -94,14 +95,13 @@ public class PolarisFragment extends ActionFragment {
     private void setRunning(boolean running) {
         this.running = running;
         handler.removeCallbacks(handlerTask);
-        if (running) {
+        if (running)
             handler.postDelayed(handlerTask, 1000);
-        }
     }
 
     @Override
     public void run() {
-        running = !running;
+        setRunning(!running);
         notifyActionDrawableChange();
     }
 

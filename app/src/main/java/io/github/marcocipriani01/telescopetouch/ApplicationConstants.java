@@ -34,15 +34,17 @@ public class ApplicationConstants {
     public static final Vector3 INITIAL_DOWN = new Vector3(0, -1, -9);
 
     // Preference keys
-    public static final String AUTO_MODE_PREF_KEY = "auto_mode";
-    public static final String NO_WARN_ABOUT_MISSING_SENSORS = "no warn about missing sensors";
+    public static final String AUTO_MODE_PREF = "auto_mode";
+    public static final String NO_WARN_MISSING_SENSORS_PREF = "no warn about missing sensors";
     public static final String BUNDLE_TARGET_NAME = "target_name";
-    public static final String BUNDLE_NIGHT_MODE = "night_mode";
-    public static final String BUNDLE_X_TARGET = "bundle_x_target";
-    public static final String BUNDLE_Y_TARGET = "bundle_y_target";
-    public static final String BUNDLE_Z_TARGET = "bundle_z_target";
-    public static final String BUNDLE_SEARCH_MODE = "bundle_search";
-    public static final String SHARED_PREFERENCE_DISABLE_GYRO = "disable_gyro";
-    public static final String REVERSE_MAGNETIC_Z_PREFKEY = "reverse_magnetic_z";
-    public static final String ROTATE_HORIZON_PREFKEY = "rotate_horizon";
+    public static final String DISABLE_GYRO_PREF = "disable_gyro";
+    public static final String REVERSE_MAGNETIC_Z_PREF = "reverse_magnetic_z";
+    public static final String ROTATE_HORIZON_PREF = "rotate_horizon";
+    public static final String LONGITUDE_PREF = "longitude";
+    public static final String LATITUDE_PREF = "latitude";
+    public static final String INDI_SERVERS_PREF = "INDI_SERVERS_PREF";
+    public static final String INDI_PORT_PREF = "INDI_PORT_PREF";
+    public static final String NSD_PREF = "enable_nsd";
+    public static final String POLARIS_HEMISPHERE_PREF = "polaris_hemisphere_selection";
+    public static final String POLARIS_RETICLE_PREF = "polaris_reticle";
 }

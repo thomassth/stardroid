@@ -46,6 +46,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.MainActivity;
@@ -67,8 +68,6 @@ import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connect
 public class ConnectionFragment extends ActionFragment implements ServersReloadListener,
         ConnectionManager.ManagerListener, NSDHelper.NSDListener, Toolbar.OnMenuItemClickListener {
 
-    private static final String INDI_PORT_PREF = "INDI_PORT_PREF";
-    private static final String NSD_PREF = "NSD_PREF";
     private static int selectedSpinnerItem = 0;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private SharedPreferences preferences;
@@ -77,7 +76,6 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
     private NSDHelper nsdHelper;
     private EditText portEditText;
     private LogAdapter logAdapter;
-    private boolean showNsd = true;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -96,11 +94,10 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
 
         connectionButton = rootView.findViewById(R.id.connectionButton);
         serversSpinner = rootView.findViewById(R.id.spinnerHost);
-        showNsd = preferences.getBoolean(NSD_PREF, true);
         nsdHelper = TelescopeTouchApp.getServiceDiscoveryHelper();
         loadServers(ServersActivity.getServers(preferences));
         portEditText = rootView.findViewById(R.id.port_edittext);
-        portEditText.setText(String.valueOf(preferences.getInt(INDI_PORT_PREF, 7624)));
+        portEditText.setText(String.valueOf(preferences.getInt(ApplicationConstants.INDI_PORT_PREF, 7624)));
         final FragmentActivity activity = getActivity();
         connectionButton.setOnClickListener(v -> {
             String host = String.valueOf(serversSpinner.getSelectedItem());
@@ -115,7 +112,7 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
             } else {
                 try {
                     port = Integer.parseInt(portStr);
-                    preferences.edit().putInt(INDI_PORT_PREF, port).apply();
+                    preferences.edit().putInt(ApplicationConstants.INDI_PORT_PREF, port).apply();
                 } catch (NumberFormatException e) {
                     port = 7624;
                 }
@@ -156,30 +153,23 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
         refreshUi(connectionManager.getState());
         connectionManager.addManagerListener(this);
 
-        nsdHelper.setListener(this);
-        if (!nsdHelper.isAvailable()) connectionManager.log(getString(R.string.nsd_not_available));
+        if (nsdHelper != null) {
+            nsdHelper.setListener(this);
+            if (!nsdHelper.isAvailable())
+                connectionManager.log(getString(R.string.nsd_not_available));
+        }
         return rootView;
     }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.connection, menu);
-        MenuItem item = menu.findItem(R.id.menu_nsd);
-        item.setEnabled(nsdHelper.isAvailable());
-        item.setChecked(showNsd);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.menu_nsd) {
-            showNsd = !item.isChecked();
-            item.setChecked(showNsd);
-            loadServers(ServersActivity.getServers(preferences));
-            preferences.edit().putBoolean(NSD_PREF, showNsd).apply();
-            return true;
-        } else if (itemId == R.id.menu_open_browser) {
+        if (item.getItemId() == R.id.menu_open_browser) {
             String host = String.valueOf(serversSpinner.getSelectedItem());
             if (host.contains("@")) {
                 String[] split = host.split("@");
@@ -204,7 +194,8 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
     @Override
     public void onDestroy() {
         super.onDestroy();
-        nsdHelper.setListener(null);
+        if (nsdHelper != null)
+            nsdHelper.setListener(null);
         connectionManager.removeManagerListener(this);
     }
 
@@ -261,7 +252,7 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
     @Override
     public void loadServers(ArrayList<String> servers) {
         Resources resources = context.getResources();
-        if (showNsd) {
+        if (nsdHelper != null) {
             HashMap<String, String> services = nsdHelper.getDiscoveredServices();
             for (String name : services.keySet()) {
                 String ip = services.get(name);

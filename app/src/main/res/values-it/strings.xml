@@ -7,7 +7,6 @@
     <string name="force_gps_pref">Usa sempre GPS</string>
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">Se abilitato, anche se è disponibile la posizione di rete</string>
     <string name="no_use_gps_pref">Imposta località manual.</string>
-    <string name="no_use_gps_pref_hint">Inserisci un luogo o lat/long sotto</string>
     <string name="location_placename">Nome luogo</string>
     <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">ad es. 1400 West Mars Hill Road, Flagstaff, AZ.</string>
     <string name="location_lat_pref">Latitudine</string>
@@ -29,7 +28,6 @@
     <string name="show_grid_pref">Griglia RA/Dec</string>
     <string name="show_horizon_pref">Orizzonte</string>
     <string name="show_sky_gradient">Gradiente cielo</string>
-    <string name="sensor_prefs">Impostazioni sensori</string>
     <string name="ecliptic">Eclittica</string>
     <string name="malformed_loc_error">Il valore di lat./long. non è un numero.</string>
     <string name="menu_toggle_dim">Modalità notturna</string>
@@ -507,4 +505,6 @@
     <string name="select_host_first">Seleziona prima un host.</string>
     <string name="database_filter">Filtro database</string>
     <string name="compass_not_available">Bussola non disponibile!</string>
+    <string name="sensor_prefs">Impostazioni sensori Sky Map</string>
+    <string name="no_use_gps_pref_hint">Seleziona un punto nella mappa o inserisci le coordinate.</string>
 </resources>

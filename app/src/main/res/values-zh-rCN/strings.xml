@@ -8,7 +8,6 @@
     <string name="force_gps_pref">一律使用 GPS</string>
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">启用后（即使提供网络位置功能）</string>
     <string name="no_use_gps_pref">手动设置位置</string>
-    <string name="no_use_gps_pref_hint">在下面输入地点或纬度/经度</string>
     <string name="location_placename">地名</string>
     <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">例如，江苏省南京市北京西路 2 号</string>
     <string name="location_lat_pref">纬度</string>
@@ -33,7 +32,6 @@
     <string name="show_sky_gradient">天空梯度</string>
     <string name="show_meteors_pref">流星雨</string>
     <!-- Just in case we decide to have such a layer for the 4/24 launch -->
-    <string name="sensor_prefs">传感器设置</string>
     <string name="ecliptic">黄道</string>
     <string name="malformed_loc_error">纬度或经度设置不是数字。</string>
     <string name="menu_toggle_dim">切换夜间模式</string>

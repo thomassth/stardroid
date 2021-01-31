@@ -6,9 +6,9 @@
     <string name="go">Go!</string>
     <string name="location_prefs">Location Settings</string>
     <string name="force_gps_pref">Always use GPS</string>
-    <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">if enabled, even if network location is available</string>
+    <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">If enabled, even if network location is available</string>
     <string name="no_use_gps_pref">Set location manually</string>
-    <string name="no_use_gps_pref_hint">Enter a place or a lat/long below</string>
+    <string name="no_use_gps_pref_hint">Pick a place on the map or enter the coordinates.</string>
     <string name="location_placename">Place name</string>
     <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">e.g. 1400 West Mars Hill Road, Flagstaff, AZ.</string>
     <string name="location_lat_pref">Latitude</string>
@@ -32,8 +32,7 @@
     <string name="show_horizon_pref">Horizon</string>
     <string name="show_sky_gradient" translation_description="This is a shading of the color of the sky used for effect">Sky Gradient</string>
     <string name="show_meteors_pref">Meteor Showers</string>
-    <!-- Just in case we decide to have such a layer for the 4/24 launch -->
-    <string name="sensor_prefs">Sensor Settings (experts)</string>
+    <string name="sensor_prefs">Sky Map sensors settings</string>
     <string name="ecliptic">Ecliptic</string>
     <string name="malformed_loc_error">Latitude or longitude setting isn\'t a number.</string>
     <string name="menu_toggle_dim">Toggle night mode</string>
@@ -50,13 +49,11 @@
     <string name="menu_time">Time Travel</string>
     <string name="time_travel_start_message_alt">Traveling through time to %s…</string>
     <string name="time_travel_close_message">Back to the present…</string>
-    <!--  -->
     <string name="popular_dates_prompt" translation_description="Label for a list of dates the user can choose from">Popular dates</string>
     <string name="custom_date_prompt" translation_description="Label telling the user to manually specify a date">Or select your own date:</string>
     <string name="change_date_prompt">Change the date</string>
     <string name="change_time_prompt">Change the time</string>
-    <string name="now_visiting" translation_description="used in time travel dialog to tell the user what time they are visiting, time formatted as yyyy.mm.dd at hh.mm.ss + timezone">
-        Now visiting: %s</string>
+    <string name="now_visiting" translation_description="used in time travel dialog to tell the user what time they are visiting, time formatted as yyyy.mm.dd at hh.mm.ss + timezone">Now visiting: %s</string>
     <string name="time_travel_label_past" translation_description="Label showing that we are in the past">Time Travel: Past</string>
     <string name="time_travel_label_future" translation_description="Label showing that we are in the future">Time Travel: Future</string>
     <string name="time_travel_stopped" translation_description="Label showing rate of travel through time">Time travel frozen</string>
@@ -418,7 +415,7 @@
     <string name="sensor_reverse_preference_title">Reverse Magnetic Z</string>
     <string name="sensor_reverse_preference_summary">Fix for phones with incorrectly implemented sensors - requires restart</string>
     <string name="disable_gyro_preference_title">Disable gyroscope</string>
-    <string name="disable_gyro_preference_summary">Not all devices have a gyro - if yours does then you\'ll get better results with it enabled and this box unchecked.  On the other hand if your device does not have a gyro then Sky Map will probably not work if you uncheck this box.</string>
+    <string name="disable_gyro_preference_summary">Not evert device has a gyro: if yours does then you\'ll get better results with it enabled. If it doesn\'t, Sky Map will probably not work if you uncheck this box.</string>
     <string name="rotate_horizon_preference_title">Rotate horizon</string>
     <string name="rotate_horizon_preference_summary">Rotate by 90 degree horizon (for screens with forced landscape, such as smartglasses)</string>
 
@@ -590,7 +587,20 @@
     <string name="red_screen_light">Red screen light</string>
     <string name="flashlight_unavailable">Flashlight unavailable</string>
     <string name="inaccurate_compass_warning">Inaccurate compass - please calibrate</string>
-    <string name="title_activity_maps">Map</string>
     <string name="flashlight">Flashlight</string>
     <string name="polaris_hour_angle">Polaris hour angle</string>
+    <string name="hour_angle">Hour angle: %s</string>
+    <string name="in_finder">In finder: %s</string>
+    <string name="hemisphere">Hemisphere</string>
+    <string name="hemisphere_description">Select your hemisphere and polar star.</string>
+    <string name="hemisphere_auto">Automatic detection</string>
+    <string name="hemisphere_northern">Northern (Polaris)</string>
+    <string name="hemisphere_southern">Southern (Sigma Octantis)</string>
+    <string name="nsd_pref_description">Automatically discover Zeroconf network services. Requires restart.</string>
+    <string name="nsd_pref">Network Service Discovery</string>
+    <string name="reticle_skywatcher">New Sky-Watcher reticle</string>
+    <string name="reticle_big_dipper">Big Dipper/Cassiopeia</string>
+    <string name="pick_location_description">Choose a location from Google Maps</string>
+    <string name="pick_location_pref">Pick on map</string>
+    <string name="network">Network</string>
 </resources>

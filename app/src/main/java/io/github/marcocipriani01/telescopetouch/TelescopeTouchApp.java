@@ -116,7 +116,8 @@ public class TelescopeTouchApp extends Application {
         performFeatureCheck();
 
         connectionManager.initFormatters(context);
-        if (serviceDiscoveryHelper == null) serviceDiscoveryHelper = new NSDHelper(this);
+        if ((serviceDiscoveryHelper == null) && preferences.getBoolean(ApplicationConstants.NSD_PREF, true))
+            serviceDiscoveryHelper = new NSDHelper(this);
     }
 
     @Override
@@ -175,9 +176,9 @@ public class TelescopeTouchApp extends Application {
         }
 
         // Enable Gyro if available and user hasn't already disabled it.
-        if (!preferences.contains(ApplicationConstants.SHARED_PREFERENCE_DISABLE_GYRO)) {
+        if (!preferences.contains(ApplicationConstants.DISABLE_GYRO_PREF)) {
             preferences.edit().putBoolean(
-                    ApplicationConstants.SHARED_PREFERENCE_DISABLE_GYRO, !hasRotationSensor).apply();
+                    ApplicationConstants.DISABLE_GYRO_PREF, !hasRotationSensor).apply();
         }
 
         // Lastly a dump of all the sensors.

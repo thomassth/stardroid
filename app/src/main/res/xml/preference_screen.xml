@@ -4,6 +4,18 @@
     app:iconSpaceReserved="false">
 
     <PreferenceCategory
+        android:title="@string/network"
+        app:iconSpaceReserved="false">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="enable_nsd"
+            android:summary="@string/nsd_pref_description"
+            android:title="@string/nsd_pref"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/location_prefs"
         app:iconSpaceReserved="false">
 
@@ -21,39 +33,66 @@
             android:title="@string/no_use_gps_pref"
             app:iconSpaceReserved="false" />
 
-        <EditTextPreference
-            android:defaultValue=""
+        <Preference
             android:dependency="no_auto_locate"
-            android:key="location"
+            android:key="pick_location_map"
             android:layout="?android:attr/preferenceLayoutChild"
-            android:summary="@string/location_placename_hint"
-            android:title="@string/location_placename"
-            app:iconSpaceReserved="false" />
+            android:summary="@string/pick_location_description"
+            android:title="@string/pick_location_pref"
+            app:iconSpaceReserved="false">
+        </Preference>
 
         <EditTextPreference
             android:defaultValue="0"
             android:dependency="no_auto_locate"
+            android:dialogLayout="@layout/preference_dialog_numeric"
             android:inputType="number|numberSigned|numberDecimal"
             android:key="latitude"
             android:layout="?android:attr/preferenceLayoutChild"
             android:summary="@string/degrees"
             android:title="@string/location_lat_pref"
+            app:defaultValue="0.0"
             app:iconSpaceReserved="false" />
 
         <EditTextPreference
             android:defaultValue="0"
             android:dependency="no_auto_locate"
+            android:dialogLayout="@layout/preference_dialog_numeric"
             android:inputType="number|numberSigned|numberDecimal"
             android:key="longitude"
             android:layout="?android:attr/preferenceLayoutChild"
             android:summary="@string/degrees"
             android:title="@string/location_long_pref"
+            app:defaultValue="0.0"
             app:iconSpaceReserved="false" />
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="use_magnetic_correction"
             android:title="@string/use_magnetic_correction"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/polaris_hour_angle"
+        app:iconSpaceReserved="false">
+
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/hemisphere_pref"
+            android:entryValues="@array/hemisphere_pref_values"
+            android:key="polaris_hemisphere_selection"
+            android:summary="@string/hemisphere_description"
+            android:title="@string/hemisphere"
+            app:iconSpaceReserved="false" />
+
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/reticle_pref"
+            android:entryValues="@array/reticle_pref_values"
+            android:key="polaris_reticle"
+            android:summary="%s"
+            android:title="Polar finder reticle"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
@@ -72,6 +111,7 @@
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="reverse_magnetic_z"
+            android:layout="?android:attr/preferenceLayoutChild"
             android:summary="@string/sensor_reverse_preference_summary"
             android:title="@string/sensor_reverse_preference_title"
             app:iconSpaceReserved="false" />
