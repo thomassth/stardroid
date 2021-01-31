@@ -26,10 +26,12 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.PreferenceManager;
 
@@ -228,6 +230,22 @@ public class LocationController extends AbstractController implements LocationLi
         locationManager.removeUpdates(this);
 
         Log.d(TAG, "LocationController -onLocationChanged");
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(@NonNull String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(@NonNull String provider) {
+
     }
 
     private void showLocationToUser(LatLong location, String provider) {

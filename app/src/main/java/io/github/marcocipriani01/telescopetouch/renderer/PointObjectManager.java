@@ -71,13 +71,10 @@ public class PointObjectManager extends RendererObjectManager {
         mSkyRegions.clear();
 
         if (COMPUTE_REGIONS) {
-            // Find the region for each point, and put it in a separate list
-            // for that region.
+            // Find the region for each point, and put it in a separate list for that region.
             for (PointSource point : points) {
-                int region = points.size() < MINIMUM_NUM_POINTS_FOR_REGIONS
-                        ? SkyRegionMap.CATCHALL_REGION_ID
-                        : SkyRegionMap.getObjectRegion(point.getLocation());
-                mSkyRegions.getRegionData(region).sources.add(point);
+                mSkyRegions.getRegionData(points.size() < MINIMUM_NUM_POINTS_FOR_REGIONS ?
+                        SkyRegionMap.CATCHALL_REGION_ID : SkyRegionMap.getObjectRegion(point.getLocation())).sources.add(point);
             }
         } else {
             mSkyRegions.getRegionData(SkyRegionMap.CATCHALL_REGION_ID).sources = points;
