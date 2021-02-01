@@ -36,7 +36,7 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/menu_skymap_calibrate"
+        android:id="@+id/menu_compass_calibration"
         android:orderInCategory="7"
         android:title="@string/menu_calibrate"
         app:showAsAction="never" />

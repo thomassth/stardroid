@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,23 +7,26 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="io.github.marcocipriani01.telescopetouch.activities.DiagnosticActivity">
+    tools:context="io.github.marcocipriani01.telescopetouch.activities.DiagnosticActivity"
+    tools:ignore="HardcodedText">
 
-    <LinearLayout
+    <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:fillViewport="true">
 
         <TableLayout
-            style="@style/TableSection"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:stretchColumns="*">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingBottom="2dp"
                 android:text="@string/diagnostics_activity_general_heading"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <TableRow
                 android:layout_width="match_parent"
@@ -36,7 +39,7 @@
                 <TextView
                     android:id="@+id/diagnose_phone_txt"
                     style="@style/TableRow_Element"
-                    android:text="Nexus 5x" />
+                    android:text="@string/unknown" />
             </TableRow>
 
             <TableRow
@@ -54,7 +57,7 @@
                     style="@style/TableRow_Element"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="6.1 (xxx)" />
+                    android:text="@string/unknown" />
 
             </TableRow>
 
@@ -73,20 +76,16 @@
                     style="@style/TableRow_Element"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0.0.1 (9999)" />
+                    android:text="@string/unknown" />
             </TableRow>
-        </TableLayout>
-
-        <TableLayout
-            style="@style/TableSection"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="2dp"
                 android:text="@string/diagnostics_activity_sensors_heading"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <TableRow
                 android:layout_width="match_parent"
@@ -229,18 +228,14 @@
                     android:layout_height="wrap_content"
                     android:text="-, -, -" />
             </TableRow>
-        </TableLayout>
-
-        <TableLayout
-            style="@style/TableSection"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="2dp"
                 android:text="@string/diagnostics_activity_location_and_time_heading"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <TableRow
                 android:layout_width="match_parent"
@@ -257,7 +252,7 @@
                     style="@style/TableRow_Element"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="(waiting)" />
+                    android:text="@string/unknown" />
             </TableRow>
 
             <TableRow
@@ -275,7 +270,7 @@
                     style="@style/TableRow_Element"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="--, -- (manual)" />
+                    android:text="@string/unknown" />
             </TableRow>
 
             <TableRow
@@ -293,7 +288,7 @@
                     style="@style/TableRow_Element"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="-123, 32" />
+                    android:text="-, -" />
             </TableRow>
 
             <TableRow
@@ -304,14 +299,14 @@
                     style="@style/TableRow_RowHeading"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/diagnostics_activity_magnetic_correction" />
+                    android:text="@string/magnetic_declination" />
 
                 <TextView
                     android:id="@+id/diagnose_magnetic_correction_txt"
                     style="@style/TableRow_Element"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="+?" />
+                    android:text="-" />
             </TableRow>
 
             <TableRow
@@ -329,7 +324,7 @@
                     style="@style/TableRow_Element"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="13:33 July 20, 1969" />
+                    android:text="@string/unknown" />
             </TableRow>
 
             <TableRow
@@ -347,17 +342,16 @@
                     style="@style/TableRow_Element"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="20:18 July 20, 1969" />
+                    android:text="@string/unknown" />
             </TableRow>
-        </TableLayout>
-
-        <TableLayout style="@style/TableSection">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="2dp"
                 android:text="@string/diagnostics_activity_network_heading"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <TableRow
                 android:layout_width="match_parent"
@@ -374,9 +368,8 @@
                     style="@style/TableRow_Element"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="WiFi?" />
+                    android:text="@string/unknown" />
             </TableRow>
         </TableLayout>
-    </LinearLayout>
-
-</androidx.core.widget.NestedScrollView>
+    </HorizontalScrollView>
+</ScrollView>

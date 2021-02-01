@@ -393,7 +393,7 @@
     <string name="diagnostics_activity_gps">GPS</string>
     <string name="diagnostics_activity_location">位置 (緯度, 經度)</string>
     <string name="diagnostics_activity_pointing_ra_dec">指向快照</string>
-    <string name="diagnostics_activity_magnetic_correction">地磁修正</string>
+    <string name="magnetic_declination">地磁修正</string>
     <string name="diagnostics_activity_local_datetime">本地時間</string>
     <string name="diagnostics_activity_universal_time">全球標準時間</string>
     <string name="diagnostics_activity_network_heading">網路</string>

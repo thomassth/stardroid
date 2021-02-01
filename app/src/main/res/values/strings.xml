@@ -42,6 +42,8 @@
     <string name="east">EAST</string>
     <string name="west">WEST</string>
     <string name="south">SOUTH</string>
+    <string name="north_short">N</string>
+    <string name="south_short">S</string>
     <string name="east_short">E</string>
     <string name="west_short">W</string>
     <string name="search_label">Search the Sky</string>
@@ -396,7 +398,7 @@
     <string name="diagnostics_activity_gps">GPS</string>
     <string name="diagnostics_activity_location">Location (lat, long)</string>
     <string name="diagnostics_activity_pointing_ra_dec">Pointing snapshot</string>
-    <string name="diagnostics_activity_magnetic_correction">Mag correction</string>
+    <string name="magnetic_declination">Mag. declination</string>
     <string name="diagnostics_activity_local_datetime">Local datetime</string>
     <string name="diagnostics_activity_universal_time">Universal datetime</string>
     <string name="diagnostics_activity_network_heading">Network</string>
@@ -433,7 +435,7 @@
     <string name="menu_motion">Mount</string>
     <string name="menu_connection">Connect</string>
     <string name="menu_control_panel">Devices</string>
-    <string name="mount_goto">Goto</string>
+    <string name="mount_goto">Go-To</string>
     <string name="unavailable">Unavailable</string>
     <string name="send_request">Send</string>
     <string name="back_request">Back</string>
@@ -482,8 +484,8 @@
     <string name="entry_short_blank">Unknown</string>
     <string name="entry_short_minus">Nonexistent</string>
     <string name="entry_short_PD">Photographic defect</string>
-    <string name="sync_slew_error">Error: can\'t request sync or goto</string>
-    <string name="slew_ok">Goto started</string>
+    <string name="sync_slew_error">Error: can\'t request sync or Go-To</string>
+    <string name="slew_ok">Go-To started</string>
     <string name="sync_ok">Sync …</string>
     <string name="empty_catalog">Empty catalog</string>
     <string name="menu_about">About this app</string>
@@ -607,5 +609,8 @@
     <string name="network">Network</string>
     <string name="sigma_octantis">Sigma Octantis</string>
     <string name="polaris_star_finder">Polaris</string>
-    <string name="loading">Loading...</string>
+    <string name="loading">Loading…</string>
+    <string name="toast_manual_location_on">Switching manual location on…</string>
+    <string name="precession_pref">Compensate coordinates for precession</string>
+    <string name="precession_pref_description">The catalog\'s coordinates correspond to the J2000 astronomical epoch. Check this box to compensate them for precession. If the app slews telescope to the wrong place, try disabling this setting.</string>
 </resources>

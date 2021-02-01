@@ -345,7 +345,7 @@
     <string name="diagnostics_activity_local_datetime">Ortszeit</string>
     <string name="diagnostics_activity_location">Standort (Länge, Breite)</string>
     <string name="diagnostics_activity_location_and_time_heading">Standort und Zeit</string>
-    <string name="diagnostics_activity_magnetic_correction">Magnetische Korrektur</string>
+    <string name="magnetic_declination">Magnetische Korrektur</string>
     <string name="diagnostics_activity_network_heading">Netzwerk</string>
     <string name="diagnostics_activity_phone">Gerät</string>
     <string name="diagnostics_activity_rotation_matrix">Rotationsmatrix</string>

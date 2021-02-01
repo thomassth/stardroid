@@ -48,4 +48,7 @@ public class ApplicationConstants {
     public static final String POLARIS_HEMISPHERE_PREF = "polaris_hemisphere_selection";
     public static final String POLARIS_RETICLE_PREF = "polaris_reticle";
     public static final String MAGNETIC_DECLINATION_PREF = "use_magnetic_correction";
+    public static final String NO_AUTO_LOCATE_PREF = "no_auto_locate";
+    public static final String FORCE_GPS_PREF = "force_gps";
+    public static final String COMPENSATE_PRECESSION_PREF = "compensate_precession";
 }

@@ -16,6 +16,8 @@
 
 package io.github.marcocipriani01.telescopetouch.util;
 
+import android.annotation.SuppressLint;
+
 import java.util.Calendar;
 
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
@@ -175,5 +177,18 @@ public final class Geometry {
         return new Matrix33(x * xm + cosD, xym + zs, zxm - ys,
                 xym - zs, y * ym + cosD, yzm + xs,
                 zxm + ys, yzm - xs, z * zm + cosD);
+    }
+
+    @SuppressLint("DefaultLocale")
+    public static String angleToString(double angle, boolean degOrHourFormat) {
+        int deg = (int) angle;
+        double tmp = (angle % 1.0) * 3600.0;
+        int min = Math.abs((int) (tmp / 60.0));
+        int sec = Math.abs((int) (tmp % 60.0));
+        if (degOrHourFormat) {
+            return String.format("%1$02d°%2$02d'%3$02d\"", deg, min, sec);
+        } else {
+            return String.format("%1$02dh%2$02dm%3$02ds", deg, min, sec);
+        }
     }
 }

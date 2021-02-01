@@ -397,7 +397,7 @@
     <string name="diagnostics_activity_gps">GPS</string>
     <string name="diagnostics_activity_location">Posisjon (br., le.)</string>
     <string name="diagnostics_activity_pointing_ra_dec">Peke-øyeblikksbilde</string>
-    <string name="diagnostics_activity_magnetic_correction">Magnetisk korreksjon</string>
+    <string name="magnetic_declination">Magnetisk korreksjon</string>
     <string name="diagnostics_activity_local_datetime">Lokal dato-tid</string>
     <string name="diagnostics_activity_universal_time">Universell dato-tid</string>
     <string name="diagnostics_activity_network_heading">Nettverk</string>

@@ -335,7 +335,7 @@
     <string name="show_meteors_pref">Meteorické roje</string>
     <string name="quadrantids" translation_description="Meteor Shower">Kvadrantidy</string>
     <string name="compass_calibration_activity_heading_compass">Kompas</string>
-    <string name="diagnostics_activity_magnetic_correction">Magnetická korekce</string>
+    <string name="magnetic_declination">Magnetická korekce</string>
     <string name="menu_diagnostics">Diagnostika</string>
     <string name="permission_disabled">Povolení odmítnuto</string>
     <string name="sensor_absent">Senzor chybí</string>

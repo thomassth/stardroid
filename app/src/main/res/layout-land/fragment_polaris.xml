@@ -5,25 +5,26 @@
     android:layout_height="match_parent"
     android:layout_marginBottom="?android:attr/actionBarSize"
     android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:layout_marginTop="@dimen/activity_vertical_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     tools:ignore="ContentDescription">
 
     <TextView
-        android:id="@+id/polaris_gps"
+        android:id="@+id/polaris_spot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@id/polaris_hour_angle"
         android:layout_alignParentStart="true"
         android:layout_toStartOf="@+id/polaris_reticle_skywatcher"
         android:text="@string/loading"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:gravity="center"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/polaris_hour_angle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_marginTop="8dp"
@@ -33,12 +34,13 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/polaris_spot"
+        android:id="@+id/polaris_gps"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/polaris_hour_angle"
-        android:layout_alignParentStart="true"
+        android:gravity="center"
         android:layout_marginTop="8dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/polaris_hour_angle"
         android:layout_toStartOf="@+id/polaris_reticle_skywatcher"
         android:text="@string/loading"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"

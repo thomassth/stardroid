@@ -74,6 +74,18 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:title="@string/mount_goto"
+        app:iconSpaceReserved="false">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="compensate_precession"
+            android:title="@string/precession_pref"
+            android:summary="@string/precession_pref_description"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/polaris_hour_angle"
         app:iconSpaceReserved="false">
 

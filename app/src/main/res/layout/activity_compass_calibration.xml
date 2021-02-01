@@ -23,37 +23,22 @@
             android:text="@string/compass_calibration_activity_warning"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-        <LinearLayout
-            android:id="@+id/compass_calib_lin_layout"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/compass_calib_activity_compass_accuracy"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/compass_calib_activity_explain_why"
-            android:orientation="horizontal"
-            android:paddingTop="5dp"
-            android:paddingEnd="5dp"
-            android:paddingBottom="16dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/compass_calibration_activity_heading_compass"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-            <TextView
-                android:id="@+id/compass_calib_activity_compass_accuracy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="5dp"
-                android:text="accuracy: unknown"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                tools:ignore="HardcodedText" />
-        </LinearLayout>
+            android:layout_centerHorizontal="true"
+            android:paddingBottom="16dp"
+            android:text="accuracy: unknown"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            tools:ignore="HardcodedText" />
 
         <WebView
             android:id="@+id/compass_calib_activity_webview"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/compass_calib_lin_layout"
+            android:layout_below="@id/compass_calib_activity_compass_accuracy"
             android:layout_centerHorizontal="true"
             android:layout_margin="8dp"
             android:background="@android:color/black" />

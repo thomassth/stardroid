@@ -384,7 +384,7 @@
     <string name="diagnostics_activity_gps">GPS</string>
     <string name="diagnostics_activity_location">Розташування (ш., д.)</string>
     <string name="diagnostics_activity_pointing_ra_dec">Вказівник</string>
-    <string name="diagnostics_activity_magnetic_correction">Mag корекція</string>
+    <string name="magnetic_declination">Mag корекція</string>
     <string name="diagnostics_activity_local_datetime">Місцевий час</string>
     <string name="diagnostics_activity_universal_time">Універсальний час</string>
     <string name="diagnostics_activity_network_heading">Мережа</string>

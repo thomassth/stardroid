@@ -38,7 +38,7 @@ public class RealMagneticDeclinationCalculator implements MagneticDeclinationCal
      */
     @Override
     public float getDeclination() {
-        if (geomagneticField == null) return 0;
+        if (geomagneticField == null) return 0.0f;
         return geomagneticField.getDeclination();
     }
 
@@ -47,8 +47,7 @@ public class RealMagneticDeclinationCalculator implements MagneticDeclinationCal
      */
     @Override
     public void setLocationAndTime(LatLong location, long timeInMillis) {
-        geomagneticField = new GeomagneticField(location.getLatitude(),
-                location.getLongitude(), 0, timeInMillis);
+        geomagneticField = new GeomagneticField(location.getLatitude(), location.getLongitude(), 0, timeInMillis);
     }
 
     @NonNull

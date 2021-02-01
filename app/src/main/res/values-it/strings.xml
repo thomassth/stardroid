@@ -529,6 +529,13 @@
     <string name="sigma_octantis">Sigma Octantis</string>
     <string name="polaris_star_finder">Polaris</string>
     <string name="wifi">" (Wi-Fi)"</string>
+    <string name="loading">Caricamento…</string>
+    <string name="toast_manual_location_on">Attivo la locatilità manuale…</string>
     <string name="east_short">E</string>
     <string name="west_short">O</string>
+    <string name="north_short">N</string>
+    <string name="south_short">S</string>
+    <string name="magnetic_declination">Declinazione magn.</string>
+    <string name="precession_pref">Compensa precessione astronomica</string>
+    <string name="precession_pref_description">Le coordinate nel catalogo sono riferite all\'epoca astronomica J2000. Attiva questa impostazione per compensare la precessione. Se l\'applicazione muove il telescopio nel punto sbagliato, prova a disabilitarla.</string>
 </resources>

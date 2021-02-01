@@ -4,20 +4,68 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="?android:attr/actionBarSize"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
     tools:ignore="ContentDescription">
 
-    <ImageView
-        android:id="@+id/compass_dial"
-        android:layout_width="320dp"
-        android:layout_height="320dp"
-        android:layout_centerInParent="true"
-        android:src="@drawable/compass_dial_view" />
+    <TextView
+        android:id="@+id/compass_heading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/compass_gps"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/compass_layout"
+        android:gravity="center"
+        android:text="@string/loading"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textStyle="bold" />
 
-    <ImageView
-        android:id="@+id/compass_arrow"
-        android:layout_width="20dp"
-        android:layout_height="240dp"
-        android:layout_centerInParent="true"
-        android:scaleType="fitXY"
-        android:src="@drawable/compass_arrow" />
+    <TextView
+        android:id="@+id/compass_gps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="8dp"
+        android:layout_toStartOf="@+id/compass_layout"
+        android:gravity="center"
+        android:text="@string/loading"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/compass_declination"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/compass_gps"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="8dp"
+        android:layout_toStartOf="@+id/compass_layout"
+        android:gravity="center"
+        android:text="@string/loading"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textStyle="bold" />
+
+    <RelativeLayout
+        android:id="@+id/compass_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true">
+
+        <ImageView
+            android:id="@+id/compass_dial"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/compass_dial" />
+
+        <ImageView
+            android:id="@+id/compass_arrow"
+            android:layout_width="20dp"
+            android:layout_height="220dp"
+            android:layout_centerInParent="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/compass_arrow" />
+    </RelativeLayout>
 </RelativeLayout>

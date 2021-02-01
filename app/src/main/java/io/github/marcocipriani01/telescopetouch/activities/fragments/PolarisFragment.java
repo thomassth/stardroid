@@ -17,8 +17,8 @@
 package io.github.marcocipriani01.telescopetouch.activities.fragments;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,7 +39,7 @@ import androidx.preference.PreferenceManager;
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.astronomy.Polaris;
-import io.github.marcocipriani01.telescopetouch.control.LocationController;
+import io.github.marcocipriani01.telescopetouch.sensors.LocationHelper;
 import io.github.marcocipriani01.telescopetouch.units.LatLong;
 
 public class PolarisFragment extends ActionFragment {
@@ -60,9 +60,10 @@ public class PolarisFragment extends ActionFragment {
         @Override
         public void run() {
             polaris.refresh();
-            gpsText.setText(polaris.getLatitudeString() + " / " + polaris.getLongitudeString());
+            gpsText.setText(LatLong.latitudeToString((float) polaris.getLatitude(), context) + " / " +
+                    LatLong.longitudeToString((float) polaris.getLongitude(), context));
             hourAngleText.setText(String.format(context.getString(R.string.hour_angle), polaris.getHourAngleString()));
-            spotText.setText(String.format(context.getString(R.string.in_finder),context. getString(polaris.getStarName()), polaris.getScopePositionString()));
+            spotText.setText(String.format(context.getString(R.string.in_finder), context.getString(polaris.getStarName()), polaris.getScopePositionString()));
             float rotation = polaris.getScopePosition();
             if (reticle.equals("1"))
                 rotation = (rotation + 90.0f) % 90.0f;
@@ -76,7 +77,7 @@ public class PolarisFragment extends ActionFragment {
                 handler.postDelayed(handlerTask, 1000);
         }
     };
-    private LocationGetter locationGetter;
+    private LocationHelper locationHelper;
     private SharedPreferences preferences;
 
     @Nullable
@@ -88,7 +89,12 @@ public class PolarisFragment extends ActionFragment {
         gpsText = rootView.findViewById(R.id.polaris_gps);
         spotText = rootView.findViewById(R.id.polaris_spot);
         hourAngleText = rootView.findViewById(R.id.polaris_hour_angle);
-        locationGetter = new LocationGetter(context, ContextCompat.getSystemService(context, LocationManager.class));
+        locationHelper = new LocationHelper(context, ContextCompat.getSystemService(context, LocationManager.class)) {
+            @Override
+            protected void onLocationOk(Location location) {
+                polaris.setLocation(location.getLatitude(), location.getLongitude());
+            }
+        };
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
         setReticle();
         return rootView;
@@ -104,7 +110,7 @@ public class PolarisFragment extends ActionFragment {
             polaris.setNorthernHemisphere(hemisphere.equals("1"));
         }
         setReticle();
-        locationGetter.start();
+        locationHelper.start();
         lastRotation = 0.0f;
         Animation animation = new RotateAnimation(0.0f, 0.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         animation.setDuration(0);
@@ -131,7 +137,7 @@ public class PolarisFragment extends ActionFragment {
         super.onPause();
         wasRunning = running;
         setRunning(false);
-        locationGetter.stop();
+        locationHelper.stop();
     }
 
     private void setRunning(boolean running) {
@@ -155,17 +161,5 @@ public class PolarisFragment extends ActionFragment {
     @Override
     public int getActionDrawable() {
         return running ? R.drawable.pause : R.drawable.resume;
-    }
-
-    private class LocationGetter extends LocationController {
-
-        public LocationGetter(Context context, LocationManager locationManager) {
-            super(context, locationManager);
-        }
-
-        @Override
-        protected void setLocationInModel(LatLong location, String provider) {
-            polaris.setLocation(location.getLatitude(), location.getLongitude());
-        }
     }
 }

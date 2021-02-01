@@ -32,10 +32,11 @@ import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
  *
  * @author John Taylor
  */
-public class MagneticDeclinationCalculatorSwitcher implements OnSharedPreferenceChangeListener {
+public class MagneticDeclinationSwitcher implements OnSharedPreferenceChangeListener {
 
-    private static final String TAG = TelescopeTouchApp.getTag(MagneticDeclinationCalculatorSwitcher.class);
+    private static final String TAG = TelescopeTouchApp.getTag(MagneticDeclinationSwitcher.class);
     private final MagneticDeclinationCalculator realCalculator;
+    private final SharedPreferences preferences;
     private final MagneticDeclinationCalculator zeroCalculator;
     private final AstronomerModel model;
 
@@ -47,19 +48,22 @@ public class MagneticDeclinationCalculatorSwitcher implements OnSharedPreference
      *                    calculator to use.
      */
     @Inject
-    public MagneticDeclinationCalculatorSwitcher(AstronomerModel model, SharedPreferences preferences,
-            @Named("zero") MagneticDeclinationCalculator zeroCalculator,
-            @Named("real") MagneticDeclinationCalculator realCalculator) {
+    public MagneticDeclinationSwitcher(AstronomerModel model, SharedPreferences preferences,
+                                       @Named("zero") MagneticDeclinationCalculator zeroCalculator,
+                                       @Named("real") MagneticDeclinationCalculator realCalculator) {
+        this.preferences = preferences;
         this.zeroCalculator = zeroCalculator;
         this.realCalculator = realCalculator;
         this.model = model;
+    }
+
+    public void init() {
         preferences.registerOnSharedPreferenceChangeListener(this);
         setTheModelsCalculator(preferences);
     }
 
     private void setTheModelsCalculator(SharedPreferences preferences) {
-        boolean useRealCalculator = preferences.getBoolean(ApplicationConstants.MAGNETIC_DECLINATION_PREF, true);
-        if (useRealCalculator) {
+        if (preferences.getBoolean(ApplicationConstants.MAGNETIC_DECLINATION_PREF, true)) {
             model.setMagneticDeclinationCalculator(realCalculator);
         } else {
             model.setMagneticDeclinationCalculator(zeroCalculator);
@@ -68,8 +72,6 @@ public class MagneticDeclinationCalculatorSwitcher implements OnSharedPreference
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        // TODO(johntaylor): investigate the preferences API - currently we have too
-        // many classes all hanging off SharedPreferences.
         if (ApplicationConstants.MAGNETIC_DECLINATION_PREF.equals(key)) {
             Log.i(TAG, "Magnetic declination preference changed");
             setTheModelsCalculator(sharedPreferences);
