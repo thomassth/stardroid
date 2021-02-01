@@ -47,4 +47,5 @@ public class ApplicationConstants {
     public static final String NSD_PREF = "enable_nsd";
     public static final String POLARIS_HEMISPHERE_PREF = "polaris_hemisphere_selection";
     public static final String POLARIS_RETICLE_PREF = "polaris_reticle";
+    public static final String MAGNETIC_DECLINATION_PREF = "use_magnetic_correction";
 }

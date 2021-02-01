@@ -403,7 +403,6 @@
     <string name="no_gps">Нет GPS</string>
     <string name="connected">Соединено</string>
     <string name="disconnected">Не соединено</string>
-    <string name="wifi">" (wifi)"</string>
     <string name="cell_network">" (мобильный)"</string>
     <string name="menu_calibrate">Калибровка</string>
     <string name="compass_calibration_activity_heading_compass">Компас -</string>

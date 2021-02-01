@@ -22,9 +22,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.Objects;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
@@ -62,7 +65,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         Places.initialize(getApplicationContext(), getString(R.string.google_maps_key));
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
+        ((SupportMapFragment) Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.map))).getMapAsync(this);
     }
 
     @Override
@@ -99,6 +102,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap map) {
         this.map = map;
+        map.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style));
         getLocationPermission();
         updateLocationUI();
         if (this.cameraPosition != null)

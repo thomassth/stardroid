@@ -409,7 +409,6 @@
     <string name="no_gps">Ingen GPS</string>
     <string name="connected">Tilkoblet</string>
     <string name="disconnected">Frakoblet</string>
-    <string name="wifi">" (wifi)"</string>
     <string name="cell_network">" (mobilnett)"</string>
     <string name="menu_calibrate">Kalibrer</string>
     <string name="compass_calibration_activity_heading_compass">Kompass -</string>

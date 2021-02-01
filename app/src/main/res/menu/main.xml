@@ -16,6 +16,12 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/menu_skymap_diagnostics"
+        android:orderInCategory="75"
+        android:title="@string/menu_diagnostics"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/menu_enable_rcv_blob"
         android:checkable="true"
         android:orderInCategory="80"

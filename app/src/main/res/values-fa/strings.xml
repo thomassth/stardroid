@@ -404,7 +404,6 @@
     <string name="no_gps">فاقد جی پی اس</string>
     <string name="connected">متصل</string>
     <string name="disconnected">قطع</string>
-    <string name="wifi">" (وایفای)"</string>
     <string name="cell_network">" (دیتا)"</string>
     <string name="menu_calibrate">کالیبره</string>
     <string name="compass_calibration_activity_heading_compass">قطب‌نما -</string>

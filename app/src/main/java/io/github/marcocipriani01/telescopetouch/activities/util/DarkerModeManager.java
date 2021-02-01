@@ -18,8 +18,12 @@ package io.github.marcocipriani01.telescopetouch.activities.util;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
+
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
 /**
  * Controls an activity's illumination levels.
@@ -30,6 +34,7 @@ import android.view.WindowManager;
 public class DarkerModeManager implements OnSharedPreferenceChangeListener {
 
     public static final String DARKER_MODE_KEY = "DARKER_MODE";
+    private static final String TAG = TelescopeTouchApp.getTag(DarkerModeManager.class);
     private static final float BRIGHTNESS_DIM = 20f / 255f;
     private final SharedPreferences preferences;
     private final NightModeListener nightModeListener;
@@ -47,8 +52,15 @@ public class DarkerModeManager implements OnSharedPreferenceChangeListener {
         if (nightModeListener != null) nightModeListener.setNightMode(nightMode);
         WindowManager.LayoutParams params = window.getAttributes();
         if (nightMode) {
-            // TODO(jontayler): look at this again - at present night mode can be brighter than the phone's
-            params.screenBrightness = BRIGHTNESS_DIM;
+            try {
+                float brightness = android.provider.Settings.System.getInt(
+                        TelescopeTouchApp.getContext().getContentResolver(), Settings.System.SCREEN_BRIGHTNESS) / 255.0f;
+                if (brightness > BRIGHTNESS_DIM)
+                    params.screenBrightness = BRIGHTNESS_DIM;
+            } catch (Settings.SettingNotFoundException e) {
+                Log.e(TAG, e.getLocalizedMessage(), e);
+                params.screenBrightness = BRIGHTNESS_DIM;
+            }
             params.buttonBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_OFF;
         } else {
             params.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE;

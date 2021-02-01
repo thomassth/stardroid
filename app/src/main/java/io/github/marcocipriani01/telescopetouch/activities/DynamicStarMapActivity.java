@@ -71,6 +71,7 @@ import io.github.marcocipriani01.telescopetouch.activities.util.FullscreenContro
 import io.github.marcocipriani01.telescopetouch.activities.views.ButtonLayerView;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.control.ControllerGroup;
+import io.github.marcocipriani01.telescopetouch.control.MagneticDeclinationCalculatorSwitcher;
 import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
 import io.github.marcocipriani01.telescopetouch.layers.LayerManager;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererController;
@@ -124,9 +125,9 @@ public class DynamicStarMapActivity extends InjectableActivity
     @Inject
     SensorAccuracyMonitor sensorAccuracyMonitor;
     // We need to maintain references to these objects to keep them from getting gc'd.
-    //@Inject
-    //@SuppressWarnings("unused")
-    //MagneticDeclinationCalculatorSwitcher magneticSwitcher;
+    @Inject
+    @SuppressWarnings("unused")
+    MagneticDeclinationCalculatorSwitcher magneticSwitcher;
     @Inject
     Animation flashAnimation;
     private FullscreenControlsManager fullscreenControlsManager;
@@ -229,19 +230,16 @@ public class DynamicStarMapActivity extends InjectableActivity
         }
         // Missing at least one sensor.  Warn the user.
         handler.post(() -> {
-            if (!sharedPreferences
-                    .getBoolean(ApplicationConstants.NO_WARN_MISSING_SENSORS_PREF, false)) {
+            if (sharedPreferences.getBoolean(ApplicationConstants.NO_WARN_MISSING_SENSORS_PREF, false)) {
+                Log.d(TAG, "showing no sensor toast");
+                Toast.makeText(DynamicStarMapActivity.this, R.string.no_sensor_warning, Toast.LENGTH_LONG).show();
+                // Don't force manual mode second time through - leave it up to the user.
+            } else {
                 Log.d(TAG, "showing no sensor dialog");
                 noSensorsDialogFragment.show(fragmentManager, "No sensors dialog");
                 // First time, force manual mode.
-                sharedPreferences.edit().putBoolean(ApplicationConstants.AUTO_MODE_PREF, false)
-                        .apply();
+                sharedPreferences.edit().putBoolean(ApplicationConstants.AUTO_MODE_PREF, false).apply();
                 setAutoMode(false);
-            } else {
-                Log.d(TAG, "showing no sensor toast");
-                Toast.makeText(
-                        DynamicStarMapActivity.this, R.string.no_sensor_warning, Toast.LENGTH_LONG).show();
-                // Don't force manual mode second time through - leave it up to the user.
             }
         });
     }

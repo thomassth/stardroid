@@ -60,8 +60,7 @@ public class LocationController extends AbstractController implements LocationLi
     private static final String FORCE_GPS = "force_gps";
     private static final int MINIMUM_DISTANCE_BEFORE_UPDATE_METRES = 2000;
     private static final int LOCATION_UPDATE_TIME_MILLISECONDS = 600000;
-    private static final float MIN_DIST_TO_SHOW_TOAST_DEGS = 0.01f;
-
+    private static final float MIN_DIST_TO_SHOW_TOAST_DEGREES = 0.01f;
     private final Context context;
     private final LocationManager locationManager;
 
@@ -109,8 +108,7 @@ public class LocationController extends AbstractController implements LocationLi
                 if (possibleLocationProvider == null) {
                     Log.i(TAG, "No location provider is even available");
                     new AlertDialog.Builder(context)
-                            .setTitle(R.string.warning)
-                            .setCancelable(false)
+                            .setTitle(R.string.warning).setCancelable(false)
                             .setMessage(R.string.location_no_auto)
                             .setNegativeButton(android.R.string.cancel, (dialog12, which) -> {
                                 Toast.makeText(context, "Switching manual location on...", Toast.LENGTH_SHORT).show();
@@ -127,9 +125,8 @@ public class LocationController extends AbstractController implements LocationLi
                     setLocationFromPrefs();
                 } else {
                     new AlertDialog.Builder(context)
-                            .setTitle(R.string.location_offer_to_enable_gps_title)
+                            .setTitle(R.string.location_offer_to_enable_gps_title).setCancelable(false)
                             .setMessage(R.string.location_offer_to_enable)
-                            .setCancelable(false)
                             .setPositiveButton(android.R.string.ok, (dialog12, which) -> {
                                 Log.d(TAG, "Sending to editor location prefs page");
                                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -161,9 +158,9 @@ public class LocationController extends AbstractController implements LocationLi
         }
     }
 
-    private void setLocationInModel(LatLong location, String provider) {
+    protected void setLocationInModel(LatLong location, String provider) {
         LatLong oldLocation = model.getLocation();
-        if (location.distanceFrom(oldLocation) > MIN_DIST_TO_SHOW_TOAST_DEGS) {
+        if (location.distanceFrom(oldLocation) > MIN_DIST_TO_SHOW_TOAST_DEGREES) {
             Log.d(TAG, "Informing user of change of location");
             showLocationToUser(location, provider);
         } else {
@@ -249,30 +246,23 @@ public class LocationController extends AbstractController implements LocationLi
     }
 
     private void showLocationToUser(LatLong location, String provider) {
-        // TODO(johntaylor): move this notification to a separate thread)
         Log.d(TAG, "Reverse geocoding location");
-        Geocoder geoCoder = new Geocoder(context);
         List<Address> addresses = new ArrayList<>();
         String place;
         try {
-            addresses = geoCoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            addresses = new Geocoder(context).getFromLocation(location.getLatitude(), location.getLongitude(), 1);
         } catch (IOException e) {
             Log.e(TAG, "Unable to reverse geocode location " + location);
         }
-
         if (addresses == null || addresses.isEmpty()) {
             Log.d(TAG, "No addresses returned");
-            place = String.format(context.getString(R.string.location_long_lat), location.getLongitude(),
-                    location.getLatitude());
+            place = String.format(context.getString(R.string.location_long_lat), location.getLongitude(), location.getLatitude());
         } else {
             place = getSummaryOfPlace(location, addresses.get(0));
         }
-
         Log.d(TAG, "Location set to " + place);
-
-        String messageTemplate = context.getString(R.string.location_set_auto);
-        String message = String.format(messageTemplate, provider, place);
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, String.format(context.getString(R.string.location_set_auto), provider, place),
+                Toast.LENGTH_SHORT).show();
     }
 
     private String getSummaryOfPlace(LatLong location, Address address) {

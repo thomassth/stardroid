@@ -396,7 +396,6 @@
     <string name="no_gps">Немає GPS</string>
     <string name="connected">З\'єднано</string>
     <string name="disconnected">Роз\'єднано</string>
-    <string name="wifi">" (wifi)"</string>
     <string name="cell_network">" (виклик)"</string>
     <string name="menu_calibrate">Калібрувати</string>
     <string name="compass_calibration_activity_heading_compass">Компас -</string>

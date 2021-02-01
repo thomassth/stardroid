@@ -207,21 +207,23 @@ public class MainActivity extends AppCompatActivity implements
             } else {
                 actionSnackRequested(R.string.shortcuts_not_supported);
             }
-            return true;
         } else if (itemId == R.id.menu_enable_rcv_blob) {
             boolean checked = !item.isChecked();
             item.setChecked(checked);
             connectionManager.setBlobEnabled(checked);
             preferences.edit().putBoolean(RECEIVE_BLOB_PREF, checked).apply();
-            return true;
         } else if (itemId == R.id.menu_darker_mode) {
             darkerModeManager.toggle();
         } else if (itemId == R.id.menu_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
+        } else if (itemId == R.id.menu_skymap_diagnostics) {
+            startActivity(new Intent(this, DiagnosticActivity.class));
         } else if (currentPage.lastInstance instanceof Toolbar.OnMenuItemClickListener) {
             ((Toolbar.OnMenuItemClickListener) currentPage.lastInstance).onMenuItemClick(item);
+        } else {
+            return false;
         }
-        return false;
+        return true;
     }
 
     @Override

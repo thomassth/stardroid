@@ -404,7 +404,6 @@
     <string name="no_gps">Dim GPS</string>
     <string name="connected">Wedi cysylltu</string>
     <string name="disconnected">Heb gysylltu</string>
-    <string name="wifi">" (Wi-Fi)"</string>
     <string name="cell_network">" (symudol)"</string>
     <string name="menu_calibrate">Calibro</string>
     <string name="compass_calibration_activity_heading_compass">Cwmpawd -</string>
