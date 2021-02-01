@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 
 import java.util.Calendar;
 
+import io.github.marcocipriani01.telescopetouch.R;
+
 import static io.github.marcocipriani01.telescopetouch.util.TimeUtils.meanSiderealTime;
 
 public class Polaris {
@@ -18,8 +20,6 @@ public class Polaris {
     private double longitude;
     private boolean northernHemisphere;
     private double hourAngle = 0.0;
-    private double rightAscension = 0.0;
-    private double declination = 0.0;
     private double scopePosition;
 
     @SuppressLint("DefaultLocale")
@@ -33,10 +33,6 @@ public class Polaris {
         } else {
             return String.format("%1$02dh%2$02dm%3$02ds", deg, min, sec);
         }
-    }
-
-    public boolean isNorthernHemisphere() {
-        return northernHemisphere;
     }
 
     public void setNorthernHemisphere(boolean northernHemisphere) {
@@ -67,16 +63,8 @@ public class Polaris {
         return angleToString(this.scopePosition / 30.0, false);
     }
 
-    public String getPrecessedCoordinates() {
-        if (this.locationValid) {
-            return angleToString(this.rightAscension / 15.0d, false) + " / " + angleToString(this.declination, true);
-        } else {
-            return angleToString(0.0d, false) + " / " + angleToString(0.0d, true);
-        }
-    }
-
-    public String getStarName() {
-        return this.northernHemisphere ? "Polaris" : "Sigma Octantis";
+    public int getStarName() {
+        return this.northernHemisphere ? R.string.polaris_star_finder : R.string.sigma_octantis;
     }
 
     public void refresh() {
@@ -90,14 +78,12 @@ public class Polaris {
             } else {
                 precession = StarsPrecession.precess(calendar, SIG_OCT_J2000_RA, SIG_OCT_J2000_DEC);
             }
-            this.rightAscension = precession[0];
-            this.declination = precession[1];
-
+            double rightAscension = precession[0];
             double siderealTime = meanSiderealTime(calendar, (float) longitude);
-            if (siderealTime > this.rightAscension) {
-                this.hourAngle = siderealTime - this.rightAscension;
+            if (siderealTime > rightAscension) {
+                this.hourAngle = siderealTime - rightAscension;
             } else {
-                this.hourAngle = (siderealTime + 360.0d) - this.rightAscension;
+                this.hourAngle = (siderealTime + 360.0d) - rightAscension;
             }
             if (northernHemisphere) {
                 this.scopePosition = ((360.0 - this.hourAngle) + 180.0) % 360.0;

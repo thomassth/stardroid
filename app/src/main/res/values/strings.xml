@@ -42,6 +42,8 @@
     <string name="east">EAST</string>
     <string name="west">WEST</string>
     <string name="south">SOUTH</string>
+    <string name="east_short">E</string>
+    <string name="west_short">W</string>
     <string name="search_label">Search the Sky</string>
     <string name="no_search_title">No results</string>
     <string name="no_search_results_text">No results were found.</string>
@@ -406,7 +408,7 @@
     <string name="no_gps">No GPS</string>
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
-    <string name="wifi">" (wifi)"</string>
+    <string name="wifi">" (Wi-Fi)"</string>
     <string name="cell_network">" (cell)"</string>
     <string name="menu_calibrate">Calibrate</string>
     <string name="compass_calibration_activity_heading_compass">Compass -</string>
@@ -590,7 +592,7 @@
     <string name="flashlight">Flashlight</string>
     <string name="polaris_hour_angle">Polaris hour angle</string>
     <string name="hour_angle">Hour angle: %s</string>
-    <string name="in_finder">In finder: %s</string>
+    <string name="in_finder">%s in finder: %s</string>
     <string name="hemisphere">Hemisphere</string>
     <string name="hemisphere_description">Select your hemisphere and polar star.</string>
     <string name="hemisphere_auto">Automatic detection</string>
@@ -603,4 +605,7 @@
     <string name="pick_location_description">Choose a location from Google Maps</string>
     <string name="pick_location_pref">Pick on map</string>
     <string name="network">Network</string>
+    <string name="sigma_octantis">Sigma Octantis</string>
+    <string name="polaris_star_finder">Polaris</string>
+    <string name="loading">Loading...</string>
 </resources>

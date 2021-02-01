@@ -54,7 +54,7 @@ public class CompassFragment extends ActionFragment {
     }
 
     @Override
-    public void run() {
+    public void run() { //TODO: remove
 
     }
 

@@ -410,7 +410,6 @@
     <string name="no_gps">No GPS</string>
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
-    <string name="wifi">" (wifi)"</string>
     <string name="cell_network">" (cell)"</string>
     <string name="menu_calibrate">Βαθμονόμηση</string>
     <string name="compass_calibration_activity_heading_compass">Πυξίδα -</string>

@@ -402,7 +402,6 @@
     <string name="sensor_reverse_preference_title">Obrátit magnetické pole v ose Z</string>
     <string name="ursids" translation_description="Meteor Shower">Ursidy</string>
     <string name="geminids" translation_description="Meteor Shower">Geminidy</string>
-    <string name="wifi">" (wifi)"</string>
     <string name="sensor_accuracy_low">Přesnost: Nízká</string>
     <string name="diagnostics_activity_gps">GPS</string>
     <string name="diagnostics_activity_pointing_ra_dec">Ukazující/ilustrační snapshot</string>

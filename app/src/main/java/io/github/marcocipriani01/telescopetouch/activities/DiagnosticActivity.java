@@ -24,6 +24,8 @@ import android.hardware.SensorManager;
 import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
@@ -36,8 +38,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.preference.PreferenceManager;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -51,6 +52,7 @@ import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManage
 import io.github.marcocipriani01.telescopetouch.activities.util.SensorAccuracyDecoder;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.control.LocationController;
+import io.github.marcocipriani01.telescopetouch.control.MagneticDeclinationCalculatorSwitcher;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.LatLong;
 
@@ -71,13 +73,17 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
     LocationController locationController;
     @Inject
     AstronomerModel model;
+    // We need to maintain references to these objects to keep them from getting gc'd.
+    @Inject
+    @SuppressWarnings("unused")
+    MagneticDeclinationCalculatorSwitcher magneticSwitcher;
     @Inject
     Handler handler;
     @Inject
     SensorAccuracyDecoder sensorAccuracyDecoder;
-    private Sensor accelSensor;
-    private Sensor magSensor;
-    private Sensor gyroSensor;
+    private Sensor accelerometer;
+    private Sensor magnetometer;
+    private Sensor gyroscope;
     private Sensor rotationVectorSensor;
     private Sensor lightSensor;
     private boolean continueUpdates;
@@ -92,7 +98,6 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
         darkerModeManager = new DarkerModeManager(getWindow(), null, PreferenceManager.getDefaultSharedPreferences(this));
         setTheme(darkerModeManager.getPref() ? R.style.DarkerAppTheme : R.style.AppTheme);
         setContentView(R.layout.activity_diagnostic);
-
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -103,15 +108,9 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
     @Override
     public void onStart() {
         super.onStart();
-
-        setText(R.id.diagnose_phone_txt, Build.MODEL + " (" + Build.HARDWARE + ") " +
-                Locale.getDefault().getLanguage());
-        String androidVersion = String.format(Build.VERSION.RELEASE + " (%d)", Build.VERSION.SDK_INT);
-        setText(R.id.diagnose_android_version_txt, androidVersion);
-
-        String skyMapVersion = String.format(
-                app.getVersionName() + " (%d)", app.getVersion());
-        setText(R.id.diagnose_skymap_version_txt, skyMapVersion);
+        setText(R.id.diagnose_phone_txt, Build.MODEL + " (" + Build.HARDWARE + ") " + Locale.getDefault().getLanguage());
+        setText(R.id.diagnose_android_version_txt, String.format(Build.VERSION.RELEASE + " (%d)", Build.VERSION.SDK_INT));
+        setText(R.id.diagnose_skymap_version_txt, String.format(app.getVersionName() + " (%d)", app.getVersion()));
     }
 
     @Override
@@ -130,27 +129,28 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
             }
         });
         darkerModeManager.start();
+        locationController.start();
     }
 
     private void onResumeSensors() {
-        accelSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         int absentSensorColor = getResources().getColor(R.color.absent_sensor);
-        if (accelSensor == null) {
+        if (accelerometer == null) {
             setColor(R.id.diagnose_accelerometer_values_txt, absentSensorColor);
         } else {
-            sensorManager.registerListener(this, accelSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         }
-        magSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        if (magSensor == null) {
+        magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        if (magnetometer == null) {
             setColor(R.id.diagnose_compass_values_txt, absentSensorColor);
         } else {
-            sensorManager.registerListener(this, magSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_NORMAL);
         }
-        gyroSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        if (gyroSensor == null) {
+        gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        if (gyroscope == null) {
             setColor(R.id.diagnose_gyro_values_txt, absentSensorColor);
         } else {
-            sensorManager.registerListener(this, gyroSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_NORMAL);
         }
         rotationVectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
         if (rotationVectorSensor == null) {
@@ -187,22 +187,21 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
         setText(R.id.diagnose_location_txt, locationMessage);
     }
 
-    @SuppressLint("SimpleDateFormat")
     private void updateModel() {
         float magCorrection = model.getMagneticCorrection();
-        setText(R.id.diagnose_magnetic_correction_txt,
-                Math.abs(magCorrection) + " " + (magCorrection > 0
-                        ? getString(R.string.east) : getString(R.string.west)) + " "
-                        + getString(R.string.degrees));
+        setText(R.id.diagnose_magnetic_correction_txt, Math.abs(magCorrection) + "° " +
+                ((magCorrection > 0) ? getString(R.string.east_short) : getString(R.string.west_short)));
         AstronomerModel.Pointing pointing = model.getPointing();
         GeocentricCoordinates lineOfSight = pointing.getLineOfSight();
         setText(R.id.diagnose_pointing_txt, getDegreeInHour(lineOfSight.getRa()) + ", " + lineOfSight.getDec());
-        Calendar nowTime = model.getTime();
-        SimpleDateFormat dateFormatUtc = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
-        dateFormatUtc.setTimeZone(TimeZone.getTimeZone("UTC"));
-        SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
-        setText(R.id.diagnose_utc_datetime_txt, dateFormatUtc.format(nowTime.getTime()));
-        setText(R.id.diagnose_local_datetime_txt, dateFormatLocal.format(nowTime.getTime()));
+        Date time = model.getTime().getTime();
+        java.text.DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(this);
+        java.text.DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(this);
+        setText(R.id.diagnose_local_datetime_txt, dateFormat.format(time) + " " + timeFormat.format(time));
+        TimeZone utc = TimeZone.getTimeZone("UTC");
+        dateFormat.setTimeZone(utc);
+        timeFormat.setTimeZone(utc);
+        setText(R.id.diagnose_utc_datetime_txt, dateFormat.format(time) + " " + timeFormat.format(time));
     }
 
     @Override
@@ -211,6 +210,7 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
         continueUpdates = false;
         sensorManager.unregisterListener(this);
         darkerModeManager.stop();
+        locationController.stop();
     }
 
     @Override
@@ -226,11 +226,11 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
         knownSensorAccuracies.add(sensor);
         Log.d(TAG, "set size" + knownSensorAccuracies.size());
         int sensorViewId;
-        if (sensor == accelSensor) {
+        if (sensor == accelerometer) {
             sensorViewId = R.id.diagnose_accelerometer_values_txt;
-        } else if (sensor == magSensor) {
+        } else if (sensor == magnetometer) {
             sensorViewId = R.id.diagnose_compass_values_txt;
-        } else if (sensor == gyroSensor) {
+        } else if (sensor == gyroscope) {
             sensorViewId = R.id.diagnose_gyro_values_txt;
         } else if (sensor == rotationVectorSensor) {
             sensorViewId = R.id.diagnose_rotation_values_txt;
@@ -249,11 +249,11 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
             onAccuracyChanged(sensor, event.accuracy);
         }
         int valuesViewId;
-        if (sensor == accelSensor) {
+        if (sensor == accelerometer) {
             valuesViewId = R.id.diagnose_accelerometer_values_txt;
-        } else if (sensor == magSensor) {
+        } else if (sensor == magnetometer) {
             valuesViewId = R.id.diagnose_compass_values_txt;
-        } else if (sensor == gyroSensor) {
+        } else if (sensor == gyroscope) {
             valuesViewId = R.id.diagnose_gyro_values_txt;
         } else if (sensor == rotationVectorSensor) {
             valuesViewId = R.id.diagnose_rotation_values_txt;
@@ -300,17 +300,32 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
         setText(valuesViewId, valuesText.toString());
     }
 
+    @SuppressWarnings("deprecation")
     private void updateNetwork() {
-        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting();
-        String message = isConnected ? getString(R.string.connected) : getString(R.string.disconnected);
-        if (isConnected) {
-            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
-                message += getString(R.string.wifi);
+        String message;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            Network network = connectivityManager.getActiveNetwork();
+            boolean isConnected = (network != null);
+            message = isConnected ? getString(R.string.connected) : getString(R.string.disconnected);
+            NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(network);
+            if (isConnected) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    message += getString(R.string.wifi);
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                    message += getString(R.string.cell_network);
+                }
             }
-            if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
-                message += getString(R.string.cell_network);
+        } else {
+            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+            boolean isConnected = (activeNetwork != null) && activeNetwork.isConnectedOrConnecting();
+            message = isConnected ? getString(R.string.connected) : getString(R.string.disconnected);
+            if (isConnected) {
+                int type = activeNetwork.getType();
+                if (type == ConnectivityManager.TYPE_WIFI) {
+                    message += getString(R.string.wifi);
+                } else if (type == ConnectivityManager.TYPE_MOBILE) {
+                    message += getString(R.string.cell_network);
+                }
             }
         }
         setText(R.id.diagnose_network_status_txt, message);

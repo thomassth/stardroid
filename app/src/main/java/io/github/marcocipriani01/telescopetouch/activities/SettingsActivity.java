@@ -54,6 +54,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent intent = result.getData();
+                    if (intent == null) return;
                     String latitude = intent.getStringExtra(ApplicationConstants.LATITUDE_PREF), longitude = intent.getStringExtra(ApplicationConstants.LONGITUDE_PREF);
                     if ((latitude == null) || (longitude == null)) return;
                     preferences.edit().putString(ApplicationConstants.LATITUDE_PREF, latitude).putString(ApplicationConstants.LONGITUDE_PREF, longitude).apply();
@@ -93,10 +94,11 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
         enableGyroPrefs(preferences.getBoolean(ApplicationConstants.DISABLE_GYRO_PREF, false));
         latitudePref.setSummary(preferences.getString(ApplicationConstants.LATITUDE_PREF, "0.0"));
         longitudePref.setSummary(preferences.getString(ApplicationConstants.LONGITUDE_PREF, "0.0"));
-        preferenceFragment.findPreference("pick_location_map").setOnPreferenceClickListener(preference -> {
-            resultLauncher.launch(new Intent(SettingsActivity.this, MapsActivity.class));
-            return true;
-        });
+        Objects.<Preference>requireNonNull(preferenceFragment.findPreference("pick_location_map"))
+                .setOnPreferenceClickListener(preference -> {
+                    resultLauncher.launch(new Intent(SettingsActivity.this, MapsActivity.class));
+                    return true;
+                });
     }
 
     @Override

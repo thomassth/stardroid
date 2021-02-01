@@ -17,7 +17,7 @@ android {
             def mapsAPIKey = properties.getProperty('maps-api-key')
             resValue "string", "google_maps_key", mapsAPIKey
         } else {
-            resValue "string", "google_maps_key", 'null'
+            resValue "string", "google_maps_key", ''
         }
     }
     buildTypes {

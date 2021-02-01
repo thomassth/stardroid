@@ -29,6 +29,7 @@ import io.github.marcocipriani01.telescopetouch.units.LatLong;
  * @author John Taylor
  */
 public class RealMagneticDeclinationCalculator implements MagneticDeclinationCalculator {
+
     private GeomagneticField geomagneticField;
 
     /**
@@ -37,9 +38,7 @@ public class RealMagneticDeclinationCalculator implements MagneticDeclinationCal
      */
     @Override
     public float getDeclination() {
-        if (geomagneticField == null) {
-            return 0;
-        }
+        if (geomagneticField == null) return 0;
         return geomagneticField.getDeclination();
     }
 
@@ -49,9 +48,7 @@ public class RealMagneticDeclinationCalculator implements MagneticDeclinationCal
     @Override
     public void setLocationAndTime(LatLong location, long timeInMillis) {
         geomagneticField = new GeomagneticField(location.getLatitude(),
-                location.getLongitude(),
-                0,
-                timeInMillis);
+                location.getLongitude(), 0, timeInMillis);
     }
 
     @NonNull

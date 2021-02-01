@@ -116,11 +116,7 @@
         <activity
             android:name=".activities.DiagnosticActivity"
             android:label="@string/title_activity_diagnostic"
-            android:screenOrientation="userPortrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.DynamicStarMapActivity" />
-        </activity>
+            android:screenOrientation="userPortrait" />
         <activity
             android:name=".activities.CompassCalibrationActivity"
             android:label="@string/menu_calibrate"

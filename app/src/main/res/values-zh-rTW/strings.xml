@@ -405,7 +405,6 @@
     <string name="no_gps">無 GPS</string>
     <string name="connected">已連線</string>
     <string name="disconnected">已斷線</string>
-    <string name="wifi">" (無線網路)"</string>
     <string name="cell_network">" (電信網路)"</string>
     <string name="menu_calibrate">校正</string>
     <string name="compass_calibration_activity_heading_compass">羅盤 -</string>

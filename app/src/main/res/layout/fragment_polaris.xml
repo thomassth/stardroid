@@ -21,17 +21,29 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <TextView
+            android:id="@+id/polaris_gps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:gravity="center_horizontal"
+            android:text="@string/loading"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/polaris_hour_angle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
+            android:layout_below="@id/polaris_gps"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:gravity="center_horizontal"
+            android:text="@string/loading"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textStyle="bold" />
 
@@ -44,6 +56,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:gravity="center_horizontal"
+            android:text="@string/loading"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textStyle="bold" />
 
@@ -60,13 +73,5 @@
             android:layout_height="350dp"
             android:layout_centerInParent="true"
             android:src="@drawable/polaris_crosshair" />
-
-        <ImageView
-            android:id="@+id/polaris_reticle_big_dipper"
-            android:layout_width="350dp"
-            android:layout_height="350dp"
-            android:layout_centerInParent="true"
-            android:src="@drawable/reticle_bigdipper"
-            android:visibility="gone" />
     </RelativeLayout>
 </LinearLayout>
