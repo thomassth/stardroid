@@ -391,7 +391,7 @@
     <string name="diagnostics_activity_gps">GPS</string>
     <string name="diagnostics_activity_location">Местоположение (ш, д)</string>
     <string name="diagnostics_activity_pointing_ra_dec">Указывающий снимок</string>
-    <string name="diagnostics_activity_magnetic_correction">Магнитная коррекция</string>
+    <string name="magnetic_declination">Магнитная коррекция</string>
     <string name="diagnostics_activity_local_datetime">Местное время</string>
     <string name="diagnostics_activity_universal_time">Глобальное время</string>
     <string name="diagnostics_activity_network_heading">Сеть</string>

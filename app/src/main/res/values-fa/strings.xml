@@ -392,7 +392,7 @@
     <string name="diagnostics_activity_gps">جی پی اس</string>
     <string name="diagnostics_activity_location">طول و عرض جغرافیایی</string>
     <string name="diagnostics_activity_pointing_ra_dec">عکس نما</string>
-    <string name="diagnostics_activity_magnetic_correction">تصحیح مغناطیسی</string>
+    <string name="magnetic_declination">تصحیح مغناطیسی</string>
     <string name="diagnostics_activity_local_datetime">زمان محلی</string>
     <string name="diagnostics_activity_universal_time">زمان جهانی</string>
     <string name="diagnostics_activity_network_heading">شبکه</string>

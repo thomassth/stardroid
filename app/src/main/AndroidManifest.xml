@@ -99,7 +99,7 @@
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/menu_settings"
-            android:screenOrientation="userPortrait" />
+            android:screenOrientation="fullUser" />
         <activity
             android:name=".activities.ImageGalleryActivity"
             android:label="@string/menu_gallery"
@@ -121,11 +121,7 @@
             android:name=".activities.CompassCalibrationActivity"
             android:label="@string/menu_calibrate"
             android:launchMode="singleTop"
-            android:screenOrientation="userPortrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.DynamicStarMapActivity" />
-        </activity>
+            android:screenOrientation="userPortrait" />
         <activity
             android:name=".activities.ServersActivity"
             android:label="@string/host_manage"
@@ -138,7 +134,7 @@
             android:name=".activities.ScreenLightActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Tap screen to exit"
-            android:screenOrientation="portrait"
+            android:screenOrientation="fullUser"
             android:theme="@style/FullscreenTheme">
 
             <meta-data
@@ -147,6 +143,7 @@
         </activity>
         <activity
             android:name=".activities.MapsActivity"
+            android:screenOrientation="fullUser"
             android:label="@string/pick_location_pref" />
 
         <meta-data

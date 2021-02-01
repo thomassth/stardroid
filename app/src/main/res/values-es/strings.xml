@@ -401,7 +401,7 @@
     <string name="diagnostics_activity_gps">GPS</string>
     <string name="diagnostics_activity_location">Ubicación (lat, long)</string>
     <string name="diagnostics_activity_pointing_ra_dec">Apunte inst.</string>
-    <string name="diagnostics_activity_magnetic_correction">Corrección magnética</string>
+    <string name="magnetic_declination">Corrección magnética</string>
     <string name="diagnostics_activity_local_datetime">Fecha local</string>
     <string name="diagnostics_activity_universal_time">Fecha universal</string>
     <string name="diagnostics_activity_network_heading">Red</string>

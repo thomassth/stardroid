@@ -16,12 +16,19 @@
 
 package io.github.marcocipriani01.telescopetouch.units;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+
+import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.util.Geometry;
+
+import static io.github.marcocipriani01.telescopetouch.util.Geometry.angleToString;
 
 /**
  * A simple struct for latitude and longitude.
  */
 public class LatLong {
+
     private float latitude;
     private float longitude;
 
@@ -52,6 +59,30 @@ public class LatLong {
      */
     private static float flooredMod(float a, float n) {
         return (a < 0 ? a % n + n : a) % n;
+    }
+
+    public static String latitudeToString(float latitude, Context context) {
+        return angleToString(Math.abs(latitude), true) + " " +
+                (latitude >= 0.0 ? context.getString(R.string.north_short) : context.getString(R.string.south_short));
+    }
+
+    public static String longitudeToString(float longitude, Context context) {
+        return angleToString(Math.abs(longitude), true) + " " +
+                (longitude >= 0.0 ? context.getString(R.string.east_short) : context.getString(R.string.west_short));
+    }
+
+    @SuppressLint("DefaultLocale")
+    public static String declinationToString(float declination, Context context) {
+        return String.format("%.2f", Math.abs(declination)) + "° " +
+                ((declination > 0) ? context.getString(R.string.east_short) : context.getString(R.string.west_short));
+    }
+
+    public String latitudeToString(Context context) {
+        return latitudeToString(this.latitude, context);
+    }
+
+    public String longitudeToString(Context context) {
+        return longitudeToString(this.longitude, context);
     }
 
     /**

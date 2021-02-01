@@ -52,7 +52,7 @@ import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManage
 import io.github.marcocipriani01.telescopetouch.activities.util.SensorAccuracyDecoder;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.control.LocationController;
-import io.github.marcocipriani01.telescopetouch.control.MagneticDeclinationCalculatorSwitcher;
+import io.github.marcocipriani01.telescopetouch.control.MagneticDeclinationSwitcher;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.LatLong;
 
@@ -73,10 +73,8 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
     LocationController locationController;
     @Inject
     AstronomerModel model;
-    // We need to maintain references to these objects to keep them from getting gc'd.
     @Inject
-    @SuppressWarnings("unused")
-    MagneticDeclinationCalculatorSwitcher magneticSwitcher;
+    MagneticDeclinationSwitcher magneticSwitcher;
     @Inject
     Handler handler;
     @Inject
@@ -103,6 +101,7 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
         }
+        magneticSwitcher.init();
     }
 
     @Override
@@ -181,19 +180,16 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
             gpsStatusMessage = getString(R.string.permission_disabled);
         }
         setText(R.id.diagnose_gps_status_txt, gpsStatusMessage);
-        LatLong currentLocation = locationController.getCurrentLocation();
-        String locationMessage = currentLocation.getLatitude() + ", " + currentLocation.getLongitude();
-        // Current provider not working    + " (" + locationController.getCurrentProvider() + ")";
-        setText(R.id.diagnose_location_txt, locationMessage);
+        LatLong location = locationController.getCurrentLocation();
+        setText(R.id.diagnose_location_txt, location.latitudeToString(this) + ", " + location.longitudeToString(this));
     }
 
     private void updateModel() {
         float magCorrection = model.getMagneticCorrection();
-        setText(R.id.diagnose_magnetic_correction_txt, Math.abs(magCorrection) + "° " +
-                ((magCorrection > 0) ? getString(R.string.east_short) : getString(R.string.west_short)));
+        setText(R.id.diagnose_magnetic_correction_txt, LatLong.declinationToString(magCorrection, this));
         AstronomerModel.Pointing pointing = model.getPointing();
         GeocentricCoordinates lineOfSight = pointing.getLineOfSight();
-        setText(R.id.diagnose_pointing_txt, getDegreeInHour(lineOfSight.getRa()) + ", " + lineOfSight.getDec());
+        setText(R.id.diagnose_pointing_txt, lineOfSight.getRa() + ", " + lineOfSight.getDec());
         Date time = model.getTime().getTime();
         java.text.DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(this);
         java.text.DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(this);
@@ -291,13 +287,13 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
 
     @SuppressLint("DefaultLocale")
     private void setArrayValuesInUi(int valuesViewId, float[] values) {
-        StringBuilder valuesText = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
         for (float value : values) {
-            valuesText.append(String.format("%.2f", value));
-            valuesText.append(',');
+            builder.append(String.format("%.2f", value));
+            builder.append(", ");
         }
-        valuesText.setLength(valuesText.length() - 1);
-        setText(valuesViewId, valuesText.toString());
+        builder.setLength(builder.length() - 2);
+        setText(valuesViewId, builder.toString());
     }
 
     @SuppressWarnings("deprecation")
@@ -337,12 +333,5 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
 
     private void setColor(int viewId, int color) {
         ((TextView) findViewById(viewId)).setTextColor(color);
-    }
-
-    private String getDegreeInHour(float deg) {
-        int h = (int) deg / 15;
-        int m = (int) ((deg / 15 - h) * 60);
-        int s = (int) ((((deg / 15 - h) * 60) - m) * 60);
-        return h + "h " + m + "m " + s + "s ";
     }
 }

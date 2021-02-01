@@ -392,7 +392,7 @@
     <string name="diagnostics_activity_gps">GPS</string>
     <string name="diagnostics_activity_location">Lleoliad (lled., hyd.)</string>
     <string name="diagnostics_activity_pointing_ra_dec">Pointing snapshot</string>
-    <string name="diagnostics_activity_magnetic_correction">Mag correction</string>
+    <string name="magnetic_declination">Mag. declination</string>
     <string name="diagnostics_activity_local_datetime">Local datetime</string>
     <string name="diagnostics_activity_universal_time">Universal datetime</string>
     <string name="diagnostics_activity_network_heading">Rhwydwaith</string>

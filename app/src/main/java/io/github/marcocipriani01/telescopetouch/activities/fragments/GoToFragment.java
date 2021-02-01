@@ -15,6 +15,7 @@
 package io.github.marcocipriani01.telescopetouch.activities.fragments;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -33,6 +34,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -47,12 +49,14 @@ import org.indilib.i4j.client.INDIServerConnection;
 import org.indilib.i4j.client.INDIServerConnectionListener;
 import org.indilib.i4j.client.INDISwitchElement;
 import org.indilib.i4j.client.INDISwitchProperty;
+import org.indilib.i4j.client.INDIValueException;
 
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.astronomy.StarsPrecession;
 import io.github.marcocipriani01.telescopetouch.catalog.Catalog;
@@ -64,14 +68,6 @@ import io.github.marcocipriani01.telescopetouch.catalog.StarEntry;
 import io.github.marcocipriani01.telescopetouch.indi.PropUpdater;
 
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
-import static io.github.marcocipriani01.telescopetouch.util.TimeUtils.julianDay;
-import static io.github.marcocipriani01.telescopetouch.util.TimeUtils.julianDayToCentury;
-import static java.lang.Math.asin;
-import static java.lang.Math.atan2;
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
-import static java.lang.Math.toDegrees;
-import static java.lang.Math.toRadians;
 
 /**
  * Allows the user to look for an astronomical object and slew the telescope.
@@ -82,6 +78,7 @@ public class GoToFragment extends ActionFragment
 
     private static final Catalog catalog = new Catalog();
     private static String requestedSearch = null;
+    private SharedPreferences preferences;
     private CatalogArrayAdapter entriesAdapter;
     private MenuItem searchMenu;
     private SearchView searchView;
@@ -121,6 +118,7 @@ public class GoToFragment extends ActionFragment
         entriesAdapter.setCatalogItemListener(this);
         emptyLabel = rootView.findViewById(R.id.goto_empy_label);
         progressBar = rootView.findViewById(R.id.goto_loading);
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return rootView;
     }
 
@@ -262,14 +260,7 @@ public class GoToFragment extends ActionFragment
                     telescopeOnCoordSetSlew.setDesiredValue(Constants.SwitchStatus.OFF);
                     telescopeOnCoordSetSync.setDesiredValue(Constants.SwitchStatus.OFF);
                     new PropUpdater(telescopeOnCoordSetP).start();
-                    if ((selectedEntry instanceof StarEntry) || (selectedEntry instanceof DSOEntry)) {
-                        CatalogCoordinates precessed = StarsPrecession.precess(Calendar.getInstance(), coordinates);
-                        telescopeCoordRA.setDesiredValue(precessed.getRaStr());
-                        telescopeCoordDE.setDesiredValue(precessed.getDeStr());
-                    } else {
-                        telescopeCoordRA.setDesiredValue(coordinates.getRaStr());
-                        telescopeCoordDE.setDesiredValue(coordinates.getDeStr());
-                    }
+                    setCoordinatesMaybePrecess(selectedEntry, coordinates);
                     new PropUpdater(telescopeCoordP).start();
                     requestActionSnack(R.string.slew_ok);
                 } catch (Exception e) {
@@ -283,11 +274,7 @@ public class GoToFragment extends ActionFragment
                     telescopeOnCoordSetTrack.setDesiredValue(Constants.SwitchStatus.OFF);
                     telescopeOnCoordSetSlew.setDesiredValue(Constants.SwitchStatus.OFF);
                     new PropUpdater(telescopeOnCoordSetP).start();
-                    CatalogCoordinates precessed = StarsPrecession.precess(Calendar.getInstance(), coordinates);
-                    telescopeCoordRA.setDesiredValue(precessed.getRaStr());
-                    telescopeCoordDE.setDesiredValue(precessed.getDeStr());
-                    telescopeCoordRA.setDesiredValue(coordinates.getRaStr());
-                    telescopeCoordDE.setDesiredValue(coordinates.getDeStr());
+                    setCoordinatesMaybePrecess(selectedEntry, coordinates);
                     new PropUpdater(telescopeCoordP).start();
                     requestActionSnack(R.string.sync_ok);
                 } catch (Exception e) {
@@ -298,6 +285,18 @@ public class GoToFragment extends ActionFragment
         }
         builder.setNegativeButton(android.R.string.cancel, null);
         builder.show();
+    }
+
+    private void setCoordinatesMaybePrecess(CatalogEntry selectedEntry, CatalogCoordinates coordinates) throws INDIValueException {
+        if ((preferences.getBoolean(ApplicationConstants.COMPENSATE_PRECESSION_PREF, true)) &&
+                ((selectedEntry instanceof StarEntry) || (selectedEntry instanceof DSOEntry))) {
+            CatalogCoordinates precessed = StarsPrecession.precess(Calendar.getInstance(), coordinates);
+            telescopeCoordRA.setDesiredValue(precessed.getRaStr());
+            telescopeCoordDE.setDesiredValue(precessed.getDeStr());
+        } else {
+            telescopeCoordRA.setDesiredValue(coordinates.getRaStr());
+            telescopeCoordDE.setDesiredValue(coordinates.getDeStr());
+        }
     }
 
     private void hideKeyboard() {

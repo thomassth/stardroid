@@ -71,7 +71,7 @@ import io.github.marcocipriani01.telescopetouch.activities.util.FullscreenContro
 import io.github.marcocipriani01.telescopetouch.activities.views.ButtonLayerView;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.control.ControllerGroup;
-import io.github.marcocipriani01.telescopetouch.control.MagneticDeclinationCalculatorSwitcher;
+import io.github.marcocipriani01.telescopetouch.control.MagneticDeclinationSwitcher;
 import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
 import io.github.marcocipriani01.telescopetouch.layers.LayerManager;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererController;
@@ -83,7 +83,7 @@ import io.github.marcocipriani01.telescopetouch.touch.GestureInterpreter;
 import io.github.marcocipriani01.telescopetouch.touch.MapMover;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.Vector3;
-import io.github.marcocipriani01.telescopetouch.util.SensorAccuracyMonitor;
+import io.github.marcocipriani01.telescopetouch.sensors.SensorAccuracyMonitor;
 
 /**
  * The main map-rendering Activity.
@@ -124,10 +124,8 @@ public class DynamicStarMapActivity extends InjectableActivity
     NoSensorsDialogFragment noSensorsDialogFragment;
     @Inject
     SensorAccuracyMonitor sensorAccuracyMonitor;
-    // We need to maintain references to these objects to keep them from getting gc'd.
     @Inject
-    @SuppressWarnings("unused")
-    MagneticDeclinationCalculatorSwitcher magneticSwitcher;
+    MagneticDeclinationSwitcher magneticSwitcher;
     @Inject
     Animation flashAnimation;
     private FullscreenControlsManager fullscreenControlsManager;
@@ -163,6 +161,7 @@ public class DynamicStarMapActivity extends InjectableActivity
 
         initializeModelViewController();
         checkForSensorsAndMaybeWarn();
+        magneticSwitcher.init();
 
         Window window = getWindow();
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
@@ -323,7 +322,7 @@ public class DynamicStarMapActivity extends InjectableActivity
             timeTravelDialogFragment.show(fragmentManager, "Time Travel");
         } else if (itemId == R.id.menu_skymap_gallery) {
             startActivity(new Intent(this, ImageGalleryActivity.class));
-        } else if (itemId == R.id.menu_skymap_calibrate) {
+        } else if (itemId == R.id.menu_compass_calibration) {
             Intent intent = new Intent(this, CompassCalibrationActivity.class);
             intent.putExtra(CompassCalibrationActivity.HIDE_CHECKBOX, true);
             startActivity(intent);
