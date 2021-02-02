@@ -73,13 +73,19 @@ public class GeocentricCoordinates extends Vector3 {
     /**
      * Updates these coordinates with the given ra and dec in degrees.
      */
-    private void updateFromRaDec(float ra, float dec) {
+    public void updateFromRaDec(float ra, float dec) {
         float raRadians = ra * MathsUtils.DEGREES_TO_RADIANS;
         float decRadians = dec * MathsUtils.DEGREES_TO_RADIANS;
-
         this.x = (float) Math.cos(raRadians) * (float) Math.cos(decRadians);
         this.y = (float) Math.sin(raRadians) * (float) Math.cos(decRadians);
         this.z = (float) Math.sin(decRadians);
+    }
+
+    /**
+     * Updates these coordinates with the given ra and dec in degrees.
+     */
+    public void updateFromRaDec(double ra, double dec) {
+        updateFromRaDec((float) ra, (float) dec);
     }
 
     /**

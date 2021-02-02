@@ -33,7 +33,6 @@ import io.github.marcocipriani01.telescopetouch.renderer.RendererController;
 import io.github.marcocipriani01.telescopetouch.search.SearchResult;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.RaDec;
-import io.github.marcocipriani01.telescopetouch.util.TimeUtils;
 
 /**
  * If enabled, keeps the sky gradient up to date.
@@ -43,15 +42,13 @@ import io.github.marcocipriani01.telescopetouch.util.TimeUtils;
  */
 public class SkyGradientLayer implements Layer {
 
+    public static final int DEPTH_ORDER = 0;
+    public static final String PREFERENCE_ID = "source_provider.sky_gradient";
     private static final String TAG = TelescopeTouchApp.getTag(SkyGradientLayer.class);
-    private static final long UPDATE_FREQUENCY_MS = 5L * TimeUtils.MILLISECONDS_PER_MINUTE;
-
     private final ReentrantLock rendererLock = new ReentrantLock();
     private final AstronomerModel model;
     private final Resources resources;
-
     private RendererController renderer;
-    private long lastUpdateTimeMs = 0L;
 
     public SkyGradientLayer(AstronomerModel model, Resources resources) {
         this.model = model;
@@ -87,36 +84,28 @@ public class SkyGradientLayer implements Layer {
      * Redraws the sky shading gradient using the model's current time.
      */
     protected void redraw() {
-        Calendar modelTime = model.getTime();
-        long timeInMillis = modelTime.getTimeInMillis();
-        if (Math.abs(timeInMillis - lastUpdateTimeMs) > UPDATE_FREQUENCY_MS) {
-            lastUpdateTimeMs = timeInMillis;
-            RaDec sunPosition = SolarPositionCalculator.getSolarPosition(modelTime);
-            // Log.d(TAG, "Enabling sky gradient with sun position " + sunPosition);
-            rendererLock.lock();
-            try {
-                renderer.queueEnableSkyGradient(GeocentricCoordinates.getInstance(sunPosition));
-            } finally {
-                rendererLock.unlock();
-            }
+        Calendar calendar = model.getTime();
+        RaDec sunPosition = SolarPositionCalculator.getSolarPosition(calendar);
+        // Log.d(TAG, "Enabling sky gradient with sun position " + sunPosition);
+        rendererLock.lock();
+        try {
+            renderer.queueEnableSkyGradient(GeocentricCoordinates.getInstance(sunPosition));
+        } finally {
+            rendererLock.unlock();
         }
     }
 
     @Override
     public int getLayerDepthOrder() {
-        return -10;
+        return DEPTH_ORDER;
     }
 
     public String getPreferenceId() {
-        return "source_provider." + getLayerNameId();
+        return PREFERENCE_ID;
     }
 
     public String getLayerName() {
-        return resources.getString(getLayerNameId());
-    }
-
-    private int getLayerNameId() {
-        return R.string.show_sky_gradient;
+        return resources.getString(R.string.show_sky_gradient);
     }
 
     @Override

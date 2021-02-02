@@ -20,8 +20,6 @@ import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.util.Log;
 
-import com.google.protobuf.Parser;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -48,7 +46,6 @@ public abstract class AbstractFileBasedLayer extends AbstractLayer {
 
     private static final String TAG = TelescopeTouchApp.getTag(AbstractFileBasedLayer.class);
     private static final Executor BACKGROUND_EXECUTOR = Executors.newFixedThreadPool(1);
-
     private final AssetManager assetManager;
     private final String fileName;
     private final List<AstronomicalSource> fileSources = new ArrayList<>();
@@ -75,15 +72,12 @@ public abstract class AbstractFileBasedLayer extends AbstractLayer {
     private void readSourceFile(String sourceFilename) {
         Log.d(TAG, "Loading Proto File: " + sourceFilename + "...");
         try (InputStream in = assetManager.open(sourceFilename, AssetManager.ACCESS_BUFFER)) {
-            Parser<AstronomicalSourcesProto> parser = AstronomicalSourcesProto.parser();
-            AstronomicalSourcesProto sources = parser.parseFrom(in);
+            AstronomicalSourcesProto sources = AstronomicalSourcesProto.parser().parseFrom(in);
             for (AstronomicalSourceProto proto : sources.getSourceList()) {
                 fileSources.add(new ProtobufAstronomicalSource(proto, getResources()));
             }
             Log.d(TAG, "Found: " + fileSources.size() + " sources");
-            String s = String.format("Finished Loading: %s | Found %s sourcs.\n",
-                    sourceFilename, fileSources.size());
-            Log.d(TAG, s);
+            Log.d(TAG, String.format("Finished Loading: %s | Found %s sourcs.\n", sourceFilename, fileSources.size()));
             refreshSources(EnumSet.of(UpdateType.Reset));
         } catch (IOException e) {
             Log.e(TAG, "Unable to open " + sourceFilename);

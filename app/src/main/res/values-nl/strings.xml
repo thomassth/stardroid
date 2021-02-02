@@ -23,10 +23,10 @@
     <string name="location_place_found">Plaats gevonden. Breedtegraad %1$f en lengtegraad %2$f worden ingesteld</string>
     <string name="use_magnetic_correction">Magnetische correctie gebruiken</string>
     <string name="stars">Sterren</string>
-    <string name="show_constellations_pref">Sterrenbeelden</string>
-    <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Messier-objecten</string>
+    <string name="constellations">Sterrenbeelden</string>
+    <string name="messier_objects" translation_description="The celestial objects catalogued by Charles Messier">Messier-objecten</string>
     <string name="show_grid_pref">RK/declinatieraster</string>
-    <string name="show_horizon_pref">Horizon</string>
+    <string name="horizon">Horizon</string>
     <string name="show_sky_gradient">Hemelgradiënt</string>
     <string name="ecliptic">Ecliptica</string>
     <string name="malformed_loc_error">De ingestelde breedte- of lengtegraad is geen getal.</string>

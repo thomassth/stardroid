@@ -25,10 +25,10 @@
     <string name="use_magnetic_correction">اصلاح با جهت‌نمای مغناطیسی</string>
     <!-- This string is too long and currently unused -->
     <string name="stars">ستاره‌ها</string>
-    <string name="show_constellations_pref">صورت‌های فلکی</string>
-    <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">اجرام مسیه</string>
+    <string name="constellations">صورت‌های فلکی</string>
+    <string name="messier_objects" translation_description="The celestial objects catalogued by Charles Messier">اجرام مسیه</string>
     <string name="show_grid_pref">مختصات RA/Dec</string>
-    <string name="show_horizon_pref">افق</string>
+    <string name="horizon">افق</string>
     <string name="show_sky_gradient" translation_description="This is a shading of the color of the sky used for effect">گرادیان آسمان</string>
     <string name="show_meteors_pref">بارش شهابی</string>
     <!-- Just in case we decide to have such a layer for the 4/24 launch -->

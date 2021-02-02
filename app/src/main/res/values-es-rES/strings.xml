@@ -23,10 +23,10 @@
     <string name="location_place_found">Lugar encontrado. Configurando latitud %1$f y longitud %2$f.</string>
     <string name="use_magnetic_correction">Usar corrección magnética</string>
     <string name="stars">Estrellas</string>
-    <string name="show_constellations_pref">Constelaciones</string>
-    <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Objetos Messier</string>
+    <string name="constellations">Constelaciones</string>
+    <string name="messier_objects" translation_description="The celestial objects catalogued by Charles Messier">Objetos Messier</string>
     <string name="show_grid_pref">Cuadrícula AR/Dec</string>
-    <string name="show_horizon_pref">Horizonte</string>
+    <string name="horizon">Horizonte</string>
     <string name="show_sky_gradient">Gradiente cielo</string>
     <string name="ecliptic">Eclíptica</string>
     <string name="malformed_loc_error">La configuración de latitud o longitud no es un número.</string>

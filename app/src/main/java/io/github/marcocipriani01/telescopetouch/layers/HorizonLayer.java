@@ -44,6 +44,8 @@ import io.github.marcocipriani01.telescopetouch.util.TimeUtils;
  */
 public class HorizonLayer extends AbstractLayer {
 
+    public static final int DEPTH_ORDER = 40;
+    public static final String PREFERENCE_ID = "source_provider.5";
     private final AstronomerModel model;
 
     public HorizonLayer(AstronomerModel model, Resources resources) {
@@ -58,24 +60,17 @@ public class HorizonLayer extends AbstractLayer {
 
     @Override
     public int getLayerDepthOrder() {
-        return 90;
+        return DEPTH_ORDER;
     }
 
-    // TODO(brent): Remove this.
     @Override
     public String getPreferenceId() {
-        return "source_provider.5";
-    }
-
-    @Override
-    public String getLayerName() {
-        // TODO(johntaylor): i18n
-        return "Horizon";
+        return PREFERENCE_ID;
     }
 
     @Override
     protected int getLayerNameId() {
-        return R.string.show_horizon_pref;  // TODO(johntaylor): rename this string id
+        return R.string.horizon;
     }
 
     /**
@@ -136,7 +131,6 @@ public class HorizonLayer extends AbstractLayer {
         @Override
         public EnumSet<UpdateType> update() {
             EnumSet<UpdateType> updateTypes = EnumSet.noneOf(UpdateType.class);
-
             // TODO(brent): Add distance here.
             if (Math.abs(model.getTime().getTimeInMillis() - lastUpdateTimeMs) > UPDATE_FREQ_MS) {
                 updateCoords();

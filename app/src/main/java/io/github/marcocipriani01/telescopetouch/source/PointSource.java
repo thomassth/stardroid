@@ -35,16 +35,16 @@ public interface PointSource extends Colorable, PositionSource {
     Shape getPointShape();
 
     enum Shape {
-        CIRCLE(),
-        STAR(),
-        ELLIPTICAL_GALAXY(),
-        SPIRAL_GALAXY(),
-        IRREGULAR_GALAXY(),
-        LENTICULAR_GALAXY(),
-        GLOBULAR_CLUSTER(),
-        OPEN_CLUSTER(),
-        NEBULA(),
-        HUBBLE_DEEP_FIELD();
+        CIRCLE,
+        STAR,
+        ELLIPTICAL_GALAXY,
+        SPIRAL_GALAXY,
+        IRREGULAR_GALAXY,
+        LENTICULAR_GALAXY,
+        GLOBULAR_CLUSTER,
+        OPEN_CLUSTER,
+        NEBULA,
+        HUBBLE_DEEP_FIELD;
 
         public int getImageIndex() {
             // return imageIndex;

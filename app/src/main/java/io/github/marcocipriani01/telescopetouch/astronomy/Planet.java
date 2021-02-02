@@ -33,7 +33,6 @@ import io.github.marcocipriani01.telescopetouch.util.MathsUtils;
 import io.github.marcocipriani01.telescopetouch.util.TimeUtils;
 
 public enum Planet {
-
     // The order here is the order in which they are drawn.  To ensure that during
     // conjunctions they display "naturally" order them in reverse distance from Earth.
     Pluto(R.drawable.pluto, R.string.pluto, TimeUtils.MILLISECONDS_PER_HOUR),
@@ -161,7 +160,6 @@ public enum Planet {
 
         return 180 / (float) Math.PI * (float) Math.acos(cosHa);
     }
-
 
     // TODO(serafini): We need to correct the Ra/Dec for the user's location. The
     // current calculation is probably accurate to a degree or two, but we can,

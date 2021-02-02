@@ -37,12 +37,12 @@ public class LayerManager implements OnSharedPreferenceChangeListener {
 
     private static final String TAG = TelescopeTouchApp.getTag(LayerManager.class);
     private final List<Layer> layers = new ArrayList<>();
-    private final SharedPreferences sharedPreferences;
+    private final SharedPreferences preferences;
 
-    public LayerManager(SharedPreferences sharedPreferences) {
+    public LayerManager(SharedPreferences preferences) {
         Log.d(TAG, "Creating LayerManager");
-        this.sharedPreferences = sharedPreferences;
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        this.preferences = preferences;
+        preferences.registerOnSharedPreferenceChangeListener(this);
     }
 
     public void addLayer(Layer layer) {
@@ -58,9 +58,7 @@ public class LayerManager implements OnSharedPreferenceChangeListener {
     public void registerWithRenderer(RendererController renderer) {
         for (Layer layer : layers) {
             layer.registerWithRenderer(renderer);
-            String prefId = layer.getPreferenceId();
-            boolean visible = sharedPreferences.getBoolean(prefId, true);
-            layer.setVisible(visible);
+            layer.setVisible(preferences.getBoolean(layer.getPreferenceId(), true));
         }
     }
 
@@ -68,17 +66,10 @@ public class LayerManager implements OnSharedPreferenceChangeListener {
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
         for (Layer layer : layers) {
             if (layer.getPreferenceId().equals(key)) {
-                boolean visible = prefs.getBoolean(key, true);
-                layer.setVisible(visible);
+                layer.setVisible(prefs.getBoolean(key, true));
+                return;
             }
         }
-    }
-
-    /**
-     * Returns the name of this object.
-     */
-    public String getName() {
-        return "Layer Manager";
     }
 
     /**
@@ -118,6 +109,6 @@ public class LayerManager implements OnSharedPreferenceChangeListener {
     }
 
     private boolean isLayerVisible(Layer layer) {
-        return sharedPreferences.getBoolean(layer.getPreferenceId(), true);
+        return preferences.getBoolean(layer.getPreferenceId(), true);
     }
 }

@@ -115,7 +115,7 @@ public class TelescopeTouchApp extends Application {
         PreferenceManager.setDefaultValues(this, R.xml.preference_screen, false);
         performFeatureCheck();
 
-        connectionManager.initFormatters(context);
+        connectionManager.initContext(context);
         if ((serviceDiscoveryHelper == null) && preferences.getBoolean(ApplicationConstants.NSD_PREF, true))
             serviceDiscoveryHelper = new NSDHelper(this);
     }

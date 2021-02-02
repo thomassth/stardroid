@@ -42,6 +42,7 @@ import static java.lang.Math.abs;
  */
 
 public class OrbitalElements {
+
     // calculation error
     private final static float EPSILON = 1.0e-6f;
     private static final String TAG = TelescopeTouchApp.getTag(OrbitalElements.class);

@@ -25,10 +25,10 @@
     <string name="use_magnetic_correction">使用磁力修正</string>
     <!-- This string is too long and currently unused -->
     <string name="stars">恒星</string>
-    <string name="show_constellations_pref">星座</string>
-    <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">梅西耶天体</string>
+    <string name="constellations">星座</string>
+    <string name="messier_objects" translation_description="The celestial objects catalogued by Charles Messier">梅西耶天体</string>
     <string name="show_grid_pref">赤经赤纬网格</string>
-    <string name="show_horizon_pref">水平线</string>
+    <string name="horizon">水平线</string>
     <string name="show_sky_gradient">天空梯度</string>
     <string name="show_meteors_pref">流星雨</string>
     <!-- Just in case we decide to have such a layer for the 4/24 launch -->

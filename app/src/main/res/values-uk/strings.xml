@@ -23,10 +23,10 @@
     <string name="location_place_found">Місце знайдене. Встан. широта %1$f і довгота %2$f</string>
     <string name="use_magnetic_correction">Викор. магнітну корекцію</string>
     <string name="stars">Зірки</string>
-    <string name="show_constellations_pref">Сузір\'я</string>
-    <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Об\'єкти Мессьє</string>
+    <string name="constellations">Сузір\'я</string>
+    <string name="messier_objects" translation_description="The celestial objects catalogued by Charles Messier">Об\'єкти Мессьє</string>
     <string name="show_grid_pref">RA/Dec сітка</string>
-    <string name="show_horizon_pref">Горизонт</string>
+    <string name="horizon">Горизонт</string>
     <string name="show_sky_gradient">Градієнт неба</string>
     <string name="ecliptic">Екліптика</string>
     <string name="malformed_loc_error">Значення широти або довготи не є числом.</string>

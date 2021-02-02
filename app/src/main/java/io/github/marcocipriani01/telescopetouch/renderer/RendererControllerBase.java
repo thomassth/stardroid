@@ -99,45 +99,42 @@ public abstract class RendererControllerBase {
     }
 
     public void queueNightVisionMode(final boolean enable) {
-        final String msg = "Setting night vision mode: " + enable;
-        queueRunnable(msg, CommandType.View, () -> mRenderer.setNightVisionMode(enable));
+        queueRunnable("Setting night vision mode: " + enable,
+                CommandType.View, () -> mRenderer.setNightVisionMode(enable));
     }
 
     public void queueFieldOfView(final float fov) {
-        final String msg = "Setting fov: " + fov;
-        queueRunnable(msg, CommandType.View, () -> mRenderer.setRadiusOfView(fov));
+        queueRunnable("Setting fov: " + fov, CommandType.View, () -> mRenderer.setRadiusOfView(fov));
     }
 
     public void queueTextAngle(final float angleInRadians) {
-        final String msg = "Setting text angle: " + angleInRadians;
-        queueRunnable(msg, CommandType.View, () -> mRenderer.setTextAngle(angleInRadians));
+        queueRunnable("Setting text angle: " + angleInRadians,
+                CommandType.View, () -> mRenderer.setTextAngle(angleInRadians));
     }
 
     public void queueViewerUpDirection(final GeocentricCoordinates up) {
-        final String msg = "Setting up direction: " + up;
-        queueRunnable(msg, CommandType.View, () -> mRenderer.setViewerUpDirection(up));
+        queueRunnable("Setting up direction: " + up, CommandType.View, () -> mRenderer.setViewerUpDirection(up));
     }
 
     public void queueSetViewOrientation(final float dirX, final float dirY, final float dirZ,
                                         final float upX, final float upY, final float upZ) {
-        final String msg = "Setting view orientation";
-        queueRunnable(msg, CommandType.Data, () -> mRenderer.setViewOrientation(dirX, dirY, dirZ, upX, upY, upZ));
+        queueRunnable("Setting view orientation",
+                CommandType.Data, () -> mRenderer.setViewOrientation(dirX, dirY, dirZ, upX, upY, upZ));
     }
 
     public void queueEnableSkyGradient(final GeocentricCoordinates sunPosition) {
-        final String msg = "Enabling sky gradient at: " + sunPosition;
-        queueRunnable(msg, CommandType.Data, () -> mRenderer.enableSkyGradient(sunPosition));
+        queueRunnable("Enabling sky gradient at: " + sunPosition,
+                CommandType.Data, () -> mRenderer.enableSkyGradient(sunPosition));
     }
 
     public void queueDisableSkyGradient() {
-        final String msg = "Disabling sky gradient";
-        queueRunnable(msg, CommandType.Data, mRenderer::disableSkyGradient);
+        queueRunnable("Disabling sky gradient",
+                CommandType.Data, mRenderer::disableSkyGradient);
     }
 
-    public void queueEnableSearchOverlay(final GeocentricCoordinates target,
-                                         final String targetName) {
-        final String msg = "Enabling search overlay";
-        queueRunnable(msg, CommandType.Data, () -> mRenderer.enableSearchOverlay(target, targetName));
+    public void queueEnableSearchOverlay(final GeocentricCoordinates target, final String targetName) {
+        queueRunnable("Enabling search overlay",
+                CommandType.Data, () -> mRenderer.enableSearchOverlay(target, targetName));
     }
 
     public void queueDisableSearchOverlay() {
@@ -172,8 +169,7 @@ public abstract class RendererControllerBase {
     abstract protected EventQueuer getQueuer();
 
     protected void queueRunnable(String msg, final CommandType type, final Runnable r) {
-        String fullMessage = toString() + " - " + msg;
-        RendererControllerBase.queueRunnable(getQueuer(), fullMessage, type, r);
+        RendererControllerBase.queueRunnable(getQueuer(), toString() + " - " + msg, type, r);
     }
 
     // Used only to allow logging different types of events.  The distinction

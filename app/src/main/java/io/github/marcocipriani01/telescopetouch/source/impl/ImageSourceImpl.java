@@ -53,7 +53,6 @@ public class ImageSourceImpl extends AbstractSource implements ImageSource {
     public Bitmap image;
     public boolean requiresBlending = false;
 
-
     public ImageSourceImpl(float ra, float dec, Resources res, int id) {
         this(ra, dec, res, id, up, 1.0f);
     }
@@ -62,16 +61,13 @@ public class ImageSourceImpl extends AbstractSource implements ImageSource {
         this(ra, dec, res, id, upVec, 1.0f);
     }
 
-    public ImageSourceImpl(float ra, float dec, Resources res, int id, Vector3 upVec,
-                           float imageScale) {
+    public ImageSourceImpl(float ra, float dec, Resources res, int id, Vector3 upVec, float imageScale) {
         this(GeocentricCoordinates.getInstance(ra, dec), res, id, upVec, imageScale);
     }
 
-    public ImageSourceImpl(GeocentricCoordinates coords, Resources res, int id, Vector3 upVec,
-                           float imageScale) {
+    public ImageSourceImpl(GeocentricCoordinates coords, Resources res, int id, Vector3 upVec, float imageScale) {
         super(coords, Color.WHITE);
         this.imageScale = imageScale;
-
         // TODO(jpowell): We're never freeing this resource, so we leak it every
         // time we create a new ImageSourceImpl and garbage collect an old one.
         // We need to make sure it gets freed.
@@ -86,7 +82,6 @@ public class ImageSourceImpl extends AbstractSource implements ImageSource {
     public void setImageId(int imageId) {
         Options opts = new Options();
         opts.inScaled = false;
-
         this.image = BitmapFactory.decodeResource(resources, imageId, opts);
         if (image == null) {
             throw new RuntimeException("Coud not decode image " + imageId);
@@ -117,15 +112,12 @@ public class ImageSourceImpl extends AbstractSource implements ImageSource {
         Vector3 p = this.getLocation();
         Vector3 u = Vector3.negate(Vector3.normalized(Vector3.vectorProduct(p, upVec)));
         Vector3 v = Vector3.vectorProduct(u, p);
-
         v.scale(imageScale);
         u.scale(imageScale);
-
         // TODO(serafini): Can we replace these with a float[]?
         ux = u.x;
         uy = u.y;
         uz = u.z;
-
         vx = v.x;
         vy = v.y;
         vz = v.z;

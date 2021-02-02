@@ -45,6 +45,8 @@ import io.github.marcocipriani01.telescopetouch.util.Vector3;
  */
 public class MeteorShowerLayer extends AbstractLayer {
 
+    public static final int DEPTH_ORDER = 50;
+    public static final String PREFERENCE_ID = "source_provider.6";
     private static final int ANY_OLD_YEAR = 20000;
     /**
      * Number of meteors per hour for the larger graphic
@@ -135,17 +137,12 @@ public class MeteorShowerLayer extends AbstractLayer {
 
     @Override
     public int getLayerDepthOrder() {
-        return 80;
+        return DEPTH_ORDER;
     }
 
     @Override
     public String getPreferenceId() {
-        return "source_provider.6";
-    }
-
-    @Override
-    public String getLayerName() {
-        return "Meteor Showers";
+        return PREFERENCE_ID;
     }
 
     @Override

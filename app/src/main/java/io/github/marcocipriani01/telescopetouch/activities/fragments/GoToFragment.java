@@ -88,7 +88,7 @@ public class GoToFragment extends ActionFragment
     // INDI properties
     private INDINumberProperty telescopeCoordP = null;
     private INDINumberElement telescopeCoordRA = null;
-    private INDINumberElement telescopeCoordDE = null;
+    private INDINumberElement telescopeCoordDec = null;
     private INDISwitchProperty telescopeOnCoordSetP = null;
     private INDISwitchElement telescopeOnCoordSetSync = null;
     private INDISwitchElement telescopeOnCoordSetSlew = null;
@@ -192,7 +192,7 @@ public class GoToFragment extends ActionFragment
     private void clearVars() {
         telescopeCoordP = null;
         telescopeCoordRA = null;
-        telescopeCoordDE = null;
+        telescopeCoordDec = null;
         telescopeOnCoordSetP = null;
         telescopeOnCoordSetSlew = null;
         telescopeOnCoordSetTrack = null;
@@ -292,10 +292,10 @@ public class GoToFragment extends ActionFragment
                 ((selectedEntry instanceof StarEntry) || (selectedEntry instanceof DSOEntry))) {
             CatalogCoordinates precessed = StarsPrecession.precess(Calendar.getInstance(), coordinates);
             telescopeCoordRA.setDesiredValue(precessed.getRaStr());
-            telescopeCoordDE.setDesiredValue(precessed.getDeStr());
+            telescopeCoordDec.setDesiredValue(precessed.getDeStr());
         } else {
             telescopeCoordRA.setDesiredValue(coordinates.getRaStr());
-            telescopeCoordDE.setDesiredValue(coordinates.getDeStr());
+            telescopeCoordDec.setDesiredValue(coordinates.getDeStr());
         }
     }
 
@@ -313,7 +313,7 @@ public class GoToFragment extends ActionFragment
                 + ", elements: " + Arrays.toString(property.getElementNames()));
         switch (name) {
             case "EQUATORIAL_EOD_COORD":
-                if (((telescopeCoordDE = (INDINumberElement) property.getElement("DEC")) != null) &&
+                if (((telescopeCoordDec = (INDINumberElement) property.getElement("DEC")) != null) &&
                         ((telescopeCoordRA = (INDINumberElement) property.getElement("RA")) != null) &&
                         (property instanceof INDINumberProperty)) {
                     property.addINDIPropertyListener(this);
@@ -345,7 +345,7 @@ public class GoToFragment extends ActionFragment
             case "ON_COORD_SET":
                 telescopeCoordP = null;
                 telescopeCoordRA = null;
-                telescopeCoordDE = null;
+                telescopeCoordDec = null;
                 break;
         }
     }

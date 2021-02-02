@@ -30,24 +30,25 @@ import io.github.marcocipriani01.telescopetouch.R;
  */
 public class ConstellationsLayer extends AbstractFileBasedLayer {
 
+    public static final int DEPTH_ORDER = 10;
+    public static final String PREFERENCE_ID = "source_provider.1";
+
     public ConstellationsLayer(AssetManager assetManager, Resources resources) {
         super(assetManager, resources, "constellations.binary");
     }
 
     @Override
     public int getLayerDepthOrder() {
-        return 10;
+        return DEPTH_ORDER;
     }
 
     @Override
     public int getLayerNameId() {
-        // TODO(johntaylor): rename this string id.
-        return R.string.show_constellations_pref;
+        return R.string.constellations;
     }
 
-    // TODO(brent): Remove this.
     @Override
     public String getPreferenceId() {
-        return "source_provider.1";
+        return PREFERENCE_ID;
     }
 }

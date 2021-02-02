@@ -23,10 +23,10 @@
     <string name="location_place_found">場所が見つかりました。緯度: %1$f、経度: %2$f</string>
     <string name="use_magnetic_correction">磁気補正機能を使用</string>
     <string name="stars">恒星</string>
-    <string name="show_constellations_pref">星座</string>
-    <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">メシエ天体</string>
+    <string name="constellations">星座</string>
+    <string name="messier_objects" translation_description="The celestial objects catalogued by Charles Messier">メシエ天体</string>
     <string name="show_grid_pref">赤経/赤緯グリッド</string>
-    <string name="show_horizon_pref">地平線</string>
+    <string name="horizon">地平線</string>
     <string name="show_sky_gradient">空のグラデーション</string>
     <string name="ecliptic">黄道</string>
     <string name="malformed_loc_error">緯度や経度には数値を設定してください。</string>
