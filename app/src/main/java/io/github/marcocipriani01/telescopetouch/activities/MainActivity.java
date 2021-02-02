@@ -14,6 +14,7 @@
 
 package io.github.marcocipriani01.telescopetouch.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -61,6 +62,7 @@ import io.github.marcocipriani01.telescopetouch.activities.fragments.MountContro
 import io.github.marcocipriani01.telescopetouch.activities.fragments.PolarisFragment;
 import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
 import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
+import io.github.marcocipriani01.telescopetouch.sensors.LocationPermissionRequester;
 
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 import static io.github.marcocipriani01.telescopetouch.activities.fragments.BLOBViewerFragment.RECEIVE_BLOB_PREF;
@@ -79,8 +81,14 @@ public class MainActivity extends AppCompatActivity implements
     public static final int ACTION_SEARCH = Pages.GOTO.ordinal();
     public static final String MESSAGE = "MainActivityMessage";
     private static Pages currentPage = Pages.CONNECTION;
+    private final ActivityResultLauncher<String> locationPermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            result -> {
+                if (result && (currentPage.lastInstance instanceof LocationPermissionRequester))
+                    ((LocationPermissionRequester) currentPage.lastInstance).onLocationPermissionAcquired();
+            });
     private SharedPreferences preferences;
-    private final ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(
+    private final ActivityResultLauncher<Intent> serversActivityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if ((result.getResultCode() == Activity.RESULT_OK) && (currentPage.lastInstance instanceof ConnectionFragment))
@@ -116,10 +124,6 @@ public class MainActivity extends AppCompatActivity implements
         MainBottomNavigation bottomNavigation = new MainBottomNavigation(this);
         bottomBar.setNavigationOnClickListener(v -> bottomNavigation.show());
         intentAndFragment(getIntent());
-    }
-
-    public void launchActivityForResult(Intent intent) {
-        resultLauncher.launch(intent);
     }
 
     @Override
@@ -199,8 +203,8 @@ public class MainActivity extends AppCompatActivity implements
             if (ShortcutManagerCompat.isRequestPinShortcutSupported(this)) {
                 ShortcutManagerCompat.requestPinShortcut(this,
                         new ShortcutInfoCompat.Builder(this, "skymap_shortcut")
-                                .setIntent(new Intent(this, DynamicStarMapActivity.class)
-                                        .setAction(DynamicStarMapActivity.SKY_MAP_INTENT_ACTION))
+                                .setIntent(new Intent(this, SkyMapActivity.class)
+                                        .setAction(SkyMapActivity.SKY_MAP_INTENT_ACTION))
                                 .setShortLabel(getString(R.string.sky_map))
                                 .setIcon(IconCompat.createWithResource(this, R.mipmap.map_launcher))
                                 .build(), null);
@@ -239,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements
             startActivity(new Intent(this, ImageGalleryActivity.class));
             return true;
         } else if (page == Pages.SKY_MAP) {
-            startActivity(new Intent(this, DynamicStarMapActivity.class));
+            startActivity(new Intent(this, SkyMapActivity.class));
             return true;
         } else if ((page != null) && (page != currentPage)) {
             showFragment(page, true);
@@ -312,6 +316,14 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void setNightMode(boolean nightMode) {
         if (nightMode != this.darkerMode) recreate();
+    }
+
+    public void launchServersActivity() {
+        serversActivityLauncher.launch(new Intent(this, ServersActivity.class));
+    }
+
+    public void requestLocationPermission() {
+        locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
     }
 
     /**

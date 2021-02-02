@@ -124,7 +124,7 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
                 } else if (host.equals(context.getString(R.string.host_manage))) {
                     serversSpinner.post(() -> serversSpinner.setSelection(0));
                     if (activity instanceof MainActivity)
-                        ((MainActivity) activity).launchActivityForResult(new Intent(context, ServersActivity.class));
+                        ((MainActivity) activity).launchServersActivity();
                 } else {
                     connectionManager.connect(host, port);
                 }
@@ -144,7 +144,7 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
                 } else if (selected.equals(context.getString(R.string.host_manage))) {
                     serversSpinner.post(() -> serversSpinner.setSelection(0));
                     if (activity instanceof MainActivity)
-                        ((MainActivity) activity).launchActivityForResult(new Intent(context, ServersActivity.class));
+                        ((MainActivity) activity).launchServersActivity();
                 }
             }
         }.attach(serversSpinner);

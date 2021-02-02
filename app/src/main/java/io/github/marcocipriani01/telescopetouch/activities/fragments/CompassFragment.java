@@ -34,16 +34,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentActivity;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.CompassCalibrationActivity;
+import io.github.marcocipriani01.telescopetouch.activities.MainActivity;
 import io.github.marcocipriani01.telescopetouch.sensors.CompassHelper;
+import io.github.marcocipriani01.telescopetouch.sensors.LocationPermissionRequester;
 
 import static io.github.marcocipriani01.telescopetouch.units.LatLong.declinationToString;
 import static io.github.marcocipriani01.telescopetouch.units.LatLong.latitudeToString;
 import static io.github.marcocipriani01.telescopetouch.units.LatLong.longitudeToString;
 
-public class CompassFragment extends ActionFragment implements Toolbar.OnMenuItemClickListener {
+public class CompassFragment extends ActionFragment implements Toolbar.OnMenuItemClickListener, LocationPermissionRequester {
 
     private CompassHelper compass;
 
@@ -78,8 +81,20 @@ public class CompassFragment extends ActionFragment implements Toolbar.OnMenuIte
                 animation.setFillAfter(true);
                 arrow.startAnimation(animation);
             }
+
+            @Override
+            protected void requestLocationPermission() {
+                FragmentActivity activity = getActivity();
+                if (activity instanceof MainActivity)
+                    ((MainActivity) activity).requestLocationPermission();
+            }
         };
         return rootView;
+    }
+
+    @Override
+    public void onLocationPermissionAcquired() {
+        compass.restartLocation();
     }
 
     @Override

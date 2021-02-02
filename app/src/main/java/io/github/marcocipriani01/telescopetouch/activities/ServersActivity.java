@@ -46,8 +46,8 @@ import java.util.List;
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
-import io.github.marcocipriani01.telescopetouch.activities.util.ServersReloadListener;
 import io.github.marcocipriani01.telescopetouch.activities.util.ServersItemAdapter;
+import io.github.marcocipriani01.telescopetouch.activities.util.ServersReloadListener;
 
 /**
  * Activity to manage the list of servers.

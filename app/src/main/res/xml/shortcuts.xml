@@ -10,8 +10,8 @@
         android:shortcutShortLabel="@string/sky_map"
         tools:targetApi="n_mr1">
         <intent
-            android:action="io.github.marcocipriani01.telescopetouch.activities.DynamicStarMapActivity"
-            android:targetClass="io.github.marcocipriani01.telescopetouch.activities.DynamicStarMapActivity"
+            android:action="io.github.marcocipriani01.telescopetouch.activities.SkyMapActivity"
+            android:targetClass="io.github.marcocipriani01.telescopetouch.activities.SkyMapActivity"
             android:targetPackage="io.github.marcocipriani01.telescopetouch" />
         <categories android:name="android.shortcut.skymap" />
     </shortcut>
