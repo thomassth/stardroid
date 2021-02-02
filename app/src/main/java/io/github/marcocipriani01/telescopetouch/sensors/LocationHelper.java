@@ -159,11 +159,11 @@ public abstract class LocationHelper implements LocationListener {
 
     private void setLocationFromPrefs() {
         Log.d(TAG, "Setting location from preferences");
-        float longitude = 0.0f, latitude = 0.0f;
+        double latitude = 0.0, longitude = 0.0;
         try {
-            longitude = Float.parseFloat(preferences.getString("longitude", "0"));
-            latitude = Float.parseFloat(preferences.getString("latitude", "0"));
-        } catch (NumberFormatException nfe) {
+            latitude = Double.parseDouble(preferences.getString(ApplicationConstants.LATITUDE_PREF, "0"));
+            longitude = Double.parseDouble(preferences.getString(ApplicationConstants.LONGITUDE_PREF, "0"));
+        } catch (NumberFormatException e) {
             Log.e(TAG, "Error parsing latitude or longitude preference");
             Toast.makeText(context, R.string.malformed_loc_error, Toast.LENGTH_SHORT).show();
         }
