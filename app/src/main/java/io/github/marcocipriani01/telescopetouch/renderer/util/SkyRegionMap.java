@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.util.VectorUtil;
+import io.github.marcocipriani01.telescopetouch.util.Vector3;
 
 /**
  * This is a utility class which divides the sky into a fixed set of regions
@@ -202,7 +202,7 @@ public class SkyRegionMap<RegionRenderingData> {
         float[] regionCenterDotProducts = new float[REGION_CENTERS.length];
         ArrayList<Integer> activeStandardRegions = new ArrayList<>();
         for (int i = 0; i < REGION_CENTERS.length; i++) {
-            float dotProduct = VectorUtil.dotProduct(lookDir, REGION_CENTERS[i]);
+            float dotProduct = Vector3.scalarProduct(lookDir, REGION_CENTERS[i]);
             regionCenterDotProducts[i] = dotProduct;
             if (dotProduct > dotProductThreshold) {
                 activeStandardRegions.add(i);
@@ -244,7 +244,7 @@ public class SkyRegionMap<RegionRenderingData> {
         // does that.
         ObjectRegionData data = new ObjectRegionData();
         for (int i = 0; i < REGION_CENTERS.length; i++) {
-            float dotProduct = VectorUtil.dotProduct(REGION_CENTERS[i], position);
+            float dotProduct = Vector3.scalarProduct(REGION_CENTERS[i], position);
             if (dotProduct > data.regionCenterDotProduct) {
                 data.regionCenterDotProduct = dotProduct;
                 data.region = i;

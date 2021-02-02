@@ -16,8 +16,6 @@
 
 package io.github.marcocipriani01.telescopetouch.util;
 
-import io.github.marcocipriani01.telescopetouch.units.Vector3;
-
 public class Matrix4x4 {
 
     private final float[] mValues = new float[16];

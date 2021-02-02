@@ -54,7 +54,7 @@ import io.github.marcocipriani01.telescopetouch.activities.util.ImprovedSpinnerL
 import io.github.marcocipriani01.telescopetouch.activities.util.ServersReloadListener;
 import io.github.marcocipriani01.telescopetouch.activities.views.SameSelectionSpinner;
 import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
-import io.github.marcocipriani01.telescopetouch.util.NSDHelper;
+import io.github.marcocipriani01.telescopetouch.indi.NSDHelper;
 
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 

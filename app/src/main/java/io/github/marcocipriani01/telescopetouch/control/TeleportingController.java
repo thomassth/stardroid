@@ -19,10 +19,8 @@ package io.github.marcocipriani01.telescopetouch.control;
 import android.util.Log;
 
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
-import io.github.marcocipriani01.telescopetouch.control.AstronomerModel.Pointing;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.units.Vector3;
-import io.github.marcocipriani01.telescopetouch.util.VectorUtil;
+import io.github.marcocipriani01.telescopetouch.util.Vector3;
 
 /**
  * Flies the user to the search target in manual mode.
@@ -53,8 +51,8 @@ public class TeleportingController extends AbstractController {
         // the screen in celestial coordinates.)
         Vector3 hereTopXyz = pointing.getPerpendicular();
         hereTopXyz.normalize();
-        final Vector3 normal = VectorUtil.crossProduct(hereXyz, hereTopXyz);
-        Vector3 newUpXyz = VectorUtil.crossProduct(normal, targetXyz);
+        final Vector3 normal = Vector3.vectorProduct(hereXyz, hereTopXyz);
+        Vector3 newUpXyz = Vector3.vectorProduct(normal, targetXyz);
 
         model.setPointing(targetXyz, newUpXyz);
     }

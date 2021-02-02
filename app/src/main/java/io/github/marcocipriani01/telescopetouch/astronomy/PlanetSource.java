@@ -40,7 +40,7 @@ import io.github.marcocipriani01.telescopetouch.source.impl.TextSourceImpl;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.HeliocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.RaDec;
-import io.github.marcocipriani01.telescopetouch.units.Vector3;
+import io.github.marcocipriani01.telescopetouch.util.Vector3;
 
 /**
  * Implementation of the

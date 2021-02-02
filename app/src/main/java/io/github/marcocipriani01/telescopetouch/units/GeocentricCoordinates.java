@@ -16,7 +16,8 @@
 
 package io.github.marcocipriani01.telescopetouch.units;
 
-import io.github.marcocipriani01.telescopetouch.util.Geometry;
+import io.github.marcocipriani01.telescopetouch.util.MathsUtils;
+import io.github.marcocipriani01.telescopetouch.util.Vector3;
 
 /**
  * This class corresponds to an object's location in Euclidean space
@@ -44,6 +45,12 @@ public class GeocentricCoordinates extends Vector3 {
         return coords;
     }
 
+    public static GeocentricCoordinates getInstance(double ra, double dec) {
+        GeocentricCoordinates coords = new GeocentricCoordinates(0.0f, 0.0f, 0.0f);
+        coords.updateFromRaDec((float) ra, (float) dec);
+        return coords;
+    }
+
     /**
      * Convert ra and dec to x,y,z where the point is place on the unit sphere.
      */
@@ -67,8 +74,8 @@ public class GeocentricCoordinates extends Vector3 {
      * Updates these coordinates with the given ra and dec in degrees.
      */
     private void updateFromRaDec(float ra, float dec) {
-        float raRadians = ra * Geometry.DEGREES_TO_RADIANS;
-        float decRadians = dec * Geometry.DEGREES_TO_RADIANS;
+        float raRadians = ra * MathsUtils.DEGREES_TO_RADIANS;
+        float decRadians = dec * MathsUtils.DEGREES_TO_RADIANS;
 
         this.x = (float) Math.cos(raRadians) * (float) Math.cos(decRadians);
         this.y = (float) Math.sin(raRadians) * (float) Math.cos(decRadians);
@@ -80,7 +87,7 @@ public class GeocentricCoordinates extends Vector3 {
      */
     public float getRa() {
         // Assumes unit sphere.
-        return Geometry.RADIANS_TO_DEGREES * (float) Math.atan2(y, x);
+        return MathsUtils.RADIANS_TO_DEGREES * (float) Math.atan2(y, x);
     }
 
     /**
@@ -88,7 +95,7 @@ public class GeocentricCoordinates extends Vector3 {
      */
     public float getDec() {
         // Assumes unit sphere.
-        return Geometry.RADIANS_TO_DEGREES * (float) Math.asin(z);
+        return MathsUtils.RADIANS_TO_DEGREES * (float) Math.asin(z);
     }
 
     @Override
@@ -98,8 +105,6 @@ public class GeocentricCoordinates extends Vector3 {
 
     /**
      * Assumes it's an array of length 3.
-     *
-     * @param xyz
      */
     private void updateFromFloatArray(float[] xyz) {
         this.x = xyz[0];

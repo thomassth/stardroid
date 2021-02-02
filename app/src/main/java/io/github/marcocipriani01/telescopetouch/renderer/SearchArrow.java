@@ -23,9 +23,8 @@ import io.github.marcocipriani01.telescopetouch.renderer.util.SearchHelper;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TextureManager;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TextureReference;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TexturedQuad;
-import io.github.marcocipriani01.telescopetouch.units.Vector3;
-import io.github.marcocipriani01.telescopetouch.util.FixedPoint;
-import io.github.marcocipriani01.telescopetouch.util.VectorUtil;
+import io.github.marcocipriani01.telescopetouch.util.Vector3;
+import io.github.marcocipriani01.telescopetouch.util.MathsUtils;
 
 public class SearchArrow {
 
@@ -53,16 +52,16 @@ public class SearchArrow {
     private static float angleBetweenVectorsWithRespectToAxis(Vector3 v1, Vector3 v2, Vector3 axis) {
         // Make v1 perpendicular to axis.  We want an orthonormal basis for the plane perpendicular
         // to axis.  After rotating v1, the projection of v1 and v2 into this plane should be equal.
-        Vector3 v1proj = VectorUtil.difference(v1, VectorUtil.projectOntoUnit(v1, axis));
-        v1proj = VectorUtil.normalized(v1proj);
+        Vector3 v1proj = Vector3.difference(v1, Vector3.projectOntoUnit(v1, axis));
+        v1proj = Vector3.normalized(v1proj);
 
         // Get the vector perpendicular to the one you're rotating and the axis.  Since axis and v1proj
         // are orthonormal, this one must be a unit vector perpendicular to all three.
-        Vector3 perp = VectorUtil.crossProduct(axis, v1proj);
+        Vector3 perp = Vector3.vectorProduct(axis, v1proj);
 
         // v2 is perpendicular to axis, so therefore it's already in the same plane as v1proj perp.
-        float cosAngle = VectorUtil.dotProduct(v1proj, v2);
-        float sinAngle = -VectorUtil.dotProduct(perp, v2);
+        float cosAngle = Vector3.scalarProduct(v1proj, v2);
+        float sinAngle = -Vector3.scalarProduct(perp, v2);
 
         return (float) Math.atan2(sinAngle, cosAngle);
     }
@@ -133,7 +132,7 @@ public class SearchArrow {
         float expandFactor = searchHelper.getTransitionFactor();
 
         if (expandFactor == 0) {
-            gl.glColor4x(FixedPoint.ONE, FixedPoint.ONE, FixedPoint.ONE, FixedPoint.ONE);
+            gl.glColor4x(MathsUtils.ONE, MathsUtils.ONE, MathsUtils.ONE, MathsUtils.ONE);
 
             float redFactor, blueFactor;
             if (nightVisionMode) {
@@ -159,8 +158,8 @@ public class SearchArrow {
             gl.glScalef(arrowScale, arrowScale, arrowScale);
             mArrowQuad.draw(gl);
         } else {
-            gl.glColor4x(FixedPoint.ONE, FixedPoint.ONE, FixedPoint.ONE,
-                    FixedPoint.floatToFixedPoint(0.7f));
+            gl.glColor4x(MathsUtils.ONE, MathsUtils.ONE, MathsUtils.ONE,
+                    MathsUtils.floatToFixedPoint(0.7f));
 
             gl.glTexEnvfv(GL10.GL_TEXTURE_ENV, GL10.GL_TEXTURE_ENV_COLOR,
                     new float[]{1, nightVisionMode ? 0 : 0.5f, 0, 0.0f}, 0);
@@ -180,7 +179,7 @@ public class SearchArrow {
     }
 
     public void setTarget(Vector3 position) {
-        position = VectorUtil.normalized(position);
+        position = Vector3.normalized(position);
         mTargetPhi = (float) Math.acos(position.y);
         mTargetTheta = (float) Math.atan2(position.z, position.x);
     }

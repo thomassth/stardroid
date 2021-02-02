@@ -25,9 +25,8 @@ import io.github.marcocipriani01.telescopetouch.renderer.util.ColoredQuad;
 import io.github.marcocipriani01.telescopetouch.renderer.util.SearchHelper;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TextureManager;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.units.Vector3;
+import io.github.marcocipriani01.telescopetouch.util.Vector3;
 import io.github.marcocipriani01.telescopetouch.util.Matrix4x4;
-import io.github.marcocipriani01.telescopetouch.util.VectorUtil;
 
 public class OverlayManager extends RendererObjectManager {
 
@@ -102,8 +101,8 @@ public class OverlayManager extends RendererObjectManager {
     public void setViewerUpDirection(GeocentricCoordinates viewerUp) {
         // Log.d("OverlayManager", "Setting viewer up " + viewerUp);
         if (Math.abs(viewerUp.y) < 0.999f) {
-            Vector3 cp = VectorUtil.crossProduct(viewerUp, new Vector3(0, 1, 0));
-            cp = VectorUtil.normalized(cp);
+            Vector3 cp = Vector3.vectorProduct(viewerUp, new Vector3(0, 1, 0));
+            cp = Vector3.normalized(cp);
             mGeoToViewerTransform = Matrix4x4.createRotation((float) Math.acos(viewerUp.y), cp);
         } else {
             mGeoToViewerTransform = Matrix4x4.createIdentity();

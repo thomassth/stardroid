@@ -21,7 +21,7 @@ import androidx.annotation.NonNull;
 import java.util.Calendar;
 
 import io.github.marcocipriani01.telescopetouch.astronomy.Planet;
-import io.github.marcocipriani01.telescopetouch.util.Geometry;
+import io.github.marcocipriani01.telescopetouch.util.MathsUtils;
 
 public class RaDec {
 
@@ -35,9 +35,9 @@ public class RaDec {
 
     public static RaDec calculateRaDecDist(HeliocentricCoordinates coords) {
         // find the RA and DEC from the rectangular equatorial coords
-        float ra = Geometry.mod2pi((float) Math.atan2(coords.y, coords.x)) * Geometry.RADIANS_TO_DEGREES;
+        float ra = MathsUtils.mod2pi((float) Math.atan2(coords.y, coords.x)) * MathsUtils.RADIANS_TO_DEGREES;
         float dec = (float) (Math.atan(coords.z / Math.sqrt(coords.x * coords.x + coords.y * coords.y))
-                * Geometry.RADIANS_TO_DEGREES);
+                * MathsUtils.RADIANS_TO_DEGREES);
 
         return new RaDec(ra, dec);
     }
@@ -65,7 +65,7 @@ public class RaDec {
         float raRad = (float) Math.atan2(coords.y, coords.x);
         if (raRad < 0) raRad += 2f * (float) Math.PI;
         float decRad = (float) Math.atan2(coords.z, Math.sqrt(coords.x * coords.x + coords.y * coords.y));
-        return new RaDec(raRad * Geometry.RADIANS_TO_DEGREES, decRad * Geometry.RADIANS_TO_DEGREES);
+        return new RaDec(raRad * MathsUtils.RADIANS_TO_DEGREES, decRad * MathsUtils.RADIANS_TO_DEGREES);
     }
 
     @NonNull

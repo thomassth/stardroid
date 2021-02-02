@@ -77,11 +77,6 @@ public abstract class CompassHelper extends LocationHelper implements SensorEven
     }
 
     @Override
-    protected boolean isAltitudeRequired() {
-        return true;
-    }
-
-    @Override
     public void onSensorChanged(SensorEvent event) {
         final float alpha = 0.90f;
         synchronized (this) {

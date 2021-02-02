@@ -30,8 +30,7 @@ import io.github.marcocipriani01.telescopetouch.renderer.util.TextureReference;
 import io.github.marcocipriani01.telescopetouch.renderer.util.VertexBuffer;
 import io.github.marcocipriani01.telescopetouch.source.LineSource;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.units.Vector3;
-import io.github.marcocipriani01.telescopetouch.util.VectorUtil;
+import io.github.marcocipriani01.telescopetouch.util.Vector3;
 
 public class PolyLineObjectManager extends RendererObjectManager {
 
@@ -91,35 +90,35 @@ public class PolyLineObjectManager extends RendererObjectManager {
             for (int i = 0; i < coords.size() - 1; i++) {
                 Vector3 p1 = coords.get(i);
                 Vector3 p2 = coords.get(i + 1);
-                Vector3 u = VectorUtil.difference(p2, p1);
+                Vector3 u = Vector3.difference(p2, p1);
                 // The normal to the quad should face the origin at its midpoint.
-                Vector3 avg = VectorUtil.sum(p1, p2);
+                Vector3 avg = Vector3.sum(p1, p2);
                 avg.scale(0.5f);
                 // I'm assuming that the points will already be on a unit sphere.  If this is not the case,
                 // then we should normalize it here.
-                Vector3 v = VectorUtil.normalized(VectorUtil.crossProduct(u, avg));
+                Vector3 v = Vector3.normalized(Vector3.vectorProduct(u, avg));
                 v.scale(sizeFactor * l.getLineWidth());
 
 
                 // Add the vertices
 
                 // Lower left corner
-                vb.addPoint(VectorUtil.difference(p1, v));
+                vb.addPoint(Vector3.difference(p1, v));
                 cb.addColor(color);
                 tb.addTexCoords(0, 1);
 
                 // Upper left corner
-                vb.addPoint(VectorUtil.sum(p1, v));
+                vb.addPoint(Vector3.sum(p1, v));
                 cb.addColor(color);
                 tb.addTexCoords(0, 0);
 
                 // Lower left corner
-                vb.addPoint(VectorUtil.difference(p2, v));
+                vb.addPoint(Vector3.difference(p2, v));
                 cb.addColor(color);
                 tb.addTexCoords(1, 1);
 
                 // Upper left corner
-                vb.addPoint(VectorUtil.sum(p2, v));
+                vb.addPoint(Vector3.sum(p2, v));
                 cb.addColor(color);
                 tb.addTexCoords(1, 0);
 

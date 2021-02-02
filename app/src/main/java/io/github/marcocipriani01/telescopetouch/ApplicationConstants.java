@@ -16,7 +16,7 @@
 
 package io.github.marcocipriani01.telescopetouch;
 
-import io.github.marcocipriani01.telescopetouch.units.Vector3;
+import io.github.marcocipriani01.telescopetouch.util.Vector3;
 
 /**
  * A home for the application's few global constants.

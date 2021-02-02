@@ -36,8 +36,8 @@ import io.github.marcocipriani01.telescopetouch.renderer.util.TextureManager;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TextureReference;
 import io.github.marcocipriani01.telescopetouch.source.TextSource;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.units.Vector3;
-import io.github.marcocipriani01.telescopetouch.util.FixedPoint;
+import io.github.marcocipriani01.telescopetouch.util.Vector3;
+import io.github.marcocipriani01.telescopetouch.util.MathsUtils;
 import io.github.marcocipriani01.telescopetouch.util.Matrix4x4;
 
 /**
@@ -81,7 +81,7 @@ public class LabelObjectManager extends RendererObjectManager {
                 0.5f, -0.5f,   // lower right
                 0.5f, 0.5f};  // upper right
         for (float f : vertices) {
-            mQuadBuffer.put(FixedPoint.floatToFixedPoint(f));
+            mQuadBuffer.put(MathsUtils.floatToFixedPoint(f));
         }
         mQuadBuffer.position(0);
 
@@ -240,7 +240,7 @@ public class LabelObjectManager extends RendererObjectManager {
         gl.glPopMatrix();
         gl.glDisable(GL10.GL_TEXTURE_2D);
 
-        gl.glColor4x(FixedPoint.ONE, FixedPoint.ONE, FixedPoint.ONE, FixedPoint.ONE);
+        gl.glColor4x(MathsUtils.ONE, MathsUtils.ONE, MathsUtils.ONE, MathsUtils.ONE);
     }
 
     private void drawLabel(GL10 gl, Label label) {
@@ -278,7 +278,7 @@ public class LabelObjectManager extends RendererObjectManager {
         gl.glVertexPointer(2, GL10.GL_FIXED, 0, mQuadBuffer);
         gl.glTexCoordPointer(2, GL10.GL_FIXED, 0, label.getTexCoords());
         if (getRenderState().getNightVisionMode()) {
-            gl.glColor4x(FixedPoint.ONE, 0, 0, label.fixedA);
+            gl.glColor4x(MathsUtils.ONE, 0, 0, label.fixedA);
         } else {
             gl.glColor4x(label.fixedR, label.fixedG, label.fixedB, label.fixedA);
         }
@@ -321,10 +321,10 @@ public class LabelObjectManager extends RendererObjectManager {
             int r = (rgb >> 16) & 0xff;
             int g = (rgb >> 8) & 0xff;
             int b = rgb & 0xff;
-            fixedA = FixedPoint.floatToFixedPoint(a / 255.0f);
-            fixedB = FixedPoint.floatToFixedPoint(b / 255.0f);
-            fixedG = FixedPoint.floatToFixedPoint(g / 255.0f);
-            fixedR = FixedPoint.floatToFixedPoint(r / 255.0f);
+            fixedA = MathsUtils.floatToFixedPoint(a / 255.0f);
+            fixedB = MathsUtils.floatToFixedPoint(b / 255.0f);
+            fixedG = MathsUtils.floatToFixedPoint(g / 255.0f);
+            fixedR = MathsUtils.floatToFixedPoint(r / 255.0f);
         }
     }
 }

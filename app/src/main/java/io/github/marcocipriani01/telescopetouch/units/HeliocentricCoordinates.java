@@ -24,12 +24,13 @@ import java.util.Calendar;
 
 import io.github.marcocipriani01.telescopetouch.astronomy.OrbitalElements;
 import io.github.marcocipriani01.telescopetouch.astronomy.Planet;
-import io.github.marcocipriani01.telescopetouch.util.Geometry;
+import io.github.marcocipriani01.telescopetouch.util.MathsUtils;
+import io.github.marcocipriani01.telescopetouch.util.Vector3;
 
 public class HeliocentricCoordinates extends Vector3 {
 
     // Value of the obliquity of the ecliptic for J2000
-    private static final float OBLIQUITY = 23.439281f * Geometry.DEGREES_TO_RADIANS;
+    private static final float OBLIQUITY = 23.439281f * MathsUtils.DEGREES_TO_RADIANS;
     public final float radius;  // Radius. (AU)
 
     public HeliocentricCoordinates(float radius, float xh, float yh, float zh) {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.marcocipriani01.telescopetouch.units;
+package io.github.marcocipriani01.telescopetouch.util;
 
 import android.annotation.SuppressLint;
 
@@ -44,6 +44,64 @@ public class Vector3 {
         this.x = xyz[0];
         this.y = xyz[1];
         this.z = xyz[2];
+    }
+
+    public static Vector3 zero() {
+        return new Vector3(0, 0, 0);
+    }
+
+    public static float scalarProduct(Vector3 v1, Vector3 v2) {
+        return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+    }
+
+    public static Vector3 vectorProduct(Vector3 v1, Vector3 v2) {
+        return new Vector3(v1.y * v2.z - v1.z * v2.y,
+                -v1.x * v2.z + v1.z * v2.x,
+                v1.x * v2.y - v1.y * v2.x);
+    }
+
+    public static float length(Vector3 v) {
+        return (float) Math.sqrt(lengthSqr(v));
+    }
+
+    public static float lengthSqr(Vector3 v) {
+        return scalarProduct(v, v);
+    }
+
+    public static Vector3 normalized(Vector3 v) {
+        float len = length(v);
+        if (len < 0.000001f) {
+            return zero();
+        }
+        return scale(v, 1.0f / len);
+    }
+
+    public static Vector3 projectOntoUnit(Vector3 v, Vector3 onto) {
+        return scale(onto, scalarProduct(v, onto));
+    }
+
+    public static Vector3 negate(Vector3 v) {
+        return new Vector3(-v.x, -v.y, -v.z);
+    }
+
+    public static Vector3 sum(Vector3 v1, Vector3 v2) {
+        return new Vector3(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);
+    }
+
+    public static Vector3 difference(Vector3 v1, Vector3 v2) {
+        return new Vector3(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);
+    }
+
+    /**
+     * Scales the vector by the given amount and returns a new vector.
+     */
+    public static Vector3 scale(Vector3 v, float factor) {
+        return new Vector3(v.x * factor, v.y * factor, v.z * factor);
+    }
+
+    public static float cosineSimilarity(Vector3 v1, Vector3 v2) {
+        // We might want to optimize this implementation at some point.
+        return (float) (scalarProduct(v1, v2) / Math.sqrt(scalarProduct(v1, v1) * scalarProduct(v2, v2)));
     }
 
     public Vector3 copy() {

@@ -24,8 +24,7 @@ import android.graphics.Color;
 
 import io.github.marcocipriani01.telescopetouch.source.ImageSource;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.units.Vector3;
-import io.github.marcocipriani01.telescopetouch.util.VectorUtil;
+import io.github.marcocipriani01.telescopetouch.util.Vector3;
 
 /**
  * A celestial object represented by an image, such as a planet or a
@@ -116,8 +115,8 @@ public class ImageSourceImpl extends AbstractSource implements ImageSource {
 
     public void setUpVector(Vector3 upVec) {
         Vector3 p = this.getLocation();
-        Vector3 u = VectorUtil.negate(VectorUtil.normalized(VectorUtil.crossProduct(p, upVec)));
-        Vector3 v = VectorUtil.crossProduct(u, p);
+        Vector3 u = Vector3.negate(Vector3.normalized(Vector3.vectorProduct(p, upVec)));
+        Vector3 v = Vector3.vectorProduct(u, p);
 
         v.scale(imageScale);
         u.scale(imageScale);

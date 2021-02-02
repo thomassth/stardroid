@@ -35,9 +35,8 @@ import io.github.marcocipriani01.telescopetouch.renderer.util.SkyRegionMap;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TextureManager;
 import io.github.marcocipriani01.telescopetouch.renderer.util.UpdateClosure;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.units.Vector3;
+import io.github.marcocipriani01.telescopetouch.util.Vector3;
 import io.github.marcocipriani01.telescopetouch.util.Matrix4x4;
-import io.github.marcocipriani01.telescopetouch.util.VectorUtil;
 
 interface RenderStateInterface {
     GeocentricCoordinates getCameraPos();
@@ -351,7 +350,7 @@ public class SkyRenderer implements GLSurfaceView.Renderer {
         // lookDir cross up.
         Vector3 lookDir = mRenderState.getLookDir();
         Vector3 upDir = mRenderState.getUpDir();
-        Vector3 right = VectorUtil.crossProduct(lookDir, upDir);
+        Vector3 right = Vector3.vectorProduct(lookDir, upDir);
 
         mViewMatrix = Matrix4x4.createView(lookDir, upDir, right);
 

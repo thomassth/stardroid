@@ -16,7 +16,7 @@
 
 package io.github.marcocipriani01.telescopetouch.control;
 
-import io.github.marcocipriani01.telescopetouch.units.LatLong;
+import android.location.Location;
 
 /**
  * A trivial calculator that returns zero magnetic declination.  Used when
@@ -32,7 +32,7 @@ public final class ZeroMagneticDeclinationCalculator implements MagneticDeclinat
     }
 
     @Override
-    public void setLocationAndTime(LatLong location, long timeInMills) {
+    public void setLocationAndTime(Location location, long timeInMills) {
         // Do nothing.
     }
 

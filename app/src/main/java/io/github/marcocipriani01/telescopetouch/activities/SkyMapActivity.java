@@ -72,6 +72,7 @@ import io.github.marcocipriani01.telescopetouch.activities.views.ButtonLayerView
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.control.ControllerGroup;
 import io.github.marcocipriani01.telescopetouch.control.MagneticDeclinationSwitcher;
+import io.github.marcocipriani01.telescopetouch.control.Pointing;
 import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
 import io.github.marcocipriani01.telescopetouch.layers.LayerManager;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererController;
@@ -83,7 +84,7 @@ import io.github.marcocipriani01.telescopetouch.touch.DragRotateZoomGestureDetec
 import io.github.marcocipriani01.telescopetouch.touch.GestureInterpreter;
 import io.github.marcocipriani01.telescopetouch.touch.MapMover;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.units.Vector3;
+import io.github.marcocipriani01.telescopetouch.util.Vector3;
 
 /**
  * The main map-rendering Activity.
@@ -660,7 +661,7 @@ public class SkyMapActivity extends InjectableActivity
 
         @Override
         public void run() {
-            AstronomerModel.Pointing pointing = model.getPointing();
+            Pointing pointing = model.getPointing();
             float directionX = pointing.getLineOfSightX();
             float directionY = pointing.getLineOfSightY();
             float directionZ = pointing.getLineOfSightZ();

@@ -43,7 +43,6 @@ import java.util.List;
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
-import io.github.marcocipriani01.telescopetouch.units.LatLong;
 
 public abstract class LocationHelper implements LocationListener {
 
@@ -116,10 +115,6 @@ public abstract class LocationHelper implements LocationListener {
         }
     }
 
-    protected boolean isAltitudeRequired() {
-        return false;
-    }
-
     public void restartLocation() {
         try {
             String locationProvider = locationManager.getBestProvider(getLocationCriteria(), true);
@@ -136,7 +131,7 @@ public abstract class LocationHelper implements LocationListener {
     private Criteria getLocationCriteria() {
         Criteria locationCriteria = new Criteria();
         locationCriteria.setAccuracy(preferences.getBoolean(ApplicationConstants.FORCE_GPS_PREF, false) ? Criteria.ACCURACY_FINE : Criteria.ACCURACY_COARSE);
-        locationCriteria.setAltitudeRequired(isAltitudeRequired());
+        locationCriteria.setAltitudeRequired(true);
         locationCriteria.setBearingRequired(false);
         locationCriteria.setCostAllowed(true);
         locationCriteria.setSpeedRequired(false);
@@ -217,7 +212,7 @@ public abstract class LocationHelper implements LocationListener {
 
     protected abstract void onLocationOk(Location location);
 
-    public void showLocationToUser(LatLong location, String provider) {
+    public void showLocationToUser(Location location, String provider) {
         Log.d(TAG, "Reverse geocoding location");
         List<Address> addresses = new ArrayList<>();
         String place;
@@ -237,7 +232,7 @@ public abstract class LocationHelper implements LocationListener {
                 Toast.LENGTH_SHORT).show();
     }
 
-    private String getPlaceSummary(LatLong location, Address address) {
+    private String getPlaceSummary(Location location, Address address) {
         String longLat = String.format(context.getString(R.string.location_long_lat),
                 location.getLongitude(), location.getLatitude());
         if (address == null) {

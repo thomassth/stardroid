@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.marcocipriani01.telescopetouch.util;
+package io.github.marcocipriani01.telescopetouch.indi;
 
 import android.app.Application;
 import android.content.Context;
