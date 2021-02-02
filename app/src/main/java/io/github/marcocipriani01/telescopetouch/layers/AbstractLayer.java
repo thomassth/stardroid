@@ -294,23 +294,12 @@ public abstract class AbstractLayer implements Layer {
 
     @Override
     public String getPreferenceId() {
-        return getPreferenceId(getLayerNameId());
-    }
-
-    protected String getPreferenceId(int layerNameId) {
-        return "source_provider." + layerNameId;
+        return "source_provider." + getLayerNameId();
     }
 
     @Override
     public String getLayerName() {
-        return getStringFromId(getLayerNameId());
-    }
-
-    /**
-     * Return an internationalized string from a string resource id.
-     */
-    protected String getStringFromId(int resourceId) {
-        return resources.getString(resourceId);
+        return resources.getString(getLayerNameId());
     }
 
     /**

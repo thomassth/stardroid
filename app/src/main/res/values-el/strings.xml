@@ -25,10 +25,10 @@
     <string name="use_magnetic_correction">Χρήση μαγνητικής διόρθωσης</string>
     <!-- This string is too long and currently unused -->
     <string name="stars">Αστέρια</string>
-    <string name="show_constellations_pref">Αστερισμοί</string>
-    <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Αντικείμενα Μεσιέ</string>
+    <string name="constellations">Αστερισμοί</string>
+    <string name="messier_objects" translation_description="The celestial objects catalogued by Charles Messier">Αντικείμενα Μεσιέ</string>
     <string name="show_grid_pref">Πλέγμα RA/Dec</string>
-    <string name="show_horizon_pref">Ορίζοντας</string>
+    <string name="horizon">Ορίζοντας</string>
     <string name="show_sky_gradient" translation_description="This is a shading of the color of the sky used for effect">Απόχρωση ουρανού</string>
     <string name="show_meteors_pref">Βροχές διαττόντων</string>
     <string name="ecliptic">Εκλειπτική</string>

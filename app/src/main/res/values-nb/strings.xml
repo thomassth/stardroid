@@ -25,10 +25,10 @@
     <string name="use_magnetic_correction">Bruk magnetisk korrigering</string>
     <!-- This string is too long and currently unused -->
     <string name="stars">Stjerner</string>
-    <string name="show_constellations_pref">Stjernebilder</string>
-    <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Messier-objekter</string>
+    <string name="constellations">Stjernebilder</string>
+    <string name="messier_objects" translation_description="The celestial objects catalogued by Charles Messier">Messier-objekter</string>
     <string name="show_grid_pref">RA/Dec-rutenett</string>
-    <string name="show_horizon_pref">Horisont</string>
+    <string name="horizon">Horisont</string>
     <string name="show_sky_gradient" translation_description="This is a shading of the color of the sky used for effect">Himmelgradient</string>
     <string name="show_meteors_pref">Meteorsvermer</string>
     <!-- Just in case we decide to have such a layer for the 4/24 launch -->

@@ -25,10 +25,10 @@
     <string name="use_magnetic_correction">Defnyddio cywiriad magnetig</string>
     <!-- This string is too long and currently unused -->
     <string name="stars">Sêr</string>
-    <string name="show_constellations_pref">Cytser</string>
-    <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Gwrthrychau Messier</string>
+    <string name="constellations">Cytser</string>
+    <string name="messier_objects" translation_description="The celestial objects catalogued by Charles Messier">Gwrthrychau Messier</string>
     <string name="show_grid_pref">Grid RA/Dec</string>
-    <string name="show_horizon_pref">Gorwel</string>
+    <string name="horizon">Gorwel</string>
     <string name="show_sky_gradient" translation_description="This is a shading of the color of the sky used for effect">Graddfa Awyr</string>
     <string name="show_meteors_pref">Sêr gwib</string>
     <string name="ecliptic">Ecliptig</string>

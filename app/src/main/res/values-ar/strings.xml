@@ -27,10 +27,10 @@
     <string name="use_magnetic_correction">Use magnetic correction</string>
     <!-- This string is too long and currently unused -->
     <string name="stars">النجوم</string>
-    <string name="show_constellations_pref">المجموعات النجمية</string>
-    <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Messier Objects</string>
+    <string name="constellations">المجموعات النجمية</string>
+    <string name="messier_objects" translation_description="The celestial objects catalogued by Charles Messier">Messier Objects</string>
     <string name="show_grid_pref">RA/Dec Grid</string>
-    <string name="show_horizon_pref">Horizon</string>
+    <string name="horizon">Horizon</string>
     <string name="show_sky_gradient" translation_description="This is a shading of the color of the sky used for effect">Sky Gradient</string>
     <string name="show_meteors_pref">Meteor Showers</string>
     <string name="ecliptic">Ecliptic</string>

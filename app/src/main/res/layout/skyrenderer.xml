@@ -29,6 +29,7 @@
         android:background="@drawable/search_background"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
+        android:layout_marginTop="?android:attr/actionBarSize"
         android:visibility="gone">
 
         <ImageView
@@ -84,7 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/search_prompt"
             android:layout_centerHorizontal="true"
-            android:text="Search in the telescope database"
+            android:text="@string/search_in_goto_database"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
     </RelativeLayout>

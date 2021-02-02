@@ -42,6 +42,8 @@ import io.github.marcocipriani01.telescopetouch.units.RaDec;
  */
 public class GridLayer extends AbstractLayer {
 
+    public static final int DEPTH_ORDER = 30;
+    public static final String PREFERENCE_ID = "source_provider.4";
     private final int numRightAscentionLines;
     private final int numDeclinationLines;
 
@@ -63,7 +65,7 @@ public class GridLayer extends AbstractLayer {
 
     @Override
     public int getLayerDepthOrder() {
-        return 0;
+        return DEPTH_ORDER;
     }
 
     @Override
@@ -73,7 +75,7 @@ public class GridLayer extends AbstractLayer {
 
     @Override
     public String getPreferenceId() {
-        return "source_provider.4";
+        return PREFERENCE_ID;
     }
 
     /**

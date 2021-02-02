@@ -38,6 +38,9 @@ import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
  */
 public class EclipticLayer extends AbstractLayer {
 
+    public static final int DEPTH_ORDER = 50;
+    public static final String PREFERENCE_ID = "source_provider.4";
+
     public EclipticLayer(Resources resources) {
         super(resources, false);
     }
@@ -49,7 +52,7 @@ public class EclipticLayer extends AbstractLayer {
 
     @Override
     public int getLayerDepthOrder() {
-        return 50;
+        return DEPTH_ORDER;
     }
 
     @Override
@@ -59,7 +62,7 @@ public class EclipticLayer extends AbstractLayer {
 
     @Override
     public String getPreferenceId() {
-        return "source_provider.4";
+        return PREFERENCE_ID;
     }
 
     /**

@@ -40,16 +40,17 @@ import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.control.MagneticDeclinationCalculator;
 import io.github.marcocipriani01.telescopetouch.control.RealMagneticDeclinationCalculator;
 import io.github.marcocipriani01.telescopetouch.control.ZeroMagneticDeclinationCalculator;
+import io.github.marcocipriani01.telescopetouch.layers.ConstellationsLayer;
 import io.github.marcocipriani01.telescopetouch.layers.EclipticLayer;
 import io.github.marcocipriani01.telescopetouch.layers.GridLayer;
 import io.github.marcocipriani01.telescopetouch.layers.HorizonLayer;
 import io.github.marcocipriani01.telescopetouch.layers.LayerManager;
-import io.github.marcocipriani01.telescopetouch.layers.MeteorShowerLayer;
-import io.github.marcocipriani01.telescopetouch.layers.ConstellationsLayer;
 import io.github.marcocipriani01.telescopetouch.layers.MessierLayer;
-import io.github.marcocipriani01.telescopetouch.layers.StarsLayer;
+import io.github.marcocipriani01.telescopetouch.layers.MeteorShowerLayer;
 import io.github.marcocipriani01.telescopetouch.layers.PlanetsLayer;
 import io.github.marcocipriani01.telescopetouch.layers.SkyGradientLayer;
+import io.github.marcocipriani01.telescopetouch.layers.StarsLayer;
+import io.github.marcocipriani01.telescopetouch.layers.TelescopeLayer;
 
 /**
  * Dagger module
@@ -142,20 +143,20 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    LayerManager provideLayerManager(
-            AssetManager assetManager, Resources resources, AstronomerModel model,
-            SharedPreferences preferences) {
+    LayerManager provideLayerManager(AssetManager assetManager, Resources resources,
+                                     AstronomerModel model, SharedPreferences preferences) {
         Log.i(TAG, "Initializing LayerManager");
         LayerManager layerManager = new LayerManager(preferences);
         layerManager.addLayer(new StarsLayer(assetManager, resources));
         layerManager.addLayer(new MessierLayer(assetManager, resources));
         layerManager.addLayer(new ConstellationsLayer(assetManager, resources));
-        layerManager.addLayer(new PlanetsLayer(model, resources, preferences));
+        layerManager.addLayer(new PlanetsLayer(model, resources));
         layerManager.addLayer(new MeteorShowerLayer(model, resources));
         layerManager.addLayer(new GridLayer(resources, 24, 9));
         layerManager.addLayer(new HorizonLayer(model, resources));
         layerManager.addLayer(new EclipticLayer(resources));
         layerManager.addLayer(new SkyGradientLayer(model, resources));
+        layerManager.addLayer(new TelescopeLayer(resources));
 
         layerManager.initialize();
         return layerManager;

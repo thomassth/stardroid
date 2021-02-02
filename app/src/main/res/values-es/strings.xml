@@ -26,10 +26,10 @@
     <string name="use_magnetic_correction">Usar corrección magnética</string>
     <!-- This string is too long and currently unused -->
     <string name="stars">Estrellas</string>
-    <string name="show_constellations_pref">Constelaciones</string>
-    <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Objetos Messier</string>
+    <string name="constellations">Constelaciones</string>
+    <string name="messier_objects" translation_description="The celestial objects catalogued by Charles Messier">Objetos Messier</string>
     <string name="show_grid_pref">Cuadrícula AR/Dec</string>
-    <string name="show_horizon_pref">Horizonte</string>
+    <string name="horizon">Horizonte</string>
     <string name="show_sky_gradient" translation_description="This is a shading of the color of the sky used for effect">Gradiente del cielo</string>
     <string name="show_meteors_pref">Lluvias de meteoros</string>
     <!-- Just in case we decide to have such a layer for the 4/24 launch -->

@@ -23,10 +23,10 @@
     <string name="location_place_found">Znaleziono miejsce. Ustawianie szerokości %1$f i długości %2$f geograficznych</string>
     <string name="use_magnetic_correction">Użyj poprawki magnetycznej</string>
     <string name="stars">Gwiazdy</string>
-    <string name="show_constellations_pref">Gwiazdozbiory</string>
-    <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Katalog Messiera</string>
+    <string name="constellations">Gwiazdozbiory</string>
+    <string name="messier_objects" translation_description="The celestial objects catalogued by Charles Messier">Katalog Messiera</string>
     <string name="show_grid_pref">Siatka RA/Dec</string>
-    <string name="show_horizon_pref">Horyzont</string>
+    <string name="horizon">Horyzont</string>
     <string name="show_sky_gradient">Gradient nieba</string>
     <string name="ecliptic">Ekliptyka</string>
     <string name="malformed_loc_error">Ustawienie szerokości lub długości geograficznej nie jest liczbą.</string>

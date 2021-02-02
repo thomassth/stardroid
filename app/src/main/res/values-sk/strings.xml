@@ -23,10 +23,10 @@
     <string name="location_place_found">Místo nalezeno. Nastavení šířky %1$f a délky %2$f</string>
     <string name="use_magnetic_correction">Použít magnetickou korekci</string>
     <string name="stars">Hvězdy</string>
-    <string name="show_constellations_pref">Souhvězdí</string>
-    <string name="show_messier_objects_pref" translation_description="The celestial objects catalogued by Charles Messier">Messierovy objekty</string>
+    <string name="constellations">Souhvězdí</string>
+    <string name="messier_objects" translation_description="The celestial objects catalogued by Charles Messier">Messierovy objekty</string>
     <string name="show_grid_pref">Síť RA/Dec</string>
-    <string name="show_horizon_pref">Horizont</string>
+    <string name="horizon">Horizont</string>
     <string name="show_sky_gradient">Gradient oblohy</string>
     <string name="ecliptic">Ekliptika</string>
     <string name="malformed_loc_error">Nastavená šířka nebo délka není číslo.</string>

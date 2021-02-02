@@ -30,13 +30,16 @@ import io.github.marcocipriani01.telescopetouch.R;
  */
 public class StarsLayer extends AbstractFileBasedLayer {
 
+    public static final int DEPTH_ORDER = 20;
+    public static final String PREFERENCE_ID = "source_provider.0";
+
     public StarsLayer(AssetManager assetManager, Resources resources) {
         super(assetManager, resources, "stars.binary");
     }
 
     @Override
     public int getLayerDepthOrder() {
-        return 30;
+        return DEPTH_ORDER;
     }
 
     @Override
@@ -44,9 +47,8 @@ public class StarsLayer extends AbstractFileBasedLayer {
         return R.string.stars;
     }
 
-    // TODO(brent): Remove this.
     @Override
     public String getPreferenceId() {
-        return "source_provider.0";
+        return PREFERENCE_ID;
     }
 }
