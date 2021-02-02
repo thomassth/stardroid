@@ -33,8 +33,7 @@ import io.github.marcocipriani01.telescopetouch.renderer.util.TextureManager;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TextureReference;
 import io.github.marcocipriani01.telescopetouch.renderer.util.VertexBuffer;
 import io.github.marcocipriani01.telescopetouch.source.PointSource;
-import io.github.marcocipriani01.telescopetouch.units.Vector3;
-import io.github.marcocipriani01.telescopetouch.util.VectorUtil;
+import io.github.marcocipriani01.telescopetouch.util.Vector3;
 
 public class PointObjectManager extends RendererObjectManager {
 
@@ -144,8 +143,8 @@ public class PointObjectManager extends RendererObjectManager {
                 data.mTexCoordBuffer.addTexCoords(texOffsetU + starWidthInTexels, 0);
 
                 Vector3 pos = p.getLocation();
-                Vector3 u = VectorUtil.normalized(VectorUtil.crossProduct(pos, up));
-                Vector3 v = VectorUtil.crossProduct(u, pos);
+                Vector3 u = Vector3.normalized(Vector3.vectorProduct(pos, up));
+                Vector3 v = Vector3.vectorProduct(u, pos);
 
                 float s = p.getSize() * sizeFactor;
 

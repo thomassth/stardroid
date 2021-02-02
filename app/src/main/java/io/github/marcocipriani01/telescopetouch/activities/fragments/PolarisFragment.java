@@ -41,7 +41,7 @@ import io.github.marcocipriani01.telescopetouch.activities.MainActivity;
 import io.github.marcocipriani01.telescopetouch.astronomy.Polaris;
 import io.github.marcocipriani01.telescopetouch.sensors.LocationHelper;
 import io.github.marcocipriani01.telescopetouch.sensors.LocationPermissionRequester;
-import io.github.marcocipriani01.telescopetouch.units.LatLong;
+import io.github.marcocipriani01.telescopetouch.util.Formatters;
 
 public class PolarisFragment extends ActionFragment implements LocationPermissionRequester {
 
@@ -61,8 +61,8 @@ public class PolarisFragment extends ActionFragment implements LocationPermissio
         @Override
         public void run() {
             polaris.refresh();
-            gpsText.setText(LatLong.latitudeToString((float) polaris.getLatitude(), context) + " / " +
-                    LatLong.longitudeToString((float) polaris.getLongitude(), context));
+            gpsText.setText(Formatters.latitudeToString((float) polaris.getLatitude(), context) + " / " +
+                    Formatters.longitudeToString((float) polaris.getLongitude(), context));
             hourAngleText.setText(String.format(context.getString(R.string.hour_angle), polaris.getHourAngleString()));
             spotText.setText(String.format(context.getString(R.string.in_finder), context.getString(polaris.getStarName()), polaris.getScopePositionString()));
             float rotation = polaris.getScopePosition();

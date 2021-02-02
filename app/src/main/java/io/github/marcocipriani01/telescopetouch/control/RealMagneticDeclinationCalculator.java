@@ -17,10 +17,9 @@
 package io.github.marcocipriani01.telescopetouch.control;
 
 import android.hardware.GeomagneticField;
+import android.location.Location;
 
 import androidx.annotation.NonNull;
-
-import io.github.marcocipriani01.telescopetouch.units.LatLong;
 
 /**
  * Encapsulates the calculation of magnetic declination for the user's location
@@ -46,8 +45,9 @@ public class RealMagneticDeclinationCalculator implements MagneticDeclinationCal
      * Sets the user's current location and time.
      */
     @Override
-    public void setLocationAndTime(LatLong location, long timeInMillis) {
-        geomagneticField = new GeomagneticField(location.getLatitude(), location.getLongitude(), 0, timeInMillis);
+    public void setLocationAndTime(Location location, long timeInMillis) {
+        geomagneticField = new GeomagneticField((float) location.getLatitude(),
+                (float) location.getLongitude(), (float) location.getAltitude(), timeInMillis);
     }
 
     @NonNull

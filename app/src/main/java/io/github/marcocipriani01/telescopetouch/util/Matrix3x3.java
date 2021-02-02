@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.marcocipriani01.telescopetouch.units;
+package io.github.marcocipriani01.telescopetouch.util;
 
 import androidx.annotation.NonNull;
 
@@ -24,7 +24,7 @@ import androidx.annotation.NonNull;
  *
  * @author Dominic Widdows
  */
-public class Matrix33 implements Cloneable {
+public class Matrix3x3 implements Cloneable {
 
     public float xx;
     public float xy;
@@ -49,9 +49,9 @@ public class Matrix33 implements Cloneable {
      * @param zy row 3, col 2
      * @param zz row 3, col 3
      */
-    public Matrix33(float xx, float xy, float xz,
-                    float yx, float yy, float yz,
-                    float zx, float zy, float zz) {
+    public Matrix3x3(float xx, float xy, float xz,
+                     float yx, float yy, float yz,
+                     float zx, float zy, float zz) {
         this.xx = xx;
         this.xy = xy;
         this.xz = xz;
@@ -66,7 +66,7 @@ public class Matrix33 implements Cloneable {
     /**
      * Construct a matrix from three column vectors.
      */
-    public Matrix33(Vector3 v1, Vector3 v2, Vector3 v3) {
+    public Matrix3x3(Vector3 v1, Vector3 v2, Vector3 v3) {
         this(v1, v2, v3, true);
     }
 
@@ -76,7 +76,7 @@ public class Matrix33 implements Cloneable {
      * @param columnVectors true if the vectors are column vectors, otherwise
      *                      they're row vectors.
      */
-    public Matrix33(Vector3 v1, Vector3 v2, Vector3 v3, boolean columnVectors) {
+    public Matrix3x3(Vector3 v1, Vector3 v2, Vector3 v3, boolean columnVectors) {
         if (columnVectors) {
             this.xx = v1.x;
             this.yx = v1.y;
@@ -102,20 +102,74 @@ public class Matrix33 implements Cloneable {
     /**
      * Create a zero matrix.
      */
-    public Matrix33() {
-        new Matrix33(0, 0, 0, 0, 0, 0, 0, 0, 0);
+    public Matrix3x3() {
+        new Matrix3x3(0, 0, 0, 0, 0, 0, 0, 0, 0);
     }
 
-    public static Matrix33 getIdMatrix() {
-        return new Matrix33(1, 0, 0, 0, 1, 0, 0, 0, 1);
+    public static Matrix3x3 getIdMatrix() {
+        return new Matrix3x3(1, 0, 0, 0, 1, 0, 0, 0, 1);
     }
 
-    // TODO(widdows): rename this to something like copyOf().
+    /**
+     * Multiply two 3X3 matrices m1 * m2.
+     */
+    public static Matrix3x3 matrixMultiply(Matrix3x3 m1, Matrix3x3 m2) {
+        return new Matrix3x3(m1.xx * m2.xx + m1.xy * m2.yx + m1.xz * m2.zx,
+                m1.xx * m2.xy + m1.xy * m2.yy + m1.xz * m2.zy,
+                m1.xx * m2.xz + m1.xy * m2.yz + m1.xz * m2.zz,
+                m1.yx * m2.xx + m1.yy * m2.yx + m1.yz * m2.zx,
+                m1.yx * m2.xy + m1.yy * m2.yy + m1.yz * m2.zy,
+                m1.yx * m2.xz + m1.yy * m2.yz + m1.yz * m2.zz,
+                m1.zx * m2.xx + m1.zy * m2.yx + m1.zz * m2.zx,
+                m1.zx * m2.xy + m1.zy * m2.yy + m1.zz * m2.zy,
+                m1.zx * m2.xz + m1.zy * m2.yz + m1.zz * m2.zz);
+    }
+
+    /**
+     * Calculate w = m * v where m is a 3X3 matrix and v a column vector.
+     */
+    public static Vector3 matrixVectorMultiply(Matrix3x3 m, Vector3 v) {
+        return new Vector3(m.xx * v.x + m.xy * v.y + m.xz * v.z,
+                m.yx * v.x + m.yy * v.y + m.yz * v.z,
+                m.zx * v.x + m.zy * v.y + m.zz * v.z);
+    }
+
+    /**
+     * Calculate the rotation matrix for a certain number of degrees about the
+     * give axis.
+     *
+     * @param axis - must be a unit vector.
+     */
+    public static Matrix3x3 calculateRotationMatrix(float degrees, Vector3 axis) {
+        // Construct the rotation matrix about this vector
+        float cosD = (float) Math.cos(degrees * MathsUtils.DEGREES_TO_RADIANS);
+        float sinD = (float) Math.sin(degrees * MathsUtils.DEGREES_TO_RADIANS);
+        float oneMinusCosD = 1f - cosD;
+
+        float x = axis.x;
+        float y = axis.y;
+        float z = axis.z;
+
+        float xs = x * sinD;
+        float ys = y * sinD;
+        float zs = z * sinD;
+
+        float xm = x * oneMinusCosD;
+        float ym = y * oneMinusCosD;
+        float zm = z * oneMinusCosD;
+
+        float xym = x * ym;
+        float yzm = y * zm;
+        float zxm = z * xm;
+
+        return new Matrix3x3(x * xm + cosD, xym + zs, zxm - ys,
+                xym - zs, y * ym + cosD, yzm + xs,
+                zxm + ys, yzm - xs, z * zm + cosD);
+    }
+
     @NonNull
-    @SuppressWarnings("MethodDoesntCallSuperMethod")
-    @Override
-    public Matrix33 clone() {
-        return new Matrix33(xx, xy, xz,
+    public Matrix3x3 copy() {
+        return new Matrix3x3(xx, xy, xz,
                 yx, yy, yz,
                 zx, zy, zz);
     }
@@ -124,10 +178,10 @@ public class Matrix33 implements Cloneable {
         return xx * yy * zz + xy * yz * zx + xz * yx * zy - xx * yz * zy - yy * zx * xz - zz * xy * yx;
     }
 
-    public Matrix33 getInverse() {
+    public Matrix3x3 getInverse() {
         float det = getDeterminant();
         if (det == 0.0) return null;
-        return new Matrix33(
+        return new Matrix3x3(
                 (yy * zz - yz * zy) / det, (xz * zy - xy * zz) / det, (xy * yz - xz * yy) / det,
                 (yz * zx - yx * zz) / det, (xx * zz - xz * zx) / det, (xz * yx - xx * yz) / det,
                 (yx * zy - yy * zx) / det, (xy * zx - xx * zy) / det, (xx * yy - xy * yx) / det);

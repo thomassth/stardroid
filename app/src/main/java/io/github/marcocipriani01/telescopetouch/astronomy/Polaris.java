@@ -4,7 +4,7 @@ import java.util.Calendar;
 
 import io.github.marcocipriani01.telescopetouch.R;
 
-import static io.github.marcocipriani01.telescopetouch.util.Geometry.angleToString;
+import static io.github.marcocipriani01.telescopetouch.util.Formatters.angleToString;
 import static io.github.marcocipriani01.telescopetouch.util.TimeUtils.meanSiderealTime;
 
 public class Polaris {
@@ -65,7 +65,7 @@ public class Polaris {
                 precession = StarsPrecession.precess(calendar, SIG_OCT_J2000_RA, SIG_OCT_J2000_DEC);
             }
             double rightAscension = precession[0];
-            double siderealTime = meanSiderealTime(calendar, (float) longitude);
+            double siderealTime = meanSiderealTime(calendar, longitude);
             if (siderealTime > rightAscension) {
                 this.hourAngle = siderealTime - rightAscension;
             } else {

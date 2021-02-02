@@ -28,7 +28,7 @@ import java.nio.IntBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import io.github.marcocipriani01.telescopetouch.util.FixedPoint;
+import io.github.marcocipriani01.telescopetouch.util.MathsUtils;
 
 public class LabelMaker {
 
@@ -228,20 +228,20 @@ public class LabelMaker {
 
             int[] texCoords = new int[8];
             // lower left
-            texCoords[0] = FixedPoint.floatToFixedPoint(cropU * texelWidth);
-            texCoords[1] = FixedPoint.floatToFixedPoint(cropV * texelHeight);
+            texCoords[0] = MathsUtils.floatToFixedPoint(cropU * texelWidth);
+            texCoords[1] = MathsUtils.floatToFixedPoint(cropV * texelHeight);
 
             // upper left
-            texCoords[2] = FixedPoint.floatToFixedPoint(cropU * texelWidth);
-            texCoords[3] = FixedPoint.floatToFixedPoint((cropV + cropH) * texelHeight);
+            texCoords[2] = MathsUtils.floatToFixedPoint(cropU * texelWidth);
+            texCoords[3] = MathsUtils.floatToFixedPoint((cropV + cropH) * texelHeight);
 
             // lower right
-            texCoords[4] = FixedPoint.floatToFixedPoint((cropU + cropW) * texelWidth);
-            texCoords[5] = FixedPoint.floatToFixedPoint(cropV * texelHeight);
+            texCoords[4] = MathsUtils.floatToFixedPoint((cropU + cropW) * texelWidth);
+            texCoords[5] = MathsUtils.floatToFixedPoint(cropV * texelHeight);
 
             // upper right
-            texCoords[6] = FixedPoint.floatToFixedPoint((cropU + cropW) * texelWidth);
-            texCoords[7] = FixedPoint.floatToFixedPoint((cropV + cropH) * texelHeight);
+            texCoords[6] = MathsUtils.floatToFixedPoint((cropU + cropW) * texelWidth);
+            texCoords[7] = MathsUtils.floatToFixedPoint((cropV + cropH) * texelHeight);
 
             mTexCoords = ByteBuffer.allocateDirect(8 * 4).order(ByteOrder.nativeOrder()).asIntBuffer();
             mTexCoords.put(texCoords);

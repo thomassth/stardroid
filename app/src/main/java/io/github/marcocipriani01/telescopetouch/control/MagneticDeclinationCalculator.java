@@ -16,7 +16,7 @@
 
 package io.github.marcocipriani01.telescopetouch.control;
 
-import io.github.marcocipriani01.telescopetouch.units.LatLong;
+import android.location.Location;
 
 /**
  * Passed to the {@link AstronomerModel} to calculate the local magnetic
@@ -35,5 +35,5 @@ public interface MagneticDeclinationCalculator {
     /**
      * Sets the user's location and time.
      */
-    void setLocationAndTime(LatLong location, long timeInMillis);
+    void setLocationAndTime(Location location, long timeInMillis);
 }

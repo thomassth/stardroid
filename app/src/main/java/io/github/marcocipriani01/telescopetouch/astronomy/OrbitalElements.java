@@ -21,7 +21,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
-import io.github.marcocipriani01.telescopetouch.util.Geometry;
+import io.github.marcocipriani01.telescopetouch.util.MathsUtils;
 
 import static java.lang.Math.abs;
 
@@ -85,7 +85,7 @@ public class OrbitalElements {
 
         // convert eccentric anomaly to true anomaly
         float v = 2f * (float) Math.atan((float) (Math.sqrt((1 + e) / (1 - e)) * ((float) Math.sin(0.5f * e0) / (float) Math.cos(0.5f * e0))));
-        return Geometry.mod2pi(v);
+        return MathsUtils.mod2pi(v);
     }
 
     public float getAnomaly() {

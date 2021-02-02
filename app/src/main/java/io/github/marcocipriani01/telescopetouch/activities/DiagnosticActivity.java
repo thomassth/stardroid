@@ -21,6 +21,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
 import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.net.ConnectivityManager;
@@ -53,8 +54,9 @@ import io.github.marcocipriani01.telescopetouch.activities.util.SensorAccuracyDe
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.control.LocationController;
 import io.github.marcocipriani01.telescopetouch.control.MagneticDeclinationSwitcher;
+import io.github.marcocipriani01.telescopetouch.control.Pointing;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.units.LatLong;
+import io.github.marcocipriani01.telescopetouch.util.Formatters;
 
 public class DiagnosticActivity extends InjectableActivity implements SensorEventListener {
 
@@ -180,14 +182,14 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
             gpsStatusMessage = getString(R.string.permission_disabled);
         }
         setText(R.id.diagnose_gps_status_txt, gpsStatusMessage);
-        LatLong location = locationController.getCurrentLocation();
-        setText(R.id.diagnose_location_txt, location.latitudeToString(this) + ", " + location.longitudeToString(this));
+        Location location = locationController.getCurrentLocation();
+        setText(R.id.diagnose_location_txt, Formatters.latitudeToString(location.getLatitude(), this) + ", " + Formatters.longitudeToString(location.getLongitude(), this));
     }
 
     private void updateModel() {
         float magCorrection = model.getMagneticCorrection();
-        setText(R.id.diagnose_magnetic_correction_txt, LatLong.declinationToString(magCorrection, this));
-        AstronomerModel.Pointing pointing = model.getPointing();
+        setText(R.id.diagnose_magnetic_correction_txt, Formatters.declinationToString(magCorrection, this));
+        Pointing pointing = model.getPointing();
         GeocentricCoordinates lineOfSight = pointing.getLineOfSight();
         setText(R.id.diagnose_pointing_txt, lineOfSight.getRa() + ", " + lineOfSight.getDec());
         Date time = model.getTime().getTime();

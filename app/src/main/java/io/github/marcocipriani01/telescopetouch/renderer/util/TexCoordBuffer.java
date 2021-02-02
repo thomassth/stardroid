@@ -25,7 +25,7 @@ import java.nio.IntBuffer;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
-import io.github.marcocipriani01.telescopetouch.util.FixedPoint;
+import io.github.marcocipriani01.telescopetouch.util.MathsUtils;
 
 public class TexCoordBuffer {
     private final GLBuffer mGLBuffer = new GLBuffer(GL11.GL_ARRAY_BUFFER);
@@ -66,8 +66,8 @@ public class TexCoordBuffer {
     }
 
     public void addTexCoords(float u, float v) {
-        mTexCoordBuffer.put(FixedPoint.floatToFixedPoint(u));
-        mTexCoordBuffer.put(FixedPoint.floatToFixedPoint(v));
+        mTexCoordBuffer.put(MathsUtils.floatToFixedPoint(u));
+        mTexCoordBuffer.put(MathsUtils.floatToFixedPoint(v));
     }
 
     public void set(GL10 gl) {

@@ -16,7 +16,7 @@
 
 package io.github.marcocipriani01.telescopetouch.renderer.util;
 
-import io.github.marcocipriani01.telescopetouch.units.Vector3;
+import io.github.marcocipriani01.telescopetouch.util.Vector3;
 import io.github.marcocipriani01.telescopetouch.util.Matrix4x4;
 
 public class SearchHelper {

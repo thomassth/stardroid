@@ -25,7 +25,7 @@ import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.sensors.LocationHelper;
-import io.github.marcocipriani01.telescopetouch.units.LatLong;
+import io.github.marcocipriani01.telescopetouch.util.Formatters;
 
 /**
  * Sets the AstronomerModel's (and thus the user's) position using one of the
@@ -44,7 +44,7 @@ public class LocationController extends AbstractController {
         locationHelper = new LocationHelper(context, locationManager) {
             @Override
             protected void onLocationOk(Location location) {
-                setLocationInModel(new LatLong(location.getLatitude(), location.getLongitude()), location.getProvider());
+                setLocationInModel(location, location.getProvider());
             }
         };
     }
@@ -54,9 +54,8 @@ public class LocationController extends AbstractController {
         locationHelper.start();
     }
 
-    protected void setLocationInModel(LatLong location, String provider) {
-        LatLong oldLocation = model.getLocation();
-        if (location.distanceFrom(oldLocation) > MIN_DIST_TO_SHOW_TOAST_DEGREES) {
+    protected void setLocationInModel(Location location, String provider) {
+        if (Formatters.locationDistance(location, model.getLocation()) > MIN_DIST_TO_SHOW_TOAST_DEGREES) {
             Log.d(TAG, "Informing user of change of location");
             locationHelper.showLocationToUser(location, provider);
         } else {
@@ -65,7 +64,7 @@ public class LocationController extends AbstractController {
         model.setLocation(location);
     }
 
-    public LatLong getCurrentLocation() {
+    public Location getCurrentLocation() {
         return model.getLocation();
     }
 

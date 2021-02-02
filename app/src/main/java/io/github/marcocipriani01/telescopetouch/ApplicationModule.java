@@ -37,7 +37,6 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
-import io.github.marcocipriani01.telescopetouch.control.AstronomerModelImpl;
 import io.github.marcocipriani01.telescopetouch.control.MagneticDeclinationCalculator;
 import io.github.marcocipriani01.telescopetouch.control.RealMagneticDeclinationCalculator;
 import io.github.marcocipriani01.telescopetouch.control.ZeroMagneticDeclinationCalculator;
@@ -94,7 +93,7 @@ public class ApplicationModule {
     @Singleton
     AstronomerModel provideAstronomerModel(
             @Named("zero") MagneticDeclinationCalculator magneticDeclinationCalculator) {
-        return new AstronomerModelImpl(magneticDeclinationCalculator);
+        return new AstronomerModel(magneticDeclinationCalculator);
     }
 
     @Provides

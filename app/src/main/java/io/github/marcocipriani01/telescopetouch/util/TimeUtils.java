@@ -79,8 +79,16 @@ public class TimeUtils {
      * Calculate local mean sidereal time in degrees. Note that longitude is
      * negative for western longitude values.
      */
-    public static double meanSiderealTime(Calendar date, float longitude) {
-        double jd = julianDayGreenwich(date),
+    public static float meanSiderealTime(Calendar calendar, float longitude) {
+        return (float) meanSiderealTime(calendar, (double) longitude);
+    }
+
+    /**
+     * Calculate local mean sidereal time in degrees. Note that longitude is
+     * negative for western longitude values.
+     */
+    public static double meanSiderealTime(Calendar calendar, double longitude) {
+        double jd = julianDayGreenwich(calendar),
                 t = julianDayToCentury(jd),
                 t2 = t * t,
                 t3 = t2 * t,

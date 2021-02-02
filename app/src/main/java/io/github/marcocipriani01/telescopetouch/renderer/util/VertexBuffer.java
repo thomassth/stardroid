@@ -23,8 +23,8 @@ import java.nio.IntBuffer;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
-import io.github.marcocipriani01.telescopetouch.units.Vector3;
-import io.github.marcocipriani01.telescopetouch.util.FixedPoint;
+import io.github.marcocipriani01.telescopetouch.util.Vector3;
+import io.github.marcocipriani01.telescopetouch.util.MathsUtils;
 
 public class VertexBuffer {
 
@@ -72,9 +72,9 @@ public class VertexBuffer {
     }
 
     public void addPoint(float x, float y, float z) {
-        mPositionBuffer.put(FixedPoint.floatToFixedPoint(x));
-        mPositionBuffer.put(FixedPoint.floatToFixedPoint(y));
-        mPositionBuffer.put(FixedPoint.floatToFixedPoint(z));
+        mPositionBuffer.put(MathsUtils.floatToFixedPoint(x));
+        mPositionBuffer.put(MathsUtils.floatToFixedPoint(y));
+        mPositionBuffer.put(MathsUtils.floatToFixedPoint(z));
     }
 
     public void set(GL10 gl) {

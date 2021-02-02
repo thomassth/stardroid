@@ -19,11 +19,9 @@ package io.github.marcocipriani01.telescopetouch.control;
 import android.util.Log;
 
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
-import io.github.marcocipriani01.telescopetouch.control.AstronomerModel.Pointing;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.units.Matrix33;
-import io.github.marcocipriani01.telescopetouch.units.Vector3;
-import io.github.marcocipriani01.telescopetouch.util.Geometry;
+import io.github.marcocipriani01.telescopetouch.util.Matrix3x3;
+import io.github.marcocipriani01.telescopetouch.util.Vector3;
 
 /**
  * Allows user-input elements such as touch screens and trackballs to move the
@@ -60,10 +58,10 @@ public class ManualOrientationController extends AbstractController {
         Pointing pointing = model.getPointing();
         GeocentricCoordinates pointingXyz = pointing.getLineOfSight();
         GeocentricCoordinates topXyz = pointing.getPerpendicular();
-        Vector3 horizontalXyz = Geometry.vectorProduct(pointingXyz, topXyz);
-        Vector3 deltaXyz = Geometry.scaleVector(horizontalXyz, radians);
+        Vector3 horizontalXyz = Vector3.vectorProduct(pointingXyz, topXyz);
+        Vector3 deltaXyz = Vector3.scale(horizontalXyz, radians);
 
-        Vector3 newPointingXyz = Geometry.addVectors(pointingXyz, deltaXyz);
+        Vector3 newPointingXyz = Vector3.sum(pointingXyz, deltaXyz);
         newPointingXyz.normalize();
 
         model.setPointing(newPointingXyz, topXyz);
@@ -85,12 +83,12 @@ public class ManualOrientationController extends AbstractController {
         // Log.d(TAG, "Current view direction " + viewDir);
         GeocentricCoordinates topXyz = pointing.getPerpendicular();
 
-        Vector3 deltaXyz = Geometry.scaleVector(topXyz, -radians);
-        Vector3 newPointingXyz = Geometry.addVectors(pointingXyz, deltaXyz);
+        Vector3 deltaXyz = Vector3.scale(topXyz, -radians);
+        Vector3 newPointingXyz = Vector3.sum(pointingXyz, deltaXyz);
         newPointingXyz.normalize();
 
-        Vector3 deltaUpXyz = Geometry.scaleVector(pointingXyz, radians);
-        Vector3 newUpXyz = Geometry.addVectors(topXyz, deltaUpXyz);
+        Vector3 deltaUpXyz = Vector3.scale(pointingXyz, radians);
+        Vector3 newUpXyz = Vector3.sum(topXyz, deltaUpXyz);
         newUpXyz.normalize();
 
         model.setPointing(newPointingXyz, newUpXyz);
@@ -107,11 +105,11 @@ public class ManualOrientationController extends AbstractController {
         Pointing pointing = model.getPointing();
         GeocentricCoordinates pointingXyz = pointing.getLineOfSight();
 
-        Matrix33 rotation = Geometry.calculateRotationMatrix(degrees, pointingXyz);
+        Matrix3x3 rotation = Matrix3x3.calculateRotationMatrix(degrees, pointingXyz);
 
         GeocentricCoordinates topXyz = pointing.getPerpendicular();
 
-        Vector3 newUpXyz = Geometry.matrixVectorMultiply(rotation, topXyz);
+        Vector3 newUpXyz = Matrix3x3.matrixVectorMultiply(rotation, topXyz);
         newUpXyz.normalize();
 
         model.setPointing(pointingXyz, newUpXyz);
