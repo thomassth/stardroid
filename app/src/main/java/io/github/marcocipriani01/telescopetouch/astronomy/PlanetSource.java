@@ -28,7 +28,6 @@ import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererObjectManager.UpdateType;
-import io.github.marcocipriani01.telescopetouch.source.AbstractAstronomicalSource;
 import io.github.marcocipriani01.telescopetouch.source.AstronomicalSource;
 import io.github.marcocipriani01.telescopetouch.source.ImageSource;
 import io.github.marcocipriani01.telescopetouch.source.PointSource;
@@ -48,7 +47,7 @@ import io.github.marcocipriani01.telescopetouch.util.Vector3;
  *
  * @author Brent Bryan
  */
-public class PlanetSource extends AbstractAstronomicalSource {
+public class PlanetSource extends AstronomicalSource {
 
     private static final int PLANET_SIZE = 3;
     private static final int PLANET_COLOR = Color.argb(20, 129, 126, 246);

@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.source.AbstractAstronomicalSource;
 import io.github.marcocipriani01.telescopetouch.source.AstronomicalSource;
 import io.github.marcocipriani01.telescopetouch.source.LineSource;
 import io.github.marcocipriani01.telescopetouch.source.TextSource;
@@ -66,7 +65,7 @@ public class EclipticLayer extends AbstractLayer {
     /**
      * Implementation of {@link AstronomicalSource} for the ecliptic source.
      */
-    private static class EclipticSource extends AbstractAstronomicalSource {
+    private static class EclipticSource extends AstronomicalSource {
         // Earth's Angular Tilt
         private static final float EPSILON = 23.439281f;
         private static final int LINE_COLOR = Color.argb(20, 248, 239, 188);

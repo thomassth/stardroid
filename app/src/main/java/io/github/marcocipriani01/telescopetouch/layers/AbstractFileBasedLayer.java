@@ -33,7 +33,7 @@ import java.util.concurrent.Executors;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererObjectManager.UpdateType;
 import io.github.marcocipriani01.telescopetouch.source.AstronomicalSource;
-import io.github.marcocipriani01.telescopetouch.source.proto.ProtobufAstronomicalSource;
+import io.github.marcocipriani01.telescopetouch.source.ProtobufAstronomicalSource;
 import io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.AstronomicalSourceProto;
 import io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.AstronomicalSourcesProto;
 

@@ -28,7 +28,6 @@ import java.util.List;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererObjectManager.UpdateType;
-import io.github.marcocipriani01.telescopetouch.source.AbstractAstronomicalSource;
 import io.github.marcocipriani01.telescopetouch.source.AstronomicalSource;
 import io.github.marcocipriani01.telescopetouch.source.ImageSource;
 import io.github.marcocipriani01.telescopetouch.source.Sources;
@@ -176,7 +175,7 @@ public class MeteorShowerLayer extends AbstractLayer {
         }
     }
 
-    private static class MeteorRadiantSource extends AbstractAstronomicalSource {
+    private static class MeteorRadiantSource extends AstronomicalSource {
         private static final int LABEL_COLOR = 0xf67e81;
         private static final Vector3 UP = new Vector3(0.0f, 1.0f, 0.0f);
         private static final long UPDATE_FREQ_MS = TimeUtils.MILLISECONDS_PER_DAY;
