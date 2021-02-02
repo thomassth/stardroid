@@ -35,8 +35,8 @@ import io.github.marcocipriani01.telescopetouch.renderer.util.SkyRegionMap;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TextureManager;
 import io.github.marcocipriani01.telescopetouch.renderer.util.UpdateClosure;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.util.Vector3;
 import io.github.marcocipriani01.telescopetouch.util.Matrix4x4;
+import io.github.marcocipriani01.telescopetouch.util.Vector3;
 
 interface RenderStateInterface {
     GeocentricCoordinates getCameraPos();

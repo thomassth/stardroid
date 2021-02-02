@@ -25,8 +25,8 @@ import io.github.marcocipriani01.telescopetouch.renderer.util.ColoredQuad;
 import io.github.marcocipriani01.telescopetouch.renderer.util.SearchHelper;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TextureManager;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.util.Vector3;
 import io.github.marcocipriani01.telescopetouch.util.Matrix4x4;
+import io.github.marcocipriani01.telescopetouch.util.Vector3;
 
 public class OverlayManager extends RendererObjectManager {
 
