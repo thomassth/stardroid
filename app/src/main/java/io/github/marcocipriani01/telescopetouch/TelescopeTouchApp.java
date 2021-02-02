@@ -38,8 +38,8 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
-import io.github.marcocipriani01.telescopetouch.layers.LayerManager;
 import io.github.marcocipriani01.telescopetouch.indi.NSDHelper;
+import io.github.marcocipriani01.telescopetouch.layers.LayerManager;
 
 /**
  * The main application class.

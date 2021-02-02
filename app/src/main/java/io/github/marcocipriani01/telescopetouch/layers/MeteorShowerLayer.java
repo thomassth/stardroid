@@ -36,8 +36,8 @@ import io.github.marcocipriani01.telescopetouch.source.TextSource;
 import io.github.marcocipriani01.telescopetouch.source.impl.ImageSourceImpl;
 import io.github.marcocipriani01.telescopetouch.source.impl.TextSourceImpl;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.util.Vector3;
 import io.github.marcocipriani01.telescopetouch.util.TimeUtils;
+import io.github.marcocipriani01.telescopetouch.util.Vector3;
 
 /**
  * A {@link Layer} to show well-known meteor showers.

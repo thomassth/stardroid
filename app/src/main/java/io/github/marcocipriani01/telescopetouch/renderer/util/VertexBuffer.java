@@ -23,8 +23,8 @@ import java.nio.IntBuffer;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
-import io.github.marcocipriani01.telescopetouch.util.Vector3;
 import io.github.marcocipriani01.telescopetouch.util.MathsUtils;
+import io.github.marcocipriani01.telescopetouch.util.Vector3;
 
 public class VertexBuffer {
 

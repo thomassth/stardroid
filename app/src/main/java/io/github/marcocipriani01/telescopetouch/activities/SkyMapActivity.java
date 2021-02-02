@@ -90,7 +90,7 @@ import io.github.marcocipriani01.telescopetouch.util.Vector3;
  * The main map-rendering Activity.
  */
 public class SkyMapActivity extends InjectableActivity
-        implements OnSharedPreferenceChangeListener, HasComponent<DynamicStarMapComponent> {
+        implements OnSharedPreferenceChangeListener, HasComponent<SkyMapComponent> {
 
     public static final String SKY_MAP_INTENT_ACTION = "io.github.marcocipriani01.telescopetouch.activities.DynamicStarMapActivity";
     private static final String BUNDLE_X_TARGET = "bundle_x_target";
@@ -138,7 +138,7 @@ public class SkyMapActivity extends InjectableActivity
     private GLSurfaceView skyView;
     private String searchTargetName;
     private View timePlayerUI;
-    private DynamicStarMapComponent daggerComponent;
+    private SkyMapComponent daggerComponent;
     private DragRotateZoomGestureDetector dragZoomRotateDetector;
     private DarkerModeManager darkerModeManager;
     private boolean isSkyMapOnly;
@@ -146,7 +146,7 @@ public class SkyMapActivity extends InjectableActivity
     private MenuItem searchMenuItem;
 
     @Override
-    public DynamicStarMapComponent getComponent() {
+    public SkyMapComponent getComponent() {
         return daggerComponent;
     }
 
@@ -154,7 +154,7 @@ public class SkyMapActivity extends InjectableActivity
     @SuppressWarnings("deprecation")
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        daggerComponent = DaggerDynamicStarMapComponent.builder()
+        daggerComponent = DaggerSkyMapComponent.builder()
                 .applicationComponent(getApplicationComponent())
                 .skyMapModule(new SkyMapModule(this)).build();
         daggerComponent.inject(this);

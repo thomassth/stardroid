@@ -23,9 +23,9 @@ import java.util.Calendar;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.util.MathsUtils;
 import io.github.marcocipriani01.telescopetouch.util.Matrix3x3;
 import io.github.marcocipriani01.telescopetouch.util.Vector3;
-import io.github.marcocipriani01.telescopetouch.util.MathsUtils;
 
 /**
  * The model of the astronomer.
