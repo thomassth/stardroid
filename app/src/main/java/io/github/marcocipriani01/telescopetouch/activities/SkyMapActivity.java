@@ -78,17 +78,17 @@ import io.github.marcocipriani01.telescopetouch.renderer.RendererController;
 import io.github.marcocipriani01.telescopetouch.renderer.SkyRenderer;
 import io.github.marcocipriani01.telescopetouch.renderer.util.AbstractUpdateClosure;
 import io.github.marcocipriani01.telescopetouch.search.SearchResult;
+import io.github.marcocipriani01.telescopetouch.sensors.SensorAccuracyMonitor;
 import io.github.marcocipriani01.telescopetouch.touch.DragRotateZoomGestureDetector;
 import io.github.marcocipriani01.telescopetouch.touch.GestureInterpreter;
 import io.github.marcocipriani01.telescopetouch.touch.MapMover;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.Vector3;
-import io.github.marcocipriani01.telescopetouch.sensors.SensorAccuracyMonitor;
 
 /**
  * The main map-rendering Activity.
  */
-public class DynamicStarMapActivity extends InjectableActivity
+public class SkyMapActivity extends InjectableActivity
         implements OnSharedPreferenceChangeListener, HasComponent<DynamicStarMapComponent> {
 
     public static final String SKY_MAP_INTENT_ACTION = "io.github.marcocipriani01.telescopetouch.activities.DynamicStarMapActivity";
@@ -98,7 +98,7 @@ public class DynamicStarMapActivity extends InjectableActivity
     private static final String BUNDLE_SEARCH_MODE = "bundle_search";
     private static final int TIME_DISPLAY_DELAY_MILLIS = 1000;
     private static final float ROTATION_SPEED = 10;
-    private static final String TAG = TelescopeTouchApp.getTag(DynamicStarMapActivity.class);
+    private static final String TAG = TelescopeTouchApp.getTag(SkyMapActivity.class);
     // A list of runnables to post on the handler when we resume.
     private final List<Runnable> onResumeRunnables = new ArrayList<>();
     // End Activity for result Ids
@@ -155,7 +155,7 @@ public class DynamicStarMapActivity extends InjectableActivity
         super.onCreate(icicle);
         daggerComponent = DaggerDynamicStarMapComponent.builder()
                 .applicationComponent(getApplicationComponent())
-                .dynamicStarMapModule(new DynamicStarMapModule(this)).build();
+                .skyMapModule(new SkyMapModule(this)).build();
         daggerComponent.inject(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
@@ -202,7 +202,7 @@ public class DynamicStarMapActivity extends InjectableActivity
             }
         });
         this.<Button>findViewById(R.id.search_in_database).setOnClickListener(v -> {
-            Intent mainIntent = new Intent(DynamicStarMapActivity.this, MainActivity.class);
+            Intent mainIntent = new Intent(SkyMapActivity.this, MainActivity.class);
             if (TelescopeTouchApp.connectionManager.isConnected()) {
                 GoToFragment.setRequestedSearch(searchTargetName);
                 mainIntent.putExtra(MainActivity.ACTION, MainActivity.ACTION_SEARCH);
@@ -223,15 +223,14 @@ public class DynamicStarMapActivity extends InjectableActivity
         if (sensorManager != null && sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null
                 && sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null) {
             Log.i(TAG, "Minimum sensors present");
-            sharedPreferences.edit().putBoolean(ApplicationConstants.AUTO_MODE_PREF, true).apply();
-            setAutoMode(true);
+            setAutoMode(sharedPreferences.getBoolean(ApplicationConstants.AUTO_MODE_PREF, true));
             return;
         }
         // Missing at least one sensor.  Warn the user.
         handler.post(() -> {
             if (sharedPreferences.getBoolean(ApplicationConstants.NO_WARN_MISSING_SENSORS_PREF, false)) {
                 Log.d(TAG, "showing no sensor toast");
-                Toast.makeText(DynamicStarMapActivity.this, R.string.no_sensor_warning, Toast.LENGTH_LONG).show();
+                Toast.makeText(SkyMapActivity.this, R.string.no_sensor_warning, Toast.LENGTH_LONG).show();
                 // Don't force manual mode second time through - leave it up to the user.
             } else {
                 Log.d(TAG, "showing no sensor dialog");

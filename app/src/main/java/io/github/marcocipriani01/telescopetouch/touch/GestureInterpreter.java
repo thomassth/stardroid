@@ -19,7 +19,6 @@ package io.github.marcocipriani01.telescopetouch.touch;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.util.FullscreenControlsManager;
 
 /**

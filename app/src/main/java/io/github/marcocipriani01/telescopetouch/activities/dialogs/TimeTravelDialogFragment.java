@@ -44,7 +44,7 @@ import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
-import io.github.marcocipriani01.telescopetouch.activities.DynamicStarMapActivity;
+import io.github.marcocipriani01.telescopetouch.activities.SkyMapActivity;
 import io.github.marcocipriani01.telescopetouch.astronomy.Planet;
 import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
 import io.github.marcocipriani01.telescopetouch.util.TimeUtils;
@@ -61,7 +61,7 @@ public class TimeTravelDialogFragment extends DialogFragment {
     // This is the date we will apply to the controller when the user hits go.
     private final Calendar calendar = Calendar.getInstance();
     @Inject
-    DynamicStarMapActivity parentActivity;
+    SkyMapActivity parentActivity;
     private Spinner popularDatesMenu;
     private TextView dateTimeReadout;
     private long lastClickTime = 0;

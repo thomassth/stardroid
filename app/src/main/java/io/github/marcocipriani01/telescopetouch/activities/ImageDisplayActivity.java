@@ -88,7 +88,7 @@ public class ImageDisplayActivity extends InjectableActivity {
                 }
             }
             editor.apply();
-            Intent queryIntent = new Intent(this, DynamicStarMapActivity.class);
+            Intent queryIntent = new Intent(this, SkyMapActivity.class);
             queryIntent.setAction(Intent.ACTION_SEARCH);
             queryIntent.putExtra(SearchManager.QUERY, selectedImage.getSearchTerm(this));
             startActivity(queryIntent);

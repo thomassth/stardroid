@@ -27,8 +27,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
-import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.astronomy.SolarPositionCalculator;
+import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererController;
 import io.github.marcocipriani01.telescopetouch.search.SearchResult;
 import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;

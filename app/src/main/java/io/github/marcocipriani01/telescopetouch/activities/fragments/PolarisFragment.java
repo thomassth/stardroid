@@ -19,7 +19,6 @@ package io.github.marcocipriani01.telescopetouch.activities.fragments;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -33,16 +32,18 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 import androidx.preference.PreferenceManager;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.activities.MainActivity;
 import io.github.marcocipriani01.telescopetouch.astronomy.Polaris;
 import io.github.marcocipriani01.telescopetouch.sensors.LocationHelper;
+import io.github.marcocipriani01.telescopetouch.sensors.LocationPermissionRequester;
 import io.github.marcocipriani01.telescopetouch.units.LatLong;
 
-public class PolarisFragment extends ActionFragment {
+public class PolarisFragment extends ActionFragment implements LocationPermissionRequester {
 
     private final Polaris polaris = new Polaris();
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -89,15 +90,27 @@ public class PolarisFragment extends ActionFragment {
         gpsText = rootView.findViewById(R.id.polaris_gps);
         spotText = rootView.findViewById(R.id.polaris_spot);
         hourAngleText = rootView.findViewById(R.id.polaris_hour_angle);
-        locationHelper = new LocationHelper(context, ContextCompat.getSystemService(context, LocationManager.class)) {
+        locationHelper = new LocationHelper(context) {
             @Override
             protected void onLocationOk(Location location) {
                 polaris.setLocation(location.getLatitude(), location.getLongitude());
+            }
+
+            @Override
+            protected void requestLocationPermission() {
+                FragmentActivity activity = getActivity();
+                if (activity instanceof MainActivity)
+                    ((MainActivity) activity).requestLocationPermission();
             }
         };
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
         setReticle();
         return rootView;
+    }
+
+    @Override
+    public void onLocationPermissionAcquired() {
+        locationHelper.restartLocation();
     }
 
     @Override

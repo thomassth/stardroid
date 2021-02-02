@@ -29,8 +29,8 @@ import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.HeliocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.units.LatLong;
 import io.github.marcocipriani01.telescopetouch.units.RaDec;
-import io.github.marcocipriani01.telescopetouch.util.TimeUtils;
 import io.github.marcocipriani01.telescopetouch.util.Geometry;
+import io.github.marcocipriani01.telescopetouch.util.TimeUtils;
 
 public enum Planet {
 

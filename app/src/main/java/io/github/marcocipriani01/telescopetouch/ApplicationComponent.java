@@ -25,9 +25,9 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import io.github.marcocipriani01.telescopetouch.activities.SettingsActivity;
 import io.github.marcocipriani01.telescopetouch.activities.ImageDisplayActivity;
 import io.github.marcocipriani01.telescopetouch.activities.ImageGalleryActivity;
+import io.github.marcocipriani01.telescopetouch.activities.SettingsActivity;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.control.MagneticDeclinationCalculator;
 import io.github.marcocipriani01.telescopetouch.layers.LayerManager;

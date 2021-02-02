@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
 import java.io.IOException;
@@ -47,8 +48,8 @@ import io.github.marcocipriani01.telescopetouch.units.LatLong;
 public abstract class LocationHelper implements LocationListener {
 
     private static final String TAG = TelescopeTouchApp.getTag(LocationHelper.class);
-    private static final int MINIMUM_DISTANCE_BEFORE_UPDATE_METRES = 2000;
-    private static final int LOCATION_UPDATE_TIME_MILLISECONDS = 600000;
+    private static final int MINIMUM_DISTANCE_UPDATES_METRES = 2000;
+    private static final int LOCATION_UPDATE_TIME_MS = 600000;
     private final Context context;
     private final LocationManager locationManager;
     private final SharedPreferences preferences;
@@ -59,47 +60,30 @@ public abstract class LocationHelper implements LocationListener {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    public void start() {
+    public LocationHelper(Context context) {
+        this(context, ContextCompat.getSystemService(context, LocationManager.class));
+    }
+
+    public boolean start() {
         Log.d(TAG, "Start");
         if (preferences.getBoolean(ApplicationConstants.NO_AUTO_LOCATE_PREF, false)) {
             Log.d(TAG, "User has elected to set location manually.");
             setLocationFromPrefs();
-            return;
+            return true;
         }
         try {
             if (locationManager == null) {
                 Log.e(TAG, "Location manager was null - using preferences");
                 setLocationFromPrefs();
-                return;
+                return true;
             }
-            Criteria locationCriteria = new Criteria();
-            locationCriteria.setAccuracy(preferences.getBoolean(ApplicationConstants.FORCE_GPS_PREF, false) ? Criteria.ACCURACY_FINE : Criteria.ACCURACY_COARSE);
-            locationCriteria.setAltitudeRequired(false);
-            locationCriteria.setBearingRequired(false);
-            locationCriteria.setCostAllowed(true);
-            locationCriteria.setSpeedRequired(false);
-            locationCriteria.setPowerRequirement(Criteria.POWER_LOW);
-
+            Criteria locationCriteria = getLocationCriteria();
             String locationProvider = locationManager.getBestProvider(locationCriteria, true);
             if (locationProvider == null) {
                 Log.w(TAG, "No location provider is enabled");
                 if (locationManager.getBestProvider(locationCriteria, false) == null) {
                     Log.i(TAG, "No location provider is even available");
-                    new AlertDialog.Builder(context)
-                            .setTitle(R.string.warning).setCancelable(false)
-                            .setMessage(R.string.location_no_auto)
-                            .setNegativeButton(android.R.string.cancel, (dialog12, which) -> {
-                                Toast.makeText(context, R.string.toast_manual_location_on, Toast.LENGTH_SHORT).show();
-                                preferences.edit().putBoolean(ApplicationConstants.NO_AUTO_LOCATE_PREF, true).apply();
-                                setLocationFromPrefs();
-                            })
-                            .setPositiveButton(R.string.take_me_there, (dialog, which) -> {
-                                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                intent.setData(Uri.fromParts("package", context.getPackageName(), null));
-                                context.startActivity(intent);
-                            }).show();
+                    requestLocationPermission();
                     setLocationFromPrefs();
                 } else {
                     new AlertDialog.Builder(context)
@@ -118,19 +102,64 @@ public abstract class LocationHelper implements LocationListener {
                                 setLocationFromPrefs();
                             }).show();
                 }
-                return;
-            } else {
-                Log.d(TAG, "Got location provider " + locationProvider);
+                return true;
             }
 
-            locationManager.requestLocationUpdates(locationProvider, LOCATION_UPDATE_TIME_MILLISECONDS,
-                    MINIMUM_DISTANCE_BEFORE_UPDATE_METRES, this);
+            Log.d(TAG, "Got location provider " + locationProvider);
+            locationManager.requestLocationUpdates(locationProvider, LOCATION_UPDATE_TIME_MS, MINIMUM_DISTANCE_UPDATES_METRES, this);
             Location location = locationManager.getLastKnownLocation(locationProvider);
-            if (location != null)
-                onLocationOk(location);
+            if (location != null) onLocationOk(location);
+            return true;
+        } catch (SecurityException e) {
+            Log.e(TAG, "Caught " + e.getLocalizedMessage(), e);
+            return false;
+        }
+    }
+
+    protected boolean isAltitudeRequired() {
+        return false;
+    }
+
+    public void restartLocation() {
+        try {
+            String locationProvider = locationManager.getBestProvider(getLocationCriteria(), true);
+            if (locationProvider != null) {
+                locationManager.requestLocationUpdates(locationProvider, LOCATION_UPDATE_TIME_MS, MINIMUM_DISTANCE_UPDATES_METRES, this);
+                Location location = locationManager.getLastKnownLocation(locationProvider);
+                if (location != null) onLocationOk(location);
+            }
         } catch (SecurityException e) {
             Log.e(TAG, "Caught " + e.getLocalizedMessage(), e);
         }
+    }
+
+    private Criteria getLocationCriteria() {
+        Criteria locationCriteria = new Criteria();
+        locationCriteria.setAccuracy(preferences.getBoolean(ApplicationConstants.FORCE_GPS_PREF, false) ? Criteria.ACCURACY_FINE : Criteria.ACCURACY_COARSE);
+        locationCriteria.setAltitudeRequired(isAltitudeRequired());
+        locationCriteria.setBearingRequired(false);
+        locationCriteria.setCostAllowed(true);
+        locationCriteria.setSpeedRequired(false);
+        locationCriteria.setPowerRequirement(Criteria.POWER_LOW);
+        return locationCriteria;
+    }
+
+    protected void requestLocationPermission() {
+        new AlertDialog.Builder(context)
+                .setTitle(R.string.warning).setCancelable(false)
+                .setMessage(R.string.location_no_auto)
+                .setNegativeButton(android.R.string.cancel, (dialog12, which) -> {
+                    Toast.makeText(context, R.string.toast_manual_location_on, Toast.LENGTH_SHORT).show();
+                    preferences.edit().putBoolean(ApplicationConstants.NO_AUTO_LOCATE_PREF, true).apply();
+                    setLocationFromPrefs();
+                })
+                .setPositiveButton(R.string.take_me_there, (dialog, which) -> {
+                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.setData(Uri.fromParts("package", context.getPackageName(), null));
+                    context.startActivity(intent);
+                }).show();
     }
 
     private void setLocationFromPrefs() {

@@ -32,7 +32,7 @@ import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
-import io.github.marcocipriani01.telescopetouch.activities.DynamicStarMapActivity;
+import io.github.marcocipriani01.telescopetouch.activities.SkyMapActivity;
 import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
 import io.github.marcocipriani01.telescopetouch.search.SearchResult;
 
@@ -43,7 +43,7 @@ public class MultipleSearchResultsDialogFragment extends DialogFragment {
 
     private static final String TAG = TelescopeTouchApp.getTag(MultipleSearchResultsDialogFragment.class);
     @Inject
-    DynamicStarMapActivity parentActivity;
+    SkyMapActivity parentActivity;
 
     private ArrayAdapter<SearchResult> multipleSearchResultsAdaptor;
 

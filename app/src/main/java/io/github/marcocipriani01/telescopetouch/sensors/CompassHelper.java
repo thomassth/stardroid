@@ -24,15 +24,13 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.view.Display;
 
-import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 
-public abstract class CompassHelper implements SensorEventListener, SharedPreferences.OnSharedPreferenceChangeListener {
+public abstract class CompassHelper extends LocationHelper implements SensorEventListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private final SensorManager sensorManager;
     private final Sensor accelerometer;
@@ -40,43 +38,47 @@ public abstract class CompassHelper implements SensorEventListener, SharedPrefer
     private final float[] gravity = new float[3];
     private final float[] geomagnetic = new float[3];
     private final Display display;
-    private final LocationHelper locationHelper;
     private final SharedPreferences preferences;
+    private final SensorAccuracyMonitor sensorAccuracyMonitor;
     private boolean enableMagneticDeclination = true;
     private float magneticDeclination = 0.0f;
-    private final SensorAccuracyMonitor sensorAccuracyMonitor;
 
     public CompassHelper(Context context) {
+        super(context);
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         display = context.getDisplay();
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
         sensorAccuracyMonitor = new SensorAccuracyMonitor(sensorManager, context, preferences);
-        locationHelper = new LocationHelper(context, ContextCompat.getSystemService(context, LocationManager.class)) {
-            @Override
-            protected void onLocationOk(Location location) {
-                magneticDeclination = new GeomagneticField((float) location.getLatitude(), (float) location.getLongitude(),
-                        (float) location.getAltitude(), System.currentTimeMillis()).getDeclination();
-                onLocationAndDeclination(location, magneticDeclination);
-            }
-        };
+    }
+
+    @Override
+    protected void onLocationOk(Location location) {
+        magneticDeclination = new GeomagneticField((float) location.getLatitude(), (float) location.getLongitude(),
+                (float) location.getAltitude(), System.currentTimeMillis()).getDeclination();
+        onLocationAndDeclination(location, magneticDeclination);
     }
 
     public boolean start() {
+        super.start();
         preferences.registerOnSharedPreferenceChangeListener(this);
         enableMagneticDeclination = preferences.getBoolean(ApplicationConstants.MAGNETIC_DECLINATION_PREF, true);
-        locationHelper.start();
         sensorAccuracyMonitor.start();
         return sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME) &&
                 sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_GAME);
     }
 
     public void stop() {
+        super.stop();
         preferences.unregisterOnSharedPreferenceChangeListener(this);
-        locationHelper.stop();
         sensorManager.unregisterListener(this);
         sensorAccuracyMonitor.stop();
+    }
+
+    @Override
+    protected boolean isAltitudeRequired() {
+        return true;
     }
 
     @Override

@@ -77,7 +77,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.DynamicStarMapActivity"
+            android:name=".activities.SkyMapActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/sky_map"
             android:launchMode="singleTop"

@@ -41,19 +41,19 @@ import io.github.marcocipriani01.telescopetouch.inject.PerActivity;
  * Created by johntaylor on 3/29/16.
  */
 @Module
-public class AbstractDynamicStarMapModule {
+public class SkyMapModule {
 
-    private static final String TAG = TelescopeTouchApp.getTag(DynamicStarMapModule.class);
-    private final DynamicStarMapActivity activity;
+    private static final String TAG = TelescopeTouchApp.getTag(SkyMapModule.class);
+    private final SkyMapActivity activity;
 
-    public AbstractDynamicStarMapModule(DynamicStarMapActivity activity) {
+    public SkyMapModule(SkyMapActivity activity) {
         Log.d(TAG, "Creating activity module for " + activity);
         this.activity = activity;
     }
 
     @Provides
     @PerActivity
-    DynamicStarMapActivity provideDynamicStarMapActivity() {
+    SkyMapActivity provideDynamicStarMapActivity() {
         return activity;
     }
 

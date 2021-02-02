@@ -28,9 +28,9 @@ import io.github.marcocipriani01.telescopetouch.inject.PerActivity;
  * Created by johntaylor on 3/29/16.
  */
 @PerActivity
-@Component(modules = DynamicStarMapModule.class, dependencies = ApplicationComponent.class)
+@Component(modules = SkyMapModule.class, dependencies = ApplicationComponent.class)
 public interface DynamicStarMapComponent extends TimeTravelDialogFragment.ActivityComponent,
         NoSearchResultsDialogFragment.ActivityComponent, MultipleSearchResultsDialogFragment.ActivityComponent,
         NoSensorsDialogFragment.ActivityComponent {
-    void inject(DynamicStarMapActivity activity);
+    void inject(SkyMapActivity activity);
 }
