@@ -92,7 +92,7 @@ import io.github.marcocipriani01.telescopetouch.util.Vector3;
 public class SkyMapActivity extends InjectableActivity
         implements OnSharedPreferenceChangeListener, HasComponent<SkyMapComponent> {
 
-    public static final String SKY_MAP_INTENT_ACTION = "io.github.marcocipriani01.telescopetouch.activities.DynamicStarMapActivity";
+    public static final String SKY_MAP_INTENT_ACTION = "io.github.marcocipriani01.telescopetouch.activities.SkyMapActivity";
     private static final String BUNDLE_X_TARGET = "bundle_x_target";
     private static final String BUNDLE_Y_TARGET = "bundle_y_target";
     private static final String BUNDLE_Z_TARGET = "bundle_z_target";
@@ -269,7 +269,7 @@ public class SkyMapActivity extends InjectableActivity
 
     @Override
     public void onDestroy() {
-        Log.d(TAG, "DynamicStarMap onDestroy");
+        Log.d(TAG, "Sky Map onDestroy");
         super.onDestroy();
     }
 
@@ -384,7 +384,7 @@ public class SkyMapActivity extends InjectableActivity
 
     @Override
     public void onPause() {
-        Log.d(TAG, "DynamicStarMap onPause");
+        Log.d(TAG, "Sky Map onPause");
         super.onPause();
         sensorAccuracyMonitor.stop();
         for (Runnable runnable : onResumeRunnables) {
@@ -393,7 +393,7 @@ public class SkyMapActivity extends InjectableActivity
         darkerModeManager.stop();
         controller.stop();
         skyView.onPause();
-        Log.d(TAG, "DynamicStarMap -onPause");
+        Log.d(TAG, "Sky Map -onPause");
     }
 
     @Override
@@ -573,7 +573,7 @@ public class SkyMapActivity extends InjectableActivity
 
     @Override
     protected void onRestoreInstanceState(Bundle icicle) {
-        Log.d(TAG, "DynamicStarMap onRestoreInstanceState");
+        Log.d(TAG, "Sky Map onRestoreInstanceState");
         super.onRestoreInstanceState(icicle);
         if (icicle == null) return;
         searchMode = icicle.getBoolean(BUNDLE_SEARCH_MODE);
@@ -591,7 +591,7 @@ public class SkyMapActivity extends InjectableActivity
 
     @Override
     protected void onSaveInstanceState(Bundle icicle) {
-        Log.d(TAG, "DynamicStarMap onSaveInstanceState");
+        Log.d(TAG, "Sky Map onSaveInstanceState");
         icicle.putBoolean(BUNDLE_SEARCH_MODE, searchMode);
         icicle.putFloat(BUNDLE_X_TARGET, searchTarget.x);
         icicle.putFloat(BUNDLE_Y_TARGET, searchTarget.y);

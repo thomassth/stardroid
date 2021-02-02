@@ -538,4 +538,7 @@
     <string name="magnetic_declination">Declinazione magn.</string>
     <string name="precession_pref">Compensa precessione</string>
     <string name="precession_pref_description">Le coordinate nel catalogo sono riferite all\'epoca astronomica J2000. Attiva questa impostazione per compensare la precessione. Se l\'applicazione muove il telescopio nel punto sbagliato, prova a disabilitarla.</string>
+    <string name="telescope">Telescopio</string>
+    <string name="search_in_goto_database">Cerca nel database Go-To</string>
+    <string name="out_of_bounds_loc_error">Latitudine o longitudine fuori dai confini!</string>
 </resources>

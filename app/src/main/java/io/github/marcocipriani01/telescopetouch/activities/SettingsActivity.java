@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -129,13 +130,36 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         if (preference == latitudePref) {
-            latitudePref.setSummary((String) newValue);
+            String string = (String) newValue;
+            try {
+                double latitude = Double.parseDouble(string);
+                if ((latitude > 90.0) || (latitude < -90.0)) {
+                    Toast.makeText(this, R.string.out_of_bounds_loc_error, Toast.LENGTH_SHORT).show();
+                } else {
+                    latitudePref.setSummary(string);
+                    return true;
+                }
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, R.string.malformed_loc_error, Toast.LENGTH_SHORT).show();
+            }
         } else if (preference == longitudePref) {
-            longitudePref.setSummary((String) newValue);
+            String string = (String) newValue;
+            try {
+                double longitude = Double.parseDouble(string);
+                if ((longitude > 180.0) || (longitude < -180.0)) {
+                    Toast.makeText(this, R.string.out_of_bounds_loc_error, Toast.LENGTH_SHORT).show();
+                } else {
+                    longitudePref.setSummary(string);
+                    return true;
+                }
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, R.string.malformed_loc_error, Toast.LENGTH_SHORT).show();
+            }
         } else if (preference == gyroPref) {
             enableGyroPrefs(((Boolean) newValue));
+            return true;
         }
-        return true;
+        return false;
     }
 
     public static class AppPreferenceFragment extends PreferenceFragmentCompat {

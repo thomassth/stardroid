@@ -615,4 +615,5 @@
     <string name="precession_pref_description">The catalog\'s coordinates correspond to the J2000 astronomical epoch. Check this box to compensate them for precession. If the app slews telescope to the wrong place, try disabling this setting.</string>
     <string name="telescope">Telescope</string>
     <string name="search_in_goto_database">Search in the Go-To database</string>
+    <string name="out_of_bounds_loc_error">Latitude or longitude out of bounds!</string>
 </resources>
