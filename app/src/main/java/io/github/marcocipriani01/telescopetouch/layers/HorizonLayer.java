@@ -27,7 +27,6 @@ import java.util.List;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererObjectManager.UpdateType;
-import io.github.marcocipriani01.telescopetouch.source.AbstractAstronomicalSource;
 import io.github.marcocipriani01.telescopetouch.source.AstronomicalSource;
 import io.github.marcocipriani01.telescopetouch.source.LineSource;
 import io.github.marcocipriani01.telescopetouch.source.Sources;
@@ -82,7 +81,7 @@ public class HorizonLayer extends AbstractLayer {
     /**
      * Implementation of {@link AstronomicalSource} for the horizon source.
      */
-    static class HorizonSource extends AbstractAstronomicalSource {
+    static class HorizonSource extends AstronomicalSource {
         // Due to a bug in the G1 rendering code text and lines render in different
         // colors.
         private static final int LINE_COLOR = Color.argb(120, 86, 176, 245);

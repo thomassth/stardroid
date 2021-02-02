@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.source.AbstractAstronomicalSource;
 import io.github.marcocipriani01.telescopetouch.source.AstronomicalSource;
 import io.github.marcocipriani01.telescopetouch.source.LineSource;
 import io.github.marcocipriani01.telescopetouch.source.TextSource;
@@ -81,7 +80,7 @@ public class GridLayer extends AbstractLayer {
      * Implementation of the grid elements as an {@link AstronomicalSource}
      */
     @SuppressLint("DefaultLocale")
-    static class GridSource extends AbstractAstronomicalSource {
+    static class GridSource extends AstronomicalSource {
         private static final int LINE_COLOR = Color.argb(20, 248, 239, 188);
         /**
          * These are great (semi)circles, so only need 3 points.

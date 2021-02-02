@@ -45,9 +45,9 @@ import io.github.marcocipriani01.telescopetouch.layers.GridLayer;
 import io.github.marcocipriani01.telescopetouch.layers.HorizonLayer;
 import io.github.marcocipriani01.telescopetouch.layers.LayerManager;
 import io.github.marcocipriani01.telescopetouch.layers.MeteorShowerLayer;
-import io.github.marcocipriani01.telescopetouch.layers.NewConstellationsLayer;
-import io.github.marcocipriani01.telescopetouch.layers.NewMessierLayer;
-import io.github.marcocipriani01.telescopetouch.layers.NewStarsLayer;
+import io.github.marcocipriani01.telescopetouch.layers.ConstellationsLayer;
+import io.github.marcocipriani01.telescopetouch.layers.MessierLayer;
+import io.github.marcocipriani01.telescopetouch.layers.StarsLayer;
 import io.github.marcocipriani01.telescopetouch.layers.PlanetsLayer;
 import io.github.marcocipriani01.telescopetouch.layers.SkyGradientLayer;
 
@@ -147,9 +147,9 @@ public class ApplicationModule {
             SharedPreferences preferences) {
         Log.i(TAG, "Initializing LayerManager");
         LayerManager layerManager = new LayerManager(preferences);
-        layerManager.addLayer(new NewStarsLayer(assetManager, resources));
-        layerManager.addLayer(new NewMessierLayer(assetManager, resources));
-        layerManager.addLayer(new NewConstellationsLayer(assetManager, resources));
+        layerManager.addLayer(new StarsLayer(assetManager, resources));
+        layerManager.addLayer(new MessierLayer(assetManager, resources));
+        layerManager.addLayer(new ConstellationsLayer(assetManager, resources));
         layerManager.addLayer(new PlanetsLayer(model, resources, preferences));
         layerManager.addLayer(new MeteorShowerLayer(model, resources));
         layerManager.addLayer(new GridLayer(resources, 24, 9));

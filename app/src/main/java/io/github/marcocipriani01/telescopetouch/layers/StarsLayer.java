@@ -28,9 +28,9 @@ import io.github.marcocipriani01.telescopetouch.R;
  * @author John Taylor
  * @author Brent Bryan
  */
-public class NewStarsLayer extends AbstractFileBasedLayer {
+public class StarsLayer extends AbstractFileBasedLayer {
 
-    public NewStarsLayer(AssetManager assetManager, Resources resources) {
+    public StarsLayer(AssetManager assetManager, Resources resources) {
         super(assetManager, resources, "stars.binary");
     }
 

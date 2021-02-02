@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.marcocipriani01.telescopetouch.source.proto;
+package io.github.marcocipriani01.telescopetouch.source;
 
 import android.content.res.Resources;
 import android.util.Log;
@@ -27,14 +27,10 @@ import java.util.Map;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
-import io.github.marcocipriani01.telescopetouch.source.AbstractAstronomicalSource;
-import io.github.marcocipriani01.telescopetouch.source.AstronomicalSource;
-import io.github.marcocipriani01.telescopetouch.source.LineSource;
-import io.github.marcocipriani01.telescopetouch.source.PointSource;
-import io.github.marcocipriani01.telescopetouch.source.TextSource;
 import io.github.marcocipriani01.telescopetouch.source.impl.LineSourceImpl;
 import io.github.marcocipriani01.telescopetouch.source.impl.PointSourceImpl;
 import io.github.marcocipriani01.telescopetouch.source.impl.TextSourceImpl;
+import io.github.marcocipriani01.telescopetouch.source.proto.SourceProto;
 import io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.AstronomicalSourceProto;
 import io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.GeocentricCoordinatesProto;
 import io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.LabelElementProto;
@@ -49,7 +45,7 @@ import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
  *
  * @author Brent Bryan
  */
-public class ProtobufAstronomicalSource extends AbstractAstronomicalSource {
+public class ProtobufAstronomicalSource extends AstronomicalSource {
 
     // Ideally we'd get this from Context.getPackageName but for some reason passing it in as a
     // string via the contructor results in it always being null when I need it. Buggered if
