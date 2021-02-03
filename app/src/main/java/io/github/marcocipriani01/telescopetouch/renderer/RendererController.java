@@ -30,6 +30,7 @@ import java.util.Queue;
  * @author James Powell
  */
 public class RendererController extends RendererControllerBase {
+
     private final EventQueuer mQueuer;
 
     public RendererController(SkyRenderer renderer, final GLSurfaceView view) {

@@ -122,7 +122,6 @@ public class SkyBox extends RendererObjectManager {
             ib.addIndex(bottomBandStart);
             ib.addIndex((short) (topBandStart + NUM_STEPS_IN_BAND - 1));
 
-
             topBandStart += NUM_STEPS_IN_BAND;
             bottomBandStart += NUM_STEPS_IN_BAND;
         }

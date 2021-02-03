@@ -29,15 +29,13 @@ public class Pointing {
     private final GeocentricCoordinates lineOfSight;
     private final GeocentricCoordinates perpendicular;
 
-    public Pointing(GeocentricCoordinates lineOfSight,
-                    GeocentricCoordinates perpendicular) {
+    public Pointing(GeocentricCoordinates lineOfSight, GeocentricCoordinates perpendicular) {
         this.lineOfSight = lineOfSight.copy();
         this.perpendicular = perpendicular.copy();
     }
 
     public Pointing() {
-        this(new GeocentricCoordinates(1, 0, 0),
-                new GeocentricCoordinates(0, 1, 0));
+        this(new GeocentricCoordinates(1, 0, 0), new GeocentricCoordinates(0, 1, 0));
     }
 
     /**
@@ -89,7 +87,6 @@ public class Pointing {
      */
     void updatePerpendicular(Vector3 newPerpendicular) {
         perpendicular.assign(newPerpendicular);
-
     }
 
     /**
