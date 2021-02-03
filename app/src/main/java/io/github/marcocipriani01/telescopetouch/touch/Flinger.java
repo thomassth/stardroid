@@ -54,16 +54,16 @@ public class Flinger {
 
             @Override
             public void run() {
-                if (myVelocityX * myVelocityX + myVelocityY * myVelocityY < (float) 10) {
+                if (((myVelocityX * myVelocityX) + (myVelocityY * myVelocityY)) < 10.0f) {
                     stop();
                 }
                 listener.fling(myVelocityX / UPDATES_PER_SECOND, myVelocityY / UPDATES_PER_SECOND);
-                float decelFactor = 1.1f;
-                myVelocityX /= decelFactor;
-                myVelocityY /= decelFactor;
+                final float decelerationFactor = 1.1f;
+                myVelocityX /= decelerationFactor;
+                myVelocityY /= decelerationFactor;
             }
         }
-        int timeIntervalMillis = 1000 / UPDATES_PER_SECOND;
+        final int timeIntervalMillis = 1000 / UPDATES_PER_SECOND;
         flingTask = executor.scheduleAtFixedRate(new PositionUpdater(velocityX, velocityY),
                 0, timeIntervalMillis, TimeUnit.MILLISECONDS);
     }
