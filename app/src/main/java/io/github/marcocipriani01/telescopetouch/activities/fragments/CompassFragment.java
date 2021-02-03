@@ -88,6 +88,13 @@ public class CompassFragment extends ActionFragment implements Toolbar.OnMenuIte
                 if (activity instanceof MainActivity)
                     ((MainActivity) activity).requestLocationPermission();
             }
+
+            @Override
+            protected void onDeclinationEnabledChange(boolean show) {
+                int visibility = show ? View.VISIBLE : View.GONE;
+                gps.setVisibility(visibility);
+                declination.setVisibility(visibility);
+            }
         };
         return rootView;
     }

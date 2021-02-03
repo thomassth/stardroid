@@ -39,7 +39,6 @@ public class SkyBox extends RendererObjectManager {
     IndexBuffer mIndexBuffer = new IndexBuffer(true);
     GeocentricCoordinates mSunPos = new GeocentricCoordinates(0, 1, 0);
 
-
     public SkyBox(int layer, TextureManager textureManager) {
         super(layer, textureManager);
 
@@ -147,30 +146,22 @@ public class SkyBox extends RendererObjectManager {
         if (getRenderState().getNightVisionMode()) {
             return;
         }
-
         gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
         gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
         gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-
         gl.glEnable(GL10.GL_CULL_FACE);
         gl.glFrontFace(GL10.GL_CW);
         gl.glCullFace(GL10.GL_BACK);
-
         gl.glShadeModel(GL10.GL_SMOOTH);
-
         gl.glPushMatrix();
-
         // Rotate the sky box to the position of the sun.
         Vector3 cp = Vector3.vectorProduct(new Vector3(0, 1, 0), mSunPos);
         cp = Vector3.normalized(cp);
         float angle = 180.0f / (float) Math.PI * (float) Math.acos(mSunPos.y);
         gl.glRotatef(angle, cp.x, cp.y, cp.z);
-
         mVertexBuffer.set(gl);
         mColorBuffer.set(gl);
-
         mIndexBuffer.draw(gl, GL10.GL_TRIANGLES);
-
         gl.glPopMatrix();
     }
 }

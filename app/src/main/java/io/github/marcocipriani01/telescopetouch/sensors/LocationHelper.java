@@ -27,6 +27,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
@@ -48,7 +49,7 @@ public abstract class LocationHelper implements LocationListener {
 
     private static final String TAG = TelescopeTouchApp.getTag(LocationHelper.class);
     private static final int MINIMUM_DISTANCE_UPDATES_METRES = 2000;
-    private static final int LOCATION_UPDATE_TIME_MS = 600000;
+    private static final int LOCATION_UPDATE_TIME_MS = 180000;
     private final Context context;
     private final LocationManager locationManager;
     private final SharedPreferences preferences;
@@ -105,7 +106,8 @@ public abstract class LocationHelper implements LocationListener {
             }
 
             Log.d(TAG, "Got location provider " + locationProvider);
-            locationManager.requestLocationUpdates(locationProvider, LOCATION_UPDATE_TIME_MS, MINIMUM_DISTANCE_UPDATES_METRES, this);
+            locationManager.requestLocationUpdates(locationProvider, LOCATION_UPDATE_TIME_MS,
+                    MINIMUM_DISTANCE_UPDATES_METRES, this, Looper.getMainLooper());
             Location location = locationManager.getLastKnownLocation(locationProvider);
             if (location != null) onLocationOk(location);
             return true;

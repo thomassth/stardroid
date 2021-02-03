@@ -42,11 +42,10 @@ import javax.microedition.khronos.opengles.GL10;
  * @author James Powell
  */
 public final class TextureManager {
+
     private final Resources mRes;
-    private final Map<Integer, TextureData> mResourceIdToTextureMap =
-            new HashMap<>();
-    private final ArrayList<TextureReferenceImpl> mAllTextures =
-            new ArrayList<>();
+    private final Map<Integer, TextureData> mResourceIdToTextureMap = new HashMap<>();
+    private final ArrayList<TextureReferenceImpl> mAllTextures = new ArrayList<>();
 
     public TextureManager(Resources res) {
         mRes = res;
@@ -55,7 +54,6 @@ public final class TextureManager {
     public TextureReference createTexture(GL10 gl) {
         return createTextureInternal(gl);
     }
-
 
     public TextureReference getTextureFromResource(GL10 gl, int resourceID) {
         // If the texture already exists, return it.
@@ -113,6 +111,7 @@ public final class TextureManager {
     }
 
     private static class TextureReferenceImpl implements TextureReference {
+
         private final int mTextureID;
         private boolean mValid = true;
 
@@ -120,11 +119,13 @@ public final class TextureManager {
             mTextureID = id;
         }
 
+        @Override
         public void bind(GL10 gl) {
             checkValid();
             gl.glBindTexture(GL10.GL_TEXTURE_2D, mTextureID);
         }
 
+        @Override
         public void delete(GL10 gl) {
             checkValid();
             gl.glDeleteTextures(1, new int[]{mTextureID}, 0);

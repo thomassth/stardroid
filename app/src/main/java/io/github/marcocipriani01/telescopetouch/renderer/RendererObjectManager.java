@@ -26,13 +26,16 @@ import io.github.marcocipriani01.telescopetouch.renderer.util.TextureManager;
 
 
 public abstract class RendererObjectManager implements Comparable<RendererObjectManager> {
-    // Used to distinguish between different renderers, so we can have sets of them.
+
+    /**
+     * Used to distinguish between different renderers, so we can have sets of them.
+     */
     private static int sIndex = 0;
     private final TextureManager mTextureManager;
     private final int mLayer;
     private final int mIndex;
     private boolean mEnabled = true;
-    private RenderStateInterface mRenderState = null;
+    private SkyRenderer.RenderState mRenderState = null;
     private UpdateListener mListener = null;
     private float mMaxRadiusOfView = 360;  // in degrees
 
@@ -69,11 +72,11 @@ public abstract class RendererObjectManager implements Comparable<RendererObject
         }
     }
 
-    final RenderStateInterface getRenderState() {
+    final SkyRenderer.RenderState getRenderState() {
         return mRenderState;
     }
 
-    final void setRenderState(RenderStateInterface state) {
+    final void setRenderState(SkyRenderer.RenderState state) {
         mRenderState = state;
     }
 
@@ -81,7 +84,9 @@ public abstract class RendererObjectManager implements Comparable<RendererObject
         mListener = listener;
     }
 
-    // Notifies the renderer that the manager must be reloaded before the next time it is drawn.
+    /**
+     * Notifies the renderer that the manager must be reloaded before the next time it is drawn.
+     */
     final void queueForReload(boolean fullReload) {
         mListener.queueForReload(this, fullReload);
     }
@@ -100,18 +105,22 @@ public abstract class RendererObjectManager implements Comparable<RendererObject
         return mTextureManager;
     }
 
-    // Reload all OpenGL resources needed by the object (ie, textures, VBOs).  If fullReload is true,
-    // this means that the object needs to reload everything (this is the case when the object
-    // is loaded for the first time, or when the activity is being recreated, and all the previous
-    // resources have been invalid.  Sometimes a manager may only need to be partially reloaded (for
-    // example, if new objects are set, they might need to be reloaded, but the texture shared
-    // between them all is the same so it does not need to be).  The renderer will only ever do a
-    // full reload - fullReload will only be false if the manager queues itself for a partial reload.
+    /**
+     * Reload all OpenGL resources needed by the object (ie, textures, VBOs).  If fullReload is true,
+     * this means that the object needs to reload everything (this is the case when the object
+     * is loaded for the first time, or when the activity is being recreated, and all the previous
+     * resources have been invalid.  Sometimes a manager may only need to be partially reloaded (for
+     * example, if new objects are set, they might need to be reloaded, but the texture shared
+     * between them all is the same so it does not need to be).  The renderer will only ever do a
+     * full reload - fullReload will only be false if the manager queues itself for a partial reload.
+     */
     public abstract void reload(GL10 gl, boolean fullReload);
 
     protected abstract void drawInternal(GL10 gl);
 
-    // Specifies options for updating a specific RendererObjectManager.
+    /**
+     * Specifies options for updating a specific RendererObjectManager.
+     */
     public enum UpdateType {
         Reset,            // Throw away any previous data and set entirely new data.
         UpdatePositions,  // Only update positions of existing objects.

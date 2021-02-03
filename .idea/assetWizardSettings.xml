@@ -131,7 +131,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="ffffff" />
-                                                <entry key="imagePath" value="C:\Users\marco\AppData\Local\Temp\baseline_gamepad_24.xml" />
+                                                <entry key="imagePath" value="C:\Users\marco\AppData\Local\Temp\baseline_access_time_24.xml" />
                                                 <entry key="paddingPercent" value="20" />
                                               </map>
                                             </option>
@@ -143,7 +143,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="file:/$PROJECT_DIR$/../../Windows/ProgramData/AndroidSDK/icons/material/materialicons/gamepad/baseline_gamepad_24.xml" />
+                                                <entry key="url" value="file:/$PROJECT_DIR$/../../Windows/ProgramData/AndroidSDK/icons/material/materialicons/access_time/baseline_access_time_24.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -177,7 +177,7 @@
                                     <map>
                                       <entry key="backgroundColor" value="1565c0" />
                                       <entry key="iconShape" value="CIRCLE" />
-                                      <entry key="outputName" value="move_launcher" />
+                                      <entry key="outputName" value="polaris_launcher" />
                                     </map>
                                   </option>
                                 </PersistentState>

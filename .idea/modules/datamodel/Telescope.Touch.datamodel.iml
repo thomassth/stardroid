@@ -21,6 +21,9 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../../datamodel">
       <sourceFolder url="file://$MODULE_DIR$/../../../datamodel/src/main/proto" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../datamodel/build/generated/source/proto/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../datamodel/build/extracted-include-protos/main" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../datamodel/build/extracted-protos/main" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/../../../datamodel/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/../../../datamodel/build" />
     </content>
@@ -38,7 +41,6 @@
     <content url="file://$MODULE_DIR$/../../../datamodel/build/generated/source/proto/test/java" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="Gradle: Telescope.Touch.datamodel.datamodel" level="project" />
     <orderEntry type="library" name="Gradle: com.google.protobuf:protobuf-javalite:3.14.0" level="project" />
   </component>
 </module>
