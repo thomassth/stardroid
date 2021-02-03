@@ -38,76 +38,50 @@ import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.util.Matrix4x4;
 import io.github.marcocipriani01.telescopetouch.util.Vector3;
 
-interface RenderStateInterface {
-    GeocentricCoordinates getCameraPos();
-
-    GeocentricCoordinates getLookDir();
-
-    GeocentricCoordinates getUpDir();
-
-    float getRadiusOfView();
-
-    float getUpAngle();
-
-    float getCosUpAngle();
-
-    float getSinUpAngle();
-
-    int getScreenWidth();
-
-    int getScreenHeight();
-
-    Matrix4x4 getTransformToDeviceMatrix();
-
-    Matrix4x4 getTransformToScreenMatrix();
-
-    Resources getResources();
-
-    boolean getNightVisionMode();
-
-    SkyRegionMap.ActiveRegionData getActiveSkyRegions();
-}
-
 public class SkyRenderer implements GLSurfaceView.Renderer {
+
     protected final TextureManager mTextureManager;
     private final RenderState mRenderState = new RenderState();
     private final Set<UpdateClosure> mUpdateClosures = new TreeSet<>();
-    // All managers - we need to reload all of these when we recreate the surface.
+    /**
+     * All managers - we need to reload all of these when we recreate the surface.
+     */
     private final Set<RendererObjectManager> mAllManagers = new TreeSet<>();
-    // A list of managers which need to be reloaded before the next frame is rendered.  This may
-    // be because they haven't ever been loaded yet, or because their objects have changed since
-    // the last frame.
+    /**
+     * A list of managers which need to be reloaded before the next frame is rendered.  This may
+     * be because they haven't ever been loaded yet, or because their objects have changed since
+     * the last frame.
+     */
     private final ArrayList<ManagerReloadData> mManagersToReload = new ArrayList<>();
     private final RendererObjectManager.UpdateListener mUpdateListener =
             (rom, fullReload) -> mManagersToReload.add(new ManagerReloadData(rom, fullReload));
     private final SkyBox mSkyBox;
     private final OverlayManager mOverlayManager;
-    // Maps an integer indicating render order to a list of objects at that level.  The managers
-    // will be rendered in order, with the lowest number coming first.
+    /**
+     * Maps an integer indicating render order to a list of objects at that level.  The managers
+     * will be rendered in order, with the lowest number coming first.
+     */
     private final TreeMap<Integer, Set<RendererObjectManager>> mLayersToManagersMap;
     private Matrix4x4 mProjectionMatrix;
     private Matrix4x4 mViewMatrix;
-    // Indicates whether the transformation matrix has changed since the last
-    // time we started rendering
+    /**
+     * Indicates whether the transformation matrix has changed since the last
+     * time we started rendering
+     */
     private boolean mMustUpdateView = true;
     private boolean mMustUpdateProjection = true;
 
     public SkyRenderer(Resources res) {
         mRenderState.setResources(res);
-
         mLayersToManagersMap = new TreeMap<>();
-
         mTextureManager = new TextureManager(res);
-
         // The skybox should go behind everything.
         mSkyBox = new SkyBox(Integer.MIN_VALUE, mTextureManager);
         mSkyBox.enable(false);
         addObjectManager(mSkyBox);
-
         // The overlays go on top of everything.
         mOverlayManager = new OverlayManager(Integer.MAX_VALUE, mTextureManager);
         addObjectManager(mOverlayManager);
-
         Log.d("SkyRenderer", "SkyRenderer::SkyRenderer()");
     }
 
@@ -153,21 +127,17 @@ public class SkyRenderer implements GLSurfaceView.Renderer {
 
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         Log.d("SkyRenderer", "surfaceCreated");
-
         gl.glEnable(GL10.GL_DITHER);
 
         /*
          * Some one-time OpenGL initialization can be made here
          * probably based on features of this particular context
          */
-        gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT,
-                GL10.GL_FASTEST);
-
+        gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FASTEST);
         gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         gl.glEnable(GL10.GL_CULL_FACE);
         gl.glShadeModel(GL10.GL_SMOOTH);
         gl.glDisable(GL10.GL_DEPTH_TEST);
-
 
         // Release references to all of the old textures.
         mTextureManager.reset();
@@ -432,125 +402,122 @@ public class SkyRenderer implements GLSurfaceView.Renderer {
             this.fullReload = fullReload;
         }
     }
-}
 
-// TODO(jpowell): RenderState is a bad name.  This class is a grab-bag of
-// general state which is set once per-frame, and which individual managers
-// may need to render the frame.  Come up with a better name for this.
-class RenderState implements RenderStateInterface {
-    private GeocentricCoordinates mCameraPos = new GeocentricCoordinates(0, 0, 0);
-    private GeocentricCoordinates mLookDir = new GeocentricCoordinates(1, 0, 0);
-    private GeocentricCoordinates mUpDir = new GeocentricCoordinates(0, 1, 0);
-    private float mRadiusOfView = 45;  // in degrees
-    private float mUpAngle = 0;
-    private float mCosUpAngle = 1;
-    private float mSinUpAngle = 0;
-    private int mScreenWidth = 100;
-    private int mScreenHeight = 100;
-    private Matrix4x4 mTransformToDevice = Matrix4x4.createIdentity();
-    private Matrix4x4 mTransformToScreen = Matrix4x4.createIdentity();
-    private Resources mRes;
-    private boolean mNightVisionMode = false;
-    private SkyRegionMap.ActiveRegionData mActiveSkyRegionSet = null;
+    static class RenderState {
 
-    public GeocentricCoordinates getCameraPos() {
-        return mCameraPos;
-    }
+        private GeocentricCoordinates mCameraPos = new GeocentricCoordinates(0, 0, 0);
+        private GeocentricCoordinates mLookDir = new GeocentricCoordinates(1, 0, 0);
+        private GeocentricCoordinates mUpDir = new GeocentricCoordinates(0, 1, 0);
+        private float mRadiusOfView = 45;  // in degrees
+        private float mUpAngle = 0;
+        private float mCosUpAngle = 1;
+        private float mSinUpAngle = 0;
+        private int mScreenWidth = 100;
+        private int mScreenHeight = 100;
+        private Matrix4x4 mTransformToDevice = Matrix4x4.createIdentity();
+        private Matrix4x4 mTransformToScreen = Matrix4x4.createIdentity();
+        private Resources mRes;
+        private boolean mNightVisionMode = false;
+        private SkyRegionMap.ActiveRegionData mActiveSkyRegionSet = null;
 
-    public void setCameraPos(GeocentricCoordinates pos) {
-        mCameraPos = pos.copy();
-    }
+        public GeocentricCoordinates getCameraPos() {
+            return mCameraPos;
+        }
 
-    public GeocentricCoordinates getLookDir() {
-        return mLookDir;
-    }
+        public void setCameraPos(GeocentricCoordinates pos) {
+            mCameraPos = pos.copy();
+        }
 
-    public void setLookDir(GeocentricCoordinates dir) {
-        mLookDir = dir.copy();
-    }
+        public GeocentricCoordinates getLookDir() {
+            return mLookDir;
+        }
 
-    public GeocentricCoordinates getUpDir() {
-        return mUpDir;
-    }
+        public void setLookDir(GeocentricCoordinates dir) {
+            mLookDir = dir.copy();
+        }
 
-    public void setUpDir(GeocentricCoordinates dir) {
-        mUpDir = dir.copy();
-    }
+        public GeocentricCoordinates getUpDir() {
+            return mUpDir;
+        }
 
-    public float getRadiusOfView() {
-        return mRadiusOfView;
-    }
+        public void setUpDir(GeocentricCoordinates dir) {
+            mUpDir = dir.copy();
+        }
 
-    public void setRadiusOfView(float radius) {
-        mRadiusOfView = radius;
-    }
+        public float getRadiusOfView() {
+            return mRadiusOfView;
+        }
 
-    public float getUpAngle() {
-        return mUpAngle;
-    }
+        public void setRadiusOfView(float radius) {
+            mRadiusOfView = radius;
+        }
 
-    public void setUpAngle(float angle) {
-        mUpAngle = angle;
-        mCosUpAngle = (float) Math.cos(angle);
-        mSinUpAngle = (float) Math.sin(angle);
-    }
+        public float getUpAngle() {
+            return mUpAngle;
+        }
 
-    public float getCosUpAngle() {
-        return mCosUpAngle;
-    }
+        public void setUpAngle(float angle) {
+            mUpAngle = angle;
+            mCosUpAngle = (float) Math.cos(angle);
+            mSinUpAngle = (float) Math.sin(angle);
+        }
 
-    public float getSinUpAngle() {
-        return mSinUpAngle;
-    }
+        public float getCosUpAngle() {
+            return mCosUpAngle;
+        }
 
-    public int getScreenWidth() {
-        return mScreenWidth;
-    }
+        public float getSinUpAngle() {
+            return mSinUpAngle;
+        }
 
-    public int getScreenHeight() {
-        return mScreenHeight;
-    }
+        public int getScreenWidth() {
+            return mScreenWidth;
+        }
 
-    public Matrix4x4 getTransformToDeviceMatrix() {
-        return mTransformToDevice;
-    }
+        public int getScreenHeight() {
+            return mScreenHeight;
+        }
 
-    public Matrix4x4 getTransformToScreenMatrix() {
-        return mTransformToScreen;
-    }
+        public Matrix4x4 getTransformToDeviceMatrix() {
+            return mTransformToDevice;
+        }
 
-    public Resources getResources() {
-        return mRes;
-    }
+        public Matrix4x4 getTransformToScreenMatrix() {
+            return mTransformToScreen;
+        }
 
-    public void setResources(Resources res) {
-        mRes = res;
-    }
+        public Resources getResources() {
+            return mRes;
+        }
 
-    public boolean getNightVisionMode() {
-        return mNightVisionMode;
-    }
+        public void setResources(Resources res) {
+            mRes = res;
+        }
 
-    public void setNightVisionMode(boolean enabled) {
-        mNightVisionMode = enabled;
-    }
+        public boolean getNightVisionMode() {
+            return mNightVisionMode;
+        }
 
-    public SkyRegionMap.ActiveRegionData getActiveSkyRegions() {
-        return mActiveSkyRegionSet;
-    }
+        public void setNightVisionMode(boolean enabled) {
+            mNightVisionMode = enabled;
+        }
 
-    public void setActiveSkyRegions(SkyRegionMap.ActiveRegionData set) {
-        mActiveSkyRegionSet = set;
-    }
+        public SkyRegionMap.ActiveRegionData getActiveSkyRegions() {
+            return mActiveSkyRegionSet;
+        }
 
-    public void setScreenSize(int width, int height) {
-        mScreenWidth = width;
-        mScreenHeight = height;
-    }
+        public void setActiveSkyRegions(SkyRegionMap.ActiveRegionData set) {
+            mActiveSkyRegionSet = set;
+        }
 
-    public void setTransformationMatrices(Matrix4x4 transformToDevice,
-                                          Matrix4x4 transformToScreen) {
-        mTransformToDevice = transformToDevice;
-        mTransformToScreen = transformToScreen;
+        public void setScreenSize(int width, int height) {
+            mScreenWidth = width;
+            mScreenHeight = height;
+        }
+
+        public void setTransformationMatrices(Matrix4x4 transformToDevice, Matrix4x4 transformToScreen) {
+            mTransformToDevice = transformToDevice;
+            mTransformToScreen = transformToScreen;
+        }
     }
 }

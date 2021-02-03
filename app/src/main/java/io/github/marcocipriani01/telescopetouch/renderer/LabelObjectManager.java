@@ -46,6 +46,7 @@ import io.github.marcocipriani01.telescopetouch.util.Vector3;
  * @author James Powell
  */
 public class LabelObjectManager extends RendererObjectManager {
+
     // Should we compute the regions for the labels?
     // If false, we just put them in the catchall region.
     private static final boolean COMPUTE_REGIONS = true;
@@ -184,8 +185,6 @@ public class LabelObjectManager extends RendererObjectManager {
 
     /**
      * Begin drawing labels. Sets the OpenGL state for rapid drawing.
-     *
-     * @param gl
      */
     public void beginDrawing(GL10 gl) {
         mTexture.bind(gl);
@@ -211,7 +210,7 @@ public class LabelObjectManager extends RendererObjectManager {
         gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
         gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
 
-        RenderStateInterface rs = super.getRenderState();
+        SkyRenderer.RenderState rs = super.getRenderState();
 
         float viewWidth = rs.getScreenWidth();
         float viewHeight = rs.getScreenHeight();
@@ -229,8 +228,6 @@ public class LabelObjectManager extends RendererObjectManager {
 
     /**
      * Ends the drawing and restores the OpenGL state.
-     *
-     * @param gl
      */
     public void endDrawing(GL10 gl) {
         gl.glDisable(GL10.GL_ALPHA_TEST);

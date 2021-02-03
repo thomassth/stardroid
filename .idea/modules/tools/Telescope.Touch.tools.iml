@@ -45,7 +45,6 @@
     <content url="file://$MODULE_DIR$/../../../tools/build/generated/source/proto/test/java" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="Gradle: Telescope.Touch.tools.tools" level="project" />
     <orderEntry type="library" name="Gradle: com.google.protobuf:protobuf-java:3.13.0" level="project" />
   </component>
 </module>

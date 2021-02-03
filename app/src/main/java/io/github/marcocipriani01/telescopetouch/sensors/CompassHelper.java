@@ -30,7 +30,8 @@ import androidx.preference.PreferenceManager;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 
-public abstract class CompassHelper extends LocationHelper implements SensorEventListener, SharedPreferences.OnSharedPreferenceChangeListener {
+public abstract class CompassHelper extends LocationHelper implements SensorEventListener,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     private final SensorManager sensorManager;
     private final Sensor accelerometer;
@@ -40,7 +41,7 @@ public abstract class CompassHelper extends LocationHelper implements SensorEven
     private final Display display;
     private final SharedPreferences preferences;
     private final SensorAccuracyMonitor sensorAccuracyMonitor;
-    private boolean enableMagneticDeclination = true;
+    private boolean enableDeclination = true;
     private float magneticDeclination = 0.0f;
 
     public CompassHelper(Context context) {
@@ -60,15 +61,19 @@ public abstract class CompassHelper extends LocationHelper implements SensorEven
         onLocationAndDeclination(location, magneticDeclination);
     }
 
+    @Override
     public boolean start() {
-        super.start();
         preferences.registerOnSharedPreferenceChangeListener(this);
-        enableMagneticDeclination = preferences.getBoolean(ApplicationConstants.MAGNETIC_DECLINATION_PREF, true);
+        enableDeclination = preferences.getBoolean(ApplicationConstants.MAGNETIC_DECLINATION_PREF, true);
+        if (enableDeclination)
+            super.start();
+        onDeclinationEnabledChange(enableDeclination);
         sensorAccuracyMonitor.start();
         return sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME) &&
                 sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_GAME);
     }
 
+    @Override
     public void stop() {
         super.stop();
         preferences.unregisterOnSharedPreferenceChangeListener(this);
@@ -95,7 +100,7 @@ public abstract class CompassHelper extends LocationHelper implements SensorEven
                 float[] orientation = new float[3];
                 SensorManager.getOrientation(rotation, orientation);
                 float azimuth = (float) Math.toDegrees(orientation[0]);
-                if (enableMagneticDeclination)
+                if (enableDeclination)
                     azimuth += magneticDeclination;
                 float displayRotation = display.getRotation() * 90.0f;
                 onAzimuth((360.0f - azimuth - displayRotation) % 360.0f, -((azimuth + displayRotation) % 360.0f));
@@ -107,6 +112,8 @@ public abstract class CompassHelper extends LocationHelper implements SensorEven
 
     protected abstract void onAzimuth(float azimuth, float arrowRotation);
 
+    protected abstract void onDeclinationEnabledChange(boolean show);
+
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
@@ -115,7 +122,10 @@ public abstract class CompassHelper extends LocationHelper implements SensorEven
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (ApplicationConstants.MAGNETIC_DECLINATION_PREF.equals(key)) {
-            enableMagneticDeclination = sharedPreferences.getBoolean(ApplicationConstants.MAGNETIC_DECLINATION_PREF, true);
+            enableDeclination = sharedPreferences.getBoolean(ApplicationConstants.MAGNETIC_DECLINATION_PREF, true);
+            if (enableDeclination)
+                super.start();
+            onDeclinationEnabledChange(enableDeclination);
         }
     }
 }
