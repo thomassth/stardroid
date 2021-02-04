@@ -42,9 +42,9 @@ import io.github.marcocipriani01.telescopetouch.activities.MainActivity;
 import io.github.marcocipriani01.telescopetouch.sensors.CompassHelper;
 import io.github.marcocipriani01.telescopetouch.sensors.LocationPermissionRequester;
 
-import static io.github.marcocipriani01.telescopetouch.maths.Formatters.magDeclinationToString;
 import static io.github.marcocipriani01.telescopetouch.maths.Formatters.latitudeToString;
 import static io.github.marcocipriani01.telescopetouch.maths.Formatters.longitudeToString;
+import static io.github.marcocipriani01.telescopetouch.maths.Formatters.magDeclinationToString;
 
 public class CompassFragment extends ActionFragment implements Toolbar.OnMenuItemClickListener, LocationPermissionRequester {
 

@@ -27,6 +27,7 @@ import java.util.Map;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.source.impl.LineSourceImpl;
 import io.github.marcocipriani01.telescopetouch.source.impl.PointSourceImpl;
 import io.github.marcocipriani01.telescopetouch.source.impl.TextSourceImpl;
@@ -36,7 +37,6 @@ import io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.Geocent
 import io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.LabelElementProto;
 import io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.LineElementProto;
 import io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.PointElementProto;
-import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 
 /**
  * Implementation of the

@@ -18,8 +18,8 @@ package io.github.marcocipriani01.telescopetouch.source.impl;
 
 import java.util.Objects;
 
-import io.github.marcocipriani01.telescopetouch.source.TextSource;
 import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.source.TextSource;
 
 
 /**

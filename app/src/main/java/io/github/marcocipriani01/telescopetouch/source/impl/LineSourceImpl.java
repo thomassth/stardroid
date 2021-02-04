@@ -22,9 +22,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import io.github.marcocipriani01.telescopetouch.source.LineSource;
-import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoordinates;
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.source.LineSource;
 
 /**
  * For representing constellations, constellation boundaries etc.

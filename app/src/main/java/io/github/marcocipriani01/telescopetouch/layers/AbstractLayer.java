@@ -29,6 +29,7 @@ import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererController;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererController.AtomicSection;
@@ -45,7 +46,6 @@ import io.github.marcocipriani01.telescopetouch.source.LineSource;
 import io.github.marcocipriani01.telescopetouch.source.PointSource;
 import io.github.marcocipriani01.telescopetouch.source.Sources;
 import io.github.marcocipriani01.telescopetouch.source.TextSource;
-import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 
 /**
  * Base implementation of the {@link Layer} interface.

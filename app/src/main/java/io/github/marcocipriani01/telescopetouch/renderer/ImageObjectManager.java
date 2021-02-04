@@ -27,12 +27,12 @@ import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TexCoordBuffer;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TextureManager;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TextureReference;
 import io.github.marcocipriani01.telescopetouch.renderer.util.VertexBuffer;
 import io.github.marcocipriani01.telescopetouch.source.ImageSource;
-import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 
 /**
  * Manages the rendering of image objects.

@@ -19,12 +19,12 @@ package io.github.marcocipriani01.telescopetouch.renderer;
 import javax.microedition.khronos.opengles.GL10;
 
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.maths.MathsUtils;
+import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 import io.github.marcocipriani01.telescopetouch.renderer.util.SearchHelper;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TextureManager;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TextureReference;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TexturedQuad;
-import io.github.marcocipriani01.telescopetouch.maths.MathsUtils;
-import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 
 public class SearchArrow {
 

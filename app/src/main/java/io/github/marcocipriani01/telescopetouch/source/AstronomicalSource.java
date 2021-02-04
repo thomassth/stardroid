@@ -20,8 +20,8 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
-import io.github.marcocipriani01.telescopetouch.renderer.RendererObjectManager.UpdateType;
 import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.renderer.RendererObjectManager.UpdateType;
 
 /**
  * Base implementation of the {@link AstronomicalSource} and {@link Sources}

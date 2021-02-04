@@ -30,15 +30,15 @@ import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
 import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.maths.MathsUtils;
+import io.github.marcocipriani01.telescopetouch.maths.Matrix4x4;
+import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 import io.github.marcocipriani01.telescopetouch.renderer.util.GLBuffer;
 import io.github.marcocipriani01.telescopetouch.renderer.util.LabelMaker;
 import io.github.marcocipriani01.telescopetouch.renderer.util.SkyRegionMap;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TextureManager;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TextureReference;
 import io.github.marcocipriani01.telescopetouch.source.TextSource;
-import io.github.marcocipriani01.telescopetouch.maths.MathsUtils;
-import io.github.marcocipriani01.telescopetouch.maths.Matrix4x4;
-import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 
 /**
  * Manages rendering of text labels.
