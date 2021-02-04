@@ -17,6 +17,8 @@ package io.github.marcocipriani01.telescopetouch.activities;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -56,9 +58,10 @@ import io.github.marcocipriani01.telescopetouch.activities.util.ServersReloadLis
  */
 public class ServersActivity extends AppCompatActivity implements ServersReloadListener {
 
-    final static Gson gson = new Gson();
-    final static Type stringArrayType = new TypeToken<ArrayList<String>>() {
+    private final static Gson gson = new Gson();
+    private final static Type STRING_ARRAY_TYPE = new TypeToken<ArrayList<String>>() {
     }.getType();
+    private static AlertDialog lastDialog = null;
     private DragListView serversListView;
     private SharedPreferences preferences;
     private DarkerModeManager darkerModeManager;
@@ -104,7 +107,9 @@ public class ServersActivity extends AppCompatActivity implements ServersReloadL
         layout.addView(input, layoutParams);
         InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
 
-        new AlertDialog.Builder(context)
+        if (lastDialog != null)
+            lastDialog.dismiss();
+        lastDialog = new AlertDialog.Builder(context)
                 .setTitle(R.string.host_prompt_text).setView(layout).setCancelable(false)
                 .setPositiveButton(android.R.string.ok, (dialog12, id) -> {
                     inputMethodManager.hideSoftInputFromWindow(input.getWindowToken(), 0);
@@ -115,14 +120,16 @@ public class ServersActivity extends AppCompatActivity implements ServersReloadL
                         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
                         ArrayList<String> list = getServers(preferences);
                         list.add(0, server);
-                        preferences.edit().putString(ApplicationConstants.INDI_SERVERS_PREF, gson.toJson(list, stringArrayType)).apply();
+                        preferences.edit().putString(ApplicationConstants.INDI_SERVERS_PREF, gson.toJson(list, STRING_ARRAY_TYPE)).apply();
                         onServersReload.loadServers(list);
                     } else {
                         Toast.makeText(context, context.getString(R.string.empty_host), Toast.LENGTH_SHORT).show();
                     }
+                    lastDialog = null;
                 })
                 .setIcon(R.drawable.edit)
-                .setNegativeButton(android.R.string.cancel, null).show();
+                .setNegativeButton(android.R.string.cancel, (dialog, which) -> lastDialog = null).create();
+        lastDialog.show();
         input.requestFocus();
         inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
     }
@@ -132,7 +139,7 @@ public class ServersActivity extends AppCompatActivity implements ServersReloadL
         if (pref == null) return new ArrayList<>();
         ArrayList<String> servers = null;
         try {
-            servers = gson.fromJson(pref, stringArrayType);
+            servers = gson.fromJson(pref, STRING_ARRAY_TYPE);
         } catch (Exception e) {
             Log.e("ServersActivity", "Gson error.", e);
         }
@@ -192,7 +199,7 @@ public class ServersActivity extends AppCompatActivity implements ServersReloadL
 
     private void saveFromListView() {
         preferences.edit().putString(ApplicationConstants.INDI_SERVERS_PREF,
-                gson.toJson(((ServersItemAdapter) serversListView.getAdapter()).getItemList(), stringArrayType)).apply();
+                gson.toJson(((ServersItemAdapter) serversListView.getAdapter()).getItemList(), STRING_ARRAY_TYPE)).apply();
     }
 
     @Override
