@@ -23,8 +23,8 @@ import io.github.marcocipriani01.telescopetouch.renderer.util.SearchHelper;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TextureManager;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TextureReference;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TexturedQuad;
-import io.github.marcocipriani01.telescopetouch.util.MathsUtils;
-import io.github.marcocipriani01.telescopetouch.util.Vector3;
+import io.github.marcocipriani01.telescopetouch.maths.MathsUtils;
+import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 
 public class SearchArrow {
 
@@ -60,8 +60,8 @@ public class SearchArrow {
         Vector3 perp = Vector3.vectorProduct(axis, v1proj);
 
         // v2 is perpendicular to axis, so therefore it's already in the same plane as v1proj perp.
-        float cosAngle = Vector3.scalarProduct(v1proj, v2);
-        float sinAngle = -Vector3.scalarProduct(perp, v2);
+        float cosAngle = (float) Vector3.scalarProduct(v1proj, v2);
+        float sinAngle = (float) -Vector3.scalarProduct(perp, v2);
 
         return (float) Math.atan2(sinAngle, cosAngle);
     }

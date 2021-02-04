@@ -21,7 +21,7 @@ import android.util.DisplayMetrics;
 
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.control.ControllerGroup;
-import io.github.marcocipriani01.telescopetouch.util.MathsUtils;
+import io.github.marcocipriani01.telescopetouch.maths.MathsUtils;
 
 /**
  * Applies drags, zooms and rotations to the model.
@@ -41,7 +41,7 @@ public class MapMover implements DragRotateZoomGestureDetector.DragRotateZoomGes
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         int screenLongSize = metrics.heightPixels;
         //Log.i(TAG, "Screen height is " + screenLongSize + " pixels.");
-        sizeTimesRadiansToDegrees = screenLongSize * MathsUtils.RADIANS_TO_DEGREES;
+        sizeTimesRadiansToDegrees = (float) (screenLongSize * MathsUtils.RADIANS_TO_DEGREES);
     }
 
     @Override

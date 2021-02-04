@@ -29,8 +29,8 @@ import io.github.marcocipriani01.telescopetouch.source.LineSource;
 import io.github.marcocipriani01.telescopetouch.source.TextSource;
 import io.github.marcocipriani01.telescopetouch.source.impl.LineSourceImpl;
 import io.github.marcocipriani01.telescopetouch.source.impl.TextSourceImpl;
-import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.units.RaDec;
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoordinates;
 
 /**
  * Creates a Layer which returns Sources which correspond to grid lines parallel
@@ -130,11 +130,11 @@ public class GridLayer extends AbstractLayer {
             float ra = index * 360.0f / numRaSources;
             for (int i = 0; i < NUM_DEC_VERTICES - 1; i++) {
                 float dec = 90.0f - i * 180.0f / (NUM_DEC_VERTICES - 1);
-                RaDec raDec = new RaDec(ra, dec);
+                EquatorialCoordinates raDec = new EquatorialCoordinates(ra, dec);
                 line.raDecs.add(raDec);
                 line.vertices.add(GeocentricCoordinates.getInstance(raDec));
             }
-            RaDec raDec = new RaDec(0.0f, -90.0f);
+            EquatorialCoordinates raDec = new EquatorialCoordinates(0.0f, -90.0f);
             line.raDecs.add(raDec);
             line.vertices.add(GeocentricCoordinates.getInstance(raDec));
             return line;
@@ -144,11 +144,11 @@ public class GridLayer extends AbstractLayer {
             LineSourceImpl line = new LineSourceImpl(LINE_COLOR);
             for (int i = 0; i < NUM_RA_VERTICES; i++) {
                 float ra = i * 360.0f / NUM_RA_VERTICES;
-                RaDec raDec = new RaDec(ra, dec);
+                EquatorialCoordinates raDec = new EquatorialCoordinates(ra, dec);
                 line.raDecs.add(raDec);
                 line.vertices.add(GeocentricCoordinates.getInstance(raDec));
             }
-            RaDec raDec = new RaDec(0.0f, dec);
+            EquatorialCoordinates raDec = new EquatorialCoordinates(0.0f, dec);
             line.raDecs.add(raDec);
             line.vertices.add(GeocentricCoordinates.getInstance(raDec));
             return line;

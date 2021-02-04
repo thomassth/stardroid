@@ -18,7 +18,7 @@ package io.github.marcocipriani01.telescopetouch.search;
 
 import androidx.annotation.NonNull;
 
-import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 
 /**
  * A single search result.

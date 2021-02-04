@@ -65,6 +65,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
                         longitudePref.setSummary(longitude);
                 }
             });
+    private Preference limitMagPref;
     private AppPreferenceFragment preferenceFragment;
     private DarkerModeManager darkerModeManager;
     private Preference gyroPref;
@@ -92,6 +93,8 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
         latitudePref.setOnPreferenceChangeListener(this);
         longitudePref = Objects.requireNonNull(preferenceFragment.findPreference(ApplicationConstants.LONGITUDE_PREF));
         longitudePref.setOnPreferenceChangeListener(this);
+        limitMagPref = Objects.requireNonNull(preferenceFragment.findPreference(ApplicationConstants.CATALOG_LIMIT_MAGNITUDE));
+        limitMagPref.setOnPreferenceChangeListener(this);
         enableGyroPrefs(preferences.getBoolean(ApplicationConstants.DISABLE_GYRO_PREF, false));
         latitudePref.setSummary(preferences.getString(ApplicationConstants.LATITUDE_PREF, "0.0"));
         longitudePref.setSummary(preferences.getString(ApplicationConstants.LONGITUDE_PREF, "0.0"));
@@ -154,6 +157,14 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
                 }
             } catch (NumberFormatException e) {
                 Toast.makeText(this, R.string.malformed_loc_error, Toast.LENGTH_SHORT).show();
+            }
+        } else if (preference == limitMagPref) {
+            try {
+                Double.parseDouble((String) newValue);
+                return true;
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, R.string.not_a_number, Toast.LENGTH_SHORT).show();
+                return false;
             }
         } else if (preference == gyroPref) {
             enableGyroPrefs(((Boolean) newValue));

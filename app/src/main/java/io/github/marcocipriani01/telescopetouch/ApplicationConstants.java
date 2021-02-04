@@ -16,7 +16,7 @@
 
 package io.github.marcocipriani01.telescopetouch;
 
-import io.github.marcocipriani01.telescopetouch.util.Vector3;
+import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 
 /**
  * A home for the application's few global constants.
@@ -51,4 +51,5 @@ public class ApplicationConstants {
     public static final String NO_AUTO_LOCATE_PREF = "no_auto_locate";
     public static final String FORCE_GPS_PREF = "force_gps";
     public static final String COMPENSATE_PRECESSION_PREF = "compensate_precession";
+    public static final String CATALOG_LIMIT_MAGNITUDE = "catalog_limit_mag";
 }

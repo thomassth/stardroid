@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="ButtonLayerView">
+    <declare-styleable name="FloatingButtonsLayout">
         <attr name="fade_time" format="integer" />
+        <attr name="invert_direction" format="boolean" />
+        <attr name="distance" format="float" />
     </declare-styleable>
 
     <declare-styleable name="PreferencesButton">
@@ -11,14 +13,11 @@
         <attr name="default_value" format="boolean" />
     </declare-styleable>
 
-    <!-- Declare custom theme attributes that allow changing which styles are
-         used for button bars depending on the API level.
-         ?android:attr/buttonBarStyle is new as of API 11 so this is
-         necessary to support previous API levels. -->
     <declare-styleable name="ButtonBarContainerTheme">
         <attr name="metaButtonBarStyle" format="reference" />
         <attr name="metaButtonBarButtonStyle" format="reference" />
     </declare-styleable>
+
     <declare-styleable name="FullscreenAttrs">
         <attr name="fullscreenBackgroundColor" format="color" />
         <attr name="fullscreenTextColor" format="color" />

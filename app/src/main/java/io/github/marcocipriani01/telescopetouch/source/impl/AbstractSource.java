@@ -22,7 +22,7 @@ import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.source.Colorable;
 import io.github.marcocipriani01.telescopetouch.source.PositionSource;
-import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 
 /**
  * This class represents the base of an astronomical object to be

@@ -68,7 +68,7 @@ import io.github.marcocipriani01.telescopetouch.activities.dialogs.TimeTravelDia
 import io.github.marcocipriani01.telescopetouch.activities.fragments.GoToFragment;
 import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
 import io.github.marcocipriani01.telescopetouch.activities.util.FullscreenControlsManager;
-import io.github.marcocipriani01.telescopetouch.activities.views.ButtonLayerView;
+import io.github.marcocipriani01.telescopetouch.activities.views.FloatingButtonsLayout;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.control.ControllerGroup;
 import io.github.marcocipriani01.telescopetouch.control.MagneticDeclinationSwitcher;
@@ -83,8 +83,8 @@ import io.github.marcocipriani01.telescopetouch.sensors.SensorAccuracyMonitor;
 import io.github.marcocipriani01.telescopetouch.touch.DragRotateZoomGestureDetector;
 import io.github.marcocipriani01.telescopetouch.touch.GestureInterpreter;
 import io.github.marcocipriani01.telescopetouch.touch.MapMover;
-import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.util.Vector3;
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 
 /**
  * The main map-rendering Activity.
@@ -480,7 +480,7 @@ public class SkyMapActivity extends InjectableActivity
         cancelSearchButton = findViewById(R.id.cancel_search_button);
         cancelSearchButton.setOnClickListener(v1 -> cancelSearch());
 
-        ButtonLayerView providerButtons = findViewById(R.id.layer_buttons_control);
+        FloatingButtonsLayout providerButtons = findViewById(R.id.layer_buttons_control);
         int numChildren = providerButtons.getChildCount();
         View[] buttonViews = new View[numChildren + 1];
         for (int i = 0; i < numChildren; i++) {
@@ -488,7 +488,7 @@ public class SkyMapActivity extends InjectableActivity
         }
         buttonViews[numChildren] = findViewById(R.id.manual_auto_toggle);
         fullscreenControlsManager = new FullscreenControlsManager(this,
-                new View[]{this.<ButtonLayerView>findViewById(R.id.layer_manual_auto_toggle), providerButtons}, buttonViews);
+                new View[]{this.<FloatingButtonsLayout>findViewById(R.id.layer_manual_auto_toggle), providerButtons}, buttonViews);
 
         MapMover mapMover = new MapMover(model, controller, this);
         gestureDetector = new GestureDetector(this, new GestureInterpreter(fullscreenControlsManager, mapMover));
@@ -593,9 +593,9 @@ public class SkyMapActivity extends InjectableActivity
     protected void onSaveInstanceState(Bundle icicle) {
         Log.d(TAG, "Sky Map onSaveInstanceState");
         icicle.putBoolean(BUNDLE_SEARCH_MODE, searchMode);
-        icicle.putFloat(BUNDLE_X_TARGET, searchTarget.x);
-        icicle.putFloat(BUNDLE_Y_TARGET, searchTarget.y);
-        icicle.putFloat(BUNDLE_Z_TARGET, searchTarget.z);
+        icicle.putFloat(BUNDLE_X_TARGET, (float) searchTarget.x);
+        icicle.putFloat(BUNDLE_Y_TARGET, (float) searchTarget.y);
+        icicle.putFloat(BUNDLE_Z_TARGET, (float) searchTarget.z);
         icicle.putString(ApplicationConstants.BUNDLE_TARGET_NAME, searchTargetName);
         super.onSaveInstanceState(icicle);
     }

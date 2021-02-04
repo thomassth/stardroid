@@ -24,8 +24,7 @@ import java.util.Date;
 import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
-import io.github.marcocipriani01.telescopetouch.base.VisibleForTesting;
-import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 
 /**
  * Manages all the different controllers that affect the model of the observer.
@@ -200,8 +199,7 @@ public class ControllerGroup implements Controller {
     /**
      * Adds a new controller to this
      */
-    @VisibleForTesting
-    public void addController(Controller controller) {
+    private void addController(Controller controller) {
         controllers.add(controller);
     }
 

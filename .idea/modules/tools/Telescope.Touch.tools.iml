@@ -24,6 +24,11 @@
     </content>
     <content url="file://$MODULE_DIR$/../../../tools">
       <sourceFolder url="file://$MODULE_DIR$/../../../tools/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../tools/build/extracted-protos/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../tools/build/extracted-protos/main" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../tools/build/generated/source/proto/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../tools/build/extracted-include-protos/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../tools/build/extracted-include-protos/main" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/../../../tools/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/../../../tools/build" />
     </content>

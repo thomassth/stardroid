@@ -446,12 +446,13 @@
     <string name="go_to">Go to</string>
     <string name="sync">Sync</string>
     <string name="entry_star">Star</string>
-    <string name="colon_with_spaces">": "</string>
     <string name="entry_names">Names</string>
     <string name="entry_type">Type</string>
     <string name="entry_magnitude">Magnitude</string>
     <string name="entry_RA">RA</string>
-    <string name="entry_DE">Dec</string>
+    <string name="entry_Dec">Dec</string>
+    <string name="entry_alt">Alt</string>
+    <string name="entry_az">Az</string>
     <string name="entry_mag">mag</string>
     <string name="arcmin">arcmin</string>
     <string name="entry_size">Size</string>
@@ -616,4 +617,9 @@
     <string name="telescope">Telescope</string>
     <string name="search_in_goto_database">Search in the Go-To database</string>
     <string name="out_of_bounds_loc_error">Latitude or longitude out of bounds!</string>
+    <string name="planet">Planet</string>
+    <string name="catalog_limit_mag">Catalog limit magnitude</string>
+    <string name="catalog_limit_mag_description">Set the stars catalog\'s maximum magnitude.</string>
+    <string name="only_visible">Only visible objects</string>
+    <string name="not_a_number">Not a number!</string>
 </resources>

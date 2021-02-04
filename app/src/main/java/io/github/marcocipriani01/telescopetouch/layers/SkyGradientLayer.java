@@ -27,12 +27,13 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
-import io.github.marcocipriani01.telescopetouch.astronomy.SolarPositionCalculator;
+import io.github.marcocipriani01.telescopetouch.astronomy.Planet;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererController;
 import io.github.marcocipriani01.telescopetouch.search.SearchResult;
-import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.units.RaDec;
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.astronomy.HeliocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoordinates;
 
 /**
  * If enabled, keeps the sky gradient up to date.
@@ -84,8 +85,8 @@ public class SkyGradientLayer implements Layer {
      * Redraws the sky shading gradient using the model's current time.
      */
     protected void redraw() {
-        Calendar calendar = model.getTime();
-        RaDec sunPosition = SolarPositionCalculator.getSolarPosition(calendar);
+        Calendar time = model.getTime();
+        EquatorialCoordinates sunPosition = Planet.Sun.getEquatorialCoordinates(time, HeliocentricCoordinates.getInstance(Planet.Sun, time));
         // Log.d(TAG, "Enabling sky gradient with sun position " + sunPosition);
         rendererLock.lock();
         try {

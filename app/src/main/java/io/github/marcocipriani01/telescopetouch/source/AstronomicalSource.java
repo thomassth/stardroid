@@ -21,7 +21,7 @@ import java.util.EnumSet;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.renderer.RendererObjectManager.UpdateType;
-import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 
 /**
  * Base implementation of the {@link AstronomicalSource} and {@link Sources}

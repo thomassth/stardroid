@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:stardroid="http://schemas.android.com/apk/res-auto"
+    xmlns:skymap="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_sky_view"
     android:layout_width="match_parent"
@@ -104,7 +104,7 @@
             android:visibility="gone" />
     </LinearLayout>
 
-    <io.github.marcocipriani01.telescopetouch.activities.views.ButtonLayerView
+    <io.github.marcocipriani01.telescopetouch.activities.views.FloatingButtonsLayout
         android:id="@+id/layer_buttons_control"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -112,80 +112,79 @@
         android:background="@drawable/button_background_rotated"
         android:orientation="vertical"
         android:padding="8dp"
-        stardroid:fade_time="500">
+        skymap:invert_direction="true">
 
         <io.github.marcocipriani01.telescopetouch.activities.views.PreferencesButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#00000000"
             android:paddingBottom="8dp"
-            stardroid:image_off="@drawable/stars_off"
-            stardroid:image_on="@drawable/stars_on"
-            stardroid:pref_key="source_provider.0" />
+            skymap:image_off="@drawable/stars_off"
+            skymap:image_on="@drawable/stars_on"
+            skymap:pref_key="source_provider.0" />
 
         <io.github.marcocipriani01.telescopetouch.activities.views.PreferencesButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#00000000"
             android:paddingBottom="8dp"
-            stardroid:image_off="@drawable/constellations_off"
-            stardroid:image_on="@drawable/constellations_on"
-            stardroid:pref_key="source_provider.1" />
+            skymap:image_off="@drawable/constellations_off"
+            skymap:image_on="@drawable/constellations_on"
+            skymap:pref_key="source_provider.1" />
 
         <io.github.marcocipriani01.telescopetouch.activities.views.PreferencesButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#00000000"
             android:paddingBottom="8dp"
-            stardroid:image_off="@drawable/galaxy_off"
-            stardroid:image_on="@drawable/galaxy_on"
-            stardroid:pref_key="source_provider.2" />
+            skymap:image_off="@drawable/galaxy_off"
+            skymap:image_on="@drawable/galaxy_on"
+            skymap:pref_key="source_provider.2" />
 
         <io.github.marcocipriani01.telescopetouch.activities.views.PreferencesButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#00000000"
             android:paddingBottom="8dp"
-            stardroid:image_off="@drawable/planets_off"
-            stardroid:image_on="@drawable/planets_on"
-            stardroid:pref_key="source_provider.3" />
+            skymap:image_off="@drawable/planets_off"
+            skymap:image_on="@drawable/planets_on"
+            skymap:pref_key="source_provider.3" />
 
         <io.github.marcocipriani01.telescopetouch.activities.views.PreferencesButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#00000000"
             android:paddingBottom="8dp"
-            stardroid:image_off="@drawable/meteors_off"
-            stardroid:image_on="@drawable/meteors_on"
-            stardroid:pref_key="source_provider.6" />
+            skymap:image_off="@drawable/meteors_off"
+            skymap:image_on="@drawable/meteors_on"
+            skymap:pref_key="source_provider.6" />
 
         <io.github.marcocipriani01.telescopetouch.activities.views.PreferencesButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#00000000"
             android:paddingBottom="8dp"
-            stardroid:image_off="@drawable/grid_off"
-            stardroid:image_on="@drawable/grid_on"
-            stardroid:pref_key="source_provider.4" />
+            skymap:image_off="@drawable/grid_off"
+            skymap:image_on="@drawable/grid_on"
+            skymap:pref_key="source_provider.4" />
 
         <io.github.marcocipriani01.telescopetouch.activities.views.PreferencesButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#00000000"
-            stardroid:image_off="@drawable/horizon_off"
-            stardroid:image_on="@drawable/horizon_on"
-            stardroid:pref_key="source_provider.5" />
-    </io.github.marcocipriani01.telescopetouch.activities.views.ButtonLayerView>
+            skymap:image_off="@drawable/horizon_off"
+            skymap:image_on="@drawable/horizon_on"
+            skymap:pref_key="source_provider.5" />
+    </io.github.marcocipriani01.telescopetouch.activities.views.FloatingButtonsLayout>
 
-    <io.github.marcocipriani01.telescopetouch.activities.views.ButtonLayerView
+    <io.github.marcocipriani01.telescopetouch.activities.views.FloatingButtonsLayout
         android:id="@+id/layer_manual_auto_toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|right"
         android:background="@drawable/button_background"
         android:orientation="vertical"
-        android:padding="8dp"
-        stardroid:fade_time="500">
+        android:padding="8dp">
 
         <io.github.marcocipriani01.telescopetouch.activities.views.PreferencesButton
             android:id="@+id/manual_auto_toggle"
@@ -193,10 +192,10 @@
             android:layout_height="wrap_content"
             android:background="#00000000"
             android:paddingBottom="16dp"
-            stardroid:default_value="true"
-            stardroid:image_off="@drawable/auto_mode"
-            stardroid:image_on="@drawable/touch"
-            stardroid:pref_key="auto_mode" />
+            skymap:default_value="true"
+            skymap:image_off="@drawable/auto_mode"
+            skymap:image_on="@drawable/touch"
+            skymap:pref_key="auto_mode" />
 
         <ImageButton
             android:id="@+id/back_telescope_control"
@@ -208,5 +207,5 @@
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/remote" />
-    </io.github.marcocipriani01.telescopetouch.activities.views.ButtonLayerView>
+    </io.github.marcocipriani01.telescopetouch.activities.views.FloatingButtonsLayout>
 </FrameLayout>

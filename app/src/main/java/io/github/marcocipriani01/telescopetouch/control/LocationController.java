@@ -25,7 +25,7 @@ import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.sensors.LocationHelper;
-import io.github.marcocipriani01.telescopetouch.util.Formatters;
+import io.github.marcocipriani01.telescopetouch.maths.Formatters;
 
 /**
  * Sets the AstronomerModel's (and thus the user's) position using one of the

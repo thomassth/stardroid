@@ -4,8 +4,9 @@ import java.util.Calendar;
 
 import io.github.marcocipriani01.telescopetouch.R;
 
-import static io.github.marcocipriani01.telescopetouch.util.Formatters.angleToString;
-import static io.github.marcocipriani01.telescopetouch.util.TimeUtils.meanSiderealTime;
+import static io.github.marcocipriani01.telescopetouch.maths.Formatters.formatDegreesAsHours;
+import static io.github.marcocipriani01.telescopetouch.maths.Formatters.formatHours;
+import static io.github.marcocipriani01.telescopetouch.astronomy.TimeUtils.meanSiderealTime;
 
 public class Polaris {
 
@@ -38,7 +39,7 @@ public class Polaris {
     }
 
     public String getHourAngleString() {
-        return angleToString(this.hourAngle / 15.0d, false);
+        return formatDegreesAsHours(this.hourAngle);
     }
 
     public float getScopePosition() {
@@ -46,7 +47,7 @@ public class Polaris {
     }
 
     public String getScopePositionString() {
-        return angleToString(this.scopePosition / 30.0, false);
+        return formatHours(this.scopePosition / 30.0);
     }
 
     public int getStarName() {

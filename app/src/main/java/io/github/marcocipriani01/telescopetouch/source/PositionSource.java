@@ -16,7 +16,7 @@
 
 package io.github.marcocipriani01.telescopetouch.source;
 
-import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 
 /**
  * This interface corresponds to sources which are located at a singular fixed

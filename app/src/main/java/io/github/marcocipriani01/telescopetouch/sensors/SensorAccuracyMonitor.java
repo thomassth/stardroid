@@ -31,7 +31,7 @@ import javax.inject.Inject;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.CompassCalibrationActivity;
-import io.github.marcocipriani01.telescopetouch.util.TimeUtils;
+import io.github.marcocipriani01.telescopetouch.astronomy.TimeUtils;
 
 /**
  * Monitors the compass accuracy and if it is not medium or high warns the user.

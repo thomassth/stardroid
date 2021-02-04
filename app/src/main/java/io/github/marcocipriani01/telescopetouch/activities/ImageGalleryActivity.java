@@ -113,7 +113,6 @@ public class ImageGalleryActivity extends InjectableActivity {
         Intent intent = new Intent(ImageGalleryActivity.this, ImageDisplayActivity.class);
         intent.putExtra(ImageGalleryActivity.IMAGE_ID, position);
         startActivity(intent);
-        overridePendingTransition(R.anim.fadein, R.anim.fastzoom);
     }
 
     private class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder> {

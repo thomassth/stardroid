@@ -23,8 +23,8 @@ import android.graphics.BitmapFactory.Options;
 import android.graphics.Color;
 
 import io.github.marcocipriani01.telescopetouch.source.ImageSource;
-import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.util.Vector3;
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 
 /**
  * A celestial object represented by an image, such as a planet or a
@@ -115,11 +115,11 @@ public class ImageSourceImpl extends AbstractSource implements ImageSource {
         v.scale(imageScale);
         u.scale(imageScale);
         // TODO(serafini): Can we replace these with a float[]?
-        ux = u.x;
-        uy = u.y;
-        uz = u.z;
-        vx = v.x;
-        vy = v.y;
-        vz = v.z;
+        ux = (float) u.x;
+        uy = (float) u.y;
+        uz = (float) u.z;
+        vx = (float) v.x;
+        vy = (float) v.y;
+        vz = (float) v.z;
     }
 }

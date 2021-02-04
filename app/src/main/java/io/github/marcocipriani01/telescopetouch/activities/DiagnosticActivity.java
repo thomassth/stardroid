@@ -55,8 +55,8 @@ import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.control.LocationController;
 import io.github.marcocipriani01.telescopetouch.control.MagneticDeclinationSwitcher;
 import io.github.marcocipriani01.telescopetouch.control.Pointing;
-import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.util.Formatters;
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.maths.Formatters;
 
 public class DiagnosticActivity extends InjectableActivity implements SensorEventListener {
 
@@ -188,7 +188,7 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
 
     private void updateModel() {
         float magCorrection = model.getMagneticCorrection();
-        setText(R.id.diagnose_magnetic_correction_txt, Formatters.declinationToString(magCorrection, this));
+        setText(R.id.diagnose_magnetic_correction_txt, Formatters.magDeclinationToString(magCorrection, this));
         Pointing pointing = model.getPointing();
         GeocentricCoordinates lineOfSight = pointing.getLineOfSight();
         setText(R.id.diagnose_pointing_txt, lineOfSight.getRa() + ", " + lineOfSight.getDec());

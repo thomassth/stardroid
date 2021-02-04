@@ -23,8 +23,8 @@ import java.util.Collections;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.source.LineSource;
-import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.units.RaDec;
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoordinates;
 
 /**
  * For representing constellations, constellation boundaries etc.
@@ -32,7 +32,7 @@ import io.github.marcocipriani01.telescopetouch.units.RaDec;
 public class LineSourceImpl extends AbstractSource implements LineSource {
 
     public final List<GeocentricCoordinates> vertices;
-    public final List<RaDec> raDecs;
+    public final List<EquatorialCoordinates> raDecs;
     public final float lineWidth;
 
     public LineSourceImpl() {

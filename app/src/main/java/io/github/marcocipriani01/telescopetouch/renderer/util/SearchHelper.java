@@ -16,8 +16,8 @@
 
 package io.github.marcocipriani01.telescopetouch.renderer.util;
 
-import io.github.marcocipriani01.telescopetouch.util.Matrix4x4;
-import io.github.marcocipriani01.telescopetouch.util.Vector3;
+import io.github.marcocipriani01.telescopetouch.maths.Matrix4x4;
+import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 
 public class SearchHelper {
 
@@ -94,8 +94,8 @@ public class SearchHelper {
     private float getDistanceFromCenterOfScreen() {
         Vector3 position = getTransformedPosition();
         if (position.z > 0) {
-            float dx = position.x * mHalfScreenWidth;
-            float dy = position.y * mHalfScreenHeight;
+            float dx = (float) position.x * mHalfScreenWidth;
+            float dy = (float) position.y * mHalfScreenHeight;
             return (float) Math.sqrt(dx * dx + dy * dy);
         } else {
             return Float.POSITIVE_INFINITY;

@@ -15,9 +15,17 @@
 package io.github.marcocipriani01.telescopetouch.catalog;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.location.Location;
 import android.text.Spannable;
 
 import androidx.annotation.NonNull;
+
+import java.util.Calendar;
+
+import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoordinates;
+import io.github.marcocipriani01.telescopetouch.astronomy.HorizontalCoordinates;
 
 /**
  * An abstract astronomical object.
@@ -25,18 +33,23 @@ import androidx.annotation.NonNull;
 public abstract class CatalogEntry implements Comparable<CatalogEntry> {
 
     /**
-     * His coordinates.
+     * Coordinates.
      */
-    protected CatalogCoordinates coord;
+    protected EquatorialCoordinates coord;
     /**
-     * His name.
+     * Name.
      */
     protected String name;
+    /**
+     * Magnitude.
+     */
+    protected String magnitude;
+    protected double magnitudeDouble = 0.0f;
 
     /**
      * @return the stored coordinates.
      */
-    public CatalogCoordinates getCoordinates() {
+    public EquatorialCoordinates getCoordinates() {
         return coord;
     }
 
@@ -50,18 +63,33 @@ public abstract class CatalogEntry implements Comparable<CatalogEntry> {
     /**
      * Create the description rich-text string
      *
-     * @param ctx Context (to access resource strings)
+     * @param context Context (to access resource strings)
      * @return description Spannable
      */
-    public abstract Spannable createDescription(Context ctx);
+    public abstract Spannable createDescription(Context context, Location location);
 
     /**
      * Create the summary rich-text string (1 line)
      *
-     * @param ctx Context (to access resource strings)
+     * @param context Context (to access resource strings)
      * @return summary Spannable
      */
-    public abstract Spannable createSummary(Context ctx);
+    public abstract Spannable createSummary(Context context);
+
+    public abstract int getIconResource();
+
+    protected String getCoordinatesString(Resources r, Location location) {
+        if (location == null) {
+            return "<b>" + r.getString(R.string.entry_RA) + ": </b>" + coord.getRAString() + "<br><b>" +
+                    r.getString(R.string.entry_Dec) + ": </b>" + coord.getDecString();
+        } else {
+            HorizontalCoordinates altAz = HorizontalCoordinates.getInstance(coord, location, Calendar.getInstance());
+            return "<b>" + r.getString(R.string.entry_RA) + ": </b>" + coord.getRAString() + "<br><b>" +
+                    r.getString(R.string.entry_Dec) + ": </b>" + coord.getDecString() + "<br><b>" +
+                    r.getString(R.string.entry_alt) + ": </b>" + altAz.getAltString() + "<br><b>" +
+                    r.getString(R.string.entry_az) + ": </b>" + altAz.getAzString();
+        }
+    }
 
     /**
      * Compares this object to the specified object to determine their relative

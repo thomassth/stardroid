@@ -28,7 +28,7 @@ import java.nio.IntBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import io.github.marcocipriani01.telescopetouch.util.MathsUtils;
+import io.github.marcocipriani01.telescopetouch.maths.MathsUtils;
 
 public class LabelMaker {
 

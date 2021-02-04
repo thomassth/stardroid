@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.marcocipriani01.telescopetouch.util;
+package io.github.marcocipriani01.telescopetouch.maths;
 
 import androidx.annotation.NonNull;
 
@@ -26,15 +26,15 @@ import androidx.annotation.NonNull;
  */
 public class Matrix3x3 implements Cloneable {
 
-    public float xx;
-    public float xy;
-    public float xz;
-    public float yx;
-    public float yy;
-    public float yz;
-    public float zx;
-    public float zy;
-    public float zz;
+    public double xx;
+    public double xy;
+    public double xz;
+    public double yx;
+    public double yy;
+    public double yz;
+    public double zx;
+    public double zy;
+    public double zz;
 
     /**
      * Construct a new matrix.
@@ -49,9 +49,9 @@ public class Matrix3x3 implements Cloneable {
      * @param zy row 3, col 2
      * @param zz row 3, col 3
      */
-    public Matrix3x3(float xx, float xy, float xz,
-                     float yx, float yy, float yz,
-                     float zx, float zy, float zz) {
+    public Matrix3x3(double xx, double xy, double xz,
+                     double yx, double yy, double yz,
+                     double zx, double zy, double zz) {
         this.xx = xx;
         this.xy = xy;
         this.xz = xz;
@@ -140,27 +140,27 @@ public class Matrix3x3 implements Cloneable {
      *
      * @param axis - must be a unit vector.
      */
-    public static Matrix3x3 calculateRotationMatrix(float degrees, Vector3 axis) {
+    public static Matrix3x3 calculateRotationMatrix(double degrees, Vector3 axis) {
         // Construct the rotation matrix about this vector
-        float cosD = (float) Math.cos(degrees * MathsUtils.DEGREES_TO_RADIANS);
-        float sinD = (float) Math.sin(degrees * MathsUtils.DEGREES_TO_RADIANS);
-        float oneMinusCosD = 1f - cosD;
+        double cosD = Math.cos(degrees * MathsUtils.DEGREES_TO_RADIANS);
+        double sinD = Math.sin(degrees * MathsUtils.DEGREES_TO_RADIANS);
+        double oneMinusCosD = 1 - cosD;
 
-        float x = axis.x;
-        float y = axis.y;
-        float z = axis.z;
+        double x = axis.x;
+        double y = axis.y;
+        double z = axis.z;
 
-        float xs = x * sinD;
-        float ys = y * sinD;
-        float zs = z * sinD;
+        double xs = x * sinD;
+        double ys = y * sinD;
+        double zs = z * sinD;
 
-        float xm = x * oneMinusCosD;
-        float ym = y * oneMinusCosD;
-        float zm = z * oneMinusCosD;
+        double xm = x * oneMinusCosD;
+        double ym = y * oneMinusCosD;
+        double zm = z * oneMinusCosD;
 
-        float xym = x * ym;
-        float yzm = y * zm;
-        float zxm = z * xm;
+        double xym = x * ym;
+        double yzm = y * zm;
+        double zxm = z * xm;
 
         return new Matrix3x3(x * xm + cosD, xym + zs, zxm - ys,
                 xym - zs, y * ym + cosD, yzm + xs,
@@ -172,36 +172,5 @@ public class Matrix3x3 implements Cloneable {
         return new Matrix3x3(xx, xy, xz,
                 yx, yy, yz,
                 zx, zy, zz);
-    }
-
-    public float getDeterminant() {
-        return xx * yy * zz + xy * yz * zx + xz * yx * zy - xx * yz * zy - yy * zx * xz - zz * xy * yx;
-    }
-
-    public Matrix3x3 getInverse() {
-        float det = getDeterminant();
-        if (det == 0.0) return null;
-        return new Matrix3x3(
-                (yy * zz - yz * zy) / det, (xz * zy - xy * zz) / det, (xy * yz - xz * yy) / det,
-                (yz * zx - yx * zz) / det, (xx * zz - xz * zx) / det, (xz * yx - xx * yz) / det,
-                (yx * zy - yy * zx) / det, (xy * zx - xx * zy) / det, (xx * yy - xy * yx) / det);
-    }
-
-    /**
-     * Transpose the matrix, in place.
-     */
-    public void transpose() {
-        float tmp;
-        tmp = xy;
-        xy = yx;
-        yx = tmp;
-
-        tmp = xz;
-        xz = zx;
-        zx = tmp;
-
-        tmp = yz;
-        yz = zy;
-        zy = tmp;
     }
 }
