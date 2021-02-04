@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements
     private final ActivityResultLauncher<Intent> serversActivityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                if ((result.getResultCode() == Activity.RESULT_OK) && (currentPage.lastInstance instanceof ConnectionFragment))
+                if (currentPage.lastInstance instanceof ConnectionFragment)
                     ((ConnectionFragment) currentPage.lastInstance).loadServers(ServersActivity.getServers(preferences));
             });
     private FragmentManager fragmentManager;
