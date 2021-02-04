@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements
     private MenuItem rcvBlobMenuItem;
     private DarkerModeManager darkerModeManager;
     private boolean darkerMode = false;
+    private BottomAppBar bottomBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements
                 ((ActionFragment) currentPage.lastInstance).run();
         });
         fragmentManager = getSupportFragmentManager();
-        BottomAppBar bottomBar = findViewById(R.id.bottom_app_bar);
+        bottomBar = findViewById(R.id.bottom_app_bar);
         setSupportActionBar(bottomBar);
         bottomBar.setOnMenuItemClickListener(this);
         MainBottomNavigation bottomNavigation = new MainBottomNavigation(this);
@@ -271,6 +272,7 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             fab.hide();
         }
+        bottomBar.performShow();
         invalidateOptionsMenu();
     }
 
