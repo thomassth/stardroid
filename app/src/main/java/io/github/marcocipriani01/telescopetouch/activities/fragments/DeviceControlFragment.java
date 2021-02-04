@@ -109,6 +109,14 @@ public class DeviceControlFragment extends PreferenceFragmentCompat implements I
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        RecyclerView list = getListView();
+        list.stopNestedScroll();
+        list.stopScroll();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         if (device != null)

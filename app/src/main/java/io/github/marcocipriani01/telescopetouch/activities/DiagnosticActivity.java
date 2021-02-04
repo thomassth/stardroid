@@ -186,12 +186,12 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
         setText(R.id.diagnose_location_txt, Formatters.latitudeToString(location.getLatitude(), this) + ", " + Formatters.longitudeToString(location.getLongitude(), this));
     }
 
+    @SuppressLint("DefaultLocale")
     private void updateModel() {
         float magCorrection = model.getMagneticCorrection();
         setText(R.id.diagnose_magnetic_correction_txt, Formatters.magDeclinationToString(magCorrection, this));
-        Pointing pointing = model.getPointing();
-        GeocentricCoordinates lineOfSight = pointing.getLineOfSight();
-        setText(R.id.diagnose_pointing_txt, lineOfSight.getRa() + ", " + lineOfSight.getDec());
+        GeocentricCoordinates lineOfSight = model.getPointing().getLineOfSight();
+        setText(R.id.diagnose_pointing_txt, String.format("%.2f, %.2f", lineOfSight.getRa(), lineOfSight.getDec()));
         Date time = model.getTime().getTime();
         java.text.DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(this);
         java.text.DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(this);

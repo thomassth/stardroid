@@ -15,7 +15,6 @@
 package io.github.marcocipriani01.telescopetouch.activities;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -81,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements
     public static final int ACTION_SEARCH = Pages.GOTO.ordinal();
     public static final String MESSAGE = "MainActivityMessage";
     private static Pages currentPage = Pages.CONNECTION;
+    private final Handler handler = new Handler(Looper.getMainLooper());
     private final ActivityResultLauncher<String> locationPermissionLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(),
             result -> {
@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements
             } else {
                 this.doubleBackPressed = true;
                 actionSnackRequested(R.string.press_back_exit);
-                new Handler(Looper.getMainLooper()).postDelayed(() -> doubleBackPressed = false, 2000);
+                handler.postDelayed(() -> doubleBackPressed = false, 2000);
             }
         } else {
             showFragment(Pages.CONNECTION, true);
@@ -272,7 +272,7 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             fab.hide();
         }
-        bottomBar.performShow();
+        handler.postDelayed(() -> bottomBar.performShow(), 200);
         invalidateOptionsMenu();
     }
 
