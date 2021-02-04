@@ -197,6 +197,8 @@ public class GoToFragment extends ActionFragment
         catalog.setListener(null);
         connectionManager.removeINDIListener(this);
         locationHelper.start();
+        list.stopNestedScroll();
+        list.stopScroll();
     }
 
     @Override
