@@ -16,6 +16,7 @@ package io.github.marcocipriani01.telescopetouch.activities.fragments;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -34,6 +35,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentActivity;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -58,14 +60,16 @@ import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.activities.MainActivity;
+import io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoordinates;
 import io.github.marcocipriani01.telescopetouch.astronomy.StarsPrecession;
 import io.github.marcocipriani01.telescopetouch.catalog.Catalog;
 import io.github.marcocipriani01.telescopetouch.catalog.CatalogArrayAdapter;
-import io.github.marcocipriani01.telescopetouch.catalog.CatalogCoordinates;
 import io.github.marcocipriani01.telescopetouch.catalog.CatalogEntry;
 import io.github.marcocipriani01.telescopetouch.catalog.DSOEntry;
 import io.github.marcocipriani01.telescopetouch.catalog.StarEntry;
 import io.github.marcocipriani01.telescopetouch.indi.PropUpdater;
+import io.github.marcocipriani01.telescopetouch.sensors.LocationHelper;
 
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 
@@ -78,6 +82,7 @@ public class GoToFragment extends ActionFragment
 
     private static final Catalog catalog = new Catalog();
     private static String requestedSearch = null;
+    private final Handler handler = new Handler(Looper.getMainLooper());
     private SharedPreferences preferences;
     private CatalogArrayAdapter entriesAdapter;
     private MenuItem searchMenu;
@@ -85,6 +90,9 @@ public class GoToFragment extends ActionFragment
     private RecyclerView list;
     private ProgressBar progressBar;
     private TextView emptyLabel;
+    private LocationHelper locationHelper;
+    private Location location = null;
+    private boolean searching = false;
     // INDI properties
     private INDINumberProperty telescopeCoordP = null;
     private INDINumberElement telescopeCoordRA = null;
@@ -111,6 +119,16 @@ public class GoToFragment extends ActionFragment
         searchView.setOnQueryTextListener(this);
         searchMenu.setActionView(searchView);
         searchView.setImeOptions(searchView.getImeOptions() | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+        searching = false;
+        searchView.setOnSearchClickListener(v -> {
+            searching = true;
+            notifyActionChange();
+        });
+        searchView.setOnCloseListener(() -> {
+            searching = false;
+            notifyActionChange();
+            return false;
+        });
         list = rootView.findViewById(R.id.goto_database_list);
         entriesAdapter = new CatalogArrayAdapter(context, catalog);
         list.setAdapter(entriesAdapter);
@@ -119,7 +137,28 @@ public class GoToFragment extends ActionFragment
         emptyLabel = rootView.findViewById(R.id.goto_empy_label);
         progressBar = rootView.findViewById(R.id.goto_loading);
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        locationHelper = new LocationHelper(context) {
+            @Override
+            protected void onLocationOk(Location location) {
+                GoToFragment.this.location = location;
+                entriesAdapter.setLocation(location);
+            }
+
+            @Override
+            protected void requestLocationPermission() {
+                FragmentActivity activity = getActivity();
+                if (activity instanceof MainActivity)
+                    ((MainActivity) activity).requestLocationPermission();
+            }
+        };
         return rootView;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (entriesAdapter != null)
+            entriesAdapter.detachPref();
     }
 
     @Override
@@ -148,7 +187,8 @@ public class GoToFragment extends ActionFragment
             // List loading
             if (!catalog.isLoading()) new Thread(catalog::load).start();
         }
-        maybeStartIntentSearch();
+        locationHelper.start();
+        handler.postDelayed(this::maybeStartIntentSearch, 300);
     }
 
     @Override
@@ -156,11 +196,12 @@ public class GoToFragment extends ActionFragment
         super.onStop();
         catalog.setListener(null);
         connectionManager.removeINDIListener(this);
+        locationHelper.start();
     }
 
     @Override
     public boolean isActionEnabled() {
-        return catalog.isReady();
+        return catalog.isReady() && (!searching);
     }
 
     @Override
@@ -170,15 +211,19 @@ public class GoToFragment extends ActionFragment
 
     @Override
     public void run() {
-        final boolean[] choices = {entriesAdapter.isShowStars(), entriesAdapter.isShowDso(), entriesAdapter.isShowPlanets()};
+        final boolean[] choices = {entriesAdapter.isShowStars(),
+                entriesAdapter.isShowDso(),
+                entriesAdapter.planetsShown(),
+                entriesAdapter.isOnlyAboveHorizon()};
         new AlertDialog.Builder(context).setTitle(R.string.database_filter)
                 .setIcon(R.drawable.filter)
                 .setMultiChoiceItems(R.array.database_filter_elements, choices,
                         (dialog, which, isChecked) -> choices[which] = isChecked)
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                    entriesAdapter.setShowStars(choices[0]);
-                    entriesAdapter.setShowDso(choices[1]);
+                    entriesAdapter.starsShown(choices[0]);
+                    entriesAdapter.dsoShown(choices[1]);
                     entriesAdapter.setShowPlanets(choices[2]);
+                    entriesAdapter.setOnlyAboveHorizon(choices[3]);
                     if (entriesAdapter.isEmpty()) {
                         emptyLabel.setVisibility(View.VISIBLE);
                         list.setVisibility(View.GONE);
@@ -210,6 +255,8 @@ public class GoToFragment extends ActionFragment
             searchView.setIconified(false);
             searchView.setQuery(requestedSearch, false);
             searchView.clearFocus();
+            searching = true;
+            notifyActionChange();
         }
     }
 
@@ -221,7 +268,7 @@ public class GoToFragment extends ActionFragment
      */
     @Override
     public boolean onQueryTextChange(String newText) {
-        if (catalog.isReady()) entriesAdapter.filter(newText);
+        if (catalog.isReady()) entriesAdapter.filter(newText.trim().toLowerCase());
         if (requestedSearch != null) {
             if (entriesAdapter.visibleItemsCount() == 1) onListItemClick0(0);
             requestedSearch = null;
@@ -247,11 +294,11 @@ public class GoToFragment extends ActionFragment
     }
 
     private void onListItemClick0(int position) {
-        final CatalogEntry selectedEntry = entriesAdapter.getEntryAt(position);
-        final CatalogCoordinates coordinates = selectedEntry.getCoordinates();
+        final CatalogEntry entry = entriesAdapter.getEntryAt(position);
+        final EquatorialCoordinates coordinates = entry.getCoordinates();
         AlertDialog.Builder builder = new AlertDialog.Builder(context)
-                .setMessage(selectedEntry.createDescription(context))
-                .setTitle(selectedEntry.getName());
+                .setMessage(entry.createDescription(context, location))
+                .setTitle(entry.getName());
         // Only display buttons if the telescope is ready
         if ((telescopeCoordP != null) && (telescopeOnCoordSetP != null)) {
             builder.setPositiveButton(R.string.go_to, (dialog, which) -> {
@@ -260,7 +307,7 @@ public class GoToFragment extends ActionFragment
                     telescopeOnCoordSetSlew.setDesiredValue(Constants.SwitchStatus.OFF);
                     telescopeOnCoordSetSync.setDesiredValue(Constants.SwitchStatus.OFF);
                     new PropUpdater(telescopeOnCoordSetP).start();
-                    setCoordinatesMaybePrecess(selectedEntry, coordinates);
+                    setCoordinatesMaybePrecess(entry, coordinates);
                     new PropUpdater(telescopeCoordP).start();
                     requestActionSnack(R.string.slew_ok);
                 } catch (Exception e) {
@@ -274,7 +321,7 @@ public class GoToFragment extends ActionFragment
                     telescopeOnCoordSetTrack.setDesiredValue(Constants.SwitchStatus.OFF);
                     telescopeOnCoordSetSlew.setDesiredValue(Constants.SwitchStatus.OFF);
                     new PropUpdater(telescopeOnCoordSetP).start();
-                    setCoordinatesMaybePrecess(selectedEntry, coordinates);
+                    setCoordinatesMaybePrecess(entry, coordinates);
                     new PropUpdater(telescopeCoordP).start();
                     requestActionSnack(R.string.sync_ok);
                 } catch (Exception e) {
@@ -283,19 +330,19 @@ public class GoToFragment extends ActionFragment
                 hideKeyboard();
             });
         }
-        builder.setNegativeButton(android.R.string.cancel, null);
-        builder.show();
+        builder.setNegativeButton(android.R.string.cancel, null)
+                .setIcon(entry.getIconResource()).show();
     }
 
-    private void setCoordinatesMaybePrecess(CatalogEntry selectedEntry, CatalogCoordinates coordinates) throws INDIValueException {
+    private void setCoordinatesMaybePrecess(CatalogEntry selectedEntry, EquatorialCoordinates coordinates) throws INDIValueException {
         if ((preferences.getBoolean(ApplicationConstants.COMPENSATE_PRECESSION_PREF, true)) &&
                 ((selectedEntry instanceof StarEntry) || (selectedEntry instanceof DSOEntry))) {
-            CatalogCoordinates precessed = StarsPrecession.precess(Calendar.getInstance(), coordinates);
-            telescopeCoordRA.setDesiredValue(precessed.getRaStr());
-            telescopeCoordDec.setDesiredValue(precessed.getDeStr());
+            EquatorialCoordinates precessed = StarsPrecession.precess(Calendar.getInstance(), coordinates);
+            telescopeCoordRA.setDesiredValue(precessed.getRAString());
+            telescopeCoordDec.setDesiredValue(precessed.getDecString());
         } else {
-            telescopeCoordRA.setDesiredValue(coordinates.getRaStr());
-            telescopeCoordDec.setDesiredValue(coordinates.getDeStr());
+            telescopeCoordRA.setDesiredValue(coordinates.getRAString());
+            telescopeCoordDec.setDesiredValue(coordinates.getDecString());
         }
     }
 
@@ -384,7 +431,7 @@ public class GoToFragment extends ActionFragment
 
     @Override
     public void onLoaded(boolean success) {
-        new Handler(Looper.getMainLooper()).post(() -> {
+        handler.post(() -> {
             if (success) {
                 if (searchMenu != null) searchMenu.setVisible(true);
                 entriesAdapter.reloadCatalog();

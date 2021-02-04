@@ -20,12 +20,12 @@ import android.util.Log;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.renderer.util.ColorBuffer;
 import io.github.marcocipriani01.telescopetouch.renderer.util.IndexBuffer;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TextureManager;
 import io.github.marcocipriani01.telescopetouch.renderer.util.VertexBuffer;
-import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.util.Vector3;
+import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 
 public class SkyBox extends RendererObjectManager {
 
@@ -157,7 +157,7 @@ public class SkyBox extends RendererObjectManager {
         Vector3 cp = Vector3.vectorProduct(new Vector3(0, 1, 0), mSunPos);
         cp = Vector3.normalized(cp);
         float angle = 180.0f / (float) Math.PI * (float) Math.acos(mSunPos.y);
-        gl.glRotatef(angle, cp.x, cp.y, cp.z);
+        gl.glRotatef(angle, (float) cp.x, (float) cp.y, (float) cp.z);
         mVertexBuffer.set(gl);
         mColorBuffer.set(gl);
         mIndexBuffer.draw(gl, GL10.GL_TRIANGLES);

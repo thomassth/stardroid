@@ -29,16 +29,16 @@ import java.util.List;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.renderer.util.GLBuffer;
 import io.github.marcocipriani01.telescopetouch.renderer.util.LabelMaker;
 import io.github.marcocipriani01.telescopetouch.renderer.util.SkyRegionMap;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TextureManager;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TextureReference;
 import io.github.marcocipriani01.telescopetouch.source.TextSource;
-import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.util.MathsUtils;
-import io.github.marcocipriani01.telescopetouch.util.Matrix4x4;
-import io.github.marcocipriani01.telescopetouch.util.Vector3;
+import io.github.marcocipriani01.telescopetouch.maths.MathsUtils;
+import io.github.marcocipriani01.telescopetouch.maths.Matrix4x4;
+import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 
 /**
  * Manages rendering of text labels.
@@ -132,9 +132,9 @@ public class LabelObjectManager extends RendererObjectManager {
             // on the label objects.
             for (int i = 0; i < mLabels.length; i++) {
                 GeocentricCoordinates pos = labels.get(i).getLocation();
-                mLabels[i].x = pos.x;
-                mLabels[i].y = pos.y;
-                mLabels[i].z = pos.z;
+                mLabels[i].x = (float) pos.x;
+                mLabels[i].y = (float) pos.y;
+                mLabels[i].z = (float) pos.z;
             }
         }
 
@@ -268,7 +268,7 @@ public class LabelObjectManager extends RendererObjectManager {
 
         gl.glPushMatrix();
 
-        gl.glTranslatef(screenPos.x, screenPos.y, 0);
+        gl.glTranslatef((float) screenPos.x, (float) screenPos.y, 0);
         gl.glRotatef(180 / (float) Math.PI * getRenderState().getUpAngle(), 0, 0, -1);
         gl.glScalef(label.getWidthInPixels(), label.getHeightInPixels(), 1);
 
@@ -307,9 +307,9 @@ public class LabelObjectManager extends RendererObjectManager {
                 throw new RuntimeException("Bad Label: " + ts.getClass());
             }
 
-            x = ts.getLocation().x;
-            y = ts.getLocation().y;
-            z = ts.getLocation().z;
+            x = (float) ts.getLocation().x;
+            y = (float) ts.getLocation().y;
+            z = (float) ts.getLocation().z;
 
             offset = ts.getOffset();
 

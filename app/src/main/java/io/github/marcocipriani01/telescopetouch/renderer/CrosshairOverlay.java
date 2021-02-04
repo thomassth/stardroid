@@ -23,7 +23,7 @@ import io.github.marcocipriani01.telescopetouch.renderer.util.SearchHelper;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TextureManager;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TextureReference;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TexturedQuad;
-import io.github.marcocipriani01.telescopetouch.util.Vector3;
+import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 
 public class CrosshairOverlay {
 
@@ -52,7 +52,7 @@ public class CrosshairOverlay {
         gl.glPushMatrix();
         gl.glLoadIdentity();
 
-        gl.glTranslatef(position.x, position.y, 0);
+        gl.glTranslatef((float) position.x, (float) position.y, 0);
 
         int period = 1000;
         long time = System.currentTimeMillis();

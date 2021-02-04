@@ -354,12 +354,11 @@
     <string name="go_to">Pointer</string>
     <string name="sync">Synchroniser</string>
     <string name="entry_star">Étoile</string>
-    <string name="colon_with_spaces">": "</string>
     <string name="entry_names">Noms</string>
     <string name="entry_type">Type</string>
     <string name="entry_magnitude">Magnitude</string>
     <string name="entry_RA">AD</string>
-    <string name="entry_DE">Dec</string>
+    <string name="entry_Dec">Dec</string>
     <string name="entry_mag">mag</string>
     <string name="entry_size">Taille</string>
     <string name="entry_Ast">Astérisme</string>

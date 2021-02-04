@@ -16,6 +16,7 @@ package io.github.marcocipriani01.telescopetouch.catalog;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.location.Location;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -27,6 +28,7 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoordinates;
 
 /**
  * Represents a star. This class also contains a loader to fetch stars from the app's catalog.
@@ -38,18 +40,19 @@ public class StarEntry extends CatalogEntry {
      */
     private final static int RESOURCE = R.raw.stars;
     private final String names;
-    private final String magnitude;
 
     /**
      * Create the entry from a catalog line
      */
     private StarEntry(String data) {
         String[] split = data.split("\\t");
-        coord = new CatalogCoordinates(Double.parseDouble(split[0].trim()), Double.parseDouble(split[1].trim()));
+        coord = new EquatorialCoordinates(Double.parseDouble(split[0].trim()), Double.parseDouble(split[1].trim()));
         magnitude = split[2].trim();
+        if (!magnitude.equals(""))
+            magnitudeDouble = Double.parseDouble(magnitude);
         String hd = "HD" + split[4].trim(),
                 sao = "SAO" + split[3].trim(),
-                con = split[5].trim().replace("  ", " ");
+                con = (split.length > 6) ? split[5].trim().replace("  ", " ") : "";
         if (split.length == 7) {
             name = capitalize(split[6].trim().replace(";", ","));
             if (con.isEmpty()) {
@@ -90,33 +93,40 @@ public class StarEntry extends CatalogEntry {
         return builder.toString();
     }
 
+    public String getNames() {
+        return names;
+    }
+
     /**
      * Create the description rich-text string
      *
-     * @param ctx Context (to access resource strings)
+     * @param context Context (to access resource strings)
      * @return description Spannable
      */
     @Override
-    public Spannable createDescription(Context ctx) {
-        Resources r = ctx.getResources();
-        String str = "<b>" + r.getString(R.string.entry_names) + r.getString(R.string.colon_with_spaces) + "</b>" + names + "<br/>";
-        str += "<b>" + r.getString(R.string.entry_type) + r.getString(R.string.colon_with_spaces) + "</b>" + r.getString(R.string.entry_star) + "<br/>";
-        str += "<b>" + r.getString(R.string.entry_magnitude) + r.getString(R.string.colon_with_spaces) + "</b>" + magnitude + "<br/>";
-        str += "<b>" + r.getString(R.string.entry_RA) + r.getString(R.string.colon_with_spaces) + "</b>" + coord.getRaStr() + "<br/>";
-        str += "<b>" + r.getString(R.string.entry_DE) + r.getString(R.string.colon_with_spaces) + "</b>" + coord.getDeStr();
-        return new SpannableString(Html.fromHtml(str));
+    public Spannable createDescription(Context context, Location location) {
+        Resources r = context.getResources();
+        return new SpannableString(Html.fromHtml("<b>" +
+                r.getString(R.string.entry_names) + ": </b>" + names + "<br><b>" +
+                r.getString(R.string.entry_magnitude) + ": </b>" + magnitude + "<br>" +
+                getCoordinatesString(r, location)));
     }
 
     /**
      * Create the summary rich-text string (1 line)
      *
-     * @param ctx Context (to access resource strings)
+     * @param context Context (to access resource strings)
      * @return summary Spannable
      */
     @Override
-    public Spannable createSummary(Context ctx) {
-        Resources r = ctx.getResources();
-        String str = "<b>" + r.getString(R.string.entry_star) + "</b> " + r.getString(R.string.entry_mag) + ": " + magnitude;
-        return new SpannableString(Html.fromHtml(str));
+    public Spannable createSummary(Context context) {
+        Resources r = context.getResources();
+        return new SpannableString(Html.fromHtml("<b>" +
+                r.getString(R.string.entry_star) + "</b> " + r.getString(R.string.entry_mag) + ": " + magnitude));
+    }
+
+    @Override
+    public int getIconResource() {
+        return R.drawable.stars_on;
     }
 }

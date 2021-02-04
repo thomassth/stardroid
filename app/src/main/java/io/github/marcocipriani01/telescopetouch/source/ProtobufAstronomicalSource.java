@@ -36,7 +36,7 @@ import io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.Geocent
 import io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.LabelElementProto;
 import io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.LineElementProto;
 import io.github.marcocipriani01.telescopetouch.source.proto.SourceProto.PointElementProto;
-import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 
 /**
  * Implementation of the

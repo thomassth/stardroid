@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.marcocipriani01.telescopetouch.util;
+package io.github.marcocipriani01.telescopetouch.maths;
 
 import android.annotation.SuppressLint;
 
@@ -22,11 +22,17 @@ import androidx.annotation.NonNull;
 
 public class Vector3 {
 
-    public float x;
-    public float y;
-    public float z;
+    public double x;
+    public double y;
+    public double z;
 
     public Vector3(float x, float y, float z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    public Vector3(double x, double y, double z) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -50,7 +56,7 @@ public class Vector3 {
         return new Vector3(0, 0, 0);
     }
 
-    public static float scalarProduct(Vector3 v1, Vector3 v2) {
+    public static double scalarProduct(Vector3 v1, Vector3 v2) {
         return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
     }
 
@@ -60,20 +66,20 @@ public class Vector3 {
                 v1.x * v2.y - v1.y * v2.x);
     }
 
-    public static float length(Vector3 v) {
-        return (float) Math.sqrt(lengthSqr(v));
+    public static double length(Vector3 v) {
+        return Math.sqrt(lengthSqr(v));
     }
 
-    public static float lengthSqr(Vector3 v) {
+    public static double lengthSqr(Vector3 v) {
         return scalarProduct(v, v);
     }
 
     public static Vector3 normalized(Vector3 v) {
-        float len = length(v);
-        if (len < 0.000001f) {
+        double len = length(v);
+        if (len < 0.000001) {
             return zero();
         }
-        return scale(v, 1.0f / len);
+        return scale(v, 1.0 / len);
     }
 
     public static Vector3 projectOntoUnit(Vector3 v, Vector3 onto) {
@@ -95,13 +101,13 @@ public class Vector3 {
     /**
      * Scales the vector by the given amount and returns a new vector.
      */
-    public static Vector3 scale(Vector3 v, float factor) {
+    public static Vector3 scale(Vector3 v, double factor) {
         return new Vector3(v.x * factor, v.y * factor, v.z * factor);
     }
 
-    public static float cosineSimilarity(Vector3 v1, Vector3 v2) {
+    public static double cosineSimilarity(Vector3 v1, Vector3 v2) {
         // We might want to optimize this implementation at some point.
-        return (float) (scalarProduct(v1, v2) / Math.sqrt(scalarProduct(v1, v1) * scalarProduct(v2, v2)));
+        return (scalarProduct(v1, v2) / Math.sqrt(scalarProduct(v1, v1) * scalarProduct(v2, v2)));
     }
 
     public Vector3 copy() {
@@ -111,7 +117,7 @@ public class Vector3 {
     /**
      * Assigns these values to the vector's components.
      */
-    public void assign(float x, float y, float z) {
+    public void assign(double x, double y, double z) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -136,7 +142,7 @@ public class Vector3 {
     /**
      * Returns the square of the vector's length.
      */
-    public float length2() {
+    public double length2() {
         return this.x * this.x + this.y * this.y + this.z * this.z;
     }
 
@@ -153,14 +159,10 @@ public class Vector3 {
     /**
      * Scale the vector in place.
      */
-    public void scale(float scale) {
+    public void scale(double scale) {
         this.x = this.x * scale;
         this.y = this.y * scale;
         this.z = this.z * scale;
-    }
-
-    public float[] toFloatArray() {
-        return new float[]{x, y, z};
     }
 
     @Override
@@ -174,7 +176,7 @@ public class Vector3 {
     @Override
     public int hashCode() {
         // This is dumb, but it will do for now.
-        return Float.floatToIntBits(x) + Float.floatToIntBits(y) + Float.floatToIntBits(z);
+        return Float.floatToIntBits((float) x) + Float.floatToIntBits((float) y) + Float.floatToIntBits((float) z);
     }
 
     @SuppressLint("DefaultLocale")

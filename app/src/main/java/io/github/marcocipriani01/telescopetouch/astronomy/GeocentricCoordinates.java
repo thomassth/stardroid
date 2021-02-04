@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package io.github.marcocipriani01.telescopetouch.units;
+package io.github.marcocipriani01.telescopetouch.astronomy;
 
-import io.github.marcocipriani01.telescopetouch.util.MathsUtils;
-import io.github.marcocipriani01.telescopetouch.util.Vector3;
+import io.github.marcocipriani01.telescopetouch.maths.MathsUtils;
+import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 
 /**
  * This class corresponds to an object's location in Euclidean space
@@ -28,14 +28,14 @@ import io.github.marcocipriani01.telescopetouch.util.Vector3;
  */
 public class GeocentricCoordinates extends Vector3 {
 
-    public GeocentricCoordinates(float x, float y, float z) {
+    public GeocentricCoordinates(double x, double y, double z) {
         super(x, y, z);
     }
 
     /**
      * Convert ra and dec to x,y,z where the point is place on the unit sphere.
      */
-    public static GeocentricCoordinates getInstance(RaDec raDec) {
+    public static GeocentricCoordinates getInstance(EquatorialCoordinates raDec) {
         return getInstance(raDec.ra, raDec.dec);
     }
 
@@ -51,77 +51,43 @@ public class GeocentricCoordinates extends Vector3 {
         return coords;
     }
 
-    /**
-     * Convert ra and dec to x,y,z where the point is place on the unit sphere.
-     */
-    public static GeocentricCoordinates getInstanceFromFloatArray(float[] xyz) {
-        return new GeocentricCoordinates(xyz[0], xyz[1], xyz[2]);
-    }
-
-    public static GeocentricCoordinates getInstanceFromVector3(Vector3 v) {
+    public static GeocentricCoordinates getInstance(Vector3 v) {
         return new GeocentricCoordinates(v.x, v.y, v.z);
     }
 
     /**
      * Recomputes the x, y, and z variables in this class based on the specified
-     * {@link RaDec}.
+     * {@link EquatorialCoordinates}.
      */
-    public void updateFromRaDec(RaDec raDec) {
+    public void updateFromRaDec(EquatorialCoordinates raDec) {
         updateFromRaDec(raDec.ra, raDec.dec);
     }
 
     /**
      * Updates these coordinates with the given ra and dec in degrees.
      */
-    public void updateFromRaDec(float ra, float dec) {
-        float raRadians = ra * MathsUtils.DEGREES_TO_RADIANS;
-        float decRadians = dec * MathsUtils.DEGREES_TO_RADIANS;
-        this.x = (float) Math.cos(raRadians) * (float) Math.cos(decRadians);
-        this.y = (float) Math.sin(raRadians) * (float) Math.cos(decRadians);
-        this.z = (float) Math.sin(decRadians);
-    }
-
-    /**
-     * Updates these coordinates with the given ra and dec in degrees.
-     */
     public void updateFromRaDec(double ra, double dec) {
-        updateFromRaDec((float) ra, (float) dec);
+        double raRadians = ra * MathsUtils.DEGREES_TO_RADIANS;
+        double decRadians = dec * MathsUtils.DEGREES_TO_RADIANS;
+        this.x = Math.cos(raRadians) * Math.cos(decRadians);
+        this.y = Math.sin(raRadians) * Math.cos(decRadians);
+        this.z = Math.sin(decRadians);
     }
 
     /**
      * Returns the RA in degrees
      */
-    public float getRa() {
+    public double getRa() {
         // Assumes unit sphere.
-        return MathsUtils.RADIANS_TO_DEGREES * (float) Math.atan2(y, x);
+        return MathsUtils.RADIANS_TO_DEGREES * Math.atan2(y, x);
     }
 
     /**
      * Returns the declination in degrees
      */
-    public float getDec() {
+    public double getDec() {
         // Assumes unit sphere.
-        return MathsUtils.RADIANS_TO_DEGREES * (float) Math.asin(z);
-    }
-
-    @Override
-    public float[] toFloatArray() {
-        return new float[]{x, y, z};
-    }
-
-    /**
-     * Assumes it's an array of length 3.
-     */
-    private void updateFromFloatArray(float[] xyz) {
-        this.x = xyz[0];
-        this.y = xyz[1];
-        this.z = xyz[2];
-    }
-
-    private void updateFromVector3(Vector3 v) {
-        this.x = v.x;
-        this.y = v.y;
-        this.z = v.z;
+        return MathsUtils.RADIANS_TO_DEGREES * Math.asin(z);
     }
 
     @Override

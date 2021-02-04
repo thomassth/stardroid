@@ -45,7 +45,7 @@ import io.github.marcocipriani01.telescopetouch.source.LineSource;
 import io.github.marcocipriani01.telescopetouch.source.PointSource;
 import io.github.marcocipriani01.telescopetouch.source.Sources;
 import io.github.marcocipriani01.telescopetouch.source.TextSource;
-import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 
 /**
  * Base implementation of the {@link Layer} interface.

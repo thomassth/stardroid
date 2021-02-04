@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package io.github.marcocipriani01.telescopetouch.util;
+package io.github.marcocipriani01.telescopetouch.maths;
 
 import android.location.Location;
 
 import java.util.Calendar;
 
-import io.github.marcocipriani01.telescopetouch.units.RaDec;
+import io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoordinates;
+import io.github.marcocipriani01.telescopetouch.astronomy.TimeUtils;
 
 /**
  * Utilities for working with angles, distances, matrices, and time.
@@ -33,9 +34,9 @@ import io.github.marcocipriani01.telescopetouch.units.RaDec;
 public final class MathsUtils {
 
     // Convert Degrees to Radians
-    public static final float DEGREES_TO_RADIANS = (float) Math.PI / 180.0f;
+    public static final double DEGREES_TO_RADIANS = (float) Math.PI / 180.0f;
     // Convert Radians to Degrees
-    public static final float RADIANS_TO_DEGREES = 180.0f / (float) Math.PI;
+    public static final double RADIANS_TO_DEGREES = 180.0f / (float) Math.PI;
     public static final int ONE = 0x00010000;
 
     private MathsUtils() {
@@ -44,34 +45,24 @@ public final class MathsUtils {
     /**
      * Return the integer part of a number
      */
-    public static float abs_floor(float x) {
-        float result;
+    public static double absFloor(double x) {
         if (x >= 0.0)
-            result = (float) Math.floor(x);
+            return Math.floor(x);
         else
-            result = (float) Math.ceil(x);
-        return result;
+            return Math.ceil(x);
     }
 
     /**
      * Returns the modulo the given value by 2\pi. Returns an angle in the range 0
      * to 2\pi radians.
      */
-    public static float mod2pi(float x) {
-        float factor = x / (2f * (float) Math.PI);
-        float result = 2f * (float) Math.PI * (factor - abs_floor(factor));
+    public static double mod2pi(double x) {
+        double factor = x / (2.0f * Math.PI);
+        double result = 2.0 * Math.PI * (factor - absFloor(factor));
         if (result < 0.0) {
-            result = 2f * (float) Math.PI + result;
+            result = 2.0 * Math.PI + result;
         }
         return result;
-    }
-
-    /**
-     * Compute celestial coordinates of zenith from utc, lat long.
-     */
-    public static RaDec calculateRADecOfZenith(Calendar utc, Location location) {
-        // compute overhead RA in degrees
-        return new RaDec((float) TimeUtils.meanSiderealTime(utc, location.getLongitude()), (float) location.getLatitude());
     }
 
     /**

@@ -2,8 +2,6 @@ package io.github.marcocipriani01.telescopetouch.astronomy;
 
 import java.util.Calendar;
 
-import io.github.marcocipriani01.telescopetouch.catalog.CatalogCoordinates;
-
 public class StarsPrecession {
 
     private StarsPrecession() {
@@ -26,9 +24,9 @@ public class StarsPrecession {
         return new double[]{atan2(y, x), atan(z / Math.sqrt((x * x) + (y * y)))};
     }
 
-    public static CatalogCoordinates precess(Calendar calendar, CatalogCoordinates in) {
-        double[] precession = precess(calendar, in.getRa(), in.getDec());
-        return new CatalogCoordinates(precession[0], precession[1]);
+    public static EquatorialCoordinates precess(Calendar calendar, EquatorialCoordinates in) {
+        double[] precession = precess(calendar, in.ra, in.dec);
+        return new EquatorialCoordinates(precession[0], precession[1]);
     }
 
     private static double sin(double d) {

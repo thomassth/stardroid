@@ -35,10 +35,9 @@ import io.github.marcocipriani01.telescopetouch.source.Sources;
 import io.github.marcocipriani01.telescopetouch.source.TextSource;
 import io.github.marcocipriani01.telescopetouch.source.impl.ImageSourceImpl;
 import io.github.marcocipriani01.telescopetouch.source.impl.TextSourceImpl;
-import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.units.HeliocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.units.RaDec;
-import io.github.marcocipriani01.telescopetouch.util.Vector3;
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.astronomy.HeliocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 
 /**
  * An implementation of the {@link Layer} interface for displaying planets in
@@ -101,7 +100,7 @@ public class PlanetsLayer extends AbstractLayer {
 
         public PlanetSource(Planet planet) {
             this.planet = planet;
-            this.name = getResources().getString(planet.getNameResourceId());
+            this.name = planet.getName(getResources());
         }
 
         @Override
@@ -117,7 +116,7 @@ public class PlanetsLayer extends AbstractLayer {
         private void updateCoords(Calendar time) {
             this.lastUpdateTimeMs = time.getTimeInMillis();
             this.sunCoords = HeliocentricCoordinates.getInstance(Planet.Sun, time);
-            this.currentCoords.updateFromRaDec(RaDec.getInstance(planet, time, sunCoords));
+            this.currentCoords.updateFromRaDec(planet.getEquatorialCoordinates(time, sunCoords));
             for (ImageSourceImpl imageSource : imageSources) {
                 imageSource.setUpVector(sunCoords);  // TODO(johntaylor): figure out why we do this.
             }

@@ -42,7 +42,8 @@ public class FullscreenControlsManager {
     private final Runnable showRunnable = new Runnable() {
         @Override
         public void run() {
-            ActionBar actionBar = activity.getSupportActionBar();
+            ActionBar actionBar;
+            actionBar = activity.getSupportActionBar();
             if (actionBar != null) {
                 actionBar.show();
             }
@@ -55,20 +56,14 @@ public class FullscreenControlsManager {
     private final Runnable hideRunnable = this::hide;
 
     @SuppressLint("ClickableViewAccessibility")
-    public FullscreenControlsManager(AppCompatActivity activity, View[] viewsToHide, View[] viewsToTriggerHide) {
+    public FullscreenControlsManager(AppCompatActivity activity, View[] viewsToHide, View[] fullscreenTriggers) {
         this.activity = activity;
         visible = true;
         this.viewsToHide = viewsToHide;
-
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
-        for (View buttonView : viewsToTriggerHide) {
-            /*
-             * Touch listener to use for in-layout UI controls to delay hiding the
-             * system UI. This is to prevent the jarring behavior of controls going away
-             * while interacting with activity UI.
-             */
+        for (View buttonView : fullscreenTriggers) {
+            // Touch listener to use for in-layout UI controls to delay hiding the
+            // system UI. This is to prevent the jarring behavior of controls going away
+            // while interacting with activity UI.
             buttonView.setOnTouchListener((View view, MotionEvent motionEvent) -> {
                 delayedHide(AUTO_HIDE_DELAY_MILLIS);
                 return false;
@@ -111,6 +106,9 @@ public class FullscreenControlsManager {
     }
 
     private void delayedHide(int delayMillis) {
+        // Upon interacting with UI controls, delay any scheduled hide()
+        // operations to prevent the jarring behavior of controls going away
+        // while interacting with the UI.
         handler.removeCallbacks(hideRunnable);
         handler.postDelayed(hideRunnable, delayMillis);
     }

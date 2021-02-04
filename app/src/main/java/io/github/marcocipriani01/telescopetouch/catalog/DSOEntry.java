@@ -16,6 +16,7 @@ package io.github.marcocipriani01.telescopetouch.catalog;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.location.Location;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -27,6 +28,7 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoordinates;
 
 /**
  * Represents a deep sky object. This class also contains a loader to fetch DSO from the app's catalog.
@@ -64,7 +66,6 @@ public class DSOEntry extends CatalogEntry {
 
     private final String type;
     private final String size;
-    private final String magnitude;
 
     /**
      * Create the entry from a formatted line
@@ -77,6 +78,8 @@ public class DSOEntry extends CatalogEntry {
         name = data.substring(i, i + NAME_LENGTH).trim();
         i += NAME_LENGTH;
         magnitude = data.substring(i, i + MAGNITUDE_LENGTH).trim();
+        if (!magnitude.equals(""))
+            magnitudeDouble = Double.parseDouble(magnitude);
         i += MAGNITUDE_LENGTH;
         type = data.substring(i, i + TYPE_LENGTH).trim();
         i += TYPE_LENGTH;
@@ -85,7 +88,7 @@ public class DSOEntry extends CatalogEntry {
         String raString = data.substring(i, i + RA_LENGTH).trim();
         i += RA_LENGTH;
         String decString = data.substring(i).trim();
-        coord = new CatalogCoordinates(raString, decString);
+        coord = new EquatorialCoordinates(raString, decString);
     }
 
     public static void loadToList(List<CatalogEntry> list, Resources resources) throws IOException {
@@ -102,42 +105,40 @@ public class DSOEntry extends CatalogEntry {
     /**
      * Create the description rich-text string
      *
-     * @param ctx Context (to access resource strings)
+     * @param context Context (to access resource strings)
      * @return description Spannable
      */
     @Override
-    public Spannable createDescription(Context ctx) {
-        Resources r = ctx.getResources();
-        String str = "<b>" + r.getString(R.string.entry_type) + r.getString(R.string.colon_with_spaces) + "</b>" + r.getString(getType()) + "<br/>";
-        if (!magnitude.equals("")) {
-            str += "<b>" + r.getString(R.string.entry_magnitude) + r.getString(R.string.colon_with_spaces) + "</b>" + magnitude + "<br/>";
-        }
-        if (!size.equals("")) {
-            str += "<b>" + r.getString(R.string.entry_size) + r.getString(R.string.colon_with_spaces) + "</b>" +
-                    size + " " + r.getString(R.string.arcmin) + "<br/>";
-        }
-        str += "<b>" + r.getString(R.string.entry_RA) + r.getString(R.string.colon_with_spaces) + "</b>" + coord.getRaStr() + "<br/>";
-        str += "<b>" + r.getString(R.string.entry_DE) + r.getString(R.string.colon_with_spaces) + "</b>" + coord.getDeStr();
-        return new SpannableString(Html.fromHtml(str));
+    public Spannable createDescription(Context context, Location location) {
+        Resources r = context.getResources();
+        String str = "<b>" + r.getString(R.string.entry_type) + ": </b>" + r.getString(getType()) + "<br>";
+        if (!magnitude.equals(""))
+            str += "<b>" + r.getString(R.string.entry_magnitude) + ": </b>" + magnitude + "<br>";
+        if (!size.equals(""))
+            str += "<b>" + r.getString(R.string.entry_size) + ": </b>" + size + " " + r.getString(R.string.arcmin) + "<br>";
+        return new SpannableString(Html.fromHtml(str + getCoordinatesString(r, location)));
     }
 
     /**
      * Create the summary rich-text string (1 line)
      *
-     * @param ctx Context (to access resource strings)
+     * @param context Context (to access resource strings)
      * @return summary Spannable
      */
     @Override
-    public Spannable createSummary(Context ctx) {
-        Resources r = ctx.getResources();
+    public Spannable createSummary(Context context) {
+        Resources r = context.getResources();
         String str = "<b>" + r.getString(getTypeShort()) + "</b> ";
-        if (!magnitude.equals("")) {
+        if (!magnitude.equals(""))
             str += r.getString(R.string.entry_mag) + ": " + magnitude + " ";
-        }
-        if (!size.equals("")) {
+        if (!size.equals(""))
             str += r.getString(R.string.entry_size).toLowerCase() + ": " + size + r.getString(R.string.arcmin);
-        }
         return new SpannableString(Html.fromHtml(str));
+    }
+
+    @Override
+    public int getIconResource() {
+        return R.drawable.galaxy_on;
     }
 
     /**

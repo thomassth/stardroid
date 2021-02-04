@@ -22,7 +22,7 @@ import java.util.Date;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
-import io.github.marcocipriani01.telescopetouch.util.TimeUtils;
+import io.github.marcocipriani01.telescopetouch.astronomy.TimeUtils;
 
 /**
  * Controls time as selected / created by the user in Time Travel mode.

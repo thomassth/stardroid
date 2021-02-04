@@ -354,12 +354,11 @@
     <string name="search_hint">Cerca oggetto</string>
     <string name="sync">Sincronizza</string>
     <string name="entry_star">Stella</string>
-    <string name="colon_with_spaces">": "</string>
     <string name="entry_names">Nomi</string>
     <string name="entry_type">Tipo</string>
     <string name="entry_magnitude">Magnitudine</string>
     <string name="entry_RA">AR</string>
-    <string name="entry_DE">Dec</string>
+    <string name="entry_Dec">Dec</string>
     <string name="entry_mag">mag</string>
     <string name="arcmin">arcmin</string>
     <string name="entry_size">Dimensione</string>

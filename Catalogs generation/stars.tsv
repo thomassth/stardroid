@@ -1,3 +1,48 @@
+#
+#   VizieR Astronomical Server vizier.u-strasbg.fr
+#    Date: 2021-02-04T16:35:05 [V1.99+ (14-Oct-2013)]
+#   In case of problem, please report to:	cds-question@unistra.fr
+#
+#
+#Coosys	J2000:	eq_FK5 J2000
+#INFO	votable-version=1.99+ (14-Oct-2013)
+#INFO	-ref=VIZ601bfeca3292
+#INFO	-out.max=9999
+#INFO	queryParameters=16
+#-oc.form=dec
+#-out.max=9999
+#-out.add=_RAJ,_DEJ
+#-nav=cat:IV/22&tab:{IV/22/index}&key:source=IV/22&HTTPPRM:&
+#-c.eq=J2000
+#-c.r=  2
+#-c.u=arcmin
+#-c.geom=r
+#-source=IV/22/index
+#-order=I
+#-out=Vmag
+#Vmag=<7
+#-out=SAO
+#-out=HD
+#-out=BFno
+#-out=name
+#
+
+#RESOURCE=yCat_4022
+#Name: IV/22
+#Title: FK5 - SAO - HD - Common Name Cross Index (Smith 1996)
+#Table	IV_22_index:
+#Name: IV/22/index
+#Title: The catalog
+#Column	_RAJ2000	(F12.8)	Right ascension (FK5, Equinox=J2000.0) at Epoch=J2000, proper motions taken into account 	[ucd=pos.eq.ra]
+#Column	_DEJ2000	(F12.8)	Declination (FK5, Equinox=J2000.0) at Epoch=J2000, proper motions taken into account 	[ucd=pos.eq.dec]
+#Column	Vmag	(F5.2)	Visual magnitude	[ucd=phot.mag;em.opt.V]
+#Column	SAO	(I6)	? SAO number (Cat. I/131) [NULL integer written as an empty string]	[ucd=meta.id]
+#Column	HD	(I6)	? HD number (Cat. III/135) [NULL integer written as an empty string]	[ucd=meta.id]
+#Column	BFno	(a9)	Bayer or Flamsteed number	[ucd=meta.id]
+#Column	name	(a20)	Common name or variable name	[ucd=meta.id]
+_RAJ2000	_DEJ2000	Vmag	SAO	HD	BFno	name
+deg	deg	mag
+------------	------------	-----	------	------	---------	--------------------
 000.39857917	-77.06571111	 4.78	258207	224889	THE  OCT
 000.49012917	 -6.01408333	 4.41	147042	224935	30   PSC
 000.93496250	-17.33599722	 4.55	147059	225132	2    CET
@@ -1509,8 +1554,9 @@
 358.70526667	+74.41007500	 6.62	 10893	224098
 359.11551250	+83.19115833	 6.59	  3994	224309	         	V CEP
 359.17292500	+22.64810000	 6.15	 91595	224303
-359.43972917	+25.14138333	 4.66	 91611	224427	PSI  PEG
-359.66830833	 -3.55599444	 4.86	147008	224533	27   PSC
-359.73235833	-52.74582222	 5.13	248087	224554	PI   PHE
-359.82792500	 +6.86328333	 4.01	128513	224617	OMG  PSC
-359.97905833	-65.57714444	 4.50	255619	224686	EPS  TUC
+359.43972917	+25.14138333	 4.66	 91611	224427	PSI  PEG 	
+359.66830833	 -3.55599444	 4.86	147008	224533	27   PSC 	
+359.73235833	-52.74582222	 5.13	248087	224554	PI   PHE 	
+359.82792500	 +6.86328333	 4.01	128513	224617	OMG  PSC 	
+359.97905833	-65.57714444	 4.50	255619	224686	EPS  TUC 	
+

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.marcocipriani01.telescopetouch.util;
+package io.github.marcocipriani01.telescopetouch.astronomy;
 
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -73,14 +73,6 @@ public class TimeUtils {
         return ((int) (365.25 * (y + 4716.0))) +
                 ((int) (30.6001 * (m + 1.0))) +
                 d + (2 - ((3 * y) / 400)) - 1524.5;
-    }
-
-    /**
-     * Calculate local mean sidereal time in degrees. Note that longitude is
-     * negative for western longitude values.
-     */
-    public static float meanSiderealTime(Calendar calendar, float longitude) {
-        return (float) meanSiderealTime(calendar, (double) longitude);
     }
 
     /**

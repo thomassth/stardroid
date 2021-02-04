@@ -42,9 +42,9 @@ import io.github.marcocipriani01.telescopetouch.activities.MainActivity;
 import io.github.marcocipriani01.telescopetouch.sensors.CompassHelper;
 import io.github.marcocipriani01.telescopetouch.sensors.LocationPermissionRequester;
 
-import static io.github.marcocipriani01.telescopetouch.util.Formatters.declinationToString;
-import static io.github.marcocipriani01.telescopetouch.util.Formatters.latitudeToString;
-import static io.github.marcocipriani01.telescopetouch.util.Formatters.longitudeToString;
+import static io.github.marcocipriani01.telescopetouch.maths.Formatters.magDeclinationToString;
+import static io.github.marcocipriani01.telescopetouch.maths.Formatters.latitudeToString;
+import static io.github.marcocipriani01.telescopetouch.maths.Formatters.longitudeToString;
 
 public class CompassFragment extends ActionFragment implements Toolbar.OnMenuItemClickListener, LocationPermissionRequester {
 
@@ -67,7 +67,7 @@ public class CompassFragment extends ActionFragment implements Toolbar.OnMenuIte
             protected void onLocationAndDeclination(Location location, float magneticDeclination) {
                 gps.setText(latitudeToString((float) location.getLatitude(), context) + " / " +
                         longitudeToString((float) location.getLongitude(), context));
-                declination.setText(context.getString(R.string.magnetic_declination) + ": " + declinationToString(magneticDeclination, context));
+                declination.setText(context.getString(R.string.magnetic_declination) + ": " + magDeclinationToString(magneticDeclination, context));
             }
 
             @Override

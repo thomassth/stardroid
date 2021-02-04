@@ -47,7 +47,7 @@ import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.SkyMapActivity;
 import io.github.marcocipriani01.telescopetouch.astronomy.Planet;
 import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
-import io.github.marcocipriani01.telescopetouch.util.TimeUtils;
+import io.github.marcocipriani01.telescopetouch.astronomy.TimeUtils;
 
 /**
  * Time travel dialog fragment.

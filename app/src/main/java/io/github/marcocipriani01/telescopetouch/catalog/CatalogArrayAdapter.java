@@ -15,63 +15,95 @@
 package io.github.marcocipriani01.telescopetouch.catalog;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.location.Location;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
+import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.astronomy.HorizontalCoordinates;
+import io.github.marcocipriani01.telescopetouch.astronomy.TimeUtils;
 
-public class CatalogArrayAdapter extends RecyclerView.Adapter<CatalogArrayAdapter.CatalogEntryHolder> {
+public class CatalogArrayAdapter extends RecyclerView.Adapter<CatalogArrayAdapter.CatalogEntryHolder>
+        implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private final List<CatalogEntry> entries;
     private final List<CatalogEntry> shownEntries = new ArrayList<>();
     private final Context context;
     private final LayoutInflater inflater;
+    private final SharedPreferences preferences;
     private boolean showStars = true;
     private boolean showDso = true;
     private boolean showPlanets = true;
     private CatalogItemListener listener;
+    private double limitMagnitude;
+    private boolean onlyAboveHorizon = false;
+    private Location location = null;
 
     public CatalogArrayAdapter(Context context, Catalog catalog) {
         super();
         this.context = context;
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        limitMagnitude = Double.parseDouble(preferences.getString(ApplicationConstants.CATALOG_LIMIT_MAGNITUDE, "5"));
+        preferences.registerOnSharedPreferenceChangeListener(this);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.entries = catalog.getEntries();
         if (catalog.isReady()) shownEntries.addAll(entries);
+    }
+
+    public void detachPref() {
+        preferences.unregisterOnSharedPreferenceChangeListener(this);
     }
 
     public boolean isShowStars() {
         return showStars;
     }
 
-    public void setShowStars(boolean showStars) {
+    public void starsShown(boolean showStars) {
         this.showStars = showStars;
         reloadCatalog();
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     public boolean isShowDso() {
         return showDso;
     }
 
-    public void setShowDso(boolean showDso) {
+    public void dsoShown(boolean showDso) {
         this.showDso = showDso;
         reloadCatalog();
     }
 
-    public boolean isShowPlanets() {
+    public boolean planetsShown() {
         return showPlanets;
     }
 
     public void setShowPlanets(boolean showPlanets) {
         this.showPlanets = showPlanets;
         reloadCatalog();
+    }
+
+    public void setOnlyAboveHorizon(boolean onlyAboveHorizon) {
+        this.onlyAboveHorizon = onlyAboveHorizon;
+        reloadCatalog();
+    }
+
+    public boolean isOnlyAboveHorizon() {
+        return onlyAboveHorizon;
     }
 
     public void setCatalogItemListener(CatalogItemListener listener) {
@@ -98,9 +130,19 @@ public class CatalogArrayAdapter extends RecyclerView.Adapter<CatalogArrayAdapte
 
     public void reloadCatalog() {
         shownEntries.clear();
-        for (CatalogEntry entry : entries) {
-            if (isVisible(entry)) {
-                shownEntries.add(entry);
+        if (onlyAboveHorizon && (location != null)) {
+            double latitude = location.getLatitude(),
+                    siderealTime = TimeUtils.meanSiderealTime(Calendar.getInstance(), location.getLongitude());
+            for (CatalogEntry entry : entries) {
+                if (isVisible(entry) && HorizontalCoordinates.isObjectAboveHorizon(entry.coord, latitude, siderealTime)) {
+                    shownEntries.add(entry);
+                }
+            }
+        } else {
+            for (CatalogEntry entry : entries) {
+                if (isVisible(entry)) {
+                    shownEntries.add(entry);
+                }
             }
         }
         notifyDataSetChanged();
@@ -108,18 +150,47 @@ public class CatalogArrayAdapter extends RecyclerView.Adapter<CatalogArrayAdapte
 
     public void filter(String string) {
         shownEntries.clear();
-        for (CatalogEntry entry : entries) {
-            if (isVisible(entry) && entry.getName().toLowerCase().contains(string.toLowerCase())) {
-                shownEntries.add(entry);
+        if (onlyAboveHorizon && (location != null)) {
+            double latitude = location.getLatitude(),
+                    siderealTime = TimeUtils.meanSiderealTime(Calendar.getInstance(), location.getLongitude());
+            for (CatalogEntry entry : entries) {
+                if (entry.magnitudeDouble <= limitMagnitude) {
+                    if (showStars && (entry instanceof StarEntry)) {
+                        if (matches(((StarEntry) entry).getNames(), string.replace("HD ", "HD").replace("SAO ", "SAO"))
+                                && HorizontalCoordinates.isObjectAboveHorizon(entry.coord, latitude, siderealTime))
+                            shownEntries.add(entry);
+                    } else if (((showDso && (entry instanceof DSOEntry)) ||
+                            (showPlanets && (entry instanceof PlanetEntry))) && matches(entry.getName(), string)
+                            && HorizontalCoordinates.isObjectAboveHorizon(entry.coord, latitude, siderealTime)) {
+                        shownEntries.add(entry);
+                    }
+                }
+            }
+        } else {
+            for (CatalogEntry entry : entries) {
+                if (entry.magnitudeDouble <= limitMagnitude) {
+                    if (showStars && (entry instanceof StarEntry)) {
+                        if (matches(((StarEntry) entry).getNames(), string.replace("hd ", "hd").replace("sao ", "sao")))
+                            shownEntries.add(entry);
+                    } else if (((showDso && (entry instanceof DSOEntry)) ||
+                            (showPlanets && (entry instanceof PlanetEntry))) && matches(entry.getName(), string)) {
+                        shownEntries.add(entry);
+                    }
+                }
             }
         }
         notifyDataSetChanged();
     }
 
+    private boolean matches(String a, String b) {
+        return a.toLowerCase().contains(b);
+    }
+
     private boolean isVisible(CatalogEntry entry) {
-        return ((showStars && (entry instanceof StarEntry)) ||
-                (showDso && (entry instanceof DSOEntry)) ||
-                (showPlanets && (entry instanceof PlanetEntry)));
+        return (entry.magnitudeDouble <= limitMagnitude) &&
+                ((showStars && (entry instanceof StarEntry)) ||
+                        (showDso && (entry instanceof DSOEntry)) ||
+                        (showPlanets && (entry instanceof PlanetEntry)));
     }
 
     public int visibleItemsCount() {
@@ -132,6 +203,18 @@ public class CatalogArrayAdapter extends RecyclerView.Adapter<CatalogArrayAdapte
 
     public boolean isEmpty() {
         return shownEntries.isEmpty();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(ApplicationConstants.CATALOG_LIMIT_MAGNITUDE)) {
+            try {
+                limitMagnitude = Double.parseDouble(preferences.getString(key, "8"));
+                reloadCatalog();
+            } catch (NumberFormatException ignored) {
+
+            }
+        }
     }
 
     public interface CatalogItemListener {

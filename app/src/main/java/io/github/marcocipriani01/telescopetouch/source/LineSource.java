@@ -18,7 +18,7 @@ package io.github.marcocipriani01.telescopetouch.source;
 
 import java.util.List;
 
-import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 
 /**
  * This interface corresponds to a set of successive line segments (drawn from

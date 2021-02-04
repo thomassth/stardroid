@@ -51,7 +51,6 @@
             android:layout="?android:attr/preferenceLayoutChild"
             android:summary="@string/degrees"
             android:title="@string/location_lat_pref"
-            app:defaultValue="0.0"
             app:iconSpaceReserved="false" />
 
         <EditTextPreference
@@ -63,7 +62,6 @@
             android:layout="?android:attr/preferenceLayoutChild"
             android:summary="@string/degrees"
             android:title="@string/location_long_pref"
-            app:defaultValue="0.0"
             app:iconSpaceReserved="false" />
 
         <CheckBoxPreference
@@ -82,6 +80,15 @@
             android:key="compensate_precession"
             android:title="@string/precession_pref"
             android:summary="@string/precession_pref_description"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            android:defaultValue="8"
+            android:dialogLayout="@layout/preference_dialog_numeric"
+            android:inputType="number|numberDecimal"
+            android:key="catalog_limit_mag"
+            android:summary="@string/catalog_limit_mag_description"
+            android:title="@string/catalog_limit_mag"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 

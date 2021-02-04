@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.source.proto.SourceProto;
-import io.github.marcocipriani01.telescopetouch.util.StarAttributeCalculator;
 
 /**
  * Class for reading the stellar csv file and writing the contents to a protocol

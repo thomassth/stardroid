@@ -19,8 +19,8 @@ package io.github.marcocipriani01.telescopetouch.control;
 import android.util.Log;
 
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
-import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.util.Vector3;
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 
 /**
  * Flies the user to the search target in manual mode.

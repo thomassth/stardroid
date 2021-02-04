@@ -23,8 +23,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
-import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.util.Vector3;
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 
 /**
  * This is a utility class which divides the sky into a fixed set of regions
@@ -202,7 +202,7 @@ public class SkyRegionMap<RegionRenderingData> {
         float[] regionCenterDotProducts = new float[REGION_CENTERS.length];
         ArrayList<Integer> activeStandardRegions = new ArrayList<>();
         for (int i = 0; i < REGION_CENTERS.length; i++) {
-            float dotProduct = Vector3.scalarProduct(lookDir, REGION_CENTERS[i]);
+            float dotProduct = (float) Vector3.scalarProduct(lookDir, REGION_CENTERS[i]);
             regionCenterDotProducts[i] = dotProduct;
             if (dotProduct > dotProductThreshold) {
                 activeStandardRegions.add(i);
@@ -220,7 +220,6 @@ public class SkyRegionMap<RegionRenderingData> {
     /**
      * Returns the region that a point belongs in.
      *
-     * @param position
      * @return The region the point belongs in.
      */
     public static int getObjectRegion(GeocentricCoordinates position) {
@@ -235,7 +234,6 @@ public class SkyRegionMap<RegionRenderingData> {
      * TODO(jpowell): I think this is useful for putting lines into regions, but
      * if I don't end up using this when I implement that, I should delete this.
      *
-     * @param position
      * @return The closest region and dot product with center of that region.
      */
     public static ObjectRegionData getObjectRegionData(GeocentricCoordinates position) {
@@ -244,7 +242,7 @@ public class SkyRegionMap<RegionRenderingData> {
         // does that.
         ObjectRegionData data = new ObjectRegionData();
         for (int i = 0; i < REGION_CENTERS.length; i++) {
-            float dotProduct = Vector3.scalarProduct(REGION_CENTERS[i], position);
+            float dotProduct = (float) Vector3.scalarProduct(REGION_CENTERS[i], position);
             if (dotProduct > data.regionCenterDotProduct) {
                 data.regionCenterDotProduct = dotProduct;
                 data.region = i;
@@ -290,9 +288,6 @@ public class SkyRegionMap<RegionRenderingData> {
     /**
      * Sets the coverage angle for a sky region.  Needed for non-point
      * objects (see the javadoc for this class).
-     *
-     * @param id
-     * @param angleInRadians
      */
     public void setRegionCoverageAngle(int id, float angleInRadians) {
         if (mRegionCoverageAngles == null) {
@@ -315,7 +310,6 @@ public class SkyRegionMap<RegionRenderingData> {
      * null.  This can be useful while building or updating a region, but to get
      * the region data when rendering a frame, use getDataForActiveRegions().
      *
-     * @param id
      * @return The data for the specified region.
      */
     public RegionRenderingData getRegionData(int id) {
@@ -337,7 +331,6 @@ public class SkyRegionMap<RegionRenderingData> {
      * computing here doesn't include regions that are obviously off screen, but
      * I should do some more work to verify that.
      *
-     * @param regions
      * @return ArrayList of rendering data corresponding to the on-screen
      * regions.
      */

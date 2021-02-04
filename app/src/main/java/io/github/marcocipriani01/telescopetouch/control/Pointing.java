@@ -16,8 +16,8 @@
 
 package io.github.marcocipriani01.telescopetouch.control;
 
-import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.util.Vector3;
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 
 /**
  * A POJO to hold the user's view direction.
@@ -59,27 +59,27 @@ public class Pointing {
     }
 
     public float getLineOfSightX() {
-        return lineOfSight.x;
+        return (float) lineOfSight.x;
     }
 
     public float getLineOfSightY() {
-        return lineOfSight.y;
+        return (float) lineOfSight.y;
     }
 
     public float getLineOfSightZ() {
-        return lineOfSight.z;
+        return (float) lineOfSight.z;
     }
 
     public float getPerpendicularX() {
-        return perpendicular.x;
+        return (float) perpendicular.x;
     }
 
     public float getPerpendicularY() {
-        return perpendicular.y;
+        return (float) perpendicular.y;
     }
 
     public float getPerpendicularZ() {
-        return perpendicular.z;
+        return (float) perpendicular.z;
     }
 
     /**

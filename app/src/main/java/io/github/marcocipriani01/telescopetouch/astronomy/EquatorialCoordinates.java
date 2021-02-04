@@ -1,60 +1,71 @@
 /*
- * Copyright (C) 2020  Marco Cipriani (@marcocipriani01)
+ * Copyright 2020 Marco Cipriani (@marcocipriani01) and the Sky Map Team
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
-package io.github.marcocipriani01.telescopetouch.catalog;
+package io.github.marcocipriani01.telescopetouch.astronomy;
 
-import android.annotation.SuppressLint;
+import android.location.Location;
 
 import androidx.annotation.NonNull;
 
+import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Stores equatorial coordinates and contains some utilities to convert decimal degrees to strings and vice-versa.
- */
-public class CatalogCoordinates {
+import io.github.marcocipriani01.telescopetouch.maths.Formatters;
+import io.github.marcocipriani01.telescopetouch.maths.MathsUtils;
+
+import static io.github.marcocipriani01.telescopetouch.maths.MathsUtils.RADIANS_TO_DEGREES;
+
+public class EquatorialCoordinates {
 
     /**
-     * Right ascension in arcsec
+     * Right ascension in degrees.
      */
-    private final double ra;
+    public double ra;
     /**
-     * Declination in arcsec
+     * Declination in degrees.
      */
-    private final double dec;
+    public double dec;
 
-    /**
-     * Class constructor. Processes the input strings and calculates right ascension and declination.
-     *
-     * @param ra  Right ascension (string).
-     * @param dec Declination (string).
-     */
-    public CatalogCoordinates(String ra, String dec) {
-        this.ra = convertRa(ra.trim());
-        this.dec = convertDec(dec.trim());
-    }
-
-    /**
-     * Class constructor.
-     *
-     * @param ra  Right ascension (decimal degrees).
-     * @param dec Declination (decimal degrees).
-     */
-    public CatalogCoordinates(double ra, double dec) {
+    public EquatorialCoordinates(float ra, float dec) {
         this.ra = ra;
         this.dec = dec;
+    }
+
+    public EquatorialCoordinates(double ra, double dec) {
+        this.ra = ra;
+        this.dec = dec;
+    }
+
+    public EquatorialCoordinates(String ra, String dec) {
+        this.ra = parseRAString(ra.trim());
+        this.dec = parseDecString(dec.trim());
+    }
+
+    public static EquatorialCoordinates getInstance(HeliocentricCoordinates coords) {
+        return new EquatorialCoordinates(
+                MathsUtils.mod2pi((float) Math.atan2(coords.y, coords.x)) * RADIANS_TO_DEGREES,
+                Math.atan(coords.z / Math.sqrt(coords.x * coords.x + coords.y * coords.y)) * RADIANS_TO_DEGREES);
+    }
+
+    public static EquatorialCoordinates getInstance(GeocentricCoordinates coords) {
+        double raRad = Math.atan2(coords.y, coords.x);
+        if (raRad < 0) raRad += 2f * Math.PI;
+        double decRad = Math.atan2(coords.z, Math.sqrt(coords.x * coords.x + coords.y * coords.y));
+        return new EquatorialCoordinates(raRad * RADIANS_TO_DEGREES, decRad * RADIANS_TO_DEGREES);
     }
 
     /**
@@ -63,7 +74,7 @@ public class CatalogCoordinates {
      * @param string an input string (right ascension)
      * @return the right ascension converted in decimal degrees.
      */
-    private static double convertRa(String string) throws NumberFormatException {
+    private static double parseRAString(String string) throws NumberFormatException {
         Pattern p = Pattern.compile("([0-9]{1,2})[h:\\s]([0-9]{1,2})([m:'\\s]([0-9]{1,2})([,.]([0-9]*))?[s\"]?)?[m:'\\s]?");
         Matcher m = p.matcher(string);
         double value = 0;
@@ -100,7 +111,7 @@ public class CatalogCoordinates {
      * @param string an input string (declination)
      * @return the declination converted in decimal degrees.
      */
-    private static double convertDec(String string) throws NumberFormatException {
+    private static double parseDecString(String string) throws NumberFormatException {
         Pattern p = Pattern.compile("([+\\-]?)([0-9]{1,2})[°:\\s]([0-9]{1,2})([m:'\\s]([0-9]{1,2})([,.]([0-9]*))?[s\"]?)?[m:'\\s]?");
         Matcher m = p.matcher(string);
         double value = 0;
@@ -137,49 +148,29 @@ public class CatalogCoordinates {
     }
 
     /**
-     * @return the right ascension in decimal degrees.
+     * Compute celestial coordinates of zenith from utc, lat long.
      */
-    public double getRa() {
-        return ra;
-    }
-
-    /**
-     * @return the declination in decimal degrees.
-     */
-    public double getDec() {
-        return dec;
+    public static EquatorialCoordinates ofZenith(Calendar utc, Location location) {
+        return new EquatorialCoordinates(TimeUtils.meanSiderealTime(utc, location.getLongitude()), location.getLatitude());
     }
 
     /**
      * @return a string containing the right ascension (hh:mm:ss)
      */
-    @SuppressLint("DefaultLocale")
-    public String getRaStr() {
-        int deg = (int) Math.floor(Math.abs(ra) / 15);
-        double tmp = (Math.abs(ra) / 15 - deg) * 60;
-        int min = (int) Math.floor(tmp);
-        int sec = (int) Math.round((tmp - min) * 60);
-        return String.format("%02d:%02d:%02d", deg, min, sec);
+    public String getRAString() {
+        return Formatters.formatDegreesAsHours(ra);
     }
 
     /**
      * @return a string containing the declination (hh:mm:ss)
      */
-    @SuppressLint("DefaultLocale")
-    public String getDeStr() {
-        int deg = (int) Math.floor(Math.abs(dec));
-        int min = (int) Math.floor((Math.abs(dec) - deg) * 60);
-        int sec = (int) Math.round(((Math.abs(dec) - deg) * 60 - min) * 60);
-        if (Math.signum(dec) >= 0) {
-            return String.format("+%02d:%02d:%02d", deg, min, sec);
-        } else {
-            return String.format("-%02d:%02d:%02d", deg, min, sec);
-        }
+    public String getDecString() {
+        return Formatters.formatDegrees(dec);
     }
 
     @NonNull
     @Override
     public String toString() {
-        return "RA: " + getRaStr() + " Dec: " + getDeStr();
+        return "RA: " + getRAString() + ", Dec: " + getDecString();
     }
 }

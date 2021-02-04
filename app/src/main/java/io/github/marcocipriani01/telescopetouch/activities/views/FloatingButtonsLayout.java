@@ -16,13 +16,12 @@
 
 package io.github.marcocipriani01.telescopetouch.activities.views;
 
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.widget.LinearLayout;
 
 import io.github.marcocipriani01.telescopetouch.R;
@@ -31,20 +30,25 @@ import io.github.marcocipriani01.telescopetouch.R;
  * Contains the provider buttons.
  */
 
-public class ButtonLayerView extends LinearLayout {
+public class FloatingButtonsLayout extends LinearLayout {
 
     private final int fadeTime;
+    private final float distance;
+    private final boolean invertDirection;
 
-    public ButtonLayerView(Context context) {
+    public FloatingButtonsLayout(Context context) {
         this(context, null);
     }
 
-    public ButtonLayerView(Context context, AttributeSet attrs) {
+    public FloatingButtonsLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         setFocusable(false);
-        TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.ButtonLayerView);
-        fadeTime = attributes.getResourceId(R.styleable.ButtonLayerView_fade_time, 500);
+        TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.FloatingButtonsLayout);
+        fadeTime = attributes.getInt(R.styleable.FloatingButtonsLayout_fade_time, 500);
+        distance = attributes.getFloat(R.styleable.FloatingButtonsLayout_distance, 200f);
+        invertDirection = attributes.getBoolean(R.styleable.FloatingButtonsLayout_invert_direction, false);
         attributes.recycle();
+        setClipChildren(false);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -55,18 +59,10 @@ public class ButtonLayerView extends LinearLayout {
 
     @Override
     public void setVisibility(int visibility) {
-        if (visibility == VISIBLE) {
-            fade(View.VISIBLE, 0.0f, 1.0f);
-        } else {
-            fade(View.GONE, 1.0f, 0.0f);
-        }
-    }
-
-    private void fade(int visibility, float startAlpha, float endAlpha) {
-        AlphaAnimation anim = new AlphaAnimation(startAlpha, endAlpha);
-        anim.setDuration(fadeTime);
-        startAnimation(anim);
-        super.setVisibility(visibility);
+        ObjectAnimator animation = ObjectAnimator.ofFloat(this, "translationX",
+                (visibility == VISIBLE) ? 0f : (invertDirection ? (-distance) : distance));
+        animation.setDuration(fadeTime);
+        animation.start();
     }
 
     @Override

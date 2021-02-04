@@ -11,6 +11,7 @@
         <item>@string/stars</item>
         <item>@string/deep_sky</item>
         <item>@string/solar_system</item>
+        <item>@string/only_visible</item>
     </string-array>
     <string-array name="hemisphere_pref">
         <item>@string/hemisphere_auto</item>

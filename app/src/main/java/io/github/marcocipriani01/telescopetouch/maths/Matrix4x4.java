@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package io.github.marcocipriani01.telescopetouch.util;
+package io.github.marcocipriani01.telescopetouch.maths;
 
 public class Matrix4x4 {
 
-    private final float[] mValues = new float[16];
+    private final float[] array = new float[16];
 
     public Matrix4x4() {
     }
 
     public Matrix4x4(float[] contents) {
         if (contents.length != 16) throw new IllegalArgumentException("Bad matrix");
-        System.arraycopy(contents, 0, mValues, 0, 16);
+        System.arraycopy(contents, 0, array, 0, 16);
     }
 
     public static Matrix4x4 createIdentity() {
@@ -52,24 +52,24 @@ public class Matrix4x4 {
     public static Matrix4x4 createRotation(float angle, Vector3 axis) {
         float[] m = new float[16];
 
-        float xSqr = axis.x * axis.x;
-        float ySqr = axis.y * axis.y;
-        float zSqr = axis.z * axis.z;
+        float xSqr = (float) (axis.x * axis.x);
+        float ySqr = (float) (axis.y * axis.y);
+        float zSqr = (float) (axis.z * axis.z);
 
         float sinAngle = (float) Math.sin(angle);
 
         float cosAngle = (float) Math.cos(angle);
         float oneMinusCosAngle = 1 - cosAngle;
 
-        float xSinAngle = axis.x * sinAngle;
-        float ySinAngle = axis.y * sinAngle;
-        float zSinAngle = axis.z * sinAngle;
+        float xSinAngle = (float) (axis.x * sinAngle);
+        float ySinAngle = (float) (axis.y * sinAngle);
+        float zSinAngle = (float) (axis.z * sinAngle);
 
-        float zOneMinusCosAngle = axis.z * oneMinusCosAngle;
+        float zOneMinusCosAngle = (float) (axis.z * oneMinusCosAngle);
 
-        float xyOneMinusCosAngle = axis.x * axis.y * oneMinusCosAngle;
-        float xzOneMinusCosAngle = axis.x * zOneMinusCosAngle;
-        float yzOneMinusCosAngle = axis.y * zOneMinusCosAngle;
+        float xyOneMinusCosAngle = (float) (axis.x * axis.y * oneMinusCosAngle);
+        float xzOneMinusCosAngle = (float) (axis.x * zOneMinusCosAngle);
+        float yzOneMinusCosAngle = (float) (axis.y * zOneMinusCosAngle);
 
         m[0] = xSqr + (ySqr + zSqr) * cosAngle;
         m[1] = xyOneMinusCosAngle + zSinAngle;
@@ -103,54 +103,23 @@ public class Matrix4x4 {
         float oneOverTanHalfRadiusOfView = 1.0f / ((float) Math.sin(fovyInRadians) / (float) Math.cos(fovyInRadians));
 
         return new Matrix4x4(new float[]{
-                inverseAspectRatio * oneOverTanHalfRadiusOfView,
-                0,
-                0,
-                0,
-
-                0,
-                oneOverTanHalfRadiusOfView,
-                0,
-                0,
-
-                0,
-                0,
-                -(far + near) / (far - near),
-                -1,
-
-                0,
-                0,
-                -2 * far * near / (far - near),
-                0});
+                inverseAspectRatio * oneOverTanHalfRadiusOfView, 0, 0, 0,
+                0, oneOverTanHalfRadiusOfView, 0, 0, 0,
+                0, -(far + near) / (far - near), -1,
+                0, 0, -2 * far * near / (far - near), 0});
     }
 
     public static Matrix4x4 createView(Vector3 lookDir, Vector3 up, Vector3 right) {
         return new Matrix4x4(new float[]{
-                right.x,
-                up.x,
-                -lookDir.x,
-                0,
-
-                right.y,
-                up.y,
-                -lookDir.y,
-                0,
-
-                right.z,
-                up.z,
-                -lookDir.z,
-                0,
-
-                0,
-                0,
-                0,
-                1,});
+                (float) right.x, (float) up.x, (float) -lookDir.x, 0,
+                (float) right.y, (float) up.y, (float) -lookDir.y, 0,
+                (float) right.z, (float) up.z, (float) -lookDir.z, 0,
+                0, 0, 0, 1});
     }
 
     public static Matrix4x4 multiplyMM(Matrix4x4 mat1, Matrix4x4 mat2) {
-        float[] m = mat1.mValues;
-        float[] n = mat2.mValues;
-
+        float[] m = mat1.array;
+        float[] n = mat2.array;
         return new Matrix4x4(new float[]{
                 m[0] * n[0] + m[4] * n[1] + m[8] * n[2] + m[12] * n[3],
                 m[1] * n[0] + m[5] * n[1] + m[9] * n[2] + m[13] * n[3],
@@ -174,7 +143,7 @@ public class Matrix4x4 {
     }
 
     public static Vector3 multiplyMV(Matrix4x4 mat, Vector3 v) {
-        float[] m = mat.mValues;
+        float[] m = mat.array;
         return new Vector3(
                 m[0] * v.x + m[4] * v.y + m[8] * v.z + m[12],
                 m[1] * v.x + m[5] * v.y + m[9] * v.z + m[13],
@@ -188,8 +157,8 @@ public class Matrix4x4 {
      */
     public static Vector3 transformVector(Matrix4x4 mat, Vector3 v) {
         Vector3 trans = multiplyMV(mat, v);
-        float[] m = mat.mValues;
-        float w = m[3] * v.x + m[7] * v.y + m[11] * v.z + m[15];
+        float[] m = mat.array;
+        float w = (float) (m[3] * v.x + m[7] * v.y + m[11] * v.z + m[15]);
         float oneOverW = 1.0f / w;
         trans.x *= oneOverW;
         trans.y *= oneOverW;
@@ -197,7 +166,7 @@ public class Matrix4x4 {
         return trans;
     }
 
-    public float[] getFloatArray() {
-        return mValues;
+    public float[] getArray() {
+        return array;
     }
 }

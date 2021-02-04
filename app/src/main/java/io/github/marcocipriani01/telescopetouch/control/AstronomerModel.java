@@ -22,10 +22,10 @@ import android.location.Location;
 import java.util.Calendar;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
-import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.util.MathsUtils;
-import io.github.marcocipriani01.telescopetouch.util.Matrix3x3;
-import io.github.marcocipriani01.telescopetouch.util.Vector3;
+import io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoordinates;
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.maths.Matrix3x3;
+import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 
 /**
  * The model of the astronomer.
@@ -200,7 +200,7 @@ public class AstronomerModel {
      */
     public GeocentricCoordinates getNorth() {
         calculateLocalNorthAndUpInCelestialCoords(false);
-        return GeocentricCoordinates.getInstanceFromVector3(trueNorthCelestial);
+        return GeocentricCoordinates.getInstance(trueNorthCelestial);
     }
 
     /**
@@ -208,7 +208,7 @@ public class AstronomerModel {
      */
     public GeocentricCoordinates getSouth() {
         calculateLocalNorthAndUpInCelestialCoords(false);
-        return GeocentricCoordinates.getInstanceFromVector3(Vector3.scale(trueNorthCelestial, -1));
+        return GeocentricCoordinates.getInstance(Vector3.scale(trueNorthCelestial, -1));
     }
 
     /**
@@ -216,7 +216,7 @@ public class AstronomerModel {
      */
     public GeocentricCoordinates getZenith() {
         calculateLocalNorthAndUpInCelestialCoords(false);
-        return GeocentricCoordinates.getInstanceFromVector3(upCelestial);
+        return GeocentricCoordinates.getInstance(upCelestial);
     }
 
     /**
@@ -224,7 +224,7 @@ public class AstronomerModel {
      */
     public GeocentricCoordinates getNadir() {
         calculateLocalNorthAndUpInCelestialCoords(false);
-        return GeocentricCoordinates.getInstanceFromVector3(Vector3.scale(upCelestial, -1));
+        return GeocentricCoordinates.getInstance(Vector3.scale(upCelestial, -1));
     }
 
     /**
@@ -232,7 +232,7 @@ public class AstronomerModel {
      */
     public GeocentricCoordinates getEast() {
         calculateLocalNorthAndUpInCelestialCoords(false);
-        return GeocentricCoordinates.getInstanceFromVector3(trueEastCelestial);
+        return GeocentricCoordinates.getInstance(trueEastCelestial);
     }
 
     /**
@@ -240,7 +240,7 @@ public class AstronomerModel {
      */
     public GeocentricCoordinates getWest() {
         calculateLocalNorthAndUpInCelestialCoords(false);
-        return GeocentricCoordinates.getInstanceFromVector3(Vector3.scale(trueEastCelestial, -1));
+        return GeocentricCoordinates.getInstance(Vector3.scale(trueEastCelestial, -1));
     }
 
     public void setMagneticDeclinationCalculator(MagneticDeclinationCalculator calculator) {
@@ -282,7 +282,7 @@ public class AstronomerModel {
             return;
         celestialCoordsLastUpdated = currentTime;
         magneticDeclinationCalculator.setLocationAndTime(location, getTimeMillis());
-        upCelestial = GeocentricCoordinates.getInstance(MathsUtils.calculateRADecOfZenith(getTime(), location));
+        upCelestial = GeocentricCoordinates.getInstance(EquatorialCoordinates.ofZenith(getTime(), location));
         Vector3 z = AXIS_OF_EARTHS_ROTATION;
         trueNorthCelestial = Vector3.sum(z, Vector3.scale(upCelestial, -Vector3.scalarProduct(upCelestial, z)));
         trueNorthCelestial.normalize();

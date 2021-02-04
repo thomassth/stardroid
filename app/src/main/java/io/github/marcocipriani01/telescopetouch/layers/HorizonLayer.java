@@ -33,8 +33,8 @@ import io.github.marcocipriani01.telescopetouch.source.Sources;
 import io.github.marcocipriani01.telescopetouch.source.TextSource;
 import io.github.marcocipriani01.telescopetouch.source.impl.LineSourceImpl;
 import io.github.marcocipriani01.telescopetouch.source.impl.TextSourceImpl;
-import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.util.TimeUtils;
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.astronomy.TimeUtils;
 
 /**
  * Creates a mark at the zenith, nadir and cardinal point and a horizon.

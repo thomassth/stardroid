@@ -30,13 +30,13 @@ import java.util.TreeSet;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.renderer.util.GLBuffer;
 import io.github.marcocipriani01.telescopetouch.renderer.util.SkyRegionMap;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TextureManager;
 import io.github.marcocipriani01.telescopetouch.renderer.util.UpdateClosure;
-import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.util.Matrix4x4;
-import io.github.marcocipriani01.telescopetouch.util.Vector3;
+import io.github.marcocipriani01.telescopetouch.maths.Matrix4x4;
+import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 
 public class SkyRenderer implements GLSurfaceView.Renderer {
 
@@ -325,7 +325,7 @@ public class SkyRenderer implements GLSurfaceView.Renderer {
         mViewMatrix = Matrix4x4.createView(lookDir, upDir, right);
 
         gl.glMatrixMode(GL10.GL_MODELVIEW);
-        gl.glLoadMatrixf(mViewMatrix.getFloatArray(), 0);
+        gl.glLoadMatrixf(mViewMatrix.getArray(), 0);
     }
 
     private void updatePerspective(GL10 gl) {
@@ -335,7 +335,7 @@ public class SkyRenderer implements GLSurfaceView.Renderer {
                 mRenderState.getRadiusOfView() * 3.141593f / 360.0f);
 
         gl.glMatrixMode(GL10.GL_PROJECTION);
-        gl.glLoadMatrixf(mProjectionMatrix.getFloatArray(), 0);
+        gl.glLoadMatrixf(mProjectionMatrix.getArray(), 0);
 
         // Switch back to the model view matrix.
         gl.glMatrixMode(GL10.GL_MODELVIEW);

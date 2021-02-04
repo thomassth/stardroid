@@ -27,7 +27,7 @@ import io.github.marcocipriani01.telescopetouch.source.ImageSource;
 import io.github.marcocipriani01.telescopetouch.source.LineSource;
 import io.github.marcocipriani01.telescopetouch.source.PointSource;
 import io.github.marcocipriani01.telescopetouch.source.TextSource;
-import io.github.marcocipriani01.telescopetouch.units.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 
 public abstract class RendererControllerBase {
 
