@@ -22,9 +22,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.graphics.Color;
 
-import io.github.marcocipriani01.telescopetouch.source.ImageSource;
 import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.maths.Vector3;
+import io.github.marcocipriani01.telescopetouch.source.ImageSource;
 
 /**
  * A celestial object represented by an image, such as a planet or a

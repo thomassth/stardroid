@@ -21,11 +21,11 @@ import android.util.Log;
 import javax.microedition.khronos.opengles.GL10;
 
 import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 import io.github.marcocipriani01.telescopetouch.renderer.util.ColorBuffer;
 import io.github.marcocipriani01.telescopetouch.renderer.util.IndexBuffer;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TextureManager;
 import io.github.marcocipriani01.telescopetouch.renderer.util.VertexBuffer;
-import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 
 public class SkyBox extends RendererObjectManager {
 

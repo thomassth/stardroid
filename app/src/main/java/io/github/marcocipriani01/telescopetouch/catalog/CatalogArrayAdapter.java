@@ -97,13 +97,13 @@ public class CatalogArrayAdapter extends RecyclerView.Adapter<CatalogArrayAdapte
         reloadCatalog();
     }
 
+    public boolean isOnlyAboveHorizon() {
+        return onlyAboveHorizon;
+    }
+
     public void setOnlyAboveHorizon(boolean onlyAboveHorizon) {
         this.onlyAboveHorizon = onlyAboveHorizon;
         reloadCatalog();
-    }
-
-    public boolean isOnlyAboveHorizon() {
-        return onlyAboveHorizon;
     }
 
     public void setCatalogItemListener(CatalogItemListener listener) {

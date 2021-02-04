@@ -26,7 +26,10 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.astronomy.TimeUtils;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
+import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererObjectManager.UpdateType;
 import io.github.marcocipriani01.telescopetouch.source.AstronomicalSource;
 import io.github.marcocipriani01.telescopetouch.source.ImageSource;
@@ -34,9 +37,6 @@ import io.github.marcocipriani01.telescopetouch.source.Sources;
 import io.github.marcocipriani01.telescopetouch.source.TextSource;
 import io.github.marcocipriani01.telescopetouch.source.impl.ImageSourceImpl;
 import io.github.marcocipriani01.telescopetouch.source.impl.TextSourceImpl;
-import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.astronomy.TimeUtils;
-import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 
 /**
  * A {@link Layer} to show well-known meteor showers.

@@ -27,13 +27,13 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
+import io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoordinates;
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.astronomy.HeliocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.astronomy.Planet;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererController;
 import io.github.marcocipriani01.telescopetouch.search.SearchResult;
-import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.astronomy.HeliocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoordinates;
 
 /**
  * If enabled, keeps the sky gradient up to date.

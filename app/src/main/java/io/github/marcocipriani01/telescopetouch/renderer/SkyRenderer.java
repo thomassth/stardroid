@@ -31,12 +31,12 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.maths.Matrix4x4;
+import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 import io.github.marcocipriani01.telescopetouch.renderer.util.GLBuffer;
 import io.github.marcocipriani01.telescopetouch.renderer.util.SkyRegionMap;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TextureManager;
 import io.github.marcocipriani01.telescopetouch.renderer.util.UpdateClosure;
-import io.github.marcocipriani01.telescopetouch.maths.Matrix4x4;
-import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 
 public class SkyRenderer implements GLSurfaceView.Renderer {
 

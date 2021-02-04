@@ -16,13 +16,6 @@
 
 package io.github.marcocipriani01.telescopetouch.maths;
 
-import android.location.Location;
-
-import java.util.Calendar;
-
-import io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoordinates;
-import io.github.marcocipriani01.telescopetouch.astronomy.TimeUtils;
-
 /**
  * Utilities for working with angles, distances, matrices, and time.
  *

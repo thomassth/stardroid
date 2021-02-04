@@ -69,12 +69,14 @@ import io.github.marcocipriani01.telescopetouch.activities.fragments.GoToFragmen
 import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
 import io.github.marcocipriani01.telescopetouch.activities.util.FullscreenControlsManager;
 import io.github.marcocipriani01.telescopetouch.activities.views.FloatingButtonsLayout;
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.control.ControllerGroup;
 import io.github.marcocipriani01.telescopetouch.control.MagneticDeclinationSwitcher;
 import io.github.marcocipriani01.telescopetouch.control.Pointing;
 import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
 import io.github.marcocipriani01.telescopetouch.layers.LayerManager;
+import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererController;
 import io.github.marcocipriani01.telescopetouch.renderer.SkyRenderer;
 import io.github.marcocipriani01.telescopetouch.renderer.util.AbstractUpdateClosure;
@@ -83,8 +85,6 @@ import io.github.marcocipriani01.telescopetouch.sensors.SensorAccuracyMonitor;
 import io.github.marcocipriani01.telescopetouch.touch.DragRotateZoomGestureDetector;
 import io.github.marcocipriani01.telescopetouch.touch.GestureInterpreter;
 import io.github.marcocipriani01.telescopetouch.touch.MapMover;
-import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 
 /**
  * The main map-rendering Activity.

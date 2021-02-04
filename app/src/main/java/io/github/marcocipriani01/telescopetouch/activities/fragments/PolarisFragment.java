@@ -39,9 +39,9 @@ import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.MainActivity;
 import io.github.marcocipriani01.telescopetouch.astronomy.Polaris;
+import io.github.marcocipriani01.telescopetouch.maths.Formatters;
 import io.github.marcocipriani01.telescopetouch.sensors.LocationHelper;
 import io.github.marcocipriani01.telescopetouch.sensors.LocationPermissionRequester;
-import io.github.marcocipriani01.telescopetouch.maths.Formatters;
 
 public class PolarisFragment extends ActionFragment implements LocationPermissionRequester {
 

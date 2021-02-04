@@ -16,8 +16,8 @@
 
 package io.github.marcocipriani01.telescopetouch.source.impl;
 
-import io.github.marcocipriani01.telescopetouch.source.PointSource;
 import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.source.PointSource;
 
 /**
  * This class represents a astronomical point source, such as a star, or a distant galaxy.
