@@ -39,12 +39,12 @@ import io.github.marcocipriani01.telescopetouch.astronomy.TimeUtils;
 public class CatalogArrayAdapter extends RecyclerView.Adapter<CatalogArrayAdapter.CatalogEntryHolder>
         implements SharedPreferences.OnSharedPreferenceChangeListener, SectionIndexer {
 
-    private ArrayList<Integer> sectionPositions = new ArrayList<>();
     private final List<CatalogEntry> entries;
     private final List<CatalogEntry> shownEntries = new ArrayList<>();
     private final Context context;
     private final LayoutInflater inflater;
     private final SharedPreferences preferences;
+    private ArrayList<Integer> sectionPositions = new ArrayList<>();
     private boolean showStars = true;
     private boolean showDso = true;
     private boolean showPlanets = true;
