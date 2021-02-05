@@ -55,7 +55,6 @@ import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.control.LocationController;
 import io.github.marcocipriani01.telescopetouch.control.MagneticDeclinationSwitcher;
-import io.github.marcocipriani01.telescopetouch.control.Pointing;
 import io.github.marcocipriani01.telescopetouch.maths.Formatters;
 
 public class DiagnosticActivity extends InjectableActivity implements SensorEventListener {
