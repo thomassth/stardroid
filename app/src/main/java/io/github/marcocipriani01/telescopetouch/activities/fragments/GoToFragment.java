@@ -38,7 +38,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import org.indilib.i4j.Constants;
 import org.indilib.i4j.client.INDIDevice;
@@ -58,6 +57,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import in.myinnos.alphabetsindexfastscrollrecycler.IndexFastScrollRecyclerView;
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.MainActivity;
@@ -87,7 +87,7 @@ public class GoToFragment extends ActionFragment
     private CatalogArrayAdapter entriesAdapter;
     private MenuItem searchMenu;
     private SearchView searchView;
-    private RecyclerView list;
+    private IndexFastScrollRecyclerView list;
     private ProgressBar progressBar;
     private TextView emptyLabel;
     private LocationHelper locationHelper;
@@ -133,6 +133,8 @@ public class GoToFragment extends ActionFragment
         entriesAdapter = new CatalogArrayAdapter(context, catalog);
         list.setAdapter(entriesAdapter);
         list.setLayoutManager(new LinearLayoutManager(context));
+        list.setIndexBarColor(R.color.darkColor);
+        list.setIndexBarStrokeVisibility(false);
         entriesAdapter.setCatalogItemListener(this);
         emptyLabel = rootView.findViewById(R.id.goto_empy_label);
         progressBar = rootView.findViewById(R.id.goto_loading);
@@ -230,6 +232,7 @@ public class GoToFragment extends ActionFragment
                         emptyLabel.setVisibility(View.VISIBLE);
                         list.setVisibility(View.GONE);
                     } else {
+                        list.updateSections();
                         list.setVisibility(View.VISIBLE);
                         emptyLabel.setVisibility(View.GONE);
                     }
@@ -291,7 +294,7 @@ public class GoToFragment extends ActionFragment
 
     @Override
     public void onCatalogItemClick(View v) {
-        int position = list.indexOfChild(v);
+        int position = list.getChildLayoutPosition(v);
         if (position != -1) onListItemClick0(position);
     }
 

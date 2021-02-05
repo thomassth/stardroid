@@ -622,4 +622,5 @@
     <string name="catalog_limit_mag_description">Set the stars catalog\'s maximum magnitude.</string>
     <string name="only_visible">Only visible objects</string>
     <string name="not_a_number">Not a number!</string>
+    <string name="no_matching_objects">No matching objects</string>
 </resources>

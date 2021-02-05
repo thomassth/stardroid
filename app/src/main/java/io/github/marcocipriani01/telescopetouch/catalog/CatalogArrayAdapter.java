@@ -20,6 +20,7 @@ import android.location.Location;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,8 +37,9 @@ import io.github.marcocipriani01.telescopetouch.astronomy.HorizontalCoordinates;
 import io.github.marcocipriani01.telescopetouch.astronomy.TimeUtils;
 
 public class CatalogArrayAdapter extends RecyclerView.Adapter<CatalogArrayAdapter.CatalogEntryHolder>
-        implements SharedPreferences.OnSharedPreferenceChangeListener {
+        implements SharedPreferences.OnSharedPreferenceChangeListener, SectionIndexer {
 
+    private ArrayList<Integer> sectionPositions = new ArrayList<>();
     private final List<CatalogEntry> entries;
     private final List<CatalogEntry> shownEntries = new ArrayList<>();
     private final Context context;
@@ -215,6 +217,32 @@ public class CatalogArrayAdapter extends RecyclerView.Adapter<CatalogArrayAdapte
 
             }
         }
+    }
+
+    @Override
+    public Object[] getSections() {
+        List<String> sections = new ArrayList<>();
+        sectionPositions.clear();
+        for (int i = 0, size = shownEntries.size(); i < size; i++) {
+            char c = shownEntries.get(i).name.toUpperCase().charAt(0);
+            if (Character.isDigit(c)) c = '#';
+            String s = String.valueOf(c);
+            if (!sections.contains(s)) {
+                sections.add(s);
+                sectionPositions.add(i);
+            }
+        }
+        return sections.toArray(new String[0]);
+    }
+
+    @Override
+    public int getPositionForSection(int sectionIndex) {
+        return (sectionIndex < sectionPositions.size()) ? sectionPositions.get(sectionIndex) : 0;
+    }
+
+    @Override
+    public int getSectionForPosition(int position) {
+        return 0;
     }
 
     public interface CatalogItemListener {
