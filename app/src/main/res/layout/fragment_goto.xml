@@ -26,10 +26,10 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:visibility="gone"
-            android:text="No matching objects"
+            android:text="@string/no_matching_objects"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-        <androidx.recyclerview.widget.RecyclerView
+        <in.myinnos.alphabetsindexfastscrollrecycler.IndexFastScrollRecyclerView
             android:id="@+id/goto_database_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

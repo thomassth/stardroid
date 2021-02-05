@@ -540,4 +540,10 @@
     <string name="telescope">Telescopio</string>
     <string name="search_in_goto_database">Cerca nel database Go-To</string>
     <string name="out_of_bounds_loc_error">Latitudine o longitudine fuori dai confini!</string>
+    <string name="planet">Pianeta</string>
+    <string name="catalog_limit_mag">Limite magnitudine catalogo</string>
+    <string name="catalog_limit_mag_description">Imposta la magnitudine massima del catalogo.</string>
+    <string name="only_visible">Solo oggetti visibili</string>
+    <string name="not_a_number">Non è un numero!</string>
+    <string name="no_matching_objects">Nessun oggetto trovato</string>
 </resources>
