@@ -16,29 +16,58 @@
 
 package io.github.marcocipriani01.telescopetouch.source;
 
+import android.graphics.Color;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoordinates;
 import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 
 /**
- * This interface corresponds to a set of successive line segments (drawn from
- * consecutive vertices). That is, for the vertices {A, B, C, D}, lines should
- * be drawn between A and B, B and C, and C and D.
- *
- * @author Brent Bryan
+ * For representing constellations, constellation boundaries etc.
  */
-public interface LineSource extends Colorable {
+public class LineSource extends AbstractSource implements Colorable {
+
+    public final List<GeocentricCoordinates> vertices;
+    public final List<EquatorialCoordinates> raDecs;
+    public final float lineWidth;
+
+    public LineSource() {
+        this(Color.WHITE, new ArrayList<>(), 1.5f);
+    }
+
+    public LineSource(int color) {
+        this(color, new ArrayList<>(), 1.5f);
+    }
+
+    public LineSource(int color, List<GeocentricCoordinates> vertices, float lineWidth) {
+        super(color);
+
+        this.vertices = vertices;
+        this.raDecs = new ArrayList<>();
+        this.lineWidth = lineWidth;
+    }
 
     /**
      * Returns the width of the line to be drawn.
      */
-    float getLineWidth();
-
-    // TODO(brent): Discuss with James to add solid, dashed, dotted, etc.
+    public float getLineWidth() {
+        return lineWidth;
+    }
 
     /**
      * Returns an ordered list of the vertices which should be used to draw a
      * polyline in the renderer.
      */
-    List<GeocentricCoordinates> getVertices();
+    public List<GeocentricCoordinates> getVertices() {
+        List<GeocentricCoordinates> result;
+        if (vertices != null) {
+            result = vertices;
+        } else {
+            result = new ArrayList<>();
+        }
+        return Collections.unmodifiableList(result);
+    }
 }

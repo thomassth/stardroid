@@ -31,10 +31,7 @@ import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererObjectManager.UpdateType;
 import io.github.marcocipriani01.telescopetouch.source.AstronomicalSource;
 import io.github.marcocipriani01.telescopetouch.source.LineSource;
-import io.github.marcocipriani01.telescopetouch.source.Sources;
 import io.github.marcocipriani01.telescopetouch.source.TextSource;
-import io.github.marcocipriani01.telescopetouch.source.impl.LineSourceImpl;
-import io.github.marcocipriani01.telescopetouch.source.impl.TextSourceImpl;
 
 /**
  * Creates a mark at the zenith, nadir and cardinal point and a horizon.
@@ -100,14 +97,14 @@ public class HorizonLayer extends AbstractLayer {
             this.model = model;
 
             List<GeocentricCoordinates> vertices = Arrays.asList(north, east, south, west, north);
-            lineSources.add(new LineSourceImpl(LINE_COLOR, vertices, 1.5f));
+            lineSources.add(new LineSource(LINE_COLOR, vertices, 1.5f));
 
-            textSources.add(new TextSourceImpl(zenith, res.getString(R.string.zenith), LABEL_COLOR));
-            textSources.add(new TextSourceImpl(nadir, res.getString(R.string.nadir), LABEL_COLOR));
-            textSources.add(new TextSourceImpl(north, res.getString(R.string.north), LABEL_COLOR));
-            textSources.add(new TextSourceImpl(south, res.getString(R.string.south), LABEL_COLOR));
-            textSources.add(new TextSourceImpl(east, res.getString(R.string.east), LABEL_COLOR));
-            textSources.add(new TextSourceImpl(west, res.getString(R.string.west), LABEL_COLOR));
+            textSources.add(new TextSource(zenith, res.getString(R.string.zenith), LABEL_COLOR));
+            textSources.add(new TextSource(nadir, res.getString(R.string.nadir), LABEL_COLOR));
+            textSources.add(new TextSource(north, res.getString(R.string.north), LABEL_COLOR));
+            textSources.add(new TextSource(south, res.getString(R.string.south), LABEL_COLOR));
+            textSources.add(new TextSource(east, res.getString(R.string.east), LABEL_COLOR));
+            textSources.add(new TextSource(west, res.getString(R.string.west), LABEL_COLOR));
         }
 
         private void updateCoords() {
@@ -123,7 +120,7 @@ public class HorizonLayer extends AbstractLayer {
         }
 
         @Override
-        public Sources initialize() {
+        public AstronomicalSource initialize() {
             updateCoords();
             return this;
         }

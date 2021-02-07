@@ -25,6 +25,10 @@ public class HorizontalCoordinates {
         this.az = az;
     }
 
+    public static HorizontalCoordinates getInstance(GeocentricCoordinates coord, Location observer, Calendar time) {
+        return getInstance(EquatorialCoordinates.getInstance(coord), observer.getLatitude(), TimeUtils.meanSiderealTime(time, observer.getLongitude()));
+    }
+
     public static HorizontalCoordinates getInstance(EquatorialCoordinates eq, Location observer, Calendar time) {
         return getInstance(eq, observer.getLatitude(), TimeUtils.meanSiderealTime(time, observer.getLongitude()));
     }
@@ -50,12 +54,20 @@ public class HorizontalCoordinates {
     }
 
     public String getAzString() {
-        return Formatters.formatDegrees(az);
+        return Formatters.formatDegrees(getNormalizedAz());
+    }
+
+    public double getNormalizedAz() {
+        return (az + 360.0) % 360.0;
     }
 
     @NonNull
     @Override
     public String toString() {
         return "Alt: " + getAltString() + ", Az: " + getAzString();
+    }
+
+    public String toStringArcmin() {
+        return "Alt: " + Formatters.formatDegreesArcmin(alt) + ", Az: " + Formatters.formatDegreesArcmin(getNormalizedAz());
     }
 }

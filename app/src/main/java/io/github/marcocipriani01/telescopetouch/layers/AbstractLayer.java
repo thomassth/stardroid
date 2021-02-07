@@ -44,7 +44,6 @@ import io.github.marcocipriani01.telescopetouch.source.AstronomicalSource;
 import io.github.marcocipriani01.telescopetouch.source.ImageSource;
 import io.github.marcocipriani01.telescopetouch.source.LineSource;
 import io.github.marcocipriani01.telescopetouch.source.PointSource;
-import io.github.marcocipriani01.telescopetouch.source.Sources;
 import io.github.marcocipriani01.telescopetouch.source.TextSource;
 
 /**
@@ -83,7 +82,7 @@ public abstract class AbstractLayer implements Layer {
         initializeAstroSources(astroSources);
 
         for (AstronomicalSource astroSource : astroSources) {
-            Sources sources = astroSource.initialize();
+            AstronomicalSource sources = astroSource.initialize();
 
             textSources.addAll(sources.getLabels());
             imageSources.addAll(sources.getImages());

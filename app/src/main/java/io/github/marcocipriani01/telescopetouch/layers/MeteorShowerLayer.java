@@ -32,10 +32,7 @@ import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererObjectManager.UpdateType;
 import io.github.marcocipriani01.telescopetouch.source.AstronomicalSource;
 import io.github.marcocipriani01.telescopetouch.source.ImageSource;
-import io.github.marcocipriani01.telescopetouch.source.Sources;
 import io.github.marcocipriani01.telescopetouch.source.TextSource;
-import io.github.marcocipriani01.telescopetouch.source.impl.ImageSourceImpl;
-import io.github.marcocipriani01.telescopetouch.source.impl.TextSourceImpl;
 
 /**
  * A {@link Layer} to show well-known meteor showers.
@@ -180,7 +177,7 @@ public class MeteorShowerLayer extends AbstractLayer {
         private final List<TextSource> labelSources = new ArrayList<>();
 
         private final AstronomerModel model;
-        private final ImageSourceImpl theImage;
+        private final ImageSource theImage;
         private final TextSource label;
         private final Shower shower;
         private final String name;
@@ -202,9 +199,9 @@ public class MeteorShowerLayer extends AbstractLayer {
             // appears to be a bug in the renderer/layer interface in that Update values are not
             // respected.  Ditto the label.
             // TODO(johntaylor): fix the bug and remove this blank image
-            theImage = new ImageSourceImpl(shower.radiant, resources, R.drawable.blank, SCALE_FACTOR);
+            theImage = new ImageSource(shower.radiant, resources, R.drawable.blank, SCALE_FACTOR);
             imageSources.add(theImage);
-            label = new TextSourceImpl(shower.radiant, name, LABEL_COLOR);
+            label = new TextSource(shower.radiant, name, LABEL_COLOR);
             labelSources.add(label);
         }
 
@@ -251,7 +248,7 @@ public class MeteorShowerLayer extends AbstractLayer {
         }
 
         @Override
-        public Sources initialize() {
+        public AstronomicalSource initialize() {
             updateShower();
             return this;
         }
