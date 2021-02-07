@@ -641,8 +641,9 @@ public class SkyMapActivity extends InjectableActivity implements OnSharedPrefer
         // Only display buttons if the telescope is ready
         if (!connectionManager.isConnected()) {
             builder.setMessage(R.string.connect_telescope_first)
-                    .setPositiveButton(R.string.take_me_there, (dialog, which) -> startActivity(new Intent(this, MainActivity.class)));
-        } else if ((connectionManager.telescopeName == null) || (connectionManager.telescopeCoordP == null) || (connectionManager.telescopeOnCoordSetP == null)) {
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> startActivity(new Intent(this, MainActivity.class)));
+        } else if ((connectionManager.telescopeName == null) ||
+                (connectionManager.telescopeCoordP == null) || (connectionManager.telescopeOnCoordSetP == null)) {
             builder.setMessage(R.string.no_telescope_found);
         } else {
             String msg = String.format(getString(R.string.point_telescope_message),

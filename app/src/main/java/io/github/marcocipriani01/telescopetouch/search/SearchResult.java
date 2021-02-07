@@ -29,11 +29,11 @@ public class SearchResult {
     /**
      * The coordinates of the object.
      */
-    public GeocentricCoordinates coords;
+    public final GeocentricCoordinates coords;
     /**
      * The user-presentable name of the object, properly capitalized.
      */
-    public String capitalizedName;
+    public final String capitalizedName;
 
     /**
      * @param capitalizedName The user-presentable name of the object, properly capitalized.

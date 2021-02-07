@@ -30,6 +30,7 @@ import io.github.marcocipriani01.telescopetouch.maths.MathsUtils;
 
 import static io.github.marcocipriani01.telescopetouch.maths.MathsUtils.RADIANS_TO_DEGREES;
 
+@SuppressWarnings("ConstantConditions")
 public class EquatorialCoordinates {
 
     /**

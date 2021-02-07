@@ -117,7 +117,7 @@ public class OverlayManager extends RendererObjectManager {
         mSearchHelper.setTarget(target, targetName);
         Vector3 transformedPosition = Matrix4x4.multiplyMV(mGeoToViewerTransform, target);
         mSearchArrow.setTarget(transformedPosition);
-        queueForReload(false);
+        queueForReload();
     }
 
     public void disableSearchOverlay() {

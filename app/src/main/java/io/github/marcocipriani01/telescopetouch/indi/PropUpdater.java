@@ -37,7 +37,7 @@ public class PropUpdater extends Thread {
     @Override
     public void run() {
         if (prop == null) {
-            Log.i(TAG, "Prop " + prop.getName() + " is null, aborting");
+            Log.i(TAG, "INDI property is null, aborting");
             return;
         }
         try {

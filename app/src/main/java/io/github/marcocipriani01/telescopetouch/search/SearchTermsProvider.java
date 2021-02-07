@@ -40,6 +40,7 @@ import io.github.marcocipriani01.telescopetouch.layers.LayerManager;
  */
 public class SearchTermsProvider extends ContentProvider {
 
+    public static final String AUTHORITY = "io.github.marcocipriani01.telescopetouch.searchterms";
     private static final String TAG = TelescopeTouchApp.getTag(SearchTermsProvider.class);
     private static final int SEARCH_SUGGEST = 0;
     /**
@@ -49,7 +50,6 @@ public class SearchTermsProvider extends ContentProvider {
             SearchManager.SUGGEST_COLUMN_QUERY,
             SearchManager.SUGGEST_COLUMN_TEXT_1,
             SearchManager.SUGGEST_COLUMN_TEXT_2};
-    public static String AUTHORITY = "io.github.marcocipriani01.telescopetouch.searchterms";
     private static final UriMatcher uriMatcher = buildUriMatcher();
     private static int s = 0;
     @Inject
@@ -166,8 +166,9 @@ public class SearchTermsProvider extends ContentProvider {
     }
 
     public static class SearchTerm {
-        public String origin;
-        public String query;
+
+        public final String origin;
+        public final String query;
 
         public SearchTerm(String query, String origin) {
             this.query = query;

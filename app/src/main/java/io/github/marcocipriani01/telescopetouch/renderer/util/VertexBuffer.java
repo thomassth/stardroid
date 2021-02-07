@@ -33,12 +33,6 @@ public class VertexBuffer {
     private IntBuffer mPositionBuffer = null;
     private int mNumVertices = 0;
 
-    //Creates an empty buffer.  Must call reset() before adding vertices.
-    public VertexBuffer() {
-        mNumVertices = 0;
-        mUseVBO = false;
-    }
-
     public VertexBuffer(boolean useVBO) {
         mNumVertices = 0;
         mUseVBO = useVBO;
