@@ -66,6 +66,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.indi.AsyncBlobLoader;
@@ -77,8 +78,6 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
         CompoundButton.OnCheckedChangeListener, AdapterView.OnItemSelectedListener,
         SharedPreferences.OnSharedPreferenceChangeListener {
 
-    public static final String RECEIVE_BLOB_PREF = "RECEIVE_BLOB_PREF";
-    public static final String STRETCH_FITS_PREF = "STRETCH_FITS_PREF";
     private static final String TAG = TelescopeTouchApp.getTag(BLOBViewerFragment.class);
     private static int selectedProperty = 0;
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -123,14 +122,14 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
     public void onStart() {
         super.onStart();
         blobLoader.setListener(this);
-        boolean blobEnabled = preferences.getBoolean(RECEIVE_BLOB_PREF, false);
+        boolean blobEnabled = preferences.getBoolean(ApplicationConstants.RECEIVE_BLOB_PREF, false);
         blobsEnableSwitch.setOnCheckedChangeListener(null);
         connectionManager.setBlobEnabled(blobEnabled);
         blobsEnableSwitch.setChecked(blobEnabled);
         blobsEnableSwitch.setSelected(blobEnabled);
         blobsEnableSwitch.setOnCheckedChangeListener(this);
 
-        boolean stretchEnabled = preferences.getBoolean(STRETCH_FITS_PREF, false);
+        boolean stretchEnabled = preferences.getBoolean(ApplicationConstants.STRETCH_FITS_PREF, false);
         blobLoader.setStretch(stretchEnabled);
         fitsStretchSwitch.setOnCheckedChangeListener(null);
         fitsStretchSwitch.setChecked(stretchEnabled);
@@ -332,10 +331,10 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (buttonView == blobsEnableSwitch) {
             connectionManager.setBlobEnabled(isChecked);
-            preferences.edit().putBoolean(RECEIVE_BLOB_PREF, isChecked).apply();
+            preferences.edit().putBoolean(ApplicationConstants.RECEIVE_BLOB_PREF, isChecked).apply();
         } else if (buttonView == fitsStretchSwitch) {
             blobLoader.setStretch(isChecked);
-            preferences.edit().putBoolean(STRETCH_FITS_PREF, isChecked).apply();
+            preferences.edit().putBoolean(ApplicationConstants.STRETCH_FITS_PREF, isChecked).apply();
             INDIBLOBProperty selectedItem = selectionAdapter.getItem(selectionSpinner.getSelectedItemPosition());
             if (selectedItem != null)
                 loadBlob(selectedItem);
@@ -355,8 +354,8 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(RECEIVE_BLOB_PREF) && (blobsEnableSwitch != null)) {
-            boolean blobEnabled = sharedPreferences.getBoolean(RECEIVE_BLOB_PREF, false);
+        if (key.equals(ApplicationConstants.RECEIVE_BLOB_PREF) && (blobsEnableSwitch != null)) {
+            boolean blobEnabled = sharedPreferences.getBoolean(ApplicationConstants.RECEIVE_BLOB_PREF, false);
             blobsEnableSwitch.setOnCheckedChangeListener(null);
             blobsEnableSwitch.setChecked(blobEnabled);
             blobsEnableSwitch.setSelected(blobEnabled);

@@ -43,7 +43,7 @@ public class ApplicationConstants {
     public static final String LONGITUDE_PREF = "longitude";
     public static final String LATITUDE_PREF = "latitude";
     public static final String INDI_SERVERS_PREF = "INDI_SERVERS_PREF";
-    public static final String INDI_PORT_PREF = "INDI_PORT_PREF";
+    public static final String INDI_PORT_PREF = "indi_port";
     public static final String NSD_PREF = "enable_nsd";
     public static final String POLARIS_HEMISPHERE_PREF = "polaris_hemisphere_selection";
     public static final String POLARIS_RETICLE_PREF = "polaris_reticle";
@@ -52,4 +52,10 @@ public class ApplicationConstants {
     public static final String FORCE_GPS_PREF = "force_gps";
     public static final String COMPENSATE_PRECESSION_PREF = "compensate_precession";
     public static final String CATALOG_LIMIT_MAGNITUDE = "catalog_limit_mag";
+    public static final String RECEIVE_BLOB_PREF = "receive_blob";
+    public static final String STRETCH_FITS_PREF = "stretch_fits";
+    public static final String SHOW_STARS_PREF = "show_stars_catalog";
+    public static final String SHOW_DSO_PREF = "show_dso_catalog";
+    public static final String SHOW_PLANETS_PREF = "show_planets_catalog";
+    public static final String ONLY_VISIBLE_OBJECTS_PREF = "only_visible_catalog";
 }

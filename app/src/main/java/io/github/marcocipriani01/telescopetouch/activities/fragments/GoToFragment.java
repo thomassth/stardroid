@@ -188,10 +188,7 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
                 .setMultiChoiceItems(R.array.database_filter_elements, choices,
                         (dialog, which, isChecked) -> choices[which] = isChecked)
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                    entriesAdapter.starsShown(choices[0]);
-                    entriesAdapter.dsoShown(choices[1]);
-                    entriesAdapter.setShowPlanets(choices[2]);
-                    entriesAdapter.setOnlyAboveHorizon(choices[3]);
+                    entriesAdapter.setVisibility(choices);
                     if (entriesAdapter.isEmpty()) {
                         emptyLabel.setVisibility(View.VISIBLE);
                         list.setVisibility(View.GONE);
