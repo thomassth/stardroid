@@ -352,7 +352,6 @@
     <string name="puppidvelids" translation_description="Meteor Shower">Пуппиды-Велиды</string>
     <string name="ursids" translation_description="Meteor Shower">Урсиды</string>
 
-    <string name="no_sensor_warning">На вашем устройстве могут отсутствовать датчики ориентации - автоматический режим может не работать</string>
     <string name="warning_dialog_title">Плохие новости!</string>
     <string name="missing_sensor_dialog_text">\n
         К сожалению, на вашем устройстве может отсутствовать

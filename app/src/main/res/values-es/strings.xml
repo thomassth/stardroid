@@ -362,7 +362,6 @@
     <string name="puppidvelids" translation_description="Meteor Shower">Púpidas-Vélidas</string>
     <string name="ursids" translation_description="Meteor Shower">Úrsidas</string>
 
-    <string name="no_sensor_warning">Es posible que tu dispositivo no tenga sensores de orientación; el modo auto no funcionará</string>
     <string name="warning_dialog_title">¡Malas noticias!</string>
     <string name="missing_sensor_dialog_text">\n
         Lamentablemente, es posible que tu dispositivo no tenga uno de los

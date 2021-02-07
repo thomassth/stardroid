@@ -67,14 +67,14 @@ public class OrbitalElements {
     // Return value is in radians.
     private static double calculateTrueAnomaly(double m, double e) {
         // initial approximation of eccentric anomaly
-        double e0 = m + e * (double) Math.sin(m) * (1.0f + e * (double) Math.cos(m));
+        double e0 = m + e * Math.sin(m) * (1.0f + e * Math.cos(m));
         double e1;
 
         // iterate to improve accuracy
         int counter = 0;
         do {
             e1 = e0;
-            e0 = e1 - (e1 - e * (double) Math.sin(e1) - m) / (1.0f - e * (double) Math.cos(e1));
+            e0 = e1 - (e1 - e * Math.sin(e1) - m) / (1.0f - e * Math.cos(e1));
             if (counter++ > 100) {
                 Log.d(TAG, "Failed to converge! Exiting.");
                 Log.d(TAG, "e1 = " + e1 + ", e0 = " + e0);
@@ -84,7 +84,7 @@ public class OrbitalElements {
         } while (abs(e0 - e1) > EPSILON);
 
         // convert eccentric anomaly to true anomaly
-        double v = 2f * (double) Math.atan((double) (Math.sqrt((1 + e) / (1 - e)) * ((double) Math.sin(0.5f * e0) / (double) Math.cos(0.5f * e0))));
+        double v = 2f * Math.atan(Math.sqrt((1 + e) / (1 - e)) * (Math.sin(0.5f * e0) / Math.cos(0.5f * e0)));
         return MathsUtils.mod2pi(v);
     }
 

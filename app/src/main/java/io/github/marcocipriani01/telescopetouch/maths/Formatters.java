@@ -24,9 +24,9 @@ public class Formatters {
         int min = (int) Math.floor(tmp);
         int sec = (int) Math.round((tmp - min) * 60.0);
         if (Math.signum(x) >= 0) {
-            return String.format("%02d:%02d:%02d", deg, min, sec);
+            return String.format("%02dh%02dm%02ds", deg, min, sec);
         } else {
-            return String.format("-%02d:%02d:%02d", deg, min, sec);
+            return String.format("-%02dh%02dm%02ds", deg, min, sec);
         }
     }
 
@@ -39,19 +39,19 @@ public class Formatters {
         int min = (int) Math.floor((Math.abs(x) - deg) * 60.0);
         int sec = (int) Math.round(((Math.abs(x) - deg) * 60.0 - min) * 60.0);
         if (Math.signum(x) >= 0) {
-            return String.format("%02d:%02d:%02d", deg, min, sec);
+            return String.format("%02d°%02d'%02d\"", deg, min, sec);
         } else {
-            return String.format("-%02d:%02d:%02d", deg, min, sec);
+            return String.format("-%02d°%02d'%02d\"", deg, min, sec);
         }
     }
 
     public static String latitudeToString(double latitude, Context context) {
-        return formatHours(Math.abs(latitude)) + " " +
+        return formatDegrees(Math.abs(latitude)) + " " +
                 (latitude >= 0.0 ? context.getString(R.string.north_short) : context.getString(R.string.south_short));
     }
 
     public static String longitudeToString(double longitude, Context context) {
-        return formatHours(Math.abs(longitude)) + " " +
+        return formatDegrees(Math.abs(longitude)) + " " +
                 (longitude >= 0.0 ? context.getString(R.string.east_short) : context.getString(R.string.west_short));
     }
 

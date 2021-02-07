@@ -75,7 +75,7 @@ public class AsyncBlobLoader {
     }
 
     private synchronized void startProcessing() {
-        loadingThread = new Thread(new LoadingRunnable(queuedValue, stretch));
+        loadingThread = new LoadingThread(queuedValue, stretch);
         loadingThread.start();
         queuedValue = null;
     }
@@ -86,12 +86,12 @@ public class AsyncBlobLoader {
         void onBlobException(Throwable e);
     }
 
-    private class LoadingRunnable implements Runnable {
+    private class LoadingThread extends Thread {
 
         private final INDIBLOBValue blobValue;
         private final boolean stretch;
 
-        private LoadingRunnable(INDIBLOBValue blobValue, boolean stretch) {
+        private LoadingThread(INDIBLOBValue blobValue, boolean stretch) {
             this.blobValue = blobValue;
             this.stretch = stretch;
         }

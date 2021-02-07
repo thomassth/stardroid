@@ -24,9 +24,8 @@ public class TelescopeLayer extends AbstractLayer {
 
     public static final int DEPTH_ORDER = 100;
     public static final String PREFERENCE_ID = "source_provider.7";
-    private static final Vector3 UP = new Vector3(0.0f, 1.0f, 0.0f);
     private static final int LABEL_COLOR = 0xff6f00;
-    private static final float SIZE_ON_MAP = 0.035f;
+    private static final float SIZE_ON_MAP = 0.03f;
 
     public TelescopeLayer(Resources resources) {
         super(resources, true);
@@ -55,6 +54,7 @@ public class TelescopeLayer extends AbstractLayer {
 
         private final ArrayList<ImageSourceImpl> imageSources = new ArrayList<>();
         private final ArrayList<TextSource> labelSources = new ArrayList<>();
+        private final GeocentricCoordinates coordinates = new GeocentricCoordinates();
         private long lastUpdateTimeMs = 0L;
         private TextSourceImpl textSource;
         private ImageSourceImpl imageSource;
@@ -62,9 +62,10 @@ public class TelescopeLayer extends AbstractLayer {
         @Override
         public Sources initialize() {
             Resources resources = getResources();
-            imageSource = new ImageSourceImpl(connectionManager.telescopeCoordinates, resources, R.drawable.telescope_crosshair, UP, SIZE_ON_MAP);
+            coordinates.updateFromRaDec(connectionManager.telescopeCoordinates);
+            imageSource = new ImageSourceImpl(coordinates, resources, R.drawable.telescope_crosshair, SIZE_ON_MAP);
             imageSources.add(imageSource);
-            textSource = new TextSourceImpl(connectionManager.telescopeCoordinates, getName(), LABEL_COLOR);
+            textSource = new TextSourceImpl(coordinates, getName(), LABEL_COLOR);
             labelSources.add(textSource);
             return this;
         }
@@ -75,9 +76,10 @@ public class TelescopeLayer extends AbstractLayer {
             long time = System.currentTimeMillis();
             if (Math.abs(time - lastUpdateTimeMs) > 200) {
                 lastUpdateTimeMs = time;
+                coordinates.updateFromRaDec(connectionManager.telescopeCoordinates);
                 updates.add(RendererObjectManager.UpdateType.UpdatePositions);
                 textSource.setText(getName());
-                imageSource.setUpVector(UP);
+                imageSource.resetUpVector();
             }
             return updates;
         }
@@ -88,12 +90,12 @@ public class TelescopeLayer extends AbstractLayer {
         }
 
         private String getName() {
-            return (connectionManager.telescopeName == null) ? "No telescope" : connectionManager.telescopeName;
+            return (connectionManager.telescopeName == null) ? getResources().getString(R.string.no_telescope) : connectionManager.telescopeName;
         }
 
         @Override
         public GeocentricCoordinates getSearchLocation() {
-            return connectionManager.telescopeCoordinates;
+            return coordinates;
         }
 
         @Override

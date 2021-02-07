@@ -35,6 +35,9 @@ import org.indilib.i4j.client.INDIProperty;
 import org.indilib.i4j.client.INDIPropertyListener;
 import org.indilib.i4j.client.INDIServerConnection;
 import org.indilib.i4j.client.INDIServerConnectionListener;
+import org.indilib.i4j.client.INDISwitchElement;
+import org.indilib.i4j.client.INDISwitchProperty;
+import org.indilib.i4j.properties.INDIStandardElement;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,7 +46,8 @@ import java.util.Set;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
-import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoordinates;
+import io.github.marcocipriani01.telescopetouch.layers.TelescopeLayer;
 
 /**
  * Manages an {@link INDIServerConnection} object, listens to INDI messages and notifies listeners.
@@ -52,32 +56,37 @@ import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
  */
 public class ConnectionManager implements INDIServerConnectionListener, INDIDeviceListener, INDIPropertyListener {
 
+    private static final String TAG = TelescopeTouchApp.getTag(ConnectionManager.class);
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Set<ManagerListener> managerListeners = new HashSet<>();
     private final HashSet<INDIServerConnectionListener> indiListeners = new HashSet<>();
     private final ArrayList<LogItem> logs = new ArrayList<>();
-    public GeocentricCoordinates telescopeCoordinates = GeocentricCoordinates.getInstance(0, 0);
-    public String telescopeName = null;
+    public final EquatorialCoordinates telescopeCoordinates = new EquatorialCoordinates();
+    public volatile String telescopeName = null;
+    // Telescope
+    public INDINumberProperty telescopeCoordP = null;
+    public INDINumberElement telescopeCoordRA = null;
+    public INDINumberElement telescopeCoordDec = null;
+    public INDISwitchProperty telescopeOnCoordSetP = null;
+    public INDISwitchElement telescopeOnCoordSetSync = null;
+    public INDISwitchElement telescopeOnCoordSetSlew = null;
+    public INDISwitchElement telescopeOnCoordSetTrack = null;
     private java.text.DateFormat dateFormat = null;
     private java.text.DateFormat timeFormat = null;
-    private INDIServerConnection indiConnection;
+    private volatile INDIServerConnection indiConnection;
     private volatile boolean busy = false;
     private volatile boolean blobEnabled = false;
     private SharedPreferences preferences;
-    // Telescope
-    private INDINumberProperty telescopeCoordP = null;
-    private INDINumberElement telescopeCoordRA = null;
-    private INDINumberElement telescopeCoordDec = null;
 
     public ArrayList<LogItem> getLogs() {
         return logs;
     }
 
-    public void initContext(Context context) {
+    public void init(Context context) {
         dateFormat = DateFormat.getDateFormat(context);
         timeFormat = DateFormat.getTimeFormat(context);
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        preferences.edit().putBoolean("source_provider.7", false).apply();
+        preferences.edit().putBoolean(TelescopeLayer.PREFERENCE_ID, false).apply();
     }
 
     public void setBlobEnabled(boolean b) {
@@ -95,7 +104,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
                     }
                 }
             } catch (Exception e) {
-                Log.e("ConnectionManager", e.getLocalizedMessage(), e);
+                Log.e(TAG, e.getLocalizedMessage(), e);
             }
         }).start();
     }
@@ -150,6 +159,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
                     updateState(ConnectionState.CONNECTED);
                     log(resources.getString(R.string.connected));
                 } catch (Exception e) {
+                    Log.e(TAG, e.getLocalizedMessage(), e);
                     busy = false;
                     updateState(ConnectionState.DISCONNECTED);
                     log(e.getLocalizedMessage());
@@ -267,7 +277,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
             try {
                 device.blobsEnable(this.blobEnabled ? Constants.BLOBEnables.ALSO : Constants.BLOBEnables.NEVER);
             } catch (Exception e) {
-                Log.e("ConnectionManager", e.getLocalizedMessage(), e);
+                Log.e(TAG, e.getLocalizedMessage(), e);
             }
         }).start();
     }
@@ -304,28 +314,54 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
                 try {
                     device.blobsEnable(this.blobEnabled ? Constants.BLOBEnables.ALSO : Constants.BLOBEnables.NEVER, property);
                 } catch (Exception e) {
-                    Log.e("ConnectionManager", e.getLocalizedMessage(), e);
+                    Log.e(TAG, e.getLocalizedMessage(), e);
                 }
             }).start();
-        } else if (property.getName().equals("EQUATORIAL_EOD_COORD")) {
-            if (((telescopeCoordDec = (INDINumberElement) property.getElement("DEC")) != null) &&
-                    ((telescopeCoordRA = (INDINumberElement) property.getElement("RA")) != null) &&
-                    (property instanceof INDINumberProperty)) {
-                property.addINDIPropertyListener(this);
-                telescopeCoordP = (INDINumberProperty) property;
-                handler.post(() -> {
-                    telescopeName = device.getName();
-                    telescopeCoordinates.updateFromRaDec(telescopeCoordRA.getValue(), telescopeCoordDec.getValue());
-                    preferences.edit().putBoolean("source_provider.7", true).apply();
-                });
+        } else {
+            String name = property.getName();
+            switch (name) {
+                case "EQUATORIAL_EOD_COORD":
+                    if (((telescopeCoordDec = (INDINumberElement) property.getElement(INDIStandardElement.DEC)) != null) &&
+                            ((telescopeCoordRA = (INDINumberElement) property.getElement(INDIStandardElement.RA)) != null) &&
+                            (property instanceof INDINumberProperty)) {
+                        property.addINDIPropertyListener(this);
+                        telescopeCoordP = (INDINumberProperty) property;
+                        telescopeName = device.getName();
+                        telescopeCoordinates.ra = telescopeCoordRA.getValue() * 15.0;
+                        telescopeCoordinates.dec = telescopeCoordDec.getValue();
+                        handler.post(() -> preferences.edit().putBoolean(TelescopeLayer.PREFERENCE_ID, true).apply());
+                    }
+                    break;
+                case "ON_COORD_SET":
+                    if (((telescopeOnCoordSetTrack = (INDISwitchElement) property.getElement(INDIStandardElement.TRACK)) != null) &&
+                            ((telescopeOnCoordSetSlew = (INDISwitchElement) property.getElement(INDIStandardElement.SLEW)) != null) &&
+                            ((telescopeOnCoordSetSync = (INDISwitchElement) property.getElement(INDIStandardElement.SYNC)) != null)) {
+                        property.addINDIPropertyListener(this);
+                        telescopeOnCoordSetP = (INDISwitchProperty) property;
+                    }
+                    break;
             }
         }
     }
 
     @Override
     public void removeProperty(INDIDevice device, INDIProperty<?> property) {
-        if (property.getName().equals("EQUATORIAL_EOD_COORD")) {
-            clearTelescopeVars();
+        String name = property.getName();
+        switch (name) {
+            case "EQUATORIAL_EOD_COORD":
+                telescopeCoordDec = null;
+                telescopeCoordRA = null;
+                telescopeCoordP = null;
+                telescopeName = null;
+                telescopeCoordinates.ra = 0;
+                telescopeCoordinates.dec = 0;
+                handler.post(() -> preferences.edit().putBoolean(TelescopeLayer.PREFERENCE_ID, false).apply());
+                break;
+            case "ON_COORD_SET":
+                telescopeCoordP = null;
+                telescopeCoordRA = null;
+                telescopeCoordDec = null;
+                break;
         }
     }
 
@@ -333,11 +369,13 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
         telescopeCoordDec = null;
         telescopeCoordRA = null;
         telescopeCoordP = null;
-        handler.post(() -> {
-            telescopeName = null;
-            telescopeCoordinates.updateFromRaDec(0.0f, 0.0f);
-            preferences.edit().putBoolean("source_provider.7", false).apply();
-        });
+        telescopeOnCoordSetP = null;
+        telescopeOnCoordSetSlew = null;
+        telescopeOnCoordSetTrack = null;
+        telescopeOnCoordSetSync = null;
+        telescopeName = null;
+        telescopeCoordinates.ra = 0;
+        telescopeCoordinates.dec = 0;
     }
 
     @Override
@@ -347,8 +385,10 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
 
     @Override
     public void propertyChanged(INDIProperty<?> indiProperty) {
-        if (indiProperty == telescopeCoordP)
-            handler.post(() -> telescopeCoordinates.updateFromRaDec(telescopeCoordRA.getValue() * 15.0, telescopeCoordDec.getValue()));
+        if ((indiProperty == telescopeCoordP) && (telescopeCoordRA != null) && (telescopeCoordDec != null)) {
+            telescopeCoordinates.ra = telescopeCoordRA.getValue() * 15.0;
+            telescopeCoordinates.dec = telescopeCoordDec.getValue();
+        }
     }
 
     public enum ConnectionState {

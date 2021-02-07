@@ -359,7 +359,6 @@
     <string name="puppidvelids" translation_description="Meteor Shower">Puppid-Velids</string>
     <string name="ursids" translation_description="Meteor Shower">Ursids</string>
 
-    <string name="no_sensor_warning">Mae\'n bosib nad oes gan dy ddyfais synwyryddion cyfeiriad i\'r modd awtomatig gweithio.</string>
     <string name="warning_dialog_title">Newyddion drwg!</string>
     <string name="missing_sensor_dialog_text">\n
         Yn anffodus, mae\'n bosib nad oes gan dy ddyfais un o\'r synwyryddion sydd ei angen ar Sky Map.\n\n

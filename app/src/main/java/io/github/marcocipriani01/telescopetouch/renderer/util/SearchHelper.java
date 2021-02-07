@@ -21,8 +21,8 @@ import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 
 public class SearchHelper {
 
-    private Vector3 mTarget = new Vector3(0, 0, 0);
-    private Vector3 mTransformedPosition = new Vector3(0, 0, 0);
+    private Vector3 mTarget = new Vector3();
+    private Vector3 mTransformedPosition = new Vector3();
     private float mHalfScreenWidth = 1;
     private float mHalfScreenHeight = 1;
     private Matrix4x4 mTransformMatrix = null;

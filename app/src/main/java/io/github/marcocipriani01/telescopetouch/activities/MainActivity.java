@@ -47,6 +47,8 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.Objects;
+
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.AboutFragment;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.ActionFragment;
@@ -77,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements
 
     public static final String ACTION = "MainActivityAction";
     public static final int ACTION_CONNECT = Pages.CONNECTION.ordinal();
+    public static final int ACTION_MOUNT_CONTROL = Pages.MOUNT_CONTROL.ordinal();
     public static final int ACTION_SEARCH = Pages.GOTO.ordinal();
     public static final String MESSAGE = "MainActivityMessage";
     private static Pages currentPage = Pages.CONNECTION;
@@ -122,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements
         bottomBar = findViewById(R.id.bottom_app_bar);
         setSupportActionBar(bottomBar);
         bottomBar.setOnMenuItemClickListener(this);
-        MainBottomNavigation bottomNavigation = new MainBottomNavigation(this);
+        final MainBottomNavigation bottomNavigation = new MainBottomNavigation(this);
         bottomBar.setNavigationOnClickListener(v -> bottomNavigation.show());
         intentAndFragment(getIntent());
     }
@@ -140,9 +143,11 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             showFragment(Pages.values()[action], false);
         }
-        int messageRes = intent.getIntExtra(MESSAGE, 0);
-        if (messageRes != 0)
-            actionSnackRequested(messageRes);
+        handler.postDelayed(() -> {
+            int messageRes = intent.getIntExtra(MESSAGE, 0);
+            if (messageRes != 0)
+                actionSnackRequested(messageRes);
+        }, 100);
     }
 
     @Override
@@ -294,14 +299,14 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void actionSnackRequested(int msgRes) {
         fab.hide();
-        Snackbar.make(mainCoordinator, msgRes, Snackbar.LENGTH_SHORT)
+        Snackbar.make(mainCoordinator, msgRes, Snackbar.LENGTH_SHORT).setAnchorView(bottomBar)
                 .addCallback(new SnackBarCallBack()).show();
     }
 
     @Override
     public void actionSnackRequested(int msgRes, int actionName, View.OnClickListener action) {
         fab.hide();
-        Snackbar.make(mainCoordinator, msgRes, Snackbar.LENGTH_SHORT)
+        Snackbar.make(mainCoordinator, msgRes, Snackbar.LENGTH_SHORT).setAnchorView(bottomBar)
                 .addCallback(new SnackBarCallBack()).setAction(actionName, action).show();
     }
 
@@ -333,7 +338,7 @@ public class MainActivity extends AppCompatActivity implements
      */
     private enum Pages {
         CONNECTION(R.id.menu_connection),
-        TELESCOPE(R.id.menu_move),
+        MOUNT_CONTROL(R.id.menu_move),
         GOTO(R.id.menu_goto_fragment),
         CCD_IMAGES(R.id.menu_ccd_images),
         FOCUSER(R.id.menu_focuser),
@@ -364,7 +369,7 @@ public class MainActivity extends AppCompatActivity implements
                 case CONNECTION:
                     lastInstance = new ConnectionFragment();
                     break;
-                case TELESCOPE:
+                case MOUNT_CONTROL:
                     lastInstance = new MountControlFragment();
                     break;
                 case GOTO:
@@ -396,12 +401,12 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    public static class MainBottomNavigation extends BottomSheetDialog {
+    private static class MainBottomNavigation extends BottomSheetDialog {
 
         private final NavigationView.OnNavigationItemSelectedListener listener;
         private Menu navigationMenu;
 
-        public MainBottomNavigation(@NonNull MainActivity activity) {
+        MainBottomNavigation(@NonNull MainActivity activity) {
             super(activity);
             this.listener = activity;
         }
@@ -413,7 +418,7 @@ public class MainActivity extends AppCompatActivity implements
             getWindow().getAttributes().width = WindowManager.LayoutParams.MATCH_PARENT;
             getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
             NavigationView navigation = findViewById(R.id.navigation_view);
-            navigation.setNavigationItemSelectedListener(item -> {
+            Objects.requireNonNull(navigation).setNavigationItemSelectedListener(item -> {
                 dismiss();
                 return listener.onNavigationItemSelected(item);
             });

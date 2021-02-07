@@ -29,7 +29,6 @@ import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.astronomy.TimeUtils;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
-import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererObjectManager.UpdateType;
 import io.github.marcocipriani01.telescopetouch.source.AstronomicalSource;
 import io.github.marcocipriani01.telescopetouch.source.ImageSource;
@@ -174,7 +173,6 @@ public class MeteorShowerLayer extends AbstractLayer {
 
     private static class MeteorRadiantSource extends AstronomicalSource {
         private static final int LABEL_COLOR = 0xf67e81;
-        private static final Vector3 UP = new Vector3(0.0f, 1.0f, 0.0f);
         private static final long UPDATE_FREQ_MS = TimeUtils.MILLISECONDS_PER_DAY;
         private static final float SCALE_FACTOR = 0.03f;
 
@@ -204,7 +202,7 @@ public class MeteorShowerLayer extends AbstractLayer {
             // appears to be a bug in the renderer/layer interface in that Update values are not
             // respected.  Ditto the label.
             // TODO(johntaylor): fix the bug and remove this blank image
-            theImage = new ImageSourceImpl(shower.radiant, resources, R.drawable.blank, UP, SCALE_FACTOR);
+            theImage = new ImageSourceImpl(shower.radiant, resources, R.drawable.blank, SCALE_FACTOR);
             imageSources.add(theImage);
             label = new TextSourceImpl(shower.radiant, name, LABEL_COLOR);
             labelSources.add(label);
@@ -227,7 +225,7 @@ public class MeteorShowerLayer extends AbstractLayer {
             // Standardize on the same year as we stored for the showers.
             now.set(Calendar.YEAR, ANY_OLD_YEAR);
 
-            theImage.setUpVector(UP);
+            theImage.resetUpVector();
             // TODO(johntaylor): consider varying the sizes by scaling factor as time progresses.
             if (now.after(shower.start) && now.before(shower.end)) {
                 label.setText(name);

@@ -349,7 +349,6 @@
     <string name="diagnostics_activity_location_and_time_heading">Lokace a čas</string>
     <string name="perseids" translation_description="Meteor Shower">Perseidy</string>
     <string name="sensor_accuracy_unreliable">Přesnost: Nespolehlivá</string>
-    <string name="no_sensor_warning">Vašemu zařízení mužou chybět orientační senzory - automatický mód nemusí fungovat</string>
     <string name="leonids" translation_description="Meteor Shower">Leonidy</string>
     <string name="sensor_accuracy_medium">Přesnost: Střední</string>
     <string name="missing_sensor_dialog_text">\n

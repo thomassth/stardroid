@@ -25,6 +25,7 @@ package io.github.marcocipriani01.telescopetouch.renderer.util;
  * @author John Taylor
  */
 public abstract class AbstractUpdateClosure implements UpdateClosure {
+
     @Override
     public int compareTo(UpdateClosure that) {
         int thisHashCode = this.hashCode();

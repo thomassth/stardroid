@@ -36,6 +36,9 @@ import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.GoToFragment;
 import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
 import io.github.marcocipriani01.telescopetouch.gallery.GalleryImages;
+import io.github.marcocipriani01.telescopetouch.layers.MessierLayer;
+import io.github.marcocipriani01.telescopetouch.layers.PlanetsLayer;
+import io.github.marcocipriani01.telescopetouch.layers.StarsLayer;
 
 /**
  * Shows an image to the user and allows them to search for it.
@@ -75,16 +78,12 @@ public class ImageDisplayActivity extends InjectableActivity {
         this.<TextView>findViewById(R.id.gallery_image_title).setText(selectedImage.getName(this));
         this.<Button>findViewById(R.id.gallery_image_search_btn).setOnClickListener(source -> {
             Log.d(TAG, "Do Search");
-            // We must ensure that all the relevant layers are actually visible or the search might
-            // fail.  This is rather hacky.
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-            Editor editor = sharedPreferences.edit();
-            // TODO move to constants
-            String[] keys = {"source_provider.0",  // Stars
-                    "source_provider.2",  // Messier
-                    "source_provider.3"};  // Planets
+            // We must ensure that all the relevant layers are actually visible or the search might fail. This is rather hacky.
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            Editor editor = preferences.edit();
+            String[] keys = {StarsLayer.PREFERENCE_ID, MessierLayer.PREFERENCE_ID, PlanetsLayer.PREFERENCE_ID};
             for (String key : keys) {
-                if (!sharedPreferences.getBoolean(key, false)) {
+                if (!preferences.getBoolean(key, false)) {
                     editor.putBoolean(key, true);
                 }
             }

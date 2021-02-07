@@ -60,8 +60,6 @@ public class LabelMaker {
 
     /**
      * Call to initialize the class. Call whenever the surface has been created.
-     *
-     * @param gl
      */
     public TextureReference initialize(GL10 gl, Paint textPaint, LabelData[] labels,
                                        Resources res, TextureManager textureManager) {
@@ -112,7 +110,6 @@ public class LabelMaker {
     /**
      * Call to add a list of labels
      *
-     * @param gl
      * @param textPaint the paint of the label
      * @param labels    the array of labels being added
      * @return the required height

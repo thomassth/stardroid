@@ -32,7 +32,7 @@ import io.github.marcocipriani01.telescopetouch.source.ImageSource;
  */
 public class ImageSourceImpl extends AbstractSource implements ImageSource {
 
-    static Vector3 up = new Vector3(0.0f, 1.0f, 0.0f);
+    public static final Vector3 UP = new Vector3(0, 1, 0);
     private final float imageScale;
     private final Resources resources;
     // These two vectors, along with Source.xyz, determine the position of the
@@ -53,16 +53,8 @@ public class ImageSourceImpl extends AbstractSource implements ImageSource {
     public Bitmap image;
     public boolean requiresBlending = false;
 
-    public ImageSourceImpl(float ra, float dec, Resources res, int id) {
-        this(ra, dec, res, id, up, 1.0f);
-    }
-
-    public ImageSourceImpl(float ra, float dec, Resources res, int id, Vector3 upVec) {
-        this(ra, dec, res, id, upVec, 1.0f);
-    }
-
-    public ImageSourceImpl(float ra, float dec, Resources res, int id, Vector3 upVec, float imageScale) {
-        this(GeocentricCoordinates.getInstance(ra, dec), res, id, upVec, imageScale);
+    public ImageSourceImpl(GeocentricCoordinates coords, Resources res, int id, float imageScale) {
+        this(coords, res, id, UP, imageScale);
     }
 
     public ImageSourceImpl(GeocentricCoordinates coords, Resources res, int id, Vector3 upVec, float imageScale) {
@@ -121,5 +113,9 @@ public class ImageSourceImpl extends AbstractSource implements ImageSource {
         vx = (float) v.x;
         vy = (float) v.y;
         vz = (float) v.z;
+    }
+
+    public void resetUpVector() {
+        setUpVector(UP);
     }
 }

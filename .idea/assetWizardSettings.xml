@@ -332,7 +332,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:/$PROJECT_DIR$/../../Windows/ProgramData/AndroidSDK/icons/material/materialicons/star/baseline_star_24.xml" />
+                                      <entry key="url" value="file:/$PROJECT_DIR$/../../Windows/ProgramData/AndroidSDK/icons/material/materialicons/lock_open/baseline_lock_open_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -342,7 +342,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="star" />
+                            <entry key="outputName" value="lock_open" />
                             <entry key="sourceFile" value="C:\Users\marco\Desktop\SVG\reticle_bigdipper_path.svg" />
                           </map>
                         </option>

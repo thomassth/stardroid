@@ -138,26 +138,22 @@ public abstract class RendererControllerBase {
     }
 
     public void queueDisableSearchOverlay() {
-        final String msg = "Disabling search overlay";
-        queueRunnable(msg, CommandType.Data, mRenderer::disableSearchOverlay);
+        queueRunnable("Disabling search overlay", CommandType.Data, mRenderer::disableSearchOverlay);
     }
 
     public void addUpdateClosure(final UpdateClosure runnable) {
-        final String msg = "Setting update callback";
-        queueRunnable(msg, CommandType.Data, () -> mRenderer.addUpdateClosure(runnable));
+        queueRunnable("Setting update callback", CommandType.Data, () -> mRenderer.addUpdateClosure(runnable));
     }
 
     public void removeUpdateCallback(final UpdateClosure update) {
-        final String msg = "Removing update callback";
-        queueRunnable(msg, CommandType.Data, () -> mRenderer.removeUpdateCallback(update));
+        queueRunnable("Removing update callback", CommandType.Data, () -> mRenderer.removeUpdateCallback(update));
     }
 
     /**
      * Must be called once to register an object manager to the renderer.
      */
     public <E> void queueAddManager(final RenderManager<E> rom) {
-        String msg = "Adding manager: " + rom;
-        queueRunnable(msg, CommandType.Data, () -> mRenderer.addObjectManager(rom.mManager));
+        queueRunnable("Adding manager: " + rom, CommandType.Data, () -> mRenderer.addObjectManager(rom.mManager));
     }
 
     public void waitUntilFinished() {

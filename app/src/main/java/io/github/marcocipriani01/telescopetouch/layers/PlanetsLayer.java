@@ -29,7 +29,6 @@ import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.astronomy.HeliocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.astronomy.Planet;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
-import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererObjectManager;
 import io.github.marcocipriani01.telescopetouch.source.AstronomicalSource;
 import io.github.marcocipriani01.telescopetouch.source.ImageSource;
@@ -51,7 +50,6 @@ public class PlanetsLayer extends AbstractLayer {
     public static final int DEPTH_ORDER = 60;
     public static final String PREFERENCE_ID = "source_provider.3";
     private static final int LABEL_COLOR = 0xf67e81;
-    private static final Vector3 UP = new Vector3(0.0f, 1.0f, 0.0f);
     private final AstronomerModel model;
 
     public PlanetsLayer(AstronomerModel model, Resources resources) {
@@ -93,7 +91,7 @@ public class PlanetsLayer extends AbstractLayer {
         private final ArrayList<TextSource> labelSources = new ArrayList<>();
         private final Planet planet;
         private final String name;
-        private final GeocentricCoordinates currentCoords = new GeocentricCoordinates(0, 0, 0);
+        private final GeocentricCoordinates currentCoords = new GeocentricCoordinates();
         private HeliocentricCoordinates sunCoords;
         private int imageId = -1;
         private long lastUpdateTimeMs = 0L;
@@ -131,7 +129,7 @@ public class PlanetsLayer extends AbstractLayer {
             if (planet == Planet.Moon) {
                 imageSources.add(new ImageSourceImpl(currentCoords, resources, imageId, sunCoords, planet.getPlanetaryImageSize()));
             } else {
-                imageSources.add(new ImageSourceImpl(currentCoords, resources, imageId, UP, planet.getPlanetaryImageSize()));
+                imageSources.add(new ImageSourceImpl(currentCoords, resources, imageId, planet.getPlanetaryImageSize()));
             }
             labelSources.add(new TextSourceImpl(currentCoords, name, LABEL_COLOR));
             return this;

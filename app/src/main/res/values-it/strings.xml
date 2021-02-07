@@ -393,7 +393,7 @@
     <string name="entry_short_PD">Difetto fotografico</string>
     <string name="sync_slew_error">Errore: impossibile richiedere sincronizzazione o vai a</string>
     <string name="slew_ok">Goto iniziato</string>
-    <string name="sync_ok">Sincronizzazione…</string>
+    <string name="sync_ok">Sincronizzazione effettuata</string>
     <string name="empty_catalog">Catalogo vuoto</string>
     <string name="menu_about">Informazioni</string>
     <string name="app_description"><b>Telescope.Touch</b> è nato come un tentativo di unire l\'app Sky Map e il progetto IPARCOS, un client INDI per Android.
@@ -417,7 +417,7 @@
     <string name="error">Errore:</string>
     <string name="host_manage">Gestisci i server</string>
     <string name="remove_server">Rimuovere il server selezionato?</string>
-    <string name="servers_list_toast">Tieni premuto per cancellare, trascina per riorganizzare</string>
+    <string name="servers_list_snack_msg">Tieni premuto per cancellare, trascina per riorganizzare</string>
     <string name="menu_focuser">Focheggiatore</string>
     <string name="stop_motion">Ferma</string>
     <string name="absolute_position">Posizione assoluta:</string>
@@ -546,4 +546,5 @@
     <string name="only_visible">Solo oggetti visibili</string>
     <string name="not_a_number">Non è un numero!</string>
     <string name="no_matching_objects">Nessun oggetto trovato</string>
+    <string name="no_sensor_warning">Il dispositivo non ha sensori di movimento!</string>
 </resources>
