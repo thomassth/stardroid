@@ -98,7 +98,7 @@ public class AsyncBlobLoader {
 
         @SuppressLint("DefaultLocale")
         @Override
-        public void run() {
+        public synchronized void run() {
             try {
                 String format = blobValue.getFormat();
                 int blobSize = blobValue.getSize();

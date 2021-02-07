@@ -83,21 +83,21 @@ public class MountControlFragment extends ActionFragment implements INDIServerCo
     private Context context;
     private MenuItem trackingMenu;
     // Properties and elements associated to the buttons
-    private INDISwitchProperty telescopeMotionNSP = null;
-    private INDISwitchElement telescopeMotionNE = null;
-    private INDISwitchElement telescopeMotionSE = null;
-    private INDISwitchProperty telescopeMotionWEP = null;
-    private INDISwitchElement telescopeMotionWE = null;
-    private INDISwitchElement telescopeMotionEE = null;
-    private INDISwitchProperty telescopeMotionAbort = null;
-    private INDISwitchElement telescopeMotionAbortE = null;
-    private INDISwitchProperty telescopeSlewRateP = null;
-    private INDISwitchProperty telescopeParkP = null;
-    private INDISwitchElement telescopeParkE = null;
-    private INDISwitchElement telescopeUnParkE = null;
-    private INDISwitchProperty telescopeTrackP = null;
-    private INDISwitchElement telescopeTrackE = null;
-    private INDISwitchElement telescopeUnTrackE = null;
+    private volatile INDISwitchProperty telescopeMotionNSP = null;
+    private volatile INDISwitchElement telescopeMotionNE = null;
+    private volatile INDISwitchElement telescopeMotionSE = null;
+    private volatile INDISwitchProperty telescopeMotionWEP = null;
+    private volatile INDISwitchElement telescopeMotionWE = null;
+    private volatile INDISwitchElement telescopeMotionEE = null;
+    private volatile INDISwitchProperty telescopeMotionAbort = null;
+    private volatile INDISwitchElement telescopeMotionAbortE = null;
+    private volatile INDISwitchProperty telescopeSlewRateP = null;
+    private volatile INDISwitchProperty telescopeParkP = null;
+    private volatile INDISwitchElement telescopeParkE = null;
+    private volatile INDISwitchElement telescopeUnParkE = null;
+    private volatile INDISwitchProperty telescopeTrackP = null;
+    private volatile INDISwitchElement telescopeTrackE = null;
+    private volatile INDISwitchElement telescopeUnTrackE = null;
     // Views
     private ToggleButton btnPark = null;
     private Button btnMoveN = null;

@@ -31,6 +31,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.preference.PreferenceManager;
 
+import com.github.chrisbanes.photoview.PhotoView;
+
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.GoToFragment;
@@ -74,7 +76,9 @@ public class ImageDisplayActivity extends InjectableActivity {
         }
 
         selectedImage = GalleryImages.values()[position];
-        this.<ImageView>findViewById(R.id.gallery_image).setImageResource(selectedImage.getImageId());
+        PhotoView photo = this.findViewById(R.id.gallery_image);
+        photo.setMaximumScale(5f);
+        photo.setImageResource(selectedImage.getImageId());
         this.<TextView>findViewById(R.id.gallery_image_title).setText(selectedImage.getName(this));
         this.<Button>findViewById(R.id.gallery_image_search_btn).setOnClickListener(source -> {
             Log.d(TAG, "Do Search");

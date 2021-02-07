@@ -41,6 +41,7 @@ import org.indilib.i4j.client.INDIServerConnection;
 import org.indilib.i4j.client.INDIServerConnectionListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -49,12 +50,12 @@ import io.github.marcocipriani01.telescopetouch.R;
 
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 
-public class ControlPanelFragment extends Fragment
-        implements INDIServerConnectionListener, SearchView.OnQueryTextListener, View.OnClickListener, SearchView.OnCloseListener {
+public class ControlPanelFragment extends Fragment implements INDIServerConnectionListener,
+        SearchView.OnQueryTextListener, View.OnClickListener, SearchView.OnCloseListener {
 
     private static final String KEY_VIEWPAGER_STATE = "DevicesViewPagerState";
     private static Bundle viewPagerBundle;
-    private final ArrayList<INDIDevice> devices = new ArrayList<>();
+    private final List<INDIDevice> devices = Collections.synchronizedList(new ArrayList<>());
     private final HashMap<Integer, DeviceControlFragment> fragmentsMap = new HashMap<>();
     private final Handler handler = new Handler(Looper.getMainLooper());
     private DevicesFragmentAdapter fragmentAdapter;
@@ -154,23 +155,23 @@ public class ControlPanelFragment extends Fragment
 
     private void noDevices() {
         devices.clear();
-        noDevicesText.post(() -> noDevicesText.setVisibility(View.VISIBLE));
-        viewPager.post(() -> {
-            fragmentAdapter.notifyDataSetChanged();
-            viewPager.setVisibility(View.GONE);
-        });
         handler.post(() -> {
+            if (noDevicesText != null) noDevicesText.setVisibility(View.VISIBLE);
+            if ((fragmentAdapter != null) && (viewPager != null)) {
+                fragmentAdapter.notifyDataSetChanged();
+                viewPager.setVisibility(View.GONE);
+            }
             if (searchMenu != null) searchMenu.setVisible(false);
         });
     }
 
     private void devices() {
-        noDevicesText.post(() -> noDevicesText.setVisibility(View.GONE));
-        viewPager.post(() -> {
-            fragmentAdapter.notifyDataSetChanged();
-            viewPager.setVisibility(View.VISIBLE);
-        });
         handler.post(() -> {
+            if (noDevicesText != null) noDevicesText.setVisibility(View.GONE);
+            if ((fragmentAdapter != null) && (viewPager != null)) {
+                fragmentAdapter.notifyDataSetChanged();
+                viewPager.setVisibility(View.VISIBLE);
+            }
             if (searchMenu != null) searchMenu.setVisible(true);
         });
     }
@@ -183,7 +184,10 @@ public class ControlPanelFragment extends Fragment
     @Override
     public void newDevice(INDIServerConnection connection, INDIDevice device) {
         Log.i("ControlPanelFragment", "New device: " + device.getName());
-        viewPager.post(() -> fragmentAdapter.notifyItemInserted(newDevice(device)));
+        handler.post(() -> {
+            if (fragmentAdapter != null)
+                fragmentAdapter.notifyItemInserted(newDevice(device));
+        });
         devices();
     }
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.marcocipriani01.telescopetouch.indi;
+package io.github.marcocipriani01.telescopetouch;
 
 import android.app.Application;
 import android.content.Context;
@@ -31,8 +31,6 @@ import java.util.HashMap;
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceListener;
-
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
 public class NSDHelper implements ServiceListener {
 
