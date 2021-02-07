@@ -116,17 +116,18 @@ public class MainActivity extends AppCompatActivity implements
         setTheme(darkerMode ? R.style.DarkerAppThemeNoActionBar : R.style.AppThemeNoActionBar);
         setContentView(R.layout.activity_main);
         mainCoordinator = findViewById(R.id.main_coordinator);
-        fab = findViewById(R.id.main_fab);
-        fab.setOnClickListener(v -> {
-            if (currentPage.lastInstance instanceof ActionFragment)
-                ((ActionFragment) currentPage.lastInstance).run();
-        });
         fragmentManager = getSupportFragmentManager();
         bottomBar = findViewById(R.id.bottom_app_bar);
         setSupportActionBar(bottomBar);
         bottomBar.setOnMenuItemClickListener(this);
         final MainBottomNavigation bottomNavigation = new MainBottomNavigation(this);
         bottomBar.setNavigationOnClickListener(v -> bottomNavigation.show());
+        fab = findViewById(R.id.main_fab);
+        fab.setOnClickListener(v -> {
+            bottomBar.performShow();
+            if (currentPage.lastInstance instanceof ActionFragment)
+                ((ActionFragment) currentPage.lastInstance).run();
+        });
         intentAndFragment(getIntent());
     }
 
@@ -298,6 +299,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void actionSnackRequested(int msgRes) {
+        bottomBar.performShow();
         fab.hide();
         Snackbar.make(mainCoordinator, msgRes, Snackbar.LENGTH_SHORT).setAnchorView(bottomBar)
                 .addCallback(new SnackBarCallBack()).show();
@@ -305,6 +307,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void actionSnackRequested(int msgRes, int actionName, View.OnClickListener action) {
+        bottomBar.performShow();
         fab.hide();
         Snackbar.make(mainCoordinator, msgRes, Snackbar.LENGTH_SHORT).setAnchorView(bottomBar)
                 .addCallback(new SnackBarCallBack()).setAction(actionName, action).show();
