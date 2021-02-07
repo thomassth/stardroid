@@ -51,7 +51,6 @@ import org.indilib.i4j.client.INDIServerConnection;
 import org.indilib.i4j.client.INDIServerConnectionListener;
 import org.indilib.i4j.client.INDISwitchElement;
 import org.indilib.i4j.client.INDISwitchProperty;
-import org.indilib.i4j.client.INDIValueException;
 import org.indilib.i4j.properties.INDIStandardElement;
 
 import java.util.Arrays;
@@ -149,7 +148,7 @@ public class MountControlFragment extends ActionFragment implements INDIServerCo
                                     telescopeParkE.setDesiredValue(Constants.SwitchStatus.OFF);
                                 }
                                 new PropUpdater(telescopeParkP).start();
-                            } catch (INDIValueException e) {
+                            } catch (Exception e) {
                                 Log.e(TAG, e.getLocalizedMessage(), e);
                             }
                         }
@@ -267,7 +266,7 @@ public class MountControlFragment extends ActionFragment implements INDIServerCo
                     }
                     new PropUpdater(telescopeTrackP).start();
                     requestActionSnack(R.string.tracking_toggled);
-                } catch (INDIValueException e) {
+                } catch (Exception e) {
                     Log.e(TAG, e.getLocalizedMessage(), e);
                     requestActionSnack(R.string.tracking_error);
                 }
@@ -430,7 +429,7 @@ public class MountControlFragment extends ActionFragment implements INDIServerCo
             } else {
                 return false;
             }
-        } catch (INDIValueException e) {
+        } catch (Exception e) {
             Log.e(TAG, e.getLocalizedMessage(), e);
             return false;
         }
@@ -459,7 +458,7 @@ public class MountControlFragment extends ActionFragment implements INDIServerCo
                     telescopeMotionAbortE.setDesiredValue(Constants.SwitchStatus.ON);
                     new PropUpdater(telescopeMotionAbort).start();
                 }
-            } catch (INDIValueException e) {
+            } catch (Exception e) {
                 Log.e(TAG, e.getLocalizedMessage(), e);
             }
         }

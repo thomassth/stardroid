@@ -35,6 +35,7 @@ import androidx.preference.PreferenceManager;
 
 import javax.inject.Inject;
 
+import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
 import io.github.marcocipriani01.telescopetouch.activities.util.SensorAccuracyDecoder;
@@ -42,7 +43,6 @@ import io.github.marcocipriani01.telescopetouch.activities.util.SensorAccuracyDe
 public class CompassCalibrationActivity extends InjectableActivity implements SensorEventListener {
 
     public static final String HIDE_CHECKBOX = "hide checkbox";
-    public static final String DONT_SHOW_CALIBRATION_DIALOG = "no calibration dialog";
     public static final String AUTO_DISMISSABLE = "auto dismissable";
     @Inject
     SensorManager sensorManager;
@@ -101,7 +101,7 @@ public class CompassCalibrationActivity extends InjectableActivity implements Se
         super.onPause();
         sensorManager.unregisterListener(this);
         if (checkBoxView.isChecked()) {
-            sharedPreferences.edit().putBoolean(DONT_SHOW_CALIBRATION_DIALOG, true).apply();
+            sharedPreferences.edit().putBoolean(ApplicationConstants.NO_SHOW_CALIBRATION_DIALOG_PREF, true).apply();
         }
         darkerModeManager.stop();
     }
@@ -130,7 +130,7 @@ public class CompassCalibrationActivity extends InjectableActivity implements Se
         accuracyTextView.setText(accuracyText);
         accuracyTextView.setTextColor(accuracyDecoder.getColorForAccuracy(accuracy));
         if (accuracy == SensorManager.SENSOR_STATUS_ACCURACY_HIGH && getIntent().getBooleanExtra(AUTO_DISMISSABLE, false)) {
-            Toast.makeText(this, R.string.sensor_accuracy_high, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.sensor_accuracy_high, Toast.LENGTH_SHORT).show();
             this.finish();
         }
     }

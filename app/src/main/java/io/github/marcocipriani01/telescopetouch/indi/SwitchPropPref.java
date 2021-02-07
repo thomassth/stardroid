@@ -32,7 +32,6 @@ import org.indilib.i4j.Constants;
 import org.indilib.i4j.client.INDIProperty;
 import org.indilib.i4j.client.INDISwitchElement;
 import org.indilib.i4j.client.INDISwitchProperty;
-import org.indilib.i4j.client.INDIValueException;
 
 import java.util.List;
 
@@ -139,8 +138,8 @@ public class SwitchPropPref extends PropPref<INDISwitchElement> {
                         for (int i = 0; i < elements.size(); i++) {
                             elements.get(i).setDesiredValue(elementsChecked[i] ? Constants.SwitchStatus.ON : Constants.SwitchStatus.OFF);
                         }
-                    } catch (INDIValueException | IllegalArgumentException e) {
-                        Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+                        Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                         TelescopeTouchApp.connectionManager.log(context.getResources().getString(R.string.error) + e.getLocalizedMessage());
                     }
                     propPref.sendChanges();

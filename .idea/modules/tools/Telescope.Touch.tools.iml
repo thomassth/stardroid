@@ -24,11 +24,6 @@
     </content>
     <content url="file://$MODULE_DIR$/../../../tools">
       <sourceFolder url="file://$MODULE_DIR$/../../../tools/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../tools/build/extracted-protos/test" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../tools/build/extracted-protos/main" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../tools/build/generated/source/proto/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../tools/build/extracted-include-protos/test" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../tools/build/extracted-include-protos/main" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/../../../tools/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/../../../tools/build" />
     </content>
@@ -50,6 +45,7 @@
     <content url="file://$MODULE_DIR$/../../../tools/build/generated/source/proto/test/java" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="Gradle: Telescope.Touch.tools.tools" level="project" />
     <orderEntry type="library" name="Gradle: com.google.protobuf:protobuf-java:3.13.0" level="project" />
   </component>
 </module>

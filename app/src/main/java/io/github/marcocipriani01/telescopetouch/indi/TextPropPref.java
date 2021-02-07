@@ -34,7 +34,6 @@ import org.indilib.i4j.Constants;
 import org.indilib.i4j.client.INDIProperty;
 import org.indilib.i4j.client.INDITextElement;
 import org.indilib.i4j.client.INDITextProperty;
-import org.indilib.i4j.client.INDIValueException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -130,8 +129,8 @@ public class TextPropPref extends PropPref<INDITextElement> {
                         for (int i = 0; i < elements.size(); i++) {
                             elements.get(i).setDesiredValue(editTextViews.get(i).getText().toString());
                         }
-                    } catch (INDIValueException | IllegalArgumentException e) {
-                        Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+                        Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                         TelescopeTouchApp.connectionManager.log(context.getResources().getString(R.string.error) + e.getLocalizedMessage());
                     }
                     propPref.sendChanges();
