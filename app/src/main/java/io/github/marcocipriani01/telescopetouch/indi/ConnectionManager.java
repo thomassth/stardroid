@@ -62,15 +62,15 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
     private final Set<ManagerListener> managerListeners = new HashSet<>();
     private final HashSet<INDIServerConnectionListener> indiListeners = new HashSet<>();
     private final ArrayList<LogItem> logs = new ArrayList<>();
-    public volatile String telescopeName = null;
     // Telescope
-    public INDINumberProperty telescopeCoordP = null;
-    public INDINumberElement telescopeCoordRA = null;
-    public INDINumberElement telescopeCoordDec = null;
-    public INDISwitchProperty telescopeOnCoordSetP = null;
-    public INDISwitchElement telescopeOnCoordSetSync = null;
-    public INDISwitchElement telescopeOnCoordSetSlew = null;
-    public INDISwitchElement telescopeOnCoordSetTrack = null;
+    public volatile String telescopeName = null;
+    public volatile INDINumberProperty telescopeCoordP = null;
+    public volatile INDINumberElement telescopeCoordRA = null;
+    public volatile INDINumberElement telescopeCoordDec = null;
+    public volatile INDISwitchProperty telescopeOnCoordSetP = null;
+    public volatile INDISwitchElement telescopeOnCoordSetSync = null;
+    public volatile INDISwitchElement telescopeOnCoordSetSlew = null;
+    public volatile INDISwitchElement telescopeOnCoordSetTrack = null;
     private java.text.DateFormat dateFormat = null;
     private java.text.DateFormat timeFormat = null;
     private volatile INDIServerConnection indiConnection;

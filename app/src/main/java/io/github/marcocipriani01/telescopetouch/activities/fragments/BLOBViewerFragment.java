@@ -63,6 +63,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -82,7 +83,7 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
     private static int selectedProperty = 0;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final AsyncBlobLoader blobLoader = new AsyncBlobLoader(handler);
-    private final ArrayList<INDIBLOBProperty> properties = new ArrayList<>();
+    private final List<INDIBLOBProperty> properties = Collections.synchronizedList(new ArrayList<>());
     private SharedPreferences preferences;
     private Bitmap bitmap = null;
     private boolean bitmapSaved = false;
@@ -110,6 +111,7 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
         bppText = rootView.findViewById(R.id.blob_bpp);
         errorText = rootView.findViewById(R.id.blob_error_label);
         blobViewer = rootView.findViewById(R.id.blob_viewer);
+        blobViewer.setMaximumScale(20f);
         progressBar = rootView.findViewById(R.id.blob_loading);
         selectionAdapter = new BLOBArrayAdapter(context);
         selectionSpinner = rootView.findViewById(R.id.spinner_select_image_blob);

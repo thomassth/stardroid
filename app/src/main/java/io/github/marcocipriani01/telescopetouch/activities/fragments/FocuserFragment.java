@@ -66,19 +66,19 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
     private static final String TAG = TelescopeTouchApp.getTag(MountControlFragment.class);
     private final Handler handler = new Handler(Looper.getMainLooper());
     // Properties and elements associated to the buttons
-    private INDISwitchProperty directionProp = null;
-    private INDISwitchElement inwardDirElem = null;
-    private INDISwitchElement outwardDirElem = null;
-    private INDINumberProperty relPosProp = null;
-    private INDINumberElement relPosElem = null;
-    private INDINumberProperty absPosProp = null;
-    private INDINumberElement absPosElem = null;
-    private INDINumberProperty syncPosProp = null;
-    private INDINumberElement syncPosElem = null;
-    private INDINumberProperty speedProp = null;
-    private INDINumberElement speedElem = null;
-    private INDISwitchProperty abortProp = null;
-    private INDISwitchElement abortElem = null;
+    private volatile INDISwitchProperty directionProp = null;
+    private volatile INDISwitchElement inwardDirElem = null;
+    private volatile INDISwitchElement outwardDirElem = null;
+    private volatile INDINumberProperty relPosProp = null;
+    private volatile INDINumberElement relPosElem = null;
+    private volatile INDINumberProperty absPosProp = null;
+    private volatile INDINumberElement absPosElem = null;
+    private volatile INDINumberProperty syncPosProp = null;
+    private volatile INDINumberElement syncPosElem = null;
+    private volatile INDINumberProperty speedProp = null;
+    private volatile INDINumberElement speedElem = null;
+    private volatile INDISwitchProperty abortProp = null;
+    private volatile INDISwitchElement abortElem = null;
     // Views
     private Button inButton = null;
     private Button outButton = null;
@@ -244,12 +244,13 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
     private void updateStepsText() {
         handler.post(() -> {
             if (stepsText != null) {
-                if (relPosElem != null) {
+                if (relPosElem == null) {
+                    stepsText.setText(R.string.unavailable);
+                } else {
                     int steps = (int) (double) relPosElem.getValue();
+                    if (steps == 0) steps = 10;
                     stepsText.setText(String.valueOf(steps));
                     stepsHandler.setValue(steps);
-                } else {
-                    stepsText.setText(R.string.unavailable);
                 }
             }
         });
@@ -258,10 +259,10 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
     private void updatePositionText() {
         handler.post(() -> {
             if (positionEditText != null) {
-                if (absPosElem != null) {
-                    positionEditText.setText(String.valueOf((int) (double) absPosElem.getValue()));
-                } else {
+                if (absPosElem == null) {
                     positionEditText.setText(R.string.unavailable);
+                } else {
+                    positionEditText.setText(String.valueOf((int) (double) absPosElem.getValue()));
                 }
             }
         });
@@ -374,14 +375,11 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
 
     @Override
     public void newProperty(INDIDevice device, INDIProperty<?> property) {
-        newProperty0(device, property);
-        enableUi();
-        updateStepsText();
-        updatePositionText();
-        updateSpeedBar();
+        if (newProperty0(device, property))
+            enableUi();
     }
 
-    private void newProperty0(INDIDevice device, INDIProperty<?> property) {
+    private boolean newProperty0(INDIDevice device, INDIProperty<?> property) {
         String name = property.getName(), devName = device.getName();
         Log.i(TAG, "New Property (" + name + ") added to device " + devName
                 + ", elements: " + Arrays.toString(property.getElementNames()));
@@ -390,16 +388,18 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
                 if ((absPosElem = (INDINumberElement) property.getElement(INDIStandardElement.FOCUS_ABSOLUTE_POSITION)) != null) {
                     property.addINDIPropertyListener(this);
                     absPosProp = (INDINumberProperty) property;
+                    updatePositionText();
                 }
-                break;
+                return true;
             }
             case "REL_FOCUS_POSITION": {
                 if ((relPosElem = (INDINumberElement) property.getElement(INDIStandardElement.FOCUS_RELATIVE_POSITION)) != null) {
                     relPosProp = (INDINumberProperty) property;
                     stepsHandler.setMaxValue((int) relPosElem.getMax());
                     stepsHandler.setMinValue((int) relPosElem.getMin());
+                    updateStepsText();
                 }
-                break;
+                return true;
             }
             case "FOCUS_MOTION": {
                 if (((inwardDirElem = (INDISwitchElement) property.getElement(INDIStandardElement.FOCUS_INWARD)) != null)
@@ -410,28 +410,30 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
                             focuserName.setText(devName);
                     });
                 }
-                break;
+                return true;
             }
             case "FOCUS_ABORT_MOTION": {
                 if ((abortElem = (INDISwitchElement) property.getElement(INDIStandardElement.ABORT)) != null) {
                     abortProp = (INDISwitchProperty) property;
                 }
-                break;
+                return true;
             }
             case "FOCUS_SPEED": {
                 if ((speedElem = (INDINumberElement) property.getElement(INDIStandardElement.FOCUS_SPEED_VALUE)) != null) {
                     speedProp = (INDINumberProperty) property;
                     property.addINDIPropertyListener(this);
+                    updateSpeedBar();
                 }
-                break;
+                return true;
             }
             case "FOCUS_SYNC": {
                 if ((syncPosElem = (INDINumberElement) property.getElement(INDIStandardElement.FOCUS_SYNC_VALUE)) != null) {
                     syncPosProp = (INDINumberProperty) property;
                 }
-                break;
+                return true;
             }
         }
+        return false;
     }
 
     @Override
@@ -442,6 +444,7 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
             case "REL_FOCUS_POSITION": {
                 relPosElem = null;
                 relPosProp = null;
+                updateStepsText();
                 break;
             }
             case "FOCUS_MOTION": {
@@ -462,6 +465,7 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
             case "ABS_FOCUS_POSITION": {
                 absPosProp = null;
                 absPosElem = null;
+                updatePositionText();
                 break;
             }
             case "FOCUS_SPEED": {
@@ -479,9 +483,6 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
             }
         }
         enableUi();
-        updateStepsText();
-        updatePositionText();
-        updateSpeedBar();
     }
 
     @Override

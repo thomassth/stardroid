@@ -49,6 +49,8 @@ public class CatalogArrayAdapter extends RecyclerView.Adapter<CatalogArrayAdapte
     private final Context context;
     private final LayoutInflater inflater;
     private final SharedPreferences preferences;
+    @NonNull
+    private final Catalog catalog;
     private final ArrayList<Integer> sectionPositions = new ArrayList<>();
     private boolean showStars;
     private boolean showDso;
@@ -65,6 +67,7 @@ public class CatalogArrayAdapter extends RecyclerView.Adapter<CatalogArrayAdapte
         limitMagnitude = Double.parseDouble(preferences.getString(ApplicationConstants.CATALOG_LIMIT_MAGNITUDE, "5"));
         preferences.registerOnSharedPreferenceChangeListener(this);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.catalog = catalog;
         this.entries = catalog.getEntries();
         showStars = preferences.getBoolean(SHOW_STARS_PREF, true);
         showDso = preferences.getBoolean(SHOW_DSO_PREF, true);
@@ -99,7 +102,7 @@ public class CatalogArrayAdapter extends RecyclerView.Adapter<CatalogArrayAdapte
 
     public void setLocation(Location location) {
         this.location = location;
-        reloadCatalog();
+        if (catalog.isReady()) reloadCatalog();
     }
 
     public boolean isShowDso() {
