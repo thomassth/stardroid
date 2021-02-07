@@ -146,11 +146,11 @@ public class TimeTravelClock implements Clock {
         /**
          * The speed in seconds per second.
          */
-        public double rate;
+        public final double rate;
         /**
          * The id of the Speed's string label.
          */
-        public int labelTag;
+        public final int labelTag;
 
         public Speed(double rate, int labelTag) {
             this.rate = rate;

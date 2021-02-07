@@ -50,7 +50,6 @@ public class ImageSource extends AbstractSource implements PositionSource {
     public float ux, uy, uz;
     public float vx, vy, vz;
     public Bitmap image;
-    public boolean requiresBlending = false;
 
     public ImageSource(GeocentricCoordinates coords, Resources res, int id, float imageScale) {
         this(coords, res, id, UP, imageScale);
@@ -92,10 +91,6 @@ public class ImageSource extends AbstractSource implements PositionSource {
 
     public float[] getVerticalCorner() {
         return new float[]{vx, vy, vz};
-    }
-
-    public boolean requiresBlending() {
-        return requiresBlending;
     }
 
     protected Resources getResources() {

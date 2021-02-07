@@ -133,7 +133,7 @@ public class ImageObjectManager extends RendererObjectManager {
         }
 
         mImages = images;
-        queueForReload(false);
+        queueForReload();
     }
 
     @Override

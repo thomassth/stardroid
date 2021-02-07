@@ -547,4 +547,12 @@
     <string name="not_a_number">Non è un numero!</string>
     <string name="no_matching_objects">Nessun oggetto trovato</string>
     <string name="no_sensor_warning">Il dispositivo non ha sensori di movimento!</string>
+    <string name="no_telescope">Nessun telescopio</string>
+    <string name="no_telescope_found">Nessun telescopio trovato!</string>
+    <string name="point_telescope_message">Sicuro di voler puntare \"%s\" verso %s, %s?</string>
+    <string name="toggle_tracking">Inseguimento</string>
+    <string name="tracking_toggled">Inseguimento cambiato!</string>
+    <string name="tracking_error">Errore di inseguimento!</string>
+    <string name="unknown_error">Errore sconosciuto!</string>
+    <string name="invalid_port">Porta non valida!</string>
 </resources>

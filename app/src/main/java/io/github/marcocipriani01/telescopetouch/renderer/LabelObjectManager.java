@@ -121,7 +121,7 @@ public class LabelObjectManager extends RendererObjectManager {
             for (int i = 0; i < labels.size(); i++) {
                 mLabels[i] = new Label(labels.get(i));
             }
-            queueForReload(false);
+            queueForReload();
         } else if (updateType.contains(UpdateType.UpdatePositions)) {
             if (labels.size() != mLabels.length) {
                 logUpdateMismatch("LabelObjectManager", mLabels.length, labels.size(), updateType);

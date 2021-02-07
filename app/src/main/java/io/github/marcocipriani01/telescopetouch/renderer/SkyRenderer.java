@@ -54,7 +54,7 @@ public class SkyRenderer implements GLSurfaceView.Renderer {
      */
     private final ArrayList<ManagerReloadData> managersToReload = new ArrayList<>();
     private final RendererObjectManager.UpdateListener updateListener =
-            (rom, fullReload) -> managersToReload.add(new ManagerReloadData(rom, fullReload));
+            (rom) -> managersToReload.add(new ManagerReloadData(rom, false));
     private final SkyBox skyBox;
     private final OverlayManager overlayManager;
     /**
@@ -397,8 +397,9 @@ public class SkyRenderer implements GLSurfaceView.Renderer {
     }
 
     private static class ManagerReloadData {
-        public RendererObjectManager manager;
-        public boolean fullReload;
+
+        public final RendererObjectManager manager;
+        public final boolean fullReload;
 
         ManagerReloadData(RendererObjectManager manager, boolean fullReload) {
             this.manager = manager;

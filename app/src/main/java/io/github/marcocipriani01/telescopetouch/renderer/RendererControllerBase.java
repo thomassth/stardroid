@@ -187,7 +187,8 @@ public abstract class RendererControllerBase {
      * Base class for all renderer managers.
      */
     public static abstract class RenderManager<E> {
-        protected RendererObjectManager mManager;
+
+        final protected RendererObjectManager mManager;
 
         private RenderManager(RendererObjectManager mgr) {
             mManager = mgr;

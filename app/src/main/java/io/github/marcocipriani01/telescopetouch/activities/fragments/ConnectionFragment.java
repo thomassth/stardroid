@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
+import io.github.marcocipriani01.telescopetouch.NSDHelper;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.MainActivity;
@@ -54,7 +55,6 @@ import io.github.marcocipriani01.telescopetouch.activities.dialogs.NewServerDial
 import io.github.marcocipriani01.telescopetouch.activities.util.ImprovedSpinnerListener;
 import io.github.marcocipriani01.telescopetouch.activities.views.SameSelectionSpinner;
 import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
-import io.github.marcocipriani01.telescopetouch.NSDHelper;
 
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 import static io.github.marcocipriani01.telescopetouch.activities.ServersActivity.getServers;

@@ -44,20 +44,6 @@ public class Vector3 {
         this.z = z;
     }
 
-    /**
-     * Constructs a Vector3 from a float[2] object.
-     * Checks for length. This is probably inefficient, so if you're using this
-     * you should already be questioning your use of float[] instead of Vector3.
-     */
-    public Vector3(float[] xyz) throws IllegalArgumentException {
-        if (xyz.length != 3) {
-            throw new IllegalArgumentException("Trying to create 3 vector from array of length: " + xyz.length);
-        }
-        this.x = xyz[0];
-        this.y = xyz[1];
-        this.z = xyz[2];
-    }
-
     public static double scalarProduct(Vector3 v1, Vector3 v2) {
         return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
     }
