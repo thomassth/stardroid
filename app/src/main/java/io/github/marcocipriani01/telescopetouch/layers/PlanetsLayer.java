@@ -33,10 +33,7 @@ import io.github.marcocipriani01.telescopetouch.renderer.RendererObjectManager;
 import io.github.marcocipriani01.telescopetouch.source.AstronomicalSource;
 import io.github.marcocipriani01.telescopetouch.source.ImageSource;
 import io.github.marcocipriani01.telescopetouch.source.PointSource;
-import io.github.marcocipriani01.telescopetouch.source.Sources;
 import io.github.marcocipriani01.telescopetouch.source.TextSource;
-import io.github.marcocipriani01.telescopetouch.source.impl.ImageSourceImpl;
-import io.github.marcocipriani01.telescopetouch.source.impl.TextSourceImpl;
 
 /**
  * An implementation of the {@link Layer} interface for displaying planets in
@@ -87,7 +84,7 @@ public class PlanetsLayer extends AbstractLayer {
     private class PlanetSource extends AstronomicalSource {
 
         private final ArrayList<PointSource> pointSources = new ArrayList<>();
-        private final ArrayList<ImageSourceImpl> imageSources = new ArrayList<>();
+        private final ArrayList<ImageSource> imageSources = new ArrayList<>();
         private final ArrayList<TextSource> labelSources = new ArrayList<>();
         private final Planet planet;
         private final String name;
@@ -115,23 +112,23 @@ public class PlanetsLayer extends AbstractLayer {
             this.lastUpdateTimeMs = time.getTimeInMillis();
             this.sunCoords = HeliocentricCoordinates.getInstance(Planet.Sun, time);
             this.currentCoords.updateFromRaDec(planet.getEquatorialCoordinates(time, sunCoords));
-            for (ImageSourceImpl imageSource : imageSources) {
+            for (ImageSource imageSource : imageSources) {
                 imageSource.setUpVector(sunCoords);  // TODO(johntaylor): figure out why we do this.
             }
         }
 
         @Override
-        public Sources initialize() {
+        public AstronomicalSource initialize() {
             Calendar time = model.getTime();
             updateCoords(time);
             this.imageId = planet.getImageResourceId(time);
             Resources resources = getResources();
             if (planet == Planet.Moon) {
-                imageSources.add(new ImageSourceImpl(currentCoords, resources, imageId, sunCoords, planet.getPlanetaryImageSize()));
+                imageSources.add(new ImageSource(currentCoords, resources, imageId, sunCoords, planet.getPlanetaryImageSize()));
             } else {
-                imageSources.add(new ImageSourceImpl(currentCoords, resources, imageId, planet.getPlanetaryImageSize()));
+                imageSources.add(new ImageSource(currentCoords, resources, imageId, planet.getPlanetaryImageSize()));
             }
-            labelSources.add(new TextSourceImpl(currentCoords, name, LABEL_COLOR));
+            labelSources.add(new TextSource(currentCoords, name, LABEL_COLOR));
             return this;
         }
 

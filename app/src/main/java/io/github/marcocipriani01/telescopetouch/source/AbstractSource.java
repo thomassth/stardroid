@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package io.github.marcocipriani01.telescopetouch.source.impl;
+package io.github.marcocipriani01.telescopetouch.source;
 
 import android.graphics.Color;
 
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.source.Colorable;
-import io.github.marcocipriani01.telescopetouch.source.PositionSource;
 
 /**
  * This class represents the base of an astronomical object to be

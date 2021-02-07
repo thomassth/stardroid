@@ -16,30 +16,60 @@
 
 package io.github.marcocipriani01.telescopetouch.source;
 
+import java.util.Objects;
+
+import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
+
+
 /**
- * This interface corresponds to a text label placed at some fixed location in
- * space.
+ * A Source which consists of only a text label (no point will be drawn).
  *
  * @author Brent Bryan
  */
-public interface TextSource extends Colorable, PositionSource {
+public class TextSource extends AbstractSource implements Colorable, PositionSource {
+
+    public final float offset;
+    public final int fontSize;
+    public String label;
+
+    public TextSource(float ra, float dec, String label, int color) {
+        this(GeocentricCoordinates.getInstance(ra, dec), label, color);
+    }
+
+    public TextSource(GeocentricCoordinates coords, String label, int color) {
+        this(coords, label, color, 0.02f, 15);
+    }
+
+    public TextSource(GeocentricCoordinates coords, String label, int color, float offset, int fontSize) {
+        super(coords, color);
+        this.label = Objects.requireNonNull(label);
+        if (label.trim().isEmpty()) throw new IllegalArgumentException();
+        this.offset = offset;
+        this.fontSize = fontSize;
+    }
 
     /**
      * Returns the text to be displayed at the specified location in the renderer.
      */
-    String getText();
+    public String getText() {
+        return label;
+    }
 
     /**
      * Changes the text in this {@link TextSource}.
      */
-    void setText(String newText);
+    public void setText(String newText) {
+        label = newText;
+    }
 
     /**
      * Returns the size of the font in points (e.g. 10, 12).
      */
-    int getFontSize();
+    public int getFontSize() {
+        return fontSize;
+    }
 
-    float getOffset();
-    // TODO(brent): talk to James: can we add font, style info?
-    // TODO(brent): can we specify label orientation?
+    public float getOffset() {
+        return offset;
+    }
 }

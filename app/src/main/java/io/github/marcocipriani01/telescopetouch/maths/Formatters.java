@@ -30,9 +30,19 @@ public class Formatters {
         }
     }
 
-    /**
-     * @return a string containing the declination (hh:mm:ss)
-     */
+    @SuppressLint("DefaultLocale")
+    public static String formatHoursArcmin(double x) {
+        double hours = Math.abs(x);
+        int deg = (int) Math.floor(hours);
+        double tmp = (hours - deg) * 60.0;
+        int min = (int) Math.floor(tmp);
+        if (Math.signum(x) >= 0) {
+            return String.format("%02dh%02dm", deg, min);
+        } else {
+            return String.format("-%02dh%02dm", deg, min);
+        }
+    }
+
     @SuppressLint("DefaultLocale")
     public static String formatDegrees(double x) {
         int deg = (int) Math.floor(Math.abs(x));
@@ -42,6 +52,17 @@ public class Formatters {
             return String.format("%02d°%02d'%02d\"", deg, min, sec);
         } else {
             return String.format("-%02d°%02d'%02d\"", deg, min, sec);
+        }
+    }
+
+    @SuppressLint("DefaultLocale")
+    public static String formatDegreesArcmin(double x) {
+        int deg = (int) Math.floor(Math.abs(x));
+        int min = (int) Math.floor((Math.abs(x) - deg) * 60.0);
+        if (Math.signum(x) >= 0) {
+            return String.format("%02d°%02d'", deg, min);
+        } else {
+            return String.format("-%02d°%02d'", deg, min);
         }
     }
 

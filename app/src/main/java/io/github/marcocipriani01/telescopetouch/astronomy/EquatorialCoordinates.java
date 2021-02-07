@@ -58,7 +58,7 @@ public class EquatorialCoordinates {
 
     public static EquatorialCoordinates getInstance(HeliocentricCoordinates coords) {
         return new EquatorialCoordinates(
-                MathsUtils.mod2pi((float) Math.atan2(coords.y, coords.x)) * RADIANS_TO_DEGREES,
+                MathsUtils.mod2pi(Math.atan2(coords.y, coords.x)) * RADIANS_TO_DEGREES,
                 Math.atan(coords.z / Math.sqrt(coords.x * coords.x + coords.y * coords.y)) * RADIANS_TO_DEGREES);
     }
 
@@ -205,24 +205,6 @@ public class EquatorialCoordinates {
 
     @SuppressLint("DefaultLocale")
     public String toStringArcmin() {
-        String string = "RA: ";
-        double hours = Math.abs(this.ra / 15.0);
-        int deg = (int) Math.floor(hours);
-        double tmp = (hours - deg) * 60.0;
-        int min = (int) Math.floor(tmp);
-        if (Math.signum(this.ra / 15.0) >= 0) {
-            string += String.format("%02dh%02dm", deg, min);
-        } else {
-            string += String.format("-%02dh%02dm", deg, min);
-        }
-        string += ", Dec: ";
-        deg = (int) Math.floor(Math.abs(this.dec));
-        min = (int) Math.floor((Math.abs(this.dec) - deg) * 60.0);
-        if (Math.signum(this.dec) >= 0) {
-            string += String.format("%02d:%02d", deg, min);
-        } else {
-            string += String.format("-%02d:%02d", deg, min);
-        }
-        return string;
+        return "RA: " + Formatters.formatHoursArcmin(ra / 15.0) + ", Dec: " + Formatters.formatDegreesArcmin(dec);
     }
 }

@@ -133,14 +133,10 @@ public class PointObjectManager extends RendererObjectManager {
                 data.indexBuffer.addIndex(bottomRight);
                 data.indexBuffer.addIndex(topLeft);
 
-                int starIndex = p.getPointShape().getImageIndex();
-
-                float texOffsetU = starWidthInTexels * starIndex;
-
-                data.texCoordBuffer.addTexCoords(texOffsetU, 1);
-                data.texCoordBuffer.addTexCoords(texOffsetU, 0);
-                data.texCoordBuffer.addTexCoords(texOffsetU + starWidthInTexels, 1);
-                data.texCoordBuffer.addTexCoords(texOffsetU + starWidthInTexels, 0);
+                data.texCoordBuffer.addTexCoords(0, 1);
+                data.texCoordBuffer.addTexCoords(0, 0);
+                data.texCoordBuffer.addTexCoords(starWidthInTexels, 1);
+                data.texCoordBuffer.addTexCoords(starWidthInTexels, 0);
 
                 Vector3 pos = p.getLocation();
                 Vector3 u = Vector3.normalized(Vector3.vectorProduct(pos, up));

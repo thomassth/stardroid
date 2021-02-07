@@ -57,11 +57,11 @@ import io.github.marcocipriani01.telescopetouch.layers.TelescopeLayer;
 public class ConnectionManager implements INDIServerConnectionListener, INDIDeviceListener, INDIPropertyListener {
 
     private static final String TAG = TelescopeTouchApp.getTag(ConnectionManager.class);
+    public final EquatorialCoordinates telescopeCoordinates = new EquatorialCoordinates();
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Set<ManagerListener> managerListeners = new HashSet<>();
     private final HashSet<INDIServerConnectionListener> indiListeners = new HashSet<>();
     private final ArrayList<LogItem> logs = new ArrayList<>();
-    public final EquatorialCoordinates telescopeCoordinates = new EquatorialCoordinates();
     public volatile String telescopeName = null;
     // Telescope
     public INDINumberProperty telescopeCoordP = null;

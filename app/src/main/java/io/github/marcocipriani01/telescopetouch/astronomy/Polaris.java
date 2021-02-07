@@ -59,13 +59,12 @@ public class Polaris {
             if (this.autoHemisphereDetection)
                 northernHemisphere = (this.latitude >= 0.0);
             Calendar calendar = Calendar.getInstance();
-            double[] precession;
+            double rightAscension;
             if (northernHemisphere) {
-                precession = StarsPrecession.precess(calendar, POLARIS_J2000_RA, POLARIS_J2000_DEC);
+                rightAscension = StarsPrecession.precess(calendar, POLARIS_J2000_RA, POLARIS_J2000_DEC).ra;
             } else {
-                precession = StarsPrecession.precess(calendar, SIG_OCT_J2000_RA, SIG_OCT_J2000_DEC);
+                rightAscension = StarsPrecession.precess(calendar, SIG_OCT_J2000_RA, SIG_OCT_J2000_DEC).ra;
             }
-            double rightAscension = precession[0];
             double siderealTime = meanSiderealTime(calendar, longitude);
             if (siderealTime > rightAscension) {
                 this.hourAngle = siderealTime - rightAscension;

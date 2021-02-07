@@ -29,8 +29,6 @@ import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.source.AstronomicalSource;
 import io.github.marcocipriani01.telescopetouch.source.LineSource;
 import io.github.marcocipriani01.telescopetouch.source.TextSource;
-import io.github.marcocipriani01.telescopetouch.source.impl.LineSourceImpl;
-import io.github.marcocipriani01.telescopetouch.source.impl.TextSourceImpl;
 
 /**
  * Creates a Layer which returns Sources which correspond to grid lines parallel
@@ -93,8 +91,8 @@ public class GridLayer extends AbstractLayer {
          */
         private static final int NUM_RA_VERTICES = 36;
 
-        private final ArrayList<LineSourceImpl> lineSources = new ArrayList<>();
-        private final ArrayList<TextSourceImpl> textSources = new ArrayList<>();
+        private final ArrayList<LineSource> lineSources = new ArrayList<>();
+        private final ArrayList<TextSource> textSources = new ArrayList<>();
 
         public GridSource(Resources res, int numRaSources, int numDecSources) {
             for (int r = 0; r < numRaSources; r++) {
@@ -102,12 +100,12 @@ public class GridLayer extends AbstractLayer {
             }
 
             // North & South pole, hour markers every 2hrs.
-            textSources.add(new TextSourceImpl(0f, 90f, res.getString(R.string.north_pole), LINE_COLOR));
-            textSources.add(new TextSourceImpl(0f, -90f, res.getString(R.string.south_pole), LINE_COLOR));
+            textSources.add(new TextSource(0f, 90f, res.getString(R.string.north_pole), LINE_COLOR));
+            textSources.add(new TextSource(0f, -90f, res.getString(R.string.south_pole), LINE_COLOR));
             for (int index = 0; index < 12; index++) {
                 float ra = index * 30.0f;
                 String title = String.format("%dh", 2 * index);
-                textSources.add(new TextSourceImpl(ra, 0.0f, title, LINE_COLOR));
+                textSources.add(new TextSource(ra, 0.0f, title, LINE_COLOR));
             }
 
             lineSources.add(createDecLine(0)); // Equator
@@ -115,9 +113,9 @@ public class GridLayer extends AbstractLayer {
             for (int d = 1; d < numDecSources; d++) {
                 double dec = d * 90.0f / numDecSources;
                 lineSources.add(createDecLine(dec));
-                textSources.add(new TextSourceImpl(0f, (float) dec, String.format("%d°", (int) dec), LINE_COLOR));
+                textSources.add(new TextSource(0f, (float) dec, String.format("%d°", (int) dec), LINE_COLOR));
                 lineSources.add(createDecLine(-dec));
-                textSources.add(new TextSourceImpl(0f, (float) -dec, String.format("%d°", (int) -dec), LINE_COLOR));
+                textSources.add(new TextSource(0f, (float) -dec, String.format("%d°", (int) -dec), LINE_COLOR));
             }
         }
 
@@ -125,8 +123,8 @@ public class GridLayer extends AbstractLayer {
          * Constructs a single longitude line. These lines run from the north pole to
          * the south pole at fixed Right Ascensions.
          */
-        private LineSourceImpl createRaLine(int index, int numRaSources) {
-            LineSourceImpl line = new LineSourceImpl(LINE_COLOR);
+        private LineSource createRaLine(int index, int numRaSources) {
+            LineSource line = new LineSource(LINE_COLOR);
             double ra = index * 360.0 / numRaSources;
             for (int i = 0; i < NUM_DEC_VERTICES - 1; i++) {
                 double dec = 90.0 - i * 180.0 / (NUM_DEC_VERTICES - 1);
@@ -140,8 +138,8 @@ public class GridLayer extends AbstractLayer {
             return line;
         }
 
-        private LineSourceImpl createDecLine(double dec) {
-            LineSourceImpl line = new LineSourceImpl(LINE_COLOR);
+        private LineSource createDecLine(double dec) {
+            LineSource line = new LineSource(LINE_COLOR);
             for (int i = 0; i < NUM_RA_VERTICES; i++) {
                 double ra = i * 360.0 / NUM_RA_VERTICES;
                 EquatorialCoordinates raDec = new EquatorialCoordinates(ra, dec);

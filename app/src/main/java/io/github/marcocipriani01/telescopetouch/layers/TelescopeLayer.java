@@ -9,14 +9,10 @@ import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
-import io.github.marcocipriani01.telescopetouch.maths.Vector3;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererObjectManager;
 import io.github.marcocipriani01.telescopetouch.source.AstronomicalSource;
 import io.github.marcocipriani01.telescopetouch.source.ImageSource;
-import io.github.marcocipriani01.telescopetouch.source.Sources;
 import io.github.marcocipriani01.telescopetouch.source.TextSource;
-import io.github.marcocipriani01.telescopetouch.source.impl.ImageSourceImpl;
-import io.github.marcocipriani01.telescopetouch.source.impl.TextSourceImpl;
 
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 
@@ -52,20 +48,20 @@ public class TelescopeLayer extends AbstractLayer {
 
     private class TelescopeSource extends AstronomicalSource {
 
-        private final ArrayList<ImageSourceImpl> imageSources = new ArrayList<>();
+        private final ArrayList<ImageSource> imageSources = new ArrayList<>();
         private final ArrayList<TextSource> labelSources = new ArrayList<>();
         private final GeocentricCoordinates coordinates = new GeocentricCoordinates();
         private long lastUpdateTimeMs = 0L;
-        private TextSourceImpl textSource;
-        private ImageSourceImpl imageSource;
+        private TextSource textSource;
+        private ImageSource imageSource;
 
         @Override
-        public Sources initialize() {
+        public AstronomicalSource initialize() {
             Resources resources = getResources();
             coordinates.updateFromRaDec(connectionManager.telescopeCoordinates);
-            imageSource = new ImageSourceImpl(coordinates, resources, R.drawable.telescope_crosshair, SIZE_ON_MAP);
+            imageSource = new ImageSource(coordinates, resources, R.drawable.telescope_crosshair, SIZE_ON_MAP);
             imageSources.add(imageSource);
-            textSource = new TextSourceImpl(coordinates, getName(), LABEL_COLOR);
+            textSource = new TextSource(coordinates, getName(), LABEL_COLOR, 0.035f, 15);
             labelSources.add(textSource);
             return this;
         }

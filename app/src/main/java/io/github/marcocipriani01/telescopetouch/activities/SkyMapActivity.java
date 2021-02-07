@@ -56,6 +56,7 @@ import org.indilib.i4j.Constants;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -74,6 +75,7 @@ import io.github.marcocipriani01.telescopetouch.activities.util.FullscreenContro
 import io.github.marcocipriani01.telescopetouch.activities.views.FloatingButtonsLayout;
 import io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoordinates;
 import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.astronomy.HorizontalCoordinates;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.control.ControllerGroup;
 import io.github.marcocipriani01.telescopetouch.control.MagneticDeclinationSwitcher;
@@ -96,8 +98,7 @@ import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connect
 /**
  * The main map-rendering Activity.
  */
-public class SkyMapActivity extends InjectableActivity
-        implements OnSharedPreferenceChangeListener, HasComponent<SkyMapComponent> {
+public class SkyMapActivity extends InjectableActivity implements OnSharedPreferenceChangeListener, HasComponent<SkyMapComponent> {
 
     public static final String SKY_MAP_INTENT_ACTION = "io.github.marcocipriani01.telescopetouch.activities.SkyMapActivity";
     private static final String BUNDLE_X_TARGET = "bundle_x_target";
@@ -152,6 +153,7 @@ public class SkyMapActivity extends InjectableActivity
     private MenuItem searchMenuItem;
     private TextView pointingText;
     private View rootView;
+    private boolean useAltAz = false;
 
     @Override
     public SkyMapComponent getComponent() {
@@ -465,7 +467,7 @@ public class SkyMapActivity extends InjectableActivity
     private void initializeModelViewController() {
         Log.i(TAG, "Initializing Model, View and Controller");
         setContentView(R.layout.skyrenderer);
-        rootView = findViewById(R.id.main_sky_view);
+        rootView = getWindow().getDecorView().getRootView();
         skyView = findViewById(R.id.skyrenderer_view);
         // We don't want a depth buffer.
         skyView.setEGLConfigChooser(false);
@@ -643,8 +645,11 @@ public class SkyMapActivity extends InjectableActivity
         } else if ((connectionManager.telescopeName == null) || (connectionManager.telescopeCoordP == null) || (connectionManager.telescopeOnCoordSetP == null)) {
             builder.setMessage(R.string.no_telescope_found);
         } else {
-            builder.setMessage(String.format(getString(R.string.point_telescope_message),
-                    connectionManager.telescopeName, coordinates.getRAString(), coordinates.getDecString()))
+            String msg = String.format(getString(R.string.point_telescope_message),
+                    connectionManager.telescopeName, coordinates.getRAString(), coordinates.getDecString());
+            if (HorizontalCoordinates.getInstance(coordinates, model.getLocation(), Calendar.getInstance()).alt < 0)
+                msg += "\n\nWarning! the object may be below the horizon!";
+            builder.setMessage(msg)
                     .setPositiveButton(R.string.go_to, (dialog, which) -> {
                         try {
                             connectionManager.telescopeOnCoordSetTrack.setDesiredValue(Constants.SwitchStatus.ON);
@@ -678,6 +683,18 @@ public class SkyMapActivity extends InjectableActivity
         builder.setNegativeButton(android.R.string.cancel, null).setIcon(R.drawable.navigation).show();
     }
 
+    public void switchCoords(View v) {
+        useAltAz = !useAltAz;
+    }
+
+    private void setPointingText(Pointing pointing) {
+        if (useAltAz) {
+            pointingText.setText(HorizontalCoordinates.getInstance(pointing.getLineOfSight(), model.getLocation(), Calendar.getInstance()).toStringArcmin());
+        } else {
+            pointingText.setText(EquatorialCoordinates.getInstance(pointing.getLineOfSight()).toStringArcmin());
+        }
+    }
+
     /**
      * Passed to the renderer to get per-frame updates from the model.
      *
@@ -694,8 +711,7 @@ public class SkyMapActivity extends InjectableActivity
         public void run() {
             Pointing pointing = model.getPointing();
             if (pointingText != null)
-                pointingText.post(() -> pointingText.setText(
-                        EquatorialCoordinates.getInstance(pointing.getLineOfSight()).toStringArcmin()));
+                pointingText.post(() -> SkyMapActivity.this.setPointingText(pointing));
 
             rendererController.queueSetViewOrientation(
                     pointing.getLineOfSightX(), pointing.getLineOfSightY(), pointing.getLineOfSightZ(),

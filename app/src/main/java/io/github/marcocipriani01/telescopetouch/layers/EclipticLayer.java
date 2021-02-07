@@ -27,8 +27,6 @@ import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.source.AstronomicalSource;
 import io.github.marcocipriani01.telescopetouch.source.LineSource;
 import io.github.marcocipriani01.telescopetouch.source.TextSource;
-import io.github.marcocipriani01.telescopetouch.source.impl.LineSourceImpl;
-import io.github.marcocipriani01.telescopetouch.source.impl.TextSourceImpl;
 
 /**
  * Creates a Layer for the Ecliptic.
@@ -78,8 +76,8 @@ public class EclipticLayer extends AbstractLayer {
 
         public EclipticSource(Resources res) {
             String title = res.getString(R.string.ecliptic);
-            textSources.add(new TextSourceImpl(90.0f, EPSILON, title, LINE_COLOR));
-            textSources.add(new TextSourceImpl(270f, -EPSILON, title, LINE_COLOR));
+            textSources.add(new TextSource(90.0f, EPSILON, title, LINE_COLOR));
+            textSources.add(new TextSource(270f, -EPSILON, title, LINE_COLOR));
 
             // Create line source.
             float[] ra = {0, 90, 180, 270, 0};
@@ -89,7 +87,7 @@ public class EclipticLayer extends AbstractLayer {
             for (int i = 0; i < ra.length; ++i) {
                 vertices.add(GeocentricCoordinates.getInstance(ra[i], dec[i]));
             }
-            lineSources.add(new LineSourceImpl(LINE_COLOR, vertices, 1.5f));
+            lineSources.add(new LineSource(LINE_COLOR, vertices, 1.5f));
         }
 
         @Override

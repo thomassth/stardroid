@@ -24,24 +24,23 @@ import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.renderer.RendererObjectManager.UpdateType;
 
 /**
- * Base implementation of the {@link AstronomicalSource} and {@link Sources}
- * interfaces.
+ * Base implementation of an astronomical source.
  *
  * @author Brent Bryan
  */
-public abstract class AstronomicalSource implements Sources {
+public abstract class AstronomicalSource {
 
     /**
      * Initializes and returns the elements for this {@link AstronomicalSource}.
      * Elements should have their positions, images, etc update to the current
      * time / location information.
      */
-    public Sources initialize() {
+    public AstronomicalSource initialize() {
         return this;
     }
 
     /**
-     * Updates the {@link Sources} of this {@link AstronomicalSource} in response
+     * Updates the sources in response
      * to a change in the user's location or current time. Changes can be caused
      * by the user moving to a new location or time progressing, or by the user
      * manually selecting a different location. Returns the minimal Set of
@@ -69,22 +68,30 @@ public abstract class AstronomicalSource implements Sources {
         throw new UnsupportedOperationException("Should not be called");
     }
 
-    @Override
+    /**
+     * Returns the list of images that should be drawn in the renderer.
+     */
     public List<? extends ImageSource> getImages() {
         return Collections.emptyList();
     }
 
-    @Override
+    /**
+     * Returns the list of text labels that should be drawn in the renderer.
+     */
     public List<? extends TextSource> getLabels() {
         return Collections.emptyList();
     }
 
-    @Override
+    /**
+     * Returns the list of lines that should be drawn in the renderer.
+     */
     public List<? extends LineSource> getLines() {
         return Collections.emptyList();
     }
 
-    @Override
+    /**
+     * Returns the list of points that should be drawn in the renderer.
+     */
     public List<? extends PointSource> getPoints() {
         return Collections.emptyList();
     }
