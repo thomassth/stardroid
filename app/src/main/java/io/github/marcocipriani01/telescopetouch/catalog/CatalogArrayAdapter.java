@@ -36,6 +36,11 @@ import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.astronomy.HorizontalCoordinates;
 import io.github.marcocipriani01.telescopetouch.astronomy.TimeUtils;
 
+import static io.github.marcocipriani01.telescopetouch.ApplicationConstants.ONLY_VISIBLE_OBJECTS_PREF;
+import static io.github.marcocipriani01.telescopetouch.ApplicationConstants.SHOW_DSO_PREF;
+import static io.github.marcocipriani01.telescopetouch.ApplicationConstants.SHOW_PLANETS_PREF;
+import static io.github.marcocipriani01.telescopetouch.ApplicationConstants.SHOW_STARS_PREF;
+
 public class CatalogArrayAdapter extends RecyclerView.Adapter<CatalogArrayAdapter.CatalogEntryHolder>
         implements SharedPreferences.OnSharedPreferenceChangeListener, SectionIndexer {
 
@@ -45,12 +50,12 @@ public class CatalogArrayAdapter extends RecyclerView.Adapter<CatalogArrayAdapte
     private final LayoutInflater inflater;
     private final SharedPreferences preferences;
     private final ArrayList<Integer> sectionPositions = new ArrayList<>();
-    private boolean showStars = true;
-    private boolean showDso = true;
-    private boolean showPlanets = true;
+    private boolean showStars;
+    private boolean showDso;
+    private boolean showPlanets;
+    private boolean onlyAboveHorizon;
     private CatalogItemListener listener;
     private double limitMagnitude;
-    private boolean onlyAboveHorizon = false;
     private Location location = null;
 
     public CatalogArrayAdapter(Context context, Catalog catalog) {
@@ -61,7 +66,16 @@ public class CatalogArrayAdapter extends RecyclerView.Adapter<CatalogArrayAdapte
         preferences.registerOnSharedPreferenceChangeListener(this);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.entries = catalog.getEntries();
-        if (catalog.isReady()) shownEntries.addAll(entries);
+        showStars = preferences.getBoolean(SHOW_STARS_PREF, true);
+        showDso = preferences.getBoolean(SHOW_DSO_PREF, true);
+        showPlanets = preferences.getBoolean(SHOW_PLANETS_PREF, true);
+        onlyAboveHorizon = preferences.getBoolean(ONLY_VISIBLE_OBJECTS_PREF, false);
+        if (catalog.isReady()) {
+            for (CatalogEntry entry : entries) {
+                if (isVisible(entry))
+                    shownEntries.add(entry);
+            }
+        }
     }
 
     public void detachPref() {
@@ -72,40 +86,32 @@ public class CatalogArrayAdapter extends RecyclerView.Adapter<CatalogArrayAdapte
         return showStars;
     }
 
-    public void starsShown(boolean showStars) {
-        this.showStars = showStars;
+    public void setVisibility(boolean[] visibility) {
+        this.showStars = visibility[0];
+        this.showDso = visibility[1];
+        this.showPlanets = visibility[2];
+        this.onlyAboveHorizon = visibility[3];
+        preferences.edit().putBoolean(SHOW_STARS_PREF, showStars)
+                .putBoolean(SHOW_DSO_PREF, showDso).putBoolean(SHOW_PLANETS_PREF, showPlanets)
+                .putBoolean(ONLY_VISIBLE_OBJECTS_PREF, onlyAboveHorizon).apply();
         reloadCatalog();
     }
 
     public void setLocation(Location location) {
         this.location = location;
+        reloadCatalog();
     }
 
     public boolean isShowDso() {
         return showDso;
     }
 
-    public void dsoShown(boolean showDso) {
-        this.showDso = showDso;
-        reloadCatalog();
-    }
-
     public boolean planetsShown() {
         return showPlanets;
     }
 
-    public void setShowPlanets(boolean showPlanets) {
-        this.showPlanets = showPlanets;
-        reloadCatalog();
-    }
-
     public boolean isOnlyAboveHorizon() {
         return onlyAboveHorizon;
-    }
-
-    public void setOnlyAboveHorizon(boolean onlyAboveHorizon) {
-        this.onlyAboveHorizon = onlyAboveHorizon;
-        reloadCatalog();
     }
 
     public void setCatalogItemListener(CatalogItemListener listener) {
@@ -136,15 +142,13 @@ public class CatalogArrayAdapter extends RecyclerView.Adapter<CatalogArrayAdapte
             double latitude = location.getLatitude(),
                     siderealTime = TimeUtils.meanSiderealTime(Calendar.getInstance(), location.getLongitude());
             for (CatalogEntry entry : entries) {
-                if (isVisible(entry) && HorizontalCoordinates.isObjectAboveHorizon(entry.coord, latitude, siderealTime)) {
+                if (isVisible(entry) && HorizontalCoordinates.isObjectAboveHorizon(entry.coord, latitude, siderealTime))
                     shownEntries.add(entry);
-                }
             }
         } else {
             for (CatalogEntry entry : entries) {
-                if (isVisible(entry)) {
+                if (isVisible(entry))
                     shownEntries.add(entry);
-                }
             }
         }
         notifyDataSetChanged();

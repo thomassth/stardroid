@@ -65,8 +65,8 @@ import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManage
 import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
 import io.github.marcocipriani01.telescopetouch.sensors.LocationPermissionRequester;
 
+import static io.github.marcocipriani01.telescopetouch.ApplicationConstants.RECEIVE_BLOB_PREF;
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
-import static io.github.marcocipriani01.telescopetouch.activities.fragments.BLOBViewerFragment.RECEIVE_BLOB_PREF;
 
 /**
  * The main activity of the application, that manages all the fragments.
