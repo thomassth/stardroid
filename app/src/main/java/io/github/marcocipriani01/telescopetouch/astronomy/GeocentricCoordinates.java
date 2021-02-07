@@ -28,6 +28,10 @@ import io.github.marcocipriani01.telescopetouch.maths.Vector3;
  */
 public class GeocentricCoordinates extends Vector3 {
 
+    public GeocentricCoordinates() {
+        super(0, 0, 0);
+    }
+
     public GeocentricCoordinates(double x, double y, double z) {
         super(x, y, z);
     }
@@ -40,13 +44,13 @@ public class GeocentricCoordinates extends Vector3 {
     }
 
     public static GeocentricCoordinates getInstance(float ra, float dec) {
-        GeocentricCoordinates coords = new GeocentricCoordinates(0.0f, 0.0f, 0.0f);
+        GeocentricCoordinates coords = new GeocentricCoordinates();
         coords.updateFromRaDec(ra, dec);
         return coords;
     }
 
     public static GeocentricCoordinates getInstance(double ra, double dec) {
-        GeocentricCoordinates coords = new GeocentricCoordinates(0.0f, 0.0f, 0.0f);
+        GeocentricCoordinates coords = new GeocentricCoordinates();
         coords.updateFromRaDec((float) ra, (float) dec);
         return coords;
     }

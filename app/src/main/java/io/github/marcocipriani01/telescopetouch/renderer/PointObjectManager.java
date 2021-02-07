@@ -44,50 +44,50 @@ public class PointObjectManager extends RendererObjectManager {
     // Should we compute the regions for the points?
     // If false, we just put them in the catchall region.
     private static final boolean COMPUTE_REGIONS = true;
-    private final SkyRegionMap<RegionData> mSkyRegions = new SkyRegionMap<>();
-    private int mNumPoints = 0;
-    private TextureReference mTextureRef = null;
+    private final SkyRegionMap<RegionData> skyRegions = new SkyRegionMap<>();
+    private int numPoints = 0;
+    private TextureReference textureRef = null;
 
     public PointObjectManager(int layer, TextureManager textureManager) {
         super(layer, textureManager);
         // We want to initialize the labels of a sky region to an empty set of data.
-        mSkyRegions.setRegionDataFactory(RegionData::new);
+        skyRegions.setRegionDataFactory(RegionData::new);
     }
 
     public void updateObjects(List<PointSource> points, EnumSet<UpdateType> updateType) {
         if (updateType.contains(UpdateType.UpdatePositions)) {
             // Sanity check: make sure the number of points is unchanged.
-            if (points.size() != mNumPoints) {
+            if (points.size() != numPoints) {
                 Log.e("PointObjectManager", "Updating PointObjectManager a different number of points: update had " +
-                        points.size() + " vs " + mNumPoints + " before");
+                        points.size() + " vs " + numPoints + " before");
                 return;
             }
         } else if (!updateType.contains(UpdateType.Reset)) {
             return;
         }
 
-        mNumPoints = points.size();
-        mSkyRegions.clear();
+        numPoints = points.size();
+        skyRegions.clear();
 
         if (COMPUTE_REGIONS) {
             // Find the region for each point, and put it in a separate list for that region.
             for (PointSource point : points) {
-                mSkyRegions.getRegionData(points.size() < MINIMUM_NUM_POINTS_FOR_REGIONS ?
+                skyRegions.getRegionData(points.size() < MINIMUM_NUM_POINTS_FOR_REGIONS ?
                         SkyRegionMap.CATCHALL_REGION_ID : SkyRegionMap.getObjectRegion(point.getLocation())).sources.add(point);
             }
         } else {
-            mSkyRegions.getRegionData(SkyRegionMap.CATCHALL_REGION_ID).sources = points;
+            skyRegions.getRegionData(SkyRegionMap.CATCHALL_REGION_ID).sources = points;
         }
 
         // Generate the resources for all of the regions.
-        for (RegionData data : mSkyRegions.getDataForAllRegions()) {
+        for (RegionData data : skyRegions.getDataForAllRegions()) {
             int numVertices = 4 * data.sources.size();
             int numIndices = 6 * data.sources.size();
 
-            data.mVertexBuffer.reset(numVertices);
-            data.mColorBuffer.reset(numVertices);
-            data.mTexCoordBuffer.reset(numVertices);
-            data.mIndexBuffer.reset(numIndices);
+            data.vertexBuffer.reset(numVertices);
+            data.colorBuffer.reset(numVertices);
+            data.texCoordBuffer.reset(numVertices);
+            data.indexBuffer.reset(numIndices);
 
             Vector3 up = new Vector3(0, 1, 0);
 
@@ -104,13 +104,13 @@ public class PointObjectManager extends RendererObjectManager {
             float fovyInRadians = 60 * (float) Math.PI / 180.0f;
             float sizeFactor = (float) Math.sin(fovyInRadians * 0.5f) / (float) Math.cos(fovyInRadians * 0.5f) / 480;
 
-            Vector3 bottomLeftPos = new Vector3(0, 0, 0);
-            Vector3 topLeftPos = new Vector3(0, 0, 0);
-            Vector3 bottomRightPos = new Vector3(0, 0, 0);
-            Vector3 topRightPos = new Vector3(0, 0, 0);
+            Vector3 bottomLeftPos = new Vector3();
+            Vector3 topLeftPos = new Vector3();
+            Vector3 bottomRightPos = new Vector3();
+            Vector3 topRightPos = new Vector3();
 
-            Vector3 su = new Vector3(0, 0, 0);
-            Vector3 sv = new Vector3(0, 0, 0);
+            Vector3 su = new Vector3();
+            Vector3 sv = new Vector3();
 
             short index = 0;
 
@@ -124,23 +124,23 @@ public class PointObjectManager extends RendererObjectManager {
                 short topRight = index++;
 
                 // First triangle
-                data.mIndexBuffer.addIndex(bottomLeft);
-                data.mIndexBuffer.addIndex(topLeft);
-                data.mIndexBuffer.addIndex(bottomRight);
+                data.indexBuffer.addIndex(bottomLeft);
+                data.indexBuffer.addIndex(topLeft);
+                data.indexBuffer.addIndex(bottomRight);
 
                 // Second triangle
-                data.mIndexBuffer.addIndex(topRight);
-                data.mIndexBuffer.addIndex(bottomRight);
-                data.mIndexBuffer.addIndex(topLeft);
+                data.indexBuffer.addIndex(topRight);
+                data.indexBuffer.addIndex(bottomRight);
+                data.indexBuffer.addIndex(topLeft);
 
                 int starIndex = p.getPointShape().getImageIndex();
 
                 float texOffsetU = starWidthInTexels * starIndex;
 
-                data.mTexCoordBuffer.addTexCoords(texOffsetU, 1);
-                data.mTexCoordBuffer.addTexCoords(texOffsetU, 0);
-                data.mTexCoordBuffer.addTexCoords(texOffsetU + starWidthInTexels, 1);
-                data.mTexCoordBuffer.addTexCoords(texOffsetU + starWidthInTexels, 0);
+                data.texCoordBuffer.addTexCoords(texOffsetU, 1);
+                data.texCoordBuffer.addTexCoords(texOffsetU, 0);
+                data.texCoordBuffer.addTexCoords(texOffsetU + starWidthInTexels, 1);
+                data.texCoordBuffer.addTexCoords(texOffsetU + starWidthInTexels, 0);
 
                 Vector3 pos = p.getLocation();
                 Vector3 u = Vector3.normalized(Vector3.vectorProduct(pos, up));
@@ -157,17 +157,17 @@ public class PointObjectManager extends RendererObjectManager {
                 topRightPos.assign(pos.x + su.x + sv.x, pos.y + su.y + sv.y, pos.z + su.z + sv.z);
 
                 // Add the vertices
-                data.mVertexBuffer.addPoint(bottomLeftPos);
-                data.mColorBuffer.addColor(color);
+                data.vertexBuffer.addPoint(bottomLeftPos);
+                data.colorBuffer.addColor(color);
 
-                data.mVertexBuffer.addPoint(topLeftPos);
-                data.mColorBuffer.addColor(color);
+                data.vertexBuffer.addPoint(topLeftPos);
+                data.colorBuffer.addColor(color);
 
-                data.mVertexBuffer.addPoint(bottomRightPos);
-                data.mColorBuffer.addColor(color);
+                data.vertexBuffer.addPoint(bottomRightPos);
+                data.colorBuffer.addColor(color);
 
-                data.mVertexBuffer.addPoint(topRightPos);
-                data.mColorBuffer.addColor(color);
+                data.vertexBuffer.addPoint(topRightPos);
+                data.colorBuffer.addColor(color);
             }
             //Log.i("PointObjectManager",
             //      "Vertices: " + data.mVertexBuffer.size() + ", Indices: " + data.mIndexBuffer.size());
@@ -177,12 +177,12 @@ public class PointObjectManager extends RendererObjectManager {
 
     @Override
     public void reload(GL10 gl, boolean fullReload) {
-        mTextureRef = textureManager().getTextureFromResource(gl, R.drawable.stars_texture);
-        for (RegionData data : mSkyRegions.getDataForAllRegions()) {
-            data.mVertexBuffer.reload();
-            data.mColorBuffer.reload();
-            data.mTexCoordBuffer.reload();
-            data.mIndexBuffer.reload();
+        textureRef = textureManager().getTextureFromResource(gl, R.drawable.stars_texture);
+        for (RegionData data : skyRegions.getDataForAllRegions()) {
+            data.vertexBuffer.reload();
+            data.colorBuffer.reload();
+            data.texCoordBuffer.reload();
+            data.indexBuffer.reload();
         }
     }
 
@@ -201,22 +201,22 @@ public class PointObjectManager extends RendererObjectManager {
 
         gl.glEnable(GL10.GL_TEXTURE_2D);
 
-        mTextureRef.bind(gl);
+        textureRef.bind(gl);
 
         gl.glTexEnvf(GL10.GL_TEXTURE_ENV, GL10.GL_TEXTURE_ENV_MODE, GL10.GL_MODULATE);
 
         // Render all of the active sky regions.
         SkyRegionMap.ActiveRegionData activeRegions = getRenderState().getActiveSkyRegions();
-        ArrayList<RegionData> activeRegionData = mSkyRegions.getDataForActiveRegions(activeRegions);
+        ArrayList<RegionData> activeRegionData = skyRegions.getDataForActiveRegions(activeRegions);
         for (RegionData data : activeRegionData) {
-            if (data.mVertexBuffer.size() == 0) {
+            if (data.vertexBuffer.size() == 0) {
                 continue;
             }
 
-            data.mVertexBuffer.set(gl);
-            data.mColorBuffer.set(gl, getRenderState().getNightVisionMode());
-            data.mTexCoordBuffer.set(gl);
-            data.mIndexBuffer.draw(gl, GL10.GL_TRIANGLES);
+            data.vertexBuffer.set(gl);
+            data.colorBuffer.set(gl, getRenderState().getNightVisionMode());
+            data.texCoordBuffer.set(gl);
+            data.indexBuffer.draw(gl, GL10.GL_TRIANGLES);
         }
 
         gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
@@ -225,10 +225,10 @@ public class PointObjectManager extends RendererObjectManager {
     }
 
     private static class RegionData {
-        private final VertexBuffer mVertexBuffer = new VertexBuffer(true);
-        private final NightVisionColorBuffer mColorBuffer = new NightVisionColorBuffer(true);
-        private final TexCoordBuffer mTexCoordBuffer = new TexCoordBuffer(true);
-        private final IndexBuffer mIndexBuffer = new IndexBuffer(true);
+        private final VertexBuffer vertexBuffer = new VertexBuffer(true);
+        private final NightVisionColorBuffer colorBuffer = new NightVisionColorBuffer(true);
+        private final TexCoordBuffer texCoordBuffer = new TexCoordBuffer(true);
+        private final IndexBuffer indexBuffer = new IndexBuffer(true);
         // TODO(jpowell): This is a convenient hack until the catalog tells us the
         // region for all of its sources.  Remove this once we add that.
         List<PointSource> sources = new ArrayList<>();

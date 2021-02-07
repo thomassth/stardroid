@@ -358,7 +358,6 @@
     <string name="puppidvelids" translation_description="Meteor Shower">船尾/船帆座流星雨</string>
     <string name="ursids" translation_description="Meteor Shower">小熊座流星雨</string>
 
-    <string name="no_sensor_warning">你的裝置沒有方位感應器 - 自動模式可能無法運作</string>
     <string name="warning_dialog_title">壞消息！</string>
     <string name="missing_sensor_dialog_text">\n
         您的裝置可能不具備 Sky Map 所需的感應器之一。\n\n

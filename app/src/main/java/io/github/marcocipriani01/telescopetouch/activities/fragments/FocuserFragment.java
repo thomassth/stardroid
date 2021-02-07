@@ -49,6 +49,7 @@ import java.util.Date;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.util.CounterHandler;
 import io.github.marcocipriani01.telescopetouch.activities.util.LongPressHandler;
 import io.github.marcocipriani01.telescopetouch.indi.PropUpdater;
@@ -63,6 +64,7 @@ import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connect
 public class FocuserFragment extends ActionFragment implements INDIServerConnectionListener, INDIPropertyListener,
         INDIDeviceListener, View.OnClickListener, SeekBar.OnSeekBarChangeListener, TextWatcher {
 
+    private static final String TAG = TelescopeTouchApp.getTag(MountControlFragment.class);
     private final Handler handler = new Handler(Looper.getMainLooper());
     // Properties and elements associated to the buttons
     private INDISwitchProperty directionProp = null;
@@ -131,7 +133,7 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
                         relPosElem.setDesiredValue((double) stepsHandler.getValue());
                         new PropUpdater(relPosProp).start();
                     } catch (INDIValueException e) {
-                        Log.e("FocusFragment", e.getLocalizedMessage(), e);
+                        Log.e(TAG, e.getLocalizedMessage(), e);
                     }
                 }
             }
@@ -146,7 +148,7 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
                         relPosElem.setDesiredValue((double) stepsHandler.getValue());
                         new PropUpdater(relPosProp).start();
                     } catch (INDIValueException e) {
-                        Log.e("FocusFragment", e.getLocalizedMessage(), e);
+                        Log.e(TAG, e.getLocalizedMessage(), e);
                     }
                 }
             }
@@ -316,7 +318,7 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
                 }
             }
         } catch (INDIValueException e) {
-            Log.e("FocusFragment", e.getLocalizedMessage(), e);
+            Log.e(TAG, e.getLocalizedMessage(), e);
         }
     }
 
@@ -328,7 +330,7 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
                 speedElem.setDesiredValue(min + (progress * step));
                 new PropUpdater(speedProp).start();
             } catch (INDIValueException e) {
-                Log.e("FocusFragment", e.getLocalizedMessage(), e);
+                Log.e(TAG, e.getLocalizedMessage(), e);
             }
         }
     }
@@ -356,13 +358,13 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
 
     @Override
     public void newDevice(INDIServerConnection connection, INDIDevice device) {
-        Log.i("FocusFragment", "New device: " + device.getName());
+        Log.i(TAG, "New device: " + device.getName());
         device.addINDIDeviceListener(this);
     }
 
     @Override
     public void removeDevice(INDIServerConnection connection, INDIDevice device) {
-        Log.d("FocusFragment", "Device removed: " + device.getName());
+        Log.d(TAG, "Device removed: " + device.getName());
         device.removeINDIDeviceListener(this);
     }
 
@@ -382,7 +384,7 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
 
     private void newProperty0(INDIDevice device, INDIProperty<?> property) {
         String name = property.getName(), devName = device.getName();
-        Log.i("FocusFragment", "New Property (" + name + ") added to device " + devName
+        Log.i(TAG, "New Property (" + name + ") added to device " + devName
                 + ", elements: " + Arrays.toString(property.getElementNames()));
         switch (name) {
             case "ABS_FOCUS_POSITION": {
@@ -436,7 +438,7 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
     @Override
     public void removeProperty(INDIDevice device, INDIProperty<?> property) {
         String name = property.getName();
-        Log.d("FocusFragment", "Removed property (" + name + ") to device " + device.getName());
+        Log.d(TAG, "Removed property (" + name + ") to device " + device.getName());
         switch (name) {
             case "REL_FOCUS_POSITION": {
                 relPosElem = null;
@@ -486,7 +488,7 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
     @Override
     public void propertyChanged(final INDIProperty<?> property) {
         String name = property.getName();
-        Log.d("FocusFragment",
+        Log.d(TAG,
                 "Changed property (" + name + "), new value" + property.getValuesAsString());
         switch (name) {
             case "ABS_FOCUS_POSITION": {

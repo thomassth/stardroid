@@ -83,12 +83,12 @@ public class HorizonLayer extends AbstractLayer {
         private static final int LABEL_COLOR = Color.argb(120, 245, 176, 86);
         private static final long UPDATE_FREQ_MS = TimeUtils.MILLISECONDS_PER_SECOND;
 
-        private final GeocentricCoordinates zenith = new GeocentricCoordinates(0, 0, 0);
-        private final GeocentricCoordinates nadir = new GeocentricCoordinates(0, 0, 0);
-        private final GeocentricCoordinates north = new GeocentricCoordinates(0, 0, 0);
-        private final GeocentricCoordinates south = new GeocentricCoordinates(0, 0, 0);
-        private final GeocentricCoordinates east = new GeocentricCoordinates(0, 0, 0);
-        private final GeocentricCoordinates west = new GeocentricCoordinates(0, 0, 0);
+        private final GeocentricCoordinates zenith = new GeocentricCoordinates();
+        private final GeocentricCoordinates nadir = new GeocentricCoordinates();
+        private final GeocentricCoordinates north = new GeocentricCoordinates();
+        private final GeocentricCoordinates south = new GeocentricCoordinates();
+        private final GeocentricCoordinates east = new GeocentricCoordinates();
+        private final GeocentricCoordinates west = new GeocentricCoordinates();
 
         private final ArrayList<LineSource> lineSources = new ArrayList<>();
         private final ArrayList<TextSource> textSources = new ArrayList<>();

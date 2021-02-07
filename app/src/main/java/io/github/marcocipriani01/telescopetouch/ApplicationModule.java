@@ -58,6 +58,7 @@ import io.github.marcocipriani01.telescopetouch.layers.TelescopeLayer;
  */
 @Module
 public class ApplicationModule {
+
     private static final String TAG = TelescopeTouchApp.getTag(ApplicationModule.class);
     private final TelescopeTouchApp app;
 

@@ -14,6 +14,7 @@
 
 package io.github.marcocipriani01.telescopetouch.activities.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -49,14 +50,14 @@ import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.MainActivity;
-import io.github.marcocipriani01.telescopetouch.activities.ServersActivity;
+import io.github.marcocipriani01.telescopetouch.activities.dialogs.NewServerDialog;
 import io.github.marcocipriani01.telescopetouch.activities.util.ImprovedSpinnerListener;
-import io.github.marcocipriani01.telescopetouch.activities.util.ServersReloadListener;
 import io.github.marcocipriani01.telescopetouch.activities.views.SameSelectionSpinner;
 import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
 import io.github.marcocipriani01.telescopetouch.indi.NSDHelper;
 
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
+import static io.github.marcocipriani01.telescopetouch.activities.ServersActivity.getServers;
 
 /**
  * The main screen of the application, which manages the connection.
@@ -64,10 +65,11 @@ import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connect
  * @author Romain Fafet
  * @author marcocipriani01
  */
-public class ConnectionFragment extends ActionFragment implements ServersReloadListener,
-        ConnectionManager.ManagerListener, NSDHelper.NSDListener, Toolbar.OnMenuItemClickListener {
+public class ConnectionFragment extends ActionFragment implements ConnectionManager.ManagerListener,
+        NSDHelper.NSDListener, Toolbar.OnMenuItemClickListener {
 
     private static int selectedSpinnerItem = 0;
+    private static boolean nsdUnavailableWarned = false;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private SharedPreferences preferences;
     private Button connectionButton;
@@ -82,6 +84,7 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_connection, container, false);
@@ -94,45 +97,56 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
         connectionButton = rootView.findViewById(R.id.connectionButton);
         serversSpinner = rootView.findViewById(R.id.spinnerHost);
         nsdHelper = TelescopeTouchApp.getServiceDiscoveryHelper();
-        loadServers(ServersActivity.getServers(preferences));
+        loadServers(getServers(preferences));
         portEditText = rootView.findViewById(R.id.port_edittext);
         portEditText.setText(String.valueOf(preferences.getInt(ApplicationConstants.INDI_PORT_PREF, 7624)));
         final FragmentActivity activity = getActivity();
         connectionButton.setOnClickListener(v -> {
-            String host = String.valueOf(serversSpinner.getSelectedItem());
-            if (host.contains("@")) {
-                String[] split = host.split("@");
-                if (split.length == 2) host = split[1];
-            }
-            String portStr = portEditText.getText().toString();
-            int port;
-            if (portStr.equals("")) {
-                port = 7624;
-            } else {
-                try {
-                    port = Integer.parseInt(portStr);
-                    preferences.edit().putInt(ApplicationConstants.INDI_PORT_PREF, port).apply();
-                } catch (NumberFormatException e) {
-                    port = 7624;
-                }
-            }
-            ConnectionManager.ConnectionState state = connectionManager.getState();
-            if (state == ConnectionManager.ConnectionState.DISCONNECTED) {
-                if (host.equals(context.getString(R.string.host_add))) {
-                    serversSpinner.post(() -> serversSpinner.setSelection(0));
-                    ServersActivity.addServer(context, ConnectionFragment.this);
-                } else if (host.equals(context.getString(R.string.host_manage))) {
-                    serversSpinner.post(() -> serversSpinner.setSelection(0));
-                    if (activity instanceof MainActivity)
-                        ((MainActivity) activity).launchServersActivity();
-                } else {
-                    connectionManager.connect(host, port);
-                }
-            } else if (state == ConnectionManager.ConnectionState.CONNECTED) {
-                connectionManager.disconnect();
-            }
             ((InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE))
                     .hideSoftInputFromWindow(portEditText.getWindowToken(), 0);
+            Object selectedItem = serversSpinner.getSelectedItem();
+            if (selectedItem == null) {
+                requestActionSnack(R.string.unknown_error);
+                return;
+            }
+            String host = String.valueOf(selectedItem);
+            if (host.equals(context.getString(R.string.host_add))) {
+                serversSpinner.post(() -> serversSpinner.setSelection(0));
+                new NewServersDialogImpl();
+            } else if (host.equals(context.getString(R.string.host_manage))) {
+                serversSpinner.post(() -> serversSpinner.setSelection(0));
+                if (activity instanceof MainActivity)
+                    ((MainActivity) activity).launchServersActivity();
+            } else {
+                ConnectionManager.ConnectionState state = connectionManager.getState();
+                if (state == ConnectionManager.ConnectionState.DISCONNECTED) {
+                    if (host.contains("@")) {
+                        String[] split = host.split("@");
+                        if (split.length == 2) host = split[1];
+                    }
+                    String portStr = portEditText.getText().toString();
+                    int port;
+                    if (portStr.equals("")) {
+                        port = 7624;
+                        portEditText.setText("7624");
+                    } else {
+                        try {
+                            port = Integer.parseInt(portStr);
+                        } catch (NumberFormatException e) {
+                            requestActionSnack(R.string.invalid_port);
+                            return;
+                        }
+                        if ((port < 0) || (port > 0xFFFF)) {
+                            requestActionSnack(R.string.invalid_port);
+                            return;
+                        }
+                    }
+                    preferences.edit().putInt(ApplicationConstants.INDI_PORT_PREF, port).apply();
+                    connectionManager.connect(host, port);
+                } else if (state == ConnectionManager.ConnectionState.CONNECTED) {
+                    connectionManager.disconnect();
+                }
+            }
         });
         new ImprovedSpinnerListener() {
             @Override
@@ -140,7 +154,7 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
                 String selected = parent.getItemAtPosition(pos).toString();
                 if (selected.equals(context.getString(R.string.host_add))) {
                     serversSpinner.post(() -> serversSpinner.setSelection(0));
-                    ServersActivity.addServer(context, ConnectionFragment.this);
+                    new NewServersDialogImpl();
                 } else if (selected.equals(context.getString(R.string.host_manage))) {
                     serversSpinner.post(() -> serversSpinner.setSelection(0));
                     if (activity instanceof MainActivity)
@@ -154,8 +168,10 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
 
         if (nsdHelper != null) {
             nsdHelper.setListener(this);
-            if (!nsdHelper.isAvailable())
+            if ((!nsdHelper.isAvailable()) && (!nsdUnavailableWarned)) {
                 connectionManager.log(context.getString(R.string.nsd_not_available));
+                nsdUnavailableWarned = true;
+            }
         }
         return rootView;
     }
@@ -248,7 +264,6 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
         }
     }
 
-    @Override
     public void loadServers(ArrayList<String> servers) {
         if (nsdHelper != null) {
             HashMap<String, String> services = nsdHelper.getDiscoveredServices();
@@ -268,7 +283,7 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
 
     @Override
     public void onNSDChange() {
-        handler.post(() -> loadServers(ServersActivity.getServers(preferences)));
+        handler.post(() -> loadServers(getServers(preferences)));
     }
 
     @Override
@@ -328,6 +343,23 @@ public class ConnectionFragment extends ActionFragment implements ServersReloadL
             super(itemView);
             log = itemView.findViewById(R.id.logs_item1);
             timestamp = itemView.findViewById(R.id.logs_item2);
+        }
+    }
+
+    private class NewServersDialogImpl extends NewServerDialog {
+
+        public NewServersDialogImpl() {
+            super(context, preferences);
+        }
+
+        @Override
+        protected void createSnackbar(int msg) {
+            requestActionSnack(msg);
+        }
+
+        @Override
+        protected void loadServers(ArrayList<String> servers) {
+            ConnectionFragment.this.loadServers(servers);
         }
     }
 }

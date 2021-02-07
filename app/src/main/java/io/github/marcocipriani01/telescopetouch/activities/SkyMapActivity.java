@@ -43,13 +43,16 @@ import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
+
+import com.google.android.material.snackbar.Snackbar;
+
+import org.indilib.i4j.Constants;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -69,11 +72,13 @@ import io.github.marcocipriani01.telescopetouch.activities.fragments.GoToFragmen
 import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
 import io.github.marcocipriani01.telescopetouch.activities.util.FullscreenControlsManager;
 import io.github.marcocipriani01.telescopetouch.activities.views.FloatingButtonsLayout;
+import io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoordinates;
 import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.control.ControllerGroup;
 import io.github.marcocipriani01.telescopetouch.control.MagneticDeclinationSwitcher;
 import io.github.marcocipriani01.telescopetouch.control.Pointing;
+import io.github.marcocipriani01.telescopetouch.indi.PropUpdater;
 import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
 import io.github.marcocipriani01.telescopetouch.layers.LayerManager;
 import io.github.marcocipriani01.telescopetouch.maths.Vector3;
@@ -85,6 +90,8 @@ import io.github.marcocipriani01.telescopetouch.sensors.SensorAccuracyMonitor;
 import io.github.marcocipriani01.telescopetouch.touch.DragRotateZoomGestureDetector;
 import io.github.marcocipriani01.telescopetouch.touch.GestureInterpreter;
 import io.github.marcocipriani01.telescopetouch.touch.MapMover;
+
+import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 
 /**
  * The main map-rendering Activity.
@@ -108,7 +115,7 @@ public class SkyMapActivity extends InjectableActivity
     @Inject
     AstronomerModel model;
     @Inject
-    SharedPreferences sharedPreferences;
+    SharedPreferences preferences;
     @Inject
     LayerManager layerManager;
     @Inject
@@ -141,9 +148,10 @@ public class SkyMapActivity extends InjectableActivity
     private SkyMapComponent daggerComponent;
     private DragRotateZoomGestureDetector dragZoomRotateDetector;
     private DarkerModeManager darkerModeManager;
-    private boolean isSkyMapOnly;
     private SearchView searchView;
     private MenuItem searchMenuItem;
+    private TextView pointingText;
+    private View rootView;
 
     @Override
     public SkyMapComponent getComponent() {
@@ -158,7 +166,7 @@ public class SkyMapActivity extends InjectableActivity
                 .applicationComponent(getApplicationComponent())
                 .skyMapModule(new SkyMapModule(this)).build();
         daggerComponent.inject(this);
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        preferences.registerOnSharedPreferenceChangeListener(this);
 
         initializeModelViewController();
         checkForSensorsAndMaybeWarn();
@@ -185,26 +193,29 @@ public class SkyMapActivity extends InjectableActivity
         setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
 
         darkerModeManager = new DarkerModeManager(
-                window, b -> this.rendererController.queueNightVisionMode(b), sharedPreferences);
+                window, b -> this.rendererController.queueNightVisionMode(b), preferences);
 
         Intent intent = getIntent();
         String intentAction = intent.getAction();
-        isSkyMapOnly = ((intentAction != null) && (intentAction.equals(SKY_MAP_INTENT_ACTION)));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
+            boolean isSkyMapOnly = ((intentAction != null) && (intentAction.equals(SKY_MAP_INTENT_ACTION)));
             actionBar.setDisplayHomeAsUpEnabled(!isSkyMapOnly);
             actionBar.setDisplayShowHomeEnabled(!isSkyMapOnly);
         }
-        this.<ImageButton>findViewById(R.id.back_telescope_control).setOnClickListener(v -> {
-            if (isSkyMapOnly) {
-                startActivity(new Intent(this, MainActivity.class));
+        this.<ImageButton>findViewById(R.id.telescope_control_button).setOnClickListener(v -> {
+            Intent gotoIntent = new Intent(this, MainActivity.class);
+            if (TelescopeTouchApp.connectionManager.isConnected()) {
+                gotoIntent.putExtra(MainActivity.ACTION, MainActivity.ACTION_MOUNT_CONTROL);
             } else {
-                onBackPressed();
+                gotoIntent.putExtra(MainActivity.ACTION, MainActivity.ACTION_CONNECT);
+                gotoIntent.putExtra(MainActivity.MESSAGE, R.string.connect_telescope_first);
             }
+            startActivity(gotoIntent);
         });
         this.<Button>findViewById(R.id.search_in_database).setOnClickListener(v -> {
             Intent mainIntent = new Intent(SkyMapActivity.this, MainActivity.class);
-            if (TelescopeTouchApp.connectionManager.isConnected()) {
+            if (connectionManager.isConnected()) {
                 GoToFragment.setRequestedSearch(searchTargetName);
                 mainIntent.putExtra(MainActivity.ACTION, MainActivity.ACTION_SEARCH);
             } else {
@@ -213,6 +224,7 @@ public class SkyMapActivity extends InjectableActivity
             }
             startActivity(mainIntent);
         });
+        pointingText = findViewById(R.id.skymap_pointing);
 
         // Were we started as the result of a search?
         if (Intent.ACTION_SEARCH.equals(intentAction))
@@ -224,20 +236,18 @@ public class SkyMapActivity extends InjectableActivity
         if (sensorManager != null && sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null
                 && sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null) {
             Log.i(TAG, "Minimum sensors present");
-            setAutoMode(sharedPreferences.getBoolean(ApplicationConstants.AUTO_MODE_PREF, true));
+            setAutoMode(preferences.getBoolean(ApplicationConstants.AUTO_MODE_PREF, true));
             return;
         }
         // Missing at least one sensor.  Warn the user.
         handler.post(() -> {
-            if (sharedPreferences.getBoolean(ApplicationConstants.NO_WARN_MISSING_SENSORS_PREF, false)) {
-                Log.d(TAG, "showing no sensor toast");
-                Toast.makeText(SkyMapActivity.this, R.string.no_sensor_warning, Toast.LENGTH_LONG).show();
+            if (preferences.getBoolean(ApplicationConstants.NO_WARN_MISSING_SENSORS_PREF, false)) {
+                Snackbar.make(rootView, R.string.no_sensor_warning, Snackbar.LENGTH_SHORT).show();
                 // Don't force manual mode second time through - leave it up to the user.
             } else {
-                Log.d(TAG, "showing no sensor dialog");
                 noSensorsDialogFragment.show(fragmentManager, "No sensors dialog");
                 // First time, force manual mode.
-                sharedPreferences.edit().putBoolean(ApplicationConstants.AUTO_MODE_PREF, false).apply();
+                preferences.edit().putBoolean(ApplicationConstants.AUTO_MODE_PREF, false).apply();
                 setAutoMode(false);
             }
         });
@@ -249,9 +259,8 @@ public class SkyMapActivity extends InjectableActivity
         // Trigger the initial hide() shortly after the activity has been
         // created, to briefly hint to the user that UI controls
         // are available.
-        if (fullscreenControlsManager != null) {
+        if (fullscreenControlsManager != null)
             fullscreenControlsManager.flashControls();
-        }
     }
 
     @Override
@@ -336,7 +345,7 @@ public class SkyMapActivity extends InjectableActivity
 
     @Override
     public void onResume() {
-        Log.d(TAG, "onResume at " + System.currentTimeMillis());
+        Log.d(TAG, "onResume");
         super.onResume();
         Log.i(TAG, "Starting view");
         skyView.onResume();
@@ -349,37 +358,32 @@ public class SkyMapActivity extends InjectableActivity
         for (Runnable runnable : onResumeRunnables) {
             handler.post(runnable);
         }
-        Log.d(TAG, "-onResume at " + System.currentTimeMillis());
     }
 
     @SuppressLint("SimpleDateFormat")
     public void setTimeTravelMode(Date newTime) {
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy.MM.dd G  HH:mm:ss z");
-        Toast.makeText(this, String.format(getString(R.string.time_travel_start_message_alt),
-                dateFormatter.format(newTime)), Toast.LENGTH_LONG).show();
         Log.d(TAG, "Showing TimePlayer UI.");
+        pointingText.setVisibility(View.GONE);
         timePlayerUI.setVisibility(View.VISIBLE);
         timePlayerUI.requestFocus();
-        flashTheScreen();
+        flashMap();
         controller.goTimeTravel(newTime);
     }
 
     public void setNormalTimeModel() {
-        flashTheScreen();
+        flashMap();
         controller.useRealTime();
-        Toast.makeText(this, R.string.time_travel_close_message, Toast.LENGTH_SHORT).show();
+        Snackbar.make(rootView, R.string.time_travel_close_message, Snackbar.LENGTH_SHORT).show();
         Log.d(TAG, "Leaving Time Travel mode.");
         timePlayerUI.setVisibility(View.GONE);
+        pointingText.setVisibility(View.VISIBLE);
     }
 
-    private void flashTheScreen() {
-        final View view = findViewById(R.id.view_mask);
-        // We don't need to set it invisible again - the end of the
-        // animation will see to that.
-        // TODO(johntaylor): check if setting it to GONE will bring
-        // performance benefits.
-        view.setVisibility(View.VISIBLE);
-        view.startAnimation(flashAnimation);
+    private void flashMap() {
+        final View mask = findViewById(R.id.view_mask);
+        // We don't need to set it invisible again - the end of the animation will see to that.
+        mask.setVisibility(View.VISIBLE);
+        mask.startAnimation(flashAnimation);
     }
 
     @Override
@@ -459,8 +463,9 @@ public class SkyMapActivity extends InjectableActivity
 
     @SuppressLint("SimpleDateFormat")
     private void initializeModelViewController() {
-        Log.i(TAG, "Initializing Model, View and Controller @ " + System.currentTimeMillis());
+        Log.i(TAG, "Initializing Model, View and Controller");
         setContentView(R.layout.skyrenderer);
+        rootView = findViewById(R.id.main_sky_view);
         skyView = findViewById(R.id.skyrenderer_view);
         // We don't want a depth buffer.
         skyView.setEGLConfigChooser(false);
@@ -469,12 +474,11 @@ public class SkyMapActivity extends InjectableActivity
 
         rendererController = new RendererController(renderer, skyView);
         // The renderer will now call back every frame to get model updates.
-        rendererController.addUpdateClosure(
-                new RendererModelUpdateClosure(model, rendererController, sharedPreferences));
+        rendererController.addUpdateClosure(new RendererModelUpdateClosure());
 
-        Log.i(TAG, "Setting layers @ " + System.currentTimeMillis());
+        Log.i(TAG, "Setting layers");
         layerManager.registerWithRenderer(rendererController);
-        Log.i(TAG, "Set up controllers @ " + System.currentTimeMillis());
+        Log.i(TAG, "Set up controllers");
         controller.setModel(model);
 
         cancelSearchButton = findViewById(R.id.cancel_search_button);
@@ -484,11 +488,11 @@ public class SkyMapActivity extends InjectableActivity
         int numChildren = providerButtons.getChildCount();
         View[] buttonViews = new View[numChildren + 1];
         for (int i = 0; i < numChildren; i++) {
-            buttonViews[i] = (ImageButton) providerButtons.getChildAt(i);
+            buttonViews[i] = providerButtons.getChildAt(i);
         }
         buttonViews[numChildren] = findViewById(R.id.manual_auto_toggle);
         fullscreenControlsManager = new FullscreenControlsManager(this,
-                new View[]{this.<FloatingButtonsLayout>findViewById(R.id.layer_manual_auto_toggle), providerButtons}, buttonViews);
+                new View[]{this.findViewById(R.id.layer_manual_auto_toggle), providerButtons}, buttonViews);
 
         MapMover mapMover = new MapMover(model, controller, this);
         gestureDetector = new GestureDetector(this, new GestureInterpreter(fullscreenControlsManager, mapMover));
@@ -565,10 +569,8 @@ public class SkyMapActivity extends InjectableActivity
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Log.d(TAG, "New Intent received " + intent);
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction()))
             doSearchWithIntent(intent);
-        }
     }
 
     @Override
@@ -615,7 +617,7 @@ public class SkyMapActivity extends InjectableActivity
         Log.d(TAG, "Searching for target=" + target);
         rendererController.queueViewerUpDirection(model.getZenith().copy());
         rendererController.queueEnableSearchOverlay(target.copy(), searchTerm);
-        boolean autoMode = sharedPreferences.getBoolean(ApplicationConstants.AUTO_MODE_PREF, true);
+        boolean autoMode = preferences.getBoolean(ApplicationConstants.AUTO_MODE_PREF, true);
         if (!autoMode) {
             controller.teleport(target);
         }
@@ -631,16 +633,49 @@ public class SkyMapActivity extends InjectableActivity
         return model;
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.w(TAG, "Unhandled activity result");
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.w(TAG, "Unhandled request permissions result");
+    public void pointTelescope(View v) {
+        EquatorialCoordinates coordinates = model.getEquatorialCoordinates();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(R.string.point_telescope);
+        // Only display buttons if the telescope is ready
+        if (!connectionManager.isConnected()) {
+            builder.setMessage(R.string.connect_telescope_first)
+                    .setPositiveButton(R.string.take_me_there, (dialog, which) -> startActivity(new Intent(this, MainActivity.class)));
+        } else if ((connectionManager.telescopeName == null) || (connectionManager.telescopeCoordP == null) || (connectionManager.telescopeOnCoordSetP == null)) {
+            builder.setMessage(R.string.no_telescope_found);
+        } else {
+            builder.setMessage(String.format(getString(R.string.point_telescope_message),
+                    connectionManager.telescopeName, coordinates.getRAString(), coordinates.getDecString()))
+                    .setPositiveButton(R.string.go_to, (dialog, which) -> {
+                        try {
+                            connectionManager.telescopeOnCoordSetTrack.setDesiredValue(Constants.SwitchStatus.ON);
+                            connectionManager.telescopeOnCoordSetSlew.setDesiredValue(Constants.SwitchStatus.OFF);
+                            connectionManager.telescopeOnCoordSetSync.setDesiredValue(Constants.SwitchStatus.OFF);
+                            new PropUpdater(connectionManager.telescopeOnCoordSetP).start();
+                            connectionManager.telescopeCoordRA.setDesiredValue(coordinates.getRATelescopeFormat());
+                            connectionManager.telescopeCoordDec.setDesiredValue(coordinates.getDecTelescopeFormat());
+                            new PropUpdater(connectionManager.telescopeCoordP).start();
+                            Snackbar.make(rootView, R.string.slew_ok, Snackbar.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            Log.e(TAG, e.getLocalizedMessage(), e);
+                            Snackbar.make(rootView, R.string.sync_slew_error, Snackbar.LENGTH_SHORT).show();
+                        }
+                    }).setNeutralButton(R.string.sync, (dialog, which) -> {
+                try {
+                    connectionManager.telescopeOnCoordSetSync.setDesiredValue(Constants.SwitchStatus.ON);
+                    connectionManager.telescopeOnCoordSetTrack.setDesiredValue(Constants.SwitchStatus.OFF);
+                    connectionManager.telescopeOnCoordSetSlew.setDesiredValue(Constants.SwitchStatus.OFF);
+                    new PropUpdater(connectionManager.telescopeOnCoordSetP).start();
+                    connectionManager.telescopeCoordRA.setDesiredValue(coordinates.getRATelescopeFormat());
+                    connectionManager.telescopeCoordDec.setDesiredValue(coordinates.getDecTelescopeFormat());
+                    new PropUpdater(connectionManager.telescopeCoordP).start();
+                    Snackbar.make(rootView, R.string.sync_ok, Snackbar.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Log.e(TAG, e.getLocalizedMessage(), e);
+                    Snackbar.make(rootView, R.string.sync_slew_error, Snackbar.LENGTH_SHORT).show();
+                }
+            });
+        }
+        builder.setNegativeButton(android.R.string.cancel, null).setIcon(R.drawable.navigation).show();
     }
 
     /**
@@ -648,36 +683,29 @@ public class SkyMapActivity extends InjectableActivity
      *
      * @author John Taylor
      */
-    private static final class RendererModelUpdateClosure extends AbstractUpdateClosure {
-        private final RendererController rendererController;
-        private final AstronomerModel model;
+    private class RendererModelUpdateClosure extends AbstractUpdateClosure {
 
-        public RendererModelUpdateClosure(AstronomerModel model, RendererController rendererController, SharedPreferences sharedPreferences) {
-            this.model = model;
-            this.rendererController = rendererController;
-            boolean horizontalRotation = sharedPreferences.getBoolean(ApplicationConstants.ROTATE_HORIZON_PREF, false);
+        public RendererModelUpdateClosure() {
+            boolean horizontalRotation = preferences.getBoolean(ApplicationConstants.ROTATE_HORIZON_PREF, false);
             model.setHorizontalRotation(horizontalRotation);
         }
 
         @Override
         public void run() {
             Pointing pointing = model.getPointing();
-            float directionX = pointing.getLineOfSightX();
-            float directionY = pointing.getLineOfSightY();
-            float directionZ = pointing.getLineOfSightZ();
+            if (pointingText != null)
+                pointingText.post(() -> pointingText.setText(
+                        EquatorialCoordinates.getInstance(pointing.getLineOfSight()).toStringArcmin()));
 
-            float upX = pointing.getPerpendicularX();
-            float upY = pointing.getPerpendicularY();
-            float upZ = pointing.getPerpendicularZ();
-
-            rendererController.queueSetViewOrientation(directionX, directionY, directionZ, upX, upY, upZ);
+            rendererController.queueSetViewOrientation(
+                    pointing.getLineOfSightX(), pointing.getLineOfSightY(), pointing.getLineOfSightZ(),
+                    pointing.getPerpendicularX(), pointing.getPerpendicularY(), pointing.getPerpendicularZ());
 
             Vector3 up = model.getPhoneUpDirection();
             rendererController.queueTextAngle((float) Math.atan2(up.x, up.y));
             rendererController.queueViewerUpDirection(model.getZenith().copy());
 
-            float fieldOfView = model.getFieldOfView();
-            rendererController.queueFieldOfView(fieldOfView);
+            rendererController.queueFieldOfView(model.getFieldOfView());
         }
     }
 }

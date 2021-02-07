@@ -26,6 +26,12 @@ public class Vector3 {
     public double y;
     public double z;
 
+    public Vector3() {
+        x = 0;
+        y = 0;
+        z = 0;
+    }
+
     public Vector3(float x, float y, float z) {
         this.x = x;
         this.y = y;
@@ -52,10 +58,6 @@ public class Vector3 {
         this.z = xyz[2];
     }
 
-    public static Vector3 zero() {
-        return new Vector3(0, 0, 0);
-    }
-
     public static double scalarProduct(Vector3 v1, Vector3 v2) {
         return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
     }
@@ -76,9 +78,8 @@ public class Vector3 {
 
     public static Vector3 normalized(Vector3 v) {
         double len = length(v);
-        if (len < 0.000001) {
-            return zero();
-        }
+        if (len < 0.000001)
+            return new Vector3();
         return scale(v, 1.0 / len);
     }
 

@@ -113,11 +113,11 @@ public class GridLayer extends AbstractLayer {
             lineSources.add(createDecLine(0)); // Equator
             // Note that we don't create lines at the poles.
             for (int d = 1; d < numDecSources; d++) {
-                float dec = d * 90.0f / numDecSources;
+                double dec = d * 90.0f / numDecSources;
                 lineSources.add(createDecLine(dec));
-                textSources.add(new TextSourceImpl(0f, dec, String.format("%d°", (int) dec), LINE_COLOR));
+                textSources.add(new TextSourceImpl(0f, (float) dec, String.format("%d°", (int) dec), LINE_COLOR));
                 lineSources.add(createDecLine(-dec));
-                textSources.add(new TextSourceImpl(0f, -dec, String.format("%d°", (int) -dec), LINE_COLOR));
+                textSources.add(new TextSourceImpl(0f, (float) -dec, String.format("%d°", (int) -dec), LINE_COLOR));
             }
         }
 
@@ -127,28 +127,28 @@ public class GridLayer extends AbstractLayer {
          */
         private LineSourceImpl createRaLine(int index, int numRaSources) {
             LineSourceImpl line = new LineSourceImpl(LINE_COLOR);
-            float ra = index * 360.0f / numRaSources;
+            double ra = index * 360.0 / numRaSources;
             for (int i = 0; i < NUM_DEC_VERTICES - 1; i++) {
-                float dec = 90.0f - i * 180.0f / (NUM_DEC_VERTICES - 1);
+                double dec = 90.0 - i * 180.0 / (NUM_DEC_VERTICES - 1);
                 EquatorialCoordinates raDec = new EquatorialCoordinates(ra, dec);
                 line.raDecs.add(raDec);
                 line.vertices.add(GeocentricCoordinates.getInstance(raDec));
             }
-            EquatorialCoordinates raDec = new EquatorialCoordinates(0.0f, -90.0f);
+            EquatorialCoordinates raDec = new EquatorialCoordinates(0.0, -90.0);
             line.raDecs.add(raDec);
             line.vertices.add(GeocentricCoordinates.getInstance(raDec));
             return line;
         }
 
-        private LineSourceImpl createDecLine(float dec) {
+        private LineSourceImpl createDecLine(double dec) {
             LineSourceImpl line = new LineSourceImpl(LINE_COLOR);
             for (int i = 0; i < NUM_RA_VERTICES; i++) {
-                float ra = i * 360.0f / NUM_RA_VERTICES;
+                double ra = i * 360.0 / NUM_RA_VERTICES;
                 EquatorialCoordinates raDec = new EquatorialCoordinates(ra, dec);
                 line.raDecs.add(raDec);
                 line.vertices.add(GeocentricCoordinates.getInstance(raDec));
             }
-            EquatorialCoordinates raDec = new EquatorialCoordinates(0.0f, dec);
+            EquatorialCoordinates raDec = new EquatorialCoordinates(0.0, dec);
             line.raDecs.add(raDec);
             line.vertices.add(GeocentricCoordinates.getInstance(raDec));
             return line;

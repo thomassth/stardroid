@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_toggle_tracking"
+        android:icon="@drawable/lock_open"
+        android:orderInCategory="10"
+        android:title="@string/toggle_tracking"
+        app:showAsAction="always" />
+</menu>

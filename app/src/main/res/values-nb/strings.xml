@@ -358,7 +358,6 @@
     <string name="puppidvelids" translation_description="Meteor Shower">Puppid-velidene</string>
     <string name="ursids" translation_description="Meteor Shower">Ursidene</string>
 
-    <string name="no_sensor_warning">Enheten din kan mangle orienteringssensorer - auto-modus fungerer kanskje ikke</string>
     <string name="warning_dialog_title">Bad news!</string>
     <string name="missing_sensor_dialog_text">\n
         Unfortunately your device might not have one of the

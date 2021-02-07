@@ -56,7 +56,7 @@
         android:largeHeap="true"
         android:requestLegacyExternalStorage="true"
         android:resizeableActivity="true"
-        android:roundIcon="@mipmap/app_icon_round"
+        android:roundIcon="@mipmap/app_icon"
         android:theme="@style/AppTheme"
         tools:targetApi="n">
         <activity

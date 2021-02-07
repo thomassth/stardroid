@@ -271,6 +271,10 @@ public class AstronomerModel {
         }
     }
 
+    public EquatorialCoordinates getEquatorialCoordinates() {
+        return EquatorialCoordinates.getInstance(pointing.getLineOfSight());
+    }
+
     /**
      * Calculates local North, East and Up vectors in terms of the celestial
      * coordinate frame.

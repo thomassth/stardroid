@@ -40,26 +40,14 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import org.indilib.i4j.Constants;
-import org.indilib.i4j.client.INDIDevice;
-import org.indilib.i4j.client.INDIDeviceListener;
-import org.indilib.i4j.client.INDINumberElement;
-import org.indilib.i4j.client.INDINumberProperty;
-import org.indilib.i4j.client.INDIProperty;
-import org.indilib.i4j.client.INDIPropertyListener;
-import org.indilib.i4j.client.INDIServerConnection;
-import org.indilib.i4j.client.INDIServerConnectionListener;
-import org.indilib.i4j.client.INDISwitchElement;
-import org.indilib.i4j.client.INDISwitchProperty;
 import org.indilib.i4j.client.INDIValueException;
 
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 import in.myinnos.alphabetsindexfastscrollrecycler.IndexFastScrollRecyclerView;
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.MainActivity;
 import io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoordinates;
 import io.github.marcocipriani01.telescopetouch.astronomy.StarsPrecession;
@@ -76,10 +64,10 @@ import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connect
 /**
  * Allows the user to look for an astronomical object and slew the telescope.
  */
-public class GoToFragment extends ActionFragment
-        implements SearchView.OnQueryTextListener, Catalog.CatalogLoadingListener,
-        INDIServerConnectionListener, INDIPropertyListener, INDIDeviceListener, CatalogArrayAdapter.CatalogItemListener {
+public class GoToFragment extends ActionFragment implements SearchView.OnQueryTextListener,
+        Catalog.CatalogLoadingListener, CatalogArrayAdapter.CatalogItemListener {
 
+    private static final String TAG = TelescopeTouchApp.getTag(GoToFragment.class);
     private static final Catalog catalog = new Catalog();
     private static String requestedSearch = null;
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -93,14 +81,6 @@ public class GoToFragment extends ActionFragment
     private LocationHelper locationHelper;
     private Location location = null;
     private boolean searching = false;
-    // INDI properties
-    private INDINumberProperty telescopeCoordP = null;
-    private INDINumberElement telescopeCoordRA = null;
-    private INDINumberElement telescopeCoordDec = null;
-    private INDISwitchProperty telescopeOnCoordSetP = null;
-    private INDISwitchElement telescopeOnCoordSetSync = null;
-    private INDISwitchElement telescopeOnCoordSetSlew = null;
-    private INDISwitchElement telescopeOnCoordSetTrack = null;
 
     public static void setRequestedSearch(String query) {
         requestedSearch = query;
@@ -166,21 +146,6 @@ public class GoToFragment extends ActionFragment
     @Override
     public void onStart() {
         super.onStart();
-        connectionManager.addINDIListener(this);
-        // Enumerate existing properties
-        if (connectionManager.isConnected()) {
-            List<INDIDevice> list = connectionManager.getIndiConnection().getDevicesAsList();
-            if (list != null) {
-                for (INDIDevice device : list) {
-                    device.addINDIDeviceListener(this);
-                    for (INDIProperty<?> property : device.getPropertiesAsList()) {
-                        newProperty(device, property);
-                    }
-                }
-            }
-        } else {
-            clearVars();
-        }
         if (catalog.isReady()) {
             setListShown(true);
         } else {
@@ -197,7 +162,6 @@ public class GoToFragment extends ActionFragment
     public void onStop() {
         super.onStop();
         catalog.setListener(null);
-        connectionManager.removeINDIListener(this);
         locationHelper.start();
         list.stopNestedScroll();
         list.stopScroll();
@@ -237,16 +201,6 @@ public class GoToFragment extends ActionFragment
                         emptyLabel.setVisibility(View.GONE);
                     }
                 }).setNegativeButton(android.R.string.cancel, null).show();
-    }
-
-    private void clearVars() {
-        telescopeCoordP = null;
-        telescopeCoordRA = null;
-        telescopeCoordDec = null;
-        telescopeOnCoordSetP = null;
-        telescopeOnCoordSetSlew = null;
-        telescopeOnCoordSetTrack = null;
-        telescopeOnCoordSetSync = null;
     }
 
     private void setListShown(boolean b) {
@@ -305,31 +259,33 @@ public class GoToFragment extends ActionFragment
                 .setMessage(entry.createDescription(context, location))
                 .setTitle(entry.getName());
         // Only display buttons if the telescope is ready
-        if ((telescopeCoordP != null) && (telescopeOnCoordSetP != null)) {
+        if ((connectionManager.telescopeCoordP != null) && (connectionManager.telescopeOnCoordSetP != null)) {
             builder.setPositiveButton(R.string.go_to, (dialog, which) -> {
                 try {
-                    telescopeOnCoordSetTrack.setDesiredValue(Constants.SwitchStatus.ON);
-                    telescopeOnCoordSetSlew.setDesiredValue(Constants.SwitchStatus.OFF);
-                    telescopeOnCoordSetSync.setDesiredValue(Constants.SwitchStatus.OFF);
-                    new PropUpdater(telescopeOnCoordSetP).start();
+                    connectionManager.telescopeOnCoordSetTrack.setDesiredValue(Constants.SwitchStatus.ON);
+                    connectionManager.telescopeOnCoordSetSlew.setDesiredValue(Constants.SwitchStatus.OFF);
+                    connectionManager.telescopeOnCoordSetSync.setDesiredValue(Constants.SwitchStatus.OFF);
+                    new PropUpdater(connectionManager.telescopeOnCoordSetP).start();
                     setCoordinatesMaybePrecess(entry, coordinates);
-                    new PropUpdater(telescopeCoordP).start();
+                    new PropUpdater(connectionManager.telescopeCoordP).start();
                     requestActionSnack(R.string.slew_ok);
                 } catch (Exception e) {
+                    Log.e(TAG, e.getLocalizedMessage(), e);
                     requestActionSnack(R.string.sync_slew_error);
                 }
                 hideKeyboard();
             });
             builder.setNeutralButton(R.string.sync, (dialog, which) -> {
                 try {
-                    telescopeOnCoordSetSync.setDesiredValue(Constants.SwitchStatus.ON);
-                    telescopeOnCoordSetTrack.setDesiredValue(Constants.SwitchStatus.OFF);
-                    telescopeOnCoordSetSlew.setDesiredValue(Constants.SwitchStatus.OFF);
-                    new PropUpdater(telescopeOnCoordSetP).start();
+                    connectionManager.telescopeOnCoordSetSync.setDesiredValue(Constants.SwitchStatus.ON);
+                    connectionManager.telescopeOnCoordSetTrack.setDesiredValue(Constants.SwitchStatus.OFF);
+                    connectionManager.telescopeOnCoordSetSlew.setDesiredValue(Constants.SwitchStatus.OFF);
+                    new PropUpdater(connectionManager.telescopeOnCoordSetP).start();
                     setCoordinatesMaybePrecess(entry, coordinates);
-                    new PropUpdater(telescopeCoordP).start();
+                    new PropUpdater(connectionManager.telescopeCoordP).start();
                     requestActionSnack(R.string.sync_ok);
                 } catch (Exception e) {
+                    Log.e(TAG, e.getLocalizedMessage(), e);
                     requestActionSnack(R.string.sync_slew_error);
                 }
                 hideKeyboard();
@@ -343,95 +299,17 @@ public class GoToFragment extends ActionFragment
         if ((preferences.getBoolean(ApplicationConstants.COMPENSATE_PRECESSION_PREF, true)) &&
                 ((selectedEntry instanceof StarEntry) || (selectedEntry instanceof DSOEntry))) {
             EquatorialCoordinates precessed = StarsPrecession.precess(Calendar.getInstance(), coordinates);
-            telescopeCoordRA.setDesiredValue(precessed.getRAString());
-            telescopeCoordDec.setDesiredValue(precessed.getDecString());
+            connectionManager.telescopeCoordRA.setDesiredValue(precessed.getRATelescopeFormat());
+            connectionManager.telescopeCoordDec.setDesiredValue(precessed.getDecTelescopeFormat());
         } else {
-            telescopeCoordRA.setDesiredValue(coordinates.getRAString());
-            telescopeCoordDec.setDesiredValue(coordinates.getDecString());
+            connectionManager.telescopeCoordRA.setDesiredValue(coordinates.getRATelescopeFormat());
+            connectionManager.telescopeCoordDec.setDesiredValue(coordinates.getDecTelescopeFormat());
         }
     }
 
     private void hideKeyboard() {
         ((InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE))
                 .hideSoftInputFromWindow(searchMenu.getActionView().getWindowToken(), 0);
-    }
-
-    // ------ Listener functions from INDI ------
-
-    @Override
-    public void newProperty(INDIDevice device, INDIProperty<?> property) {
-        String name = property.getName();
-        Log.i("SearchFragment", "New Property (" + name + ") added to device " + device.getName()
-                + ", elements: " + Arrays.toString(property.getElementNames()));
-        switch (name) {
-            case "EQUATORIAL_EOD_COORD":
-                if (((telescopeCoordDec = (INDINumberElement) property.getElement("DEC")) != null) &&
-                        ((telescopeCoordRA = (INDINumberElement) property.getElement("RA")) != null) &&
-                        (property instanceof INDINumberProperty)) {
-                    property.addINDIPropertyListener(this);
-                    telescopeCoordP = (INDINumberProperty) property;
-                }
-                break;
-            case "ON_COORD_SET":
-                if (((telescopeOnCoordSetTrack = (INDISwitchElement) property.getElement("TRACK")) != null) &&
-                        ((telescopeOnCoordSetSlew = (INDISwitchElement) property.getElement("SLEW")) != null) &&
-                        ((telescopeOnCoordSetSync = (INDISwitchElement) property.getElement("SYNC")) != null)) {
-                    property.addINDIPropertyListener(this);
-                    telescopeOnCoordSetP = (INDISwitchProperty) property;
-                }
-                break;
-        }
-    }
-
-    @Override
-    public void removeProperty(INDIDevice device, INDIProperty<?> property) {
-        String name = property.getName();
-        Log.d("SearchFragment", "Removed property (" + name + ") to device " + device.getName());
-        switch (name) {
-            case "EQUATORIAL_EOD_COORD":
-                telescopeOnCoordSetP = null;
-                telescopeOnCoordSetSlew = null;
-                telescopeOnCoordSetTrack = null;
-                telescopeOnCoordSetSync = null;
-                break;
-            case "ON_COORD_SET":
-                telescopeCoordP = null;
-                telescopeCoordRA = null;
-                telescopeCoordDec = null;
-                break;
-        }
-    }
-
-    @Override
-    public void messageChanged(INDIDevice device) {
-
-    }
-
-    @Override
-    public void propertyChanged(INDIProperty<?> property) {
-
-    }
-
-    @Override
-    public void newDevice(INDIServerConnection connection, INDIDevice device) {
-        Log.i("SearchFragment", "New device: " + device.getName());
-        device.addINDIDeviceListener(this);
-    }
-
-    @Override
-    public void removeDevice(INDIServerConnection connection, INDIDevice device) {
-        Log.d("SearchFragment", "Device removed: " + device.getName());
-        device.removeINDIDeviceListener(this);
-    }
-
-    @Override
-    public void connectionLost(INDIServerConnection connection) {
-        clearVars();
-    }
-
-    @Override
-    public void newMessage(INDIServerConnection connection, Date timestamp, String message) {
-
     }
 
     @Override

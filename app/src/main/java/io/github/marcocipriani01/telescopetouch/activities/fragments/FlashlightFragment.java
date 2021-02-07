@@ -91,7 +91,7 @@ public class FlashlightFragment extends ActionFragment {
             }
         });
         rootView.<Button>findViewById(R.id.screen_flashlight_button)
-                .setOnClickListener((View.OnClickListener) v -> startActivity(new Intent(context, ScreenLightActivity.class)));
+                .setOnClickListener(v -> startActivity(new Intent(context, ScreenLightActivity.class)));
         return rootView;
     }
 

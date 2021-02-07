@@ -26,15 +26,22 @@ import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
  */
 public class PropUpdater extends Thread {
 
+    private static final String TAG = TelescopeTouchApp.getTag(PropUpdater.class);
+    private final INDIProperty<?> prop;
+
     public PropUpdater(INDIProperty<?> prop) {
-        super(() -> {
-            try {
-                prop.sendChangesToDriver();
-            } catch (Exception e) {
-                Log.e("PropertyUpdater", "Property update error!", e);
-                TelescopeTouchApp.connectionManager.log(
-                        TelescopeTouchApp.getContext().getResources().getString(R.string.error) + " " + e.getLocalizedMessage());
-            }
-        }, "INDI property updater");
+        super("INDI property updater");
+        this.prop = prop;
+    }
+
+    @Override
+    public void run() {
+        try {
+            prop.sendChangesToDriver();
+        } catch (Exception e) {
+            Log.e(TAG, "Property update error!", e);
+            TelescopeTouchApp.connectionManager.log(
+                    TelescopeTouchApp.getContext().getString(R.string.error) + " " + e.getLocalizedMessage());
+        }
     }
 }

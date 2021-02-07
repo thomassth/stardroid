@@ -16,6 +16,7 @@
 
 package io.github.marcocipriani01.telescopetouch.astronomy;
 
+import android.annotation.SuppressLint;
 import android.location.Location;
 
 import androidx.annotation.NonNull;
@@ -40,9 +41,9 @@ public class EquatorialCoordinates {
      */
     public double dec;
 
-    public EquatorialCoordinates(float ra, float dec) {
-        this.ra = ra;
-        this.dec = dec;
+    public EquatorialCoordinates() {
+        this.ra = 0;
+        this.dec = 0;
     }
 
     public EquatorialCoordinates(double ra, double dec) {
@@ -74,7 +75,7 @@ public class EquatorialCoordinates {
      * @param string an input string (right ascension)
      * @return the right ascension converted in decimal degrees.
      */
-    private static double parseRAString(String string) throws NumberFormatException {
+    private static double parseRAString(String string) throws NumberFormatException, NullPointerException {
         Pattern p = Pattern.compile("([0-9]{1,2})[h:\\s]([0-9]{1,2})([m:'\\s]([0-9]{1,2})([,.]([0-9]*))?[s\"]?)?[m:'\\s]?");
         Matcher m = p.matcher(string);
         double value = 0;
@@ -111,7 +112,7 @@ public class EquatorialCoordinates {
      * @param string an input string (declination)
      * @return the declination converted in decimal degrees.
      */
-    private static double parseDecString(String string) throws NumberFormatException {
+    private static double parseDecString(String string) throws NumberFormatException, NullPointerException {
         Pattern p = Pattern.compile("([+\\-]?)([0-9]{1,2})[°:\\s]([0-9]{1,2})([m:'\\s]([0-9]{1,2})([,.]([0-9]*))?[s\"]?)?[m:'\\s]?");
         Matcher m = p.matcher(string);
         double value = 0;
@@ -161,6 +162,34 @@ public class EquatorialCoordinates {
         return Formatters.formatDegreesAsHours(ra);
     }
 
+    @SuppressLint("DefaultLocale")
+    public String getRATelescopeFormat() {
+        double hours = Math.abs(ra / 15.0);
+        int deg = (int) Math.floor(hours);
+        double tmp = (hours - deg) * 60.0;
+        int min = (int) Math.floor(tmp);
+        int sec = (int) Math.round((tmp - min) * 60.0);
+        if (Math.signum(ra) >= 0) {
+            return String.format("%02d:%02d:%02d", deg, min, sec);
+        } else {
+            return String.format("-%02d:%02d:%02d", deg, min, sec);
+        }
+    }
+
+    @SuppressLint("DefaultLocale")
+    public String getDecTelescopeFormat() {
+        double hours = Math.abs(dec);
+        int deg = (int) Math.floor(hours);
+        double tmp = (hours - deg) * 60.0;
+        int min = (int) Math.floor(tmp);
+        int sec = (int) Math.round((tmp - min) * 60.0);
+        if (Math.signum(dec) >= 0) {
+            return String.format("%02d:%02d:%02d", deg, min, sec);
+        } else {
+            return String.format("-%02d:%02d:%02d", deg, min, sec);
+        }
+    }
+
     /**
      * @return a string containing the declination (hh:mm:ss)
      */
@@ -172,5 +201,28 @@ public class EquatorialCoordinates {
     @Override
     public String toString() {
         return "RA: " + getRAString() + ", Dec: " + getDecString();
+    }
+
+    @SuppressLint("DefaultLocale")
+    public String toStringArcmin() {
+        String string = "RA: ";
+        double hours = Math.abs(this.ra / 15.0);
+        int deg = (int) Math.floor(hours);
+        double tmp = (hours - deg) * 60.0;
+        int min = (int) Math.floor(tmp);
+        if (Math.signum(this.ra / 15.0) >= 0) {
+            string += String.format("%02dh%02dm", deg, min);
+        } else {
+            string += String.format("-%02dh%02dm", deg, min);
+        }
+        string += ", Dec: ";
+        deg = (int) Math.floor(Math.abs(this.dec));
+        min = (int) Math.floor((Math.abs(this.dec) - deg) * 60.0);
+        if (Math.signum(this.dec) >= 0) {
+            string += String.format("%02d:%02d", deg, min);
+        } else {
+            string += String.format("-%02d:%02d", deg, min);
+        }
+        return string;
     }
 }

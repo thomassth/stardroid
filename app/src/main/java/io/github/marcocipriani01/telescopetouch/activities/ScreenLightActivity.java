@@ -47,6 +47,7 @@ public class ScreenLightActivity extends AppCompatActivity {
         window.setAttributes(params);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);

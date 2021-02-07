@@ -360,7 +360,6 @@
     <string name="puppidvelids" translation_description="Meteor Shower">Πρυμνίδες-Ιστιίδες</string>
     <string name="ursids" translation_description="Meteor Shower">Αρκτίδες</string>
 
-    <string name="no_sensor_warning">Η συσκευή σας πιθανόν δεν έχει αισθητήρες προσανατολισμού - η αυτόματη λειτουργία μπορεί να μη λειτουργεί</string>
     <string name="warning_dialog_title">Άσχημα νέα!</string>
     <string name="missing_sensor_dialog_text">\n
         Δυστυχώς η συσκευή σας πιθανόν δεν έχει κάποιον από

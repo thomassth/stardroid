@@ -44,7 +44,7 @@ public class CatalogArrayAdapter extends RecyclerView.Adapter<CatalogArrayAdapte
     private final Context context;
     private final LayoutInflater inflater;
     private final SharedPreferences preferences;
-    private ArrayList<Integer> sectionPositions = new ArrayList<>();
+    private final ArrayList<Integer> sectionPositions = new ArrayList<>();
     private boolean showStars = true;
     private boolean showDso = true;
     private boolean showPlanets = true;

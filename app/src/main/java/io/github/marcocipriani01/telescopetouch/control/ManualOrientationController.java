@@ -16,9 +16,6 @@
 
 package io.github.marcocipriani01.telescopetouch.control;
 
-import android.util.Log;
-
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.maths.Matrix3x3;
 import io.github.marcocipriani01.telescopetouch.maths.Vector3;
@@ -30,8 +27,6 @@ import io.github.marcocipriani01.telescopetouch.maths.Vector3;
  * @author John Taylor
  */
 public class ManualOrientationController extends AbstractController {
-
-    private static final String TAG = TelescopeTouchApp.getTag(ManualOrientationController.class);
 
     @Override
     public void start() {
@@ -101,14 +96,11 @@ public class ManualOrientationController extends AbstractController {
         if (!enabled) {
             return;
         }
-        Log.d(TAG, "Rotating by " + degrees);
         Pointing pointing = model.getPointing();
         GeocentricCoordinates pointingXyz = pointing.getLineOfSight();
-
         Matrix3x3 rotation = Matrix3x3.calculateRotationMatrix(degrees, pointingXyz);
 
         GeocentricCoordinates topXyz = pointing.getPerpendicular();
-
         Vector3 newUpXyz = Matrix3x3.matrixVectorMultiply(rotation, topXyz);
         newUpXyz.normalize();
 

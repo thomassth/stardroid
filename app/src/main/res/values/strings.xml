@@ -360,7 +360,7 @@
     <string name="puppidvelids" translation_description="Meteor Shower">Puppid-Velids</string>
     <string name="ursids" translation_description="Meteor Shower">Ursids</string>
 
-    <string name="no_sensor_warning">Your device may lack orientation sensors - automode may not work</string>
+    <string name="no_sensor_warning">Your device lacks orientation sensors!</string>
     <string name="warning_dialog_title">Bad news!</string>
     <string name="missing_sensor_dialog_text">\n
         Unfortunately your device might not have one of the sensors that Sky Map needs.\n\n
@@ -487,7 +487,7 @@
     <string name="entry_short_PD">Photographic defect</string>
     <string name="sync_slew_error">Error: can\'t request sync or Go-To</string>
     <string name="slew_ok">Go-To started</string>
-    <string name="sync_ok">Sync …</string>
+    <string name="sync_ok">Sync done</string>
     <string name="empty_catalog">Empty catalog</string>
     <string name="menu_about">About this app</string>
     <string name="app_description"><b>Telescope.Touch</b> was born as an attempt of merging the Sky Map app and the IPARCOS project, an INDI client for Android.
@@ -510,7 +510,7 @@
     <string name="error_no_devices">No devices found!</string>
     <string name="error">Error:</string>
     <string name="remove_server">Remove the selected server?</string>
-    <string name="servers_list_toast">Long click to remove, drag to rearrange</string>
+    <string name="servers_list_snack_msg">Long click to remove, drag to rearrange</string>
     <string name="focus_in">Focus in</string>
     <string name="focus_out">Focus out</string>
     <string name="menu_focuser">Focuser</string>
@@ -623,4 +623,12 @@
     <string name="only_visible">Only visible objects</string>
     <string name="not_a_number">Not a number!</string>
     <string name="no_matching_objects">No matching objects</string>
+    <string name="no_telescope">No telescope</string>
+    <string name="no_telescope_found">No telescope found!</string>
+    <string name="point_telescope_message">Are you sure you want to point \"%s\" at %s, %s?</string>
+    <string name="toggle_tracking">Toggle tracking</string>
+    <string name="tracking_toggled">Tracking toggled!</string>
+    <string name="tracking_error">Tracking error!</string>
+    <string name="unknown_error">Unknown error!</string>
+    <string name="invalid_port">Invalid port!</string>
 </resources>

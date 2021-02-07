@@ -34,7 +34,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class FullscreenControlsManager {
 
     private static final int AUTO_HIDE_DELAY_MILLIS = 4000;
-    private static final int UI_ANIMATION_DELAY = 300;
+    private static final int UI_ANIMATION_DELAY = 150;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final AppCompatActivity activity;

@@ -40,48 +40,48 @@ import io.github.marcocipriani01.telescopetouch.renderer.util.UpdateClosure;
 
 public class SkyRenderer implements GLSurfaceView.Renderer {
 
-    protected final TextureManager mTextureManager;
-    private final RenderState mRenderState = new RenderState();
-    private final Set<UpdateClosure> mUpdateClosures = new TreeSet<>();
+    protected final TextureManager textureManager;
+    private final RenderState renderState = new RenderState();
+    private final Set<UpdateClosure> updateClosures = new TreeSet<>();
     /**
      * All managers - we need to reload all of these when we recreate the surface.
      */
-    private final Set<RendererObjectManager> mAllManagers = new TreeSet<>();
+    private final Set<RendererObjectManager> managers = new TreeSet<>();
     /**
      * A list of managers which need to be reloaded before the next frame is rendered.  This may
      * be because they haven't ever been loaded yet, or because their objects have changed since
      * the last frame.
      */
-    private final ArrayList<ManagerReloadData> mManagersToReload = new ArrayList<>();
-    private final RendererObjectManager.UpdateListener mUpdateListener =
-            (rom, fullReload) -> mManagersToReload.add(new ManagerReloadData(rom, fullReload));
-    private final SkyBox mSkyBox;
-    private final OverlayManager mOverlayManager;
+    private final ArrayList<ManagerReloadData> managersToReload = new ArrayList<>();
+    private final RendererObjectManager.UpdateListener updateListener =
+            (rom, fullReload) -> managersToReload.add(new ManagerReloadData(rom, fullReload));
+    private final SkyBox skyBox;
+    private final OverlayManager overlayManager;
     /**
      * Maps an integer indicating render order to a list of objects at that level.  The managers
      * will be rendered in order, with the lowest number coming first.
      */
-    private final TreeMap<Integer, Set<RendererObjectManager>> mLayersToManagersMap;
-    private Matrix4x4 mProjectionMatrix;
-    private Matrix4x4 mViewMatrix;
+    private final TreeMap<Integer, Set<RendererObjectManager>> layersToManagersMap;
+    private Matrix4x4 projectionMatrix;
+    private Matrix4x4 viewMatrix;
     /**
      * Indicates whether the transformation matrix has changed since the last
      * time we started rendering
      */
-    private boolean mMustUpdateView = true;
-    private boolean mMustUpdateProjection = true;
+    private boolean mustUpdateView = true;
+    private boolean mustUpdateProjection = true;
 
     public SkyRenderer(Resources res) {
-        mRenderState.setResources(res);
-        mLayersToManagersMap = new TreeMap<>();
-        mTextureManager = new TextureManager(res);
+        renderState.setResources(res);
+        layersToManagersMap = new TreeMap<>();
+        textureManager = new TextureManager(res);
         // The skybox should go behind everything.
-        mSkyBox = new SkyBox(Integer.MIN_VALUE, mTextureManager);
-        mSkyBox.enable(false);
-        addObjectManager(mSkyBox);
+        skyBox = new SkyBox(Integer.MIN_VALUE, textureManager);
+        skyBox.enable(false);
+        addObjectManager(skyBox);
         // The overlays go on top of everything.
-        mOverlayManager = new OverlayManager(Integer.MAX_VALUE, mTextureManager);
-        addObjectManager(mOverlayManager);
+        overlayManager = new OverlayManager(Integer.MAX_VALUE, textureManager);
+        addObjectManager(overlayManager);
         Log.d("SkyRenderer", "SkyRenderer::SkyRenderer()");
     }
 
@@ -94,25 +94,26 @@ public class SkyRenderer implements GLSurfaceView.Renderer {
     }
 
     // Returns true if the buffers should be swapped, false otherwise.
+    @Override
     public void onDrawFrame(GL10 gl) {
         // Initialize any of the unloaded managers.
-        for (ManagerReloadData data : mManagersToReload) {
+        for (ManagerReloadData data : managersToReload) {
             data.manager.reload(gl, data.fullReload);
         }
-        mManagersToReload.clear();
+        managersToReload.clear();
 
         maybeUpdateMatrices(gl);
 
         // Determine which sky regions should be rendered.
-        mRenderState.setActiveSkyRegions(
+        renderState.setActiveSkyRegions(
                 SkyRegionMap.getActiveRegions(
-                        mRenderState.getLookDir(),
-                        mRenderState.getRadiusOfView(),
-                        (float) mRenderState.getScreenWidth() / mRenderState.getScreenHeight()));
+                        renderState.getLookDir(),
+                        renderState.getRadiusOfView(),
+                        (float) renderState.getScreenWidth() / renderState.getScreenHeight()));
 
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
-        for (Set<RendererObjectManager> managers : mLayersToManagersMap.values()) {
+        for (Set<RendererObjectManager> managers : layersToManagersMap.values()) {
             for (RendererObjectManager rom : managers) {
                 rom.draw(gl);
             }
@@ -120,11 +121,12 @@ public class SkyRenderer implements GLSurfaceView.Renderer {
         checkForErrors(gl);
 
         // Queue updates for the next frame.
-        for (UpdateClosure update : mUpdateClosures) {
+        for (UpdateClosure update : updateClosures) {
             update.run();
         }
     }
 
+    @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         Log.d("SkyRenderer", "surfaceCreated");
         gl.glEnable(GL10.GL_DITHER);
@@ -140,7 +142,7 @@ public class SkyRenderer implements GLSurfaceView.Renderer {
         gl.glDisable(GL10.GL_DEPTH_TEST);
 
         // Release references to all of the old textures.
-        mTextureManager.reset();
+        textureManager.reset();
 
         String extensions = gl.glGetString(GL10.GL_EXTENSIONS);
         Log.i("SkyRenderer", "GL extensions: " + extensions);
@@ -175,20 +177,21 @@ public class SkyRenderer implements GLSurfaceView.Renderer {
         GLBuffer.setCanUseVBO(canUseVBO);
 
         // Reload all of the managers.
-        for (RendererObjectManager rom : mAllManagers) {
+        for (RendererObjectManager rom : managers) {
             rom.reload(gl, true);
         }
     }
 
+    @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         Log.d("SkyRenderer", "Starting sizeChanged, size = (" + width + ", " + height + ")");
 
-        mRenderState.setScreenSize(width, height);
-        mOverlayManager.resize(gl, width, height);
+        renderState.setScreenSize(width, height);
+        overlayManager.resize(gl, width, height);
 
         // Need to set the matrices.
-        mMustUpdateView = true;
-        mMustUpdateProjection = true;
+        mustUpdateView = true;
+        mustUpdateProjection = true;
 
         Log.d("SkyRenderer", "Changing viewport size");
 
@@ -199,68 +202,68 @@ public class SkyRenderer implements GLSurfaceView.Renderer {
 
     public void setRadiusOfView(float degrees) {
         // Log.d("SkyRenderer", "setRadiusOfView(" + degrees + ")");
-        mRenderState.setRadiusOfView(degrees);
-        mMustUpdateProjection = true;
+        renderState.setRadiusOfView(degrees);
+        mustUpdateProjection = true;
     }
 
     public void addUpdateClosure(UpdateClosure update) {
-        mUpdateClosures.add(update);
+        updateClosures.add(update);
     }
 
     public void removeUpdateCallback(UpdateClosure update) {
-        mUpdateClosures.remove(update);
+        updateClosures.remove(update);
     }
 
     // Sets up from the perspective of the viewer.
     // ie, the zenith in celestial coordinates.
     public void setViewerUpDirection(GeocentricCoordinates up) {
-        mOverlayManager.setViewerUpDirection(up);
+        overlayManager.setViewerUpDirection(up);
     }
 
     public void addObjectManager(RendererObjectManager m) {
-        m.setRenderState(mRenderState);
-        m.setUpdateListener(mUpdateListener);
-        mAllManagers.add(m);
+        m.setRenderState(renderState);
+        m.setUpdateListener(updateListener);
+        managers.add(m);
 
         // It needs to be reloaded before we try to draw it.
-        mManagersToReload.add(new ManagerReloadData(m, true));
+        managersToReload.add(new ManagerReloadData(m, true));
 
         // Add it to the appropriate layer.
-        Set<RendererObjectManager> managers = mLayersToManagersMap.get(m.getLayer());
+        Set<RendererObjectManager> managers = layersToManagersMap.get(m.getLayer());
         if (managers == null) {
             managers = new TreeSet<>();
-            mLayersToManagersMap.put(m.getLayer(), managers);
+            layersToManagersMap.put(m.getLayer(), managers);
         }
         managers.add(m);
     }
 
     public void removeObjectManager(RendererObjectManager m) {
-        mAllManagers.remove(m);
-        Set<RendererObjectManager> managers = mLayersToManagersMap.get(m.getLayer());
+        managers.remove(m);
+        Set<RendererObjectManager> managers = layersToManagersMap.get(m.getLayer());
         // managers shouldn't ever be null, so don't bother checking.  Let it crash if it is so we
         // know there's a bug.
         Objects.requireNonNull(managers).remove(m);
     }
 
     public void enableSkyGradient(GeocentricCoordinates sunPosition) {
-        mSkyBox.setSunPosition(sunPosition);
-        mSkyBox.enable(true);
+        skyBox.setSunPosition(sunPosition);
+        skyBox.enable(true);
     }
 
     public void disableSkyGradient() {
-        mSkyBox.enable(false);
+        skyBox.enable(false);
     }
 
     public void enableSearchOverlay(GeocentricCoordinates target, String targetName) {
-        mOverlayManager.enableSearchOverlay(target, targetName);
+        overlayManager.enableSearchOverlay(target, targetName);
     }
 
     public void disableSearchOverlay() {
-        mOverlayManager.disableSearchOverlay();
+        overlayManager.disableSearchOverlay();
     }
 
     public void setNightVisionMode(boolean enabled) {
-        mRenderState.setNightVisionMode(enabled);
+        renderState.setNightVisionMode(enabled);
     }
 
     // Used to set the orientation of the text.  The angle parameter is the roll
@@ -272,7 +275,7 @@ public class SkyRenderer implements GLSurfaceView.Renderer {
 
         float newAngle = Math.round(angleInRadians * TWO_OVER_PI) * PI_OVER_TWO;
 
-        mRenderState.setUpAngle(newAngle);
+        renderState.setUpAngle(newAngle);
     }
 
     public void setViewOrientation(float dirX, float dirY, float dirZ,
@@ -298,58 +301,58 @@ public class SkyRenderer implements GLSurfaceView.Renderer {
         upY *= oneOverUpLen;
         upZ *= oneOverUpLen;
 
-        mRenderState.setLookDir(new GeocentricCoordinates(dirX, dirY, dirZ));
-        mRenderState.setUpDir(new GeocentricCoordinates(upX, upY, upZ));
+        renderState.setLookDir(new GeocentricCoordinates(dirX, dirY, dirZ));
+        renderState.setUpDir(new GeocentricCoordinates(upX, upY, upZ));
 
-        mMustUpdateView = true;
+        mustUpdateView = true;
 
-        mOverlayManager.setViewOrientation(new GeocentricCoordinates(dirX, dirY, dirZ),
+        overlayManager.setViewOrientation(new GeocentricCoordinates(dirX, dirY, dirZ),
                 new GeocentricCoordinates(upX, upY, upZ));
     }
 
     protected int getWidth() {
-        return mRenderState.getScreenWidth();
+        return renderState.getScreenWidth();
     }
 
     protected int getHeight() {
-        return mRenderState.getScreenHeight();
+        return renderState.getScreenHeight();
     }
 
     private void updateView(GL10 gl) {
         // Get a vector perpendicular to both, pointing to the right, by taking
         // lookDir cross up.
-        Vector3 lookDir = mRenderState.getLookDir();
-        Vector3 upDir = mRenderState.getUpDir();
+        Vector3 lookDir = renderState.getLookDir();
+        Vector3 upDir = renderState.getUpDir();
         Vector3 right = Vector3.vectorProduct(lookDir, upDir);
 
-        mViewMatrix = Matrix4x4.createView(lookDir, upDir, right);
+        viewMatrix = Matrix4x4.createView(lookDir, upDir, right);
 
         gl.glMatrixMode(GL10.GL_MODELVIEW);
-        gl.glLoadMatrixf(mViewMatrix.getArray(), 0);
+        gl.glLoadMatrixf(viewMatrix.getArray(), 0);
     }
 
     private void updatePerspective(GL10 gl) {
-        mProjectionMatrix = Matrix4x4.createPerspectiveProjection(
-                mRenderState.getScreenWidth(),
-                mRenderState.getScreenHeight(),
-                mRenderState.getRadiusOfView() * 3.141593f / 360.0f);
+        projectionMatrix = Matrix4x4.createPerspectiveProjection(
+                renderState.getScreenWidth(),
+                renderState.getScreenHeight(),
+                renderState.getRadiusOfView() * 3.141593f / 360.0f);
 
         gl.glMatrixMode(GL10.GL_PROJECTION);
-        gl.glLoadMatrixf(mProjectionMatrix.getArray(), 0);
+        gl.glLoadMatrixf(projectionMatrix.getArray(), 0);
 
         // Switch back to the model view matrix.
         gl.glMatrixMode(GL10.GL_MODELVIEW);
     }
 
     private void maybeUpdateMatrices(GL10 gl) {
-        boolean updateTransform = mMustUpdateView || mMustUpdateProjection;
-        if (mMustUpdateView) {
+        boolean updateTransform = mustUpdateView || mustUpdateProjection;
+        if (mustUpdateView) {
             updateView(gl);
-            mMustUpdateView = false;
+            mustUpdateView = false;
         }
-        if (mMustUpdateProjection) {
+        if (mustUpdateProjection) {
             updatePerspective(gl);
-            mMustUpdateProjection = false;
+            mustUpdateProjection = false;
         }
         if (updateTransform) {
             // Device coordinates are a square from (-1, -1) to (1, 1).  Screen
@@ -357,17 +360,17 @@ public class SkyRenderer implements GLSurfaceView.Renderer {
             // are useful in different circumstances, so we'll pre-compute
             // matrices to do the transformations from world coordinates
             // into each of these.
-            Matrix4x4 transformToDevice = Matrix4x4.multiplyMM(mProjectionMatrix, mViewMatrix);
+            Matrix4x4 transformToDevice = Matrix4x4.multiplyMM(projectionMatrix, viewMatrix);
 
             Matrix4x4 translate = Matrix4x4.createTranslation(1, 1, 0);
-            Matrix4x4 scale = Matrix4x4.createScaling(mRenderState.getScreenWidth() * 0.5f,
-                    mRenderState.getScreenHeight() * 0.5f, 1);
+            Matrix4x4 scale = Matrix4x4.createScaling(renderState.getScreenWidth() * 0.5f,
+                    renderState.getScreenHeight() * 0.5f, 1);
 
             Matrix4x4 transformToScreen =
                     Matrix4x4.multiplyMM(Matrix4x4.multiplyMM(scale, translate),
                             transformToDevice);
 
-            mRenderState.setTransformationMatrices(transformToDevice, transformToScreen);
+            renderState.setTransformationMatrices(transformToDevice, transformToScreen);
         }
     }
 
@@ -378,19 +381,19 @@ public class SkyRenderer implements GLSurfaceView.Renderer {
     // TODO(jpowell): This would be much safer if the renderer controller
     // schedules creation of the objects in the queue.
     public PointObjectManager createPointManager(int layer) {
-        return new PointObjectManager(layer, mTextureManager);
+        return new PointObjectManager(layer, textureManager);
     }
 
     public PolyLineObjectManager createPolyLineManager(int layer) {
-        return new PolyLineObjectManager(layer, mTextureManager);
+        return new PolyLineObjectManager(layer, textureManager);
     }
 
     public LabelObjectManager createLabelManager(int layer) {
-        return new LabelObjectManager(layer, mTextureManager);
+        return new LabelObjectManager(layer, textureManager);
     }
 
     public ImageObjectManager createImageManager(int layer) {
-        return new ImageObjectManager(layer, mTextureManager);
+        return new ImageObjectManager(layer, textureManager);
     }
 
     private static class ManagerReloadData {
@@ -405,13 +408,11 @@ public class SkyRenderer implements GLSurfaceView.Renderer {
 
     static class RenderState {
 
-        private GeocentricCoordinates mCameraPos = new GeocentricCoordinates(0, 0, 0);
+        private GeocentricCoordinates mCameraPos = new GeocentricCoordinates();
         private GeocentricCoordinates mLookDir = new GeocentricCoordinates(1, 0, 0);
         private GeocentricCoordinates mUpDir = new GeocentricCoordinates(0, 1, 0);
         private float mRadiusOfView = 45;  // in degrees
         private float mUpAngle = 0;
-        private float mCosUpAngle = 1;
-        private float mSinUpAngle = 0;
         private int mScreenWidth = 100;
         private int mScreenHeight = 100;
         private Matrix4x4 mTransformToDevice = Matrix4x4.createIdentity();
@@ -458,16 +459,6 @@ public class SkyRenderer implements GLSurfaceView.Renderer {
 
         public void setUpAngle(float angle) {
             mUpAngle = angle;
-            mCosUpAngle = (float) Math.cos(angle);
-            mSinUpAngle = (float) Math.sin(angle);
-        }
-
-        public float getCosUpAngle() {
-            return mCosUpAngle;
-        }
-
-        public float getSinUpAngle() {
-            return mSinUpAngle;
         }
 
         public int getScreenWidth() {

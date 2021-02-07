@@ -53,7 +53,7 @@ public class SkyMapModule {
 
     @Provides
     @PerActivity
-    SkyMapActivity provideDynamicStarMapActivity() {
+    SkyMapActivity provideSkyMapActivity() {
         return activity;
     }
 

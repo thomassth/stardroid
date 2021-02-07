@@ -5,7 +5,9 @@
     android:layout_height="wrap_content"
     android:minWidth="350dp"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:paddingStart="@dimen/activity_vertical_margin"
+    android:paddingEnd="@dimen/activity_vertical_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
 
     <TextView
         android:id="@+id/dateDisplay"

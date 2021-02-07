@@ -35,6 +35,7 @@ public abstract class ActionFragment extends Fragment implements Runnable {
         if (listener != null) listener.actionSnackRequested(msgRes);
     }
 
+    @SuppressWarnings("SameParameterValue")
     protected void requestActionSnack(int msgRes, int actionName, View.OnClickListener action) {
         if (listener != null) listener.actionSnackRequested(msgRes, actionName, action);
     }
