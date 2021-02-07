@@ -36,6 +36,10 @@ public class PropUpdater extends Thread {
 
     @Override
     public void run() {
+        if (prop == null) {
+            Log.i(TAG, "Prop " + prop.getName() + " is null, aborting");
+            return;
+        }
         try {
             prop.sendChangesToDriver();
         } catch (Exception e) {

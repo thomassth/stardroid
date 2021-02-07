@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import javax.inject.Inject;
 
+import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.CompassCalibrationActivity;
@@ -102,8 +103,8 @@ public class SensorAccuracyMonitor implements SensorEventListener {
             return;
         }
         sharedPreferences.edit().putLong(LAST_CALIBRATION_WARNING_PREF_KEY, System.currentTimeMillis()).apply();
-        if (sharedPreferences.getBoolean(CompassCalibrationActivity.DONT_SHOW_CALIBRATION_DIALOG, false)) {
-            Toast.makeText(context, R.string.inaccurate_compass_warning, Toast.LENGTH_LONG).show();
+        if (sharedPreferences.getBoolean(ApplicationConstants.NO_SHOW_CALIBRATION_DIALOG_PREF, false)) {
+            Toast.makeText(context, R.string.inaccurate_compass_warning, Toast.LENGTH_SHORT).show();
         } else {
             Intent intent = new Intent(context, CompassCalibrationActivity.class);
             intent.putExtra(CompassCalibrationActivity.HIDE_CHECKBOX, false);

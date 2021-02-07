@@ -41,7 +41,6 @@ import org.indilib.i4j.client.INDIServerConnection;
 import org.indilib.i4j.client.INDIServerConnectionListener;
 import org.indilib.i4j.client.INDISwitchElement;
 import org.indilib.i4j.client.INDISwitchProperty;
-import org.indilib.i4j.client.INDIValueException;
 import org.indilib.i4j.properties.INDIStandardElement;
 
 import java.util.Arrays;
@@ -132,7 +131,7 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
                         new PropUpdater(directionProp).start();
                         relPosElem.setDesiredValue((double) stepsHandler.getValue());
                         new PropUpdater(relPosProp).start();
-                    } catch (INDIValueException e) {
+                    } catch (Exception e) {
                         Log.e(TAG, e.getLocalizedMessage(), e);
                     }
                 }
@@ -147,7 +146,7 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
                         new PropUpdater(directionProp).start();
                         relPosElem.setDesiredValue((double) stepsHandler.getValue());
                         new PropUpdater(relPosProp).start();
-                    } catch (INDIValueException e) {
+                    } catch (Exception e) {
                         Log.e(TAG, e.getLocalizedMessage(), e);
                     }
                 }
@@ -317,7 +316,7 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
                     }
                 }
             }
-        } catch (INDIValueException e) {
+        } catch (Exception e) {
             Log.e(TAG, e.getLocalizedMessage(), e);
         }
     }
@@ -329,7 +328,7 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
                 double step = speedElem.getStep(), min = speedElem.getMin();
                 speedElem.setDesiredValue(min + (progress * step));
                 new PropUpdater(speedProp).start();
-            } catch (INDIValueException e) {
+            } catch (Exception e) {
                 Log.e(TAG, e.getLocalizedMessage(), e);
             }
         }

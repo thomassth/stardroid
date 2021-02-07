@@ -58,4 +58,5 @@ public class ApplicationConstants {
     public static final String SHOW_DSO_PREF = "show_dso_catalog";
     public static final String SHOW_PLANETS_PREF = "show_planets_catalog";
     public static final String ONLY_VISIBLE_OBJECTS_PREF = "only_visible_catalog";
+    public static final String NO_SHOW_CALIBRATION_DIALOG_PREF = "no_calibration_dialog";
 }
