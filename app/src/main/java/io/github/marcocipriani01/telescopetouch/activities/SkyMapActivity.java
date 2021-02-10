@@ -496,7 +496,7 @@ public class SkyMapActivity extends InjectableActivity implements OnSharedPrefer
         fullscreenControlsManager = new FullscreenControlsManager(this,
                 new View[]{this.findViewById(R.id.layer_manual_auto_toggle), providerButtons}, buttonViews);
 
-        MapMover mapMover = new MapMover(model, controller, this);
+        MapMover mapMover = new MapMover(model, controller, this, preferences);
         gestureDetector = new GestureDetector(this, new GestureInterpreter(fullscreenControlsManager, mapMover));
         dragZoomRotateDetector = new DragRotateZoomGestureDetector(mapMover);
 
@@ -636,9 +636,7 @@ public class SkyMapActivity extends InjectableActivity implements OnSharedPrefer
     }
 
     public void pointTelescope(View v) {
-        EquatorialCoordinates coordinates = model.getEquatorialCoordinates();
         AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(R.string.point_telescope);
-        // Only display buttons if the telescope is ready
         if (!connectionManager.isConnected()) {
             builder.setMessage(R.string.connect_telescope_first)
                     .setPositiveButton(android.R.string.ok, (dialog, which) -> startActivity(new Intent(this, MainActivity.class)));
@@ -646,10 +644,11 @@ public class SkyMapActivity extends InjectableActivity implements OnSharedPrefer
                 (connectionManager.telescopeCoordP == null) || (connectionManager.telescopeOnCoordSetP == null)) {
             builder.setMessage(R.string.no_telescope_found);
         } else {
+            EquatorialCoordinates coordinates = model.getEquatorialCoordinates();
             String msg = String.format(getString(R.string.point_telescope_message),
                     connectionManager.telescopeName, coordinates.getRAString(), coordinates.getDecString());
             if (HorizontalCoordinates.getInstance(coordinates, model.getLocation(), Calendar.getInstance()).alt < 0)
-                msg += "\n\nWarning! the object may be below the horizon!";
+                msg += getString(R.string.below_horizon_warning);
             builder.setMessage(msg)
                     .setPositiveButton(R.string.go_to, (dialog, which) -> {
                         try {

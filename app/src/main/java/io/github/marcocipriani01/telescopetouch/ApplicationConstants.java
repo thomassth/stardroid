@@ -59,4 +59,8 @@ public class ApplicationConstants {
     public static final String SHOW_PLANETS_PREF = "show_planets_catalog";
     public static final String ONLY_VISIBLE_OBJECTS_PREF = "only_visible_catalog";
     public static final String NO_SHOW_CALIBRATION_DIALOG_PREF = "no_calibration_dialog";
+    public static final String ALADIN_FORCE = "force_aladin";
+    public static final String ALADIN_WELCOME = "aladin_welcome";
+    public static final String ALADIN_J2000_NOTE = "aladin_j2000_note";
+    public static final String VIZIER_WELCOME = "vizier_welcome";
 }

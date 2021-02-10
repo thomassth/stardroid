@@ -32,15 +32,15 @@ import static io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoord
 public enum Planet {
     // The order here is the order in which they are drawn.  To ensure that during
     // conjunctions they display "naturally" order them in reverse distance from Earth.
-    Pluto(R.drawable.pluto, R.string.pluto, TimeUtils.MILLISECONDS_PER_HOUR),
-    Neptune(R.drawable.neptune, R.string.neptune, TimeUtils.MILLISECONDS_PER_HOUR),
-    Uranus(R.drawable.uranus, R.string.uranus, TimeUtils.MILLISECONDS_PER_HOUR),
-    Saturn(R.drawable.saturn, R.string.saturn, TimeUtils.MILLISECONDS_PER_HOUR),
-    Jupiter(R.drawable.jupiter, R.string.jupiter, TimeUtils.MILLISECONDS_PER_HOUR),
-    Mars(R.drawable.mars, R.string.mars, TimeUtils.MILLISECONDS_PER_HOUR),
+    Pluto(R.drawable.pluto, R.string.pluto, R.drawable.gallery_pluto, TimeUtils.MILLISECONDS_PER_HOUR),
+    Neptune(R.drawable.neptune, R.string.neptune, R.drawable.gallery_neptune, TimeUtils.MILLISECONDS_PER_HOUR),
+    Uranus(R.drawable.uranus, R.string.uranus, R.drawable.gallery_uranus, TimeUtils.MILLISECONDS_PER_HOUR),
+    Saturn(R.drawable.saturn, R.string.saturn, R.drawable.gallery_saturn, TimeUtils.MILLISECONDS_PER_HOUR),
+    Jupiter(R.drawable.jupiter, R.string.jupiter, R.drawable.gallery_jupiter, TimeUtils.MILLISECONDS_PER_HOUR),
+    Mars(R.drawable.mars, R.string.mars, R.drawable.gallery_mars, TimeUtils.MILLISECONDS_PER_HOUR),
     Sun(R.drawable.sun, R.string.sun, TimeUtils.MILLISECONDS_PER_HOUR),
-    Mercury(R.drawable.mercury, R.string.mercury, TimeUtils.MILLISECONDS_PER_HOUR),
-    Venus(R.drawable.venus, R.string.venus, TimeUtils.MILLISECONDS_PER_HOUR),
+    Mercury(R.drawable.mercury, R.string.mercury, R.drawable.gallery_mercury, TimeUtils.MILLISECONDS_PER_HOUR),
+    Venus(R.drawable.venus, R.string.venus, R.drawable.gallery_venus, TimeUtils.MILLISECONDS_PER_HOUR),
     Moon(R.drawable.moon4, R.string.moon, TimeUtils.MILLISECONDS_PER_MINUTE);
 
     private static final String TAG = TelescopeTouchApp.getTag(Planet.class);
@@ -54,6 +54,7 @@ public enum Planet {
      * Resource ID to use for a planet's image.
      */
     private final int imageResourceId;
+    private final int galleryResourceId;
     /**
      * String ID
      */
@@ -62,8 +63,15 @@ public enum Planet {
     Planet(int imageResourceId, int nameResourceId, long updateFreqMs) {
         this.imageResourceId = imageResourceId;
         this.nameResourceId = nameResourceId;
+        this.galleryResourceId = 0;
         this.updateFreqMs = updateFreqMs;
-        // Add Color, magnitude, etc.
+    }
+
+    Planet(int imageResourceId, int nameResourceId, int galleryResourceId, long updateFreqMs) {
+        this.imageResourceId = imageResourceId;
+        this.nameResourceId = nameResourceId;
+        this.galleryResourceId = galleryResourceId;
+        this.updateFreqMs = updateFreqMs;
     }
 
     /**
@@ -154,6 +162,10 @@ public enum Planet {
                 decRads = declination * Math.PI / 180.0,
                 cosHa = (Math.sin(altRads) - Math.sin(latRads) * Math.sin(decRads)) / (Math.cos(latRads) * Math.cos(decRads));
         return 180.0 / Math.PI * Math.acos(cosHa);
+    }
+
+    public int getGalleryResourceId() {
+        return galleryResourceId;
     }
 
     public EquatorialCoordinates getEquatorialCoordinates(Calendar time, HeliocentricCoordinates earthCoordinates) {

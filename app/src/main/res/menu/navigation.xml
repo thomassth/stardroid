@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <group
         android:id="@+id/menu_group_telescope"
         android:checkableBehavior="none">
@@ -41,6 +42,11 @@
             android:id="@+id/menu_skymap"
             android:icon="@drawable/map"
             android:title="@string/sky_map" />
+
+        <item
+            android:id="@+id/menu_aladin"
+            android:icon="@drawable/cds"
+            android:title="@string/aladin_sky_atlas" />
 
         <item
             android:id="@+id/menu_skymap_gallery"

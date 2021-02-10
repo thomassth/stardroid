@@ -3,6 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools">
     <shortcut
         android:enabled="true"
+        android:icon="@mipmap/aladin_launcher"
+        android:shortcutDisabledMessage="@string/aladin_sky_atlas"
+        android:shortcutId="aladin_sky_atlas"
+        android:shortcutLongLabel="@string/aladin_sky_atlas"
+        android:shortcutShortLabel="@string/aladin_sky_atlas"
+        tools:targetApi="n_mr1">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="io.github.marcocipriani01.telescopetouch.activities.MainActivity"
+            android:targetPackage="io.github.marcocipriani01.telescopetouch">
+            <extra
+                android:name="MainActivityAction"
+                android:value="8" />
+        </intent>
+        <categories android:name="android.shortcut.aladin_sky_atlas" />
+    </shortcut>
+    <shortcut
+        android:enabled="true"
         android:icon="@mipmap/polaris_launcher"
         android:shortcutDisabledMessage="@string/polaris_hour_angle"
         android:shortcutId="polaris_hour_angle"
@@ -15,7 +33,7 @@
             android:targetPackage="io.github.marcocipriani01.telescopetouch">
             <extra
                 android:name="MainActivityAction"
-                android:value="8" />
+                android:value="9" />
         </intent>
         <categories android:name="android.shortcut.polaris_hour_angle" />
     </shortcut>
@@ -33,7 +51,7 @@
             android:targetPackage="io.github.marcocipriani01.telescopetouch">
             <extra
                 android:name="MainActivityAction"
-                android:value="9" />
+                android:value="10" />
         </intent>
         <categories android:name="android.shortcut.telescope_compass" />
     </shortcut>

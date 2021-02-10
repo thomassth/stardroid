@@ -26,14 +26,18 @@ import java.util.Calendar;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoordinates;
 import io.github.marcocipriani01.telescopetouch.astronomy.HeliocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.astronomy.Planet;
 
 public class PlanetEntry extends CatalogEntry {
 
+    private final Planet planet;
+
     @SuppressLint("DefaultLocale")
-    private PlanetEntry(Planet planet, String name, Calendar time, HeliocentricCoordinates sun) {
-        this.name = name;
+    private PlanetEntry(Planet planet, Resources resources, Calendar time, HeliocentricCoordinates sun) {
+        this.planet = planet;
+        this.name = planet.getName(resources);
         coord = planet.getEquatorialCoordinates(time, sun);
         magnitudeDouble = planet.getMagnitude(time);
         this.magnitude = String.format("%.2f", magnitudeDouble);
@@ -43,8 +47,24 @@ public class PlanetEntry extends CatalogEntry {
         Calendar time = Calendar.getInstance();
         HeliocentricCoordinates sun = HeliocentricCoordinates.getInstance(Planet.Sun, time);
         for (Planet planet : Planet.values()) {
-            list.add(new PlanetEntry(planet, planet.getName(resources), time, sun));
+            list.add(new PlanetEntry(planet, resources, time, sun));
         }
+    }
+
+    public Planet getPlanet() {
+        return planet;
+    }
+
+    public int getGalleryResourceId() {
+        return (planet == Planet.Moon) ? planet.getImageResourceId(Calendar.getInstance()) : planet.getGalleryResourceId();
+    }
+
+    @Override
+    public EquatorialCoordinates getCoordinates() {
+        Calendar time = Calendar.getInstance();
+        HeliocentricCoordinates sun = HeliocentricCoordinates.getInstance(Planet.Sun, time);
+        coord = planet.getEquatorialCoordinates(time, sun);
+        return super.getCoordinates();
     }
 
     /**

@@ -17,6 +17,8 @@ package io.github.marcocipriani01.telescopetouch.activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -52,6 +54,7 @@ import java.util.Objects;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.AboutFragment;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.ActionFragment;
+import io.github.marcocipriani01.telescopetouch.activities.fragments.AladinFragment;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.BLOBViewerFragment;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.CompassFragment;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.ConnectionFragment;
@@ -224,7 +227,11 @@ public class MainActivity extends AppCompatActivity implements
             connectionManager.setBlobEnabled(checked);
             preferences.edit().putBoolean(RECEIVE_BLOB_PREF, checked).apply();
         } else if (itemId == R.id.menu_darker_mode) {
-            darkerModeManager.toggle();
+            if ((currentPage == Pages.ALADIN) && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+                actionSnackRequested(R.string.dark_mode_not_supported);
+            } else {
+                darkerModeManager.toggle();
+            }
         } else if (itemId == R.id.menu_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
         } else if (itemId == R.id.menu_skymap_diagnostics) {
@@ -265,6 +272,11 @@ public class MainActivity extends AppCompatActivity implements
         if (animate)
             transaction.setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out);
         Fragment fragment = currentPage.newInstance();
+        if (currentPage == Pages.ALADIN) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_USER);
+        }
         transaction.replace(R.id.content_frame, fragment).commit();
         if (fragment instanceof ActionFragment) {
             ActionFragment actionFragment = (ActionFragment) fragment;
@@ -348,6 +360,7 @@ public class MainActivity extends AppCompatActivity implements
         CONTROL_PANEL(R.id.menu_generic),
         SKY_MAP(R.id.menu_skymap),
         SKY_MAP_GALLERY(R.id.menu_skymap_gallery),
+        ALADIN(R.id.menu_aladin),
         POLARIS(R.id.menu_polaris),
         COMPASS(R.id.menu_compass),
         FLASHLIGHT(R.id.menu_flashlight),
@@ -386,6 +399,9 @@ public class MainActivity extends AppCompatActivity implements
                     break;
                 case CONTROL_PANEL:
                     lastInstance = new ControlPanelFragment();
+                    break;
+                case ALADIN:
+                    lastInstance = new AladinFragment();
                     break;
                 case POLARIS:
                     lastInstance = new PolarisFragment();

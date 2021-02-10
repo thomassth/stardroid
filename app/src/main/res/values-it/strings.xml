@@ -401,17 +401,15 @@
         \n\nIl codice sorgente è disponibile alla pagina github.com/marcocipriani01/Telescope.Touch
         \nSe vuoi sostenere lo sviluppo di Telescope.Touch, invito a donare tramite PayPal! Link nella pagina del progetto.
         \n\nSviluppato da <b>Marco Cipriani</b> (marcocipriani01)
-        \n\n<b>Librerie e crediti:</b>\n
+        \n\n<b>Crediti:</b>\n
         ★ Il progetto IPARCOS, licenza GPL v3\n
         ★ Il progetto Sky Map, licenza Apache 2.0\n
+        ★ I progetti VizieR e Aladin\n
         ★ INDIForJava, licenza LGPL v3\n
-        ★ DragListView, licenza Apache 2.0\n
-        ★ PhotoView, licenza Apache 2.0\n
-        ★ Google Gson, licenza Apache 2.0\n
         ★ Material icons, licenza Apache 2.0\n
         ★ Telescope icon, licenza Flaticon\n
         ★ Touch icon, licenza Flaticon\n
-        ★ Compass by iutinvg, licenza MIT
+        ★ Compass di iutinvg, licenza MIT
     </string>
     <string name="error_no_devices">Nessun dispositivo trovato!</string>
     <string name="error">Errore:</string>
@@ -555,4 +553,24 @@
     <string name="tracking_error">Errore di inseguimento!</string>
     <string name="unknown_error">Errore sconosciuto!</string>
     <string name="invalid_port">Porta non valida!</string>
+    <string name="aladin_sky_atlas">Aladin Sky Atlas</string>
+    <string name="dark_mode_not_supported">Impossibile cambiare modalità in Aladin!</string>
+    <string name="no_internet_connection">Nessuna connessione ad internet!</string>
+    <string name="aladin_api_error">L\'atlante stellare Aladin richiede Android 6.0 o superiore. Puoi comunque provare ad eseguirlo nel browser.</string>
+    <string name="open">Apri</string>
+    <string name="cds_copyright">© Centre de Données astronomiques de Strasbourg, Unistra/CNRS.</string>
+    <string name="aladin_welcome">Aladin è un atlante stellare interattivo sviluppato dal Centro dati astronomici di Strasburgo. Utilizza la tecnologia HiPS (Hierarchical Progressive Surveys).\nTelescope.Touch integra un client Aladin, così puoi vedere gli oggetti ad altissima qualità prima di puntare il telescopio! Puoi anche fare Go-To direttamente dalla mappa o cercare gli oggetti, grazie al risolutore Sesame.</string>
+    <string name="vizier_catalogue_service">Servizio di catalogo VizieR</string>
+    <string name="vizier_welcome">VizieR è un servizio di catalogo astronomico fornito dal Centro dati astronomici di Strasburgo.\nTelescope.Touch integra i cataloghi Stelle Comuni e NGC 2000 per permetterti di puntare il telescopio.</string>
+    <string name="aladin_compatibility">Modalità compatibilità Aladin</string>
+    <string name="aladin_compatibility_description">Permetti l\'esecuzione di Aladin su dispotivi più vecchi. Nota: instabile, la visualizzare è tremolante e la mappa potrebbe non caricare bene. Richiede il riavvio.</string>
+    <string name="open_source_licenses">License Open Source</string>
+    <string name="continue_button">Continua</string>
+    <string name="about_vizier_menu">Riguardo VizieR</string>
+    <string name="save_image">Salva immagina</string>
+    <string name="about_aladin_menu">Riguardo Aladin</string>
+    <string name="aladin_search_fail">L\'oggetto non è stato trovato!</string>
+    <string name="below_horizon_warning">\n\nAttenzione! L\'oggetto potrebbe trovarsi sotto l\'orizzonte!</string>
+    <string name="refresh">Ricarica</string>
+    <string name="aladin_j2000_note">\n\nNota: Aladin usa coordinate J2000. Verranno compensate, quindi il segnaposto del telescopio sarà in un punto leggermente diverso da quello richiesto. L\'oggetto sarà centrato</string>
 </resources>
