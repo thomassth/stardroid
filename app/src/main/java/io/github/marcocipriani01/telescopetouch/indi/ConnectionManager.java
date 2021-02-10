@@ -83,7 +83,6 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
     }
 
     public void init(Context context) {
-        // TODO(marcocipriani01): replace with SimpleDateFormat
         dateFormat = DateFormat.getDateFormat(context);
         timeFormat = DateFormat.getTimeFormat(context);
         preferences = PreferenceManager.getDefaultSharedPreferences(context);

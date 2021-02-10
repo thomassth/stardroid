@@ -87,7 +87,8 @@ public abstract class CatalogEntry implements Comparable<CatalogEntry> {
             return "<b>" + r.getString(R.string.entry_RA) + ": </b>" + coord.getRAString() + "<br><b>" +
                     r.getString(R.string.entry_Dec) + ": </b>" + coord.getDecString() + "<br><b>" +
                     r.getString(R.string.entry_alt) + ": </b>" + altAz.getAltString() + "<br><b>" +
-                    r.getString(R.string.entry_az) + ": </b>" + altAz.getAzString();
+                    r.getString(R.string.entry_az) + ": </b>" + altAz.getAzString() +
+                    ((altAz.alt < 0) ? ("<br><br>" + r.getString(R.string.below_horizon_warning)) : "");
         }
     }
 

@@ -45,6 +45,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.ContentLoadingProgressBar;
+import androidx.fragment.app.FragmentActivity;
 import androidx.preference.PreferenceManager;
 
 import org.indilib.i4j.Constants;
@@ -66,6 +67,7 @@ import io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoordinates;
 import io.github.marcocipriani01.telescopetouch.astronomy.HorizontalCoordinates;
 import io.github.marcocipriani01.telescopetouch.astronomy.StarsPrecession;
 import io.github.marcocipriani01.telescopetouch.indi.PropUpdater;
+import io.github.marcocipriani01.telescopetouch.sensors.LocationHelper;
 
 import static io.github.marcocipriani01.telescopetouch.ApplicationConstants.ALADIN_J2000_NOTE;
 import static io.github.marcocipriani01.telescopetouch.ApplicationConstants.ALADIN_WELCOME;
@@ -85,6 +87,8 @@ public class AladinFragment extends ActionFragment implements Toolbar.OnMenuItem
     private TextView errorText;
     private SharedPreferences preferences;
     private MenuItem aboutMenu;
+    private LocationHelper locationHelper;
+    private Location location = null;
 
     @Nullable
     @Override
@@ -118,6 +122,19 @@ public class AladinFragment extends ActionFragment implements Toolbar.OnMenuItem
             aladinView = rootView.findViewById(R.id.aladin_web_view);
             aladinView.setAladinListener(this);
             aladinView.start();
+            locationHelper = new LocationHelper(context) {
+                @Override
+                protected void onLocationOk(Location location) {
+                    AladinFragment.this.location = location;
+                }
+
+                @Override
+                protected void requestLocationPermission() {
+                    FragmentActivity activity = getActivity();
+                    if (activity instanceof MainActivity)
+                        ((MainActivity) activity).requestLocationPermission();
+                }
+            };
             if (!preferences.getBoolean(ALADIN_WELCOME, false))
                 aladinDialog();
         } else {
@@ -126,6 +143,18 @@ public class AladinFragment extends ActionFragment implements Toolbar.OnMenuItem
                     context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://aladin.u-strasbg.fr/AladinLite/"))));
         }
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        locationHelper.start();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        locationHelper.stop();
     }
 
     private void aladinDialog() {
@@ -162,7 +191,7 @@ public class AladinFragment extends ActionFragment implements Toolbar.OnMenuItem
         } else {
             String msg = String.format(getString(R.string.point_telescope_message),
                     connectionManager.telescopeName, pointing.getRAString(), pointing.getDecString());
-            if (HorizontalCoordinates.getInstance(pointing, new Location(""), Calendar.getInstance()).alt < 0)
+            if ((location != null) && HorizontalCoordinates.getInstance(pointing, location, Calendar.getInstance()).alt < 0)
                 msg += context.getString(R.string.below_horizon_warning);
             if (preferences.getBoolean(ApplicationConstants.ALADIN_J2000_NOTE, true))
                 msg += context.getString(R.string.aladin_j2000_note);

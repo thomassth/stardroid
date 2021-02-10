@@ -199,7 +199,7 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
     public void onStop() {
         super.onStop();
         catalog.setListener(null);
-        locationHelper.start();
+        locationHelper.stop();
         list.stopNestedScroll();
         list.stopScroll();
     }
