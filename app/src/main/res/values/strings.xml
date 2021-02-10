@@ -495,13 +495,11 @@
         \n\nThe source code is available at github.com/marcocipriani01/Telescope.Touch
         \nIf you want to support Telescope.Touch\'s development, please consider donating using PayPal! Link in the project\'s page.
         \n\nDeveloped by <b>Marco Cipriani</b> (marcocipriani01)
-        \n\n<b>Libraries and credits:</b>\n
+        \n\n<b>Credits:</b>\n
         ★ The IPARCOS project, GPL v3 license\n
         ★ The Sky Map project, Apache 2.0 license\n
+        ★ The VizieR and Aladin projects\n
         ★ INDIForJava, LGPL v3 license\n
-        ★ DragListView, Apache 2.0 license\n
-        ★ PhotoView, Apache 2.0 license\n
-        ★ Google Gson, Apache 2.0 license\n
         ★ Material icons, Apache 2.0 license\n
         ★ Telescope icon, Flaticon license\n
         ★ Touch icon, Flaticon license\n
@@ -550,7 +548,7 @@
     <string name="connect_telescope_first">Please connect the telescope first.</string>
     <string name="gallery_copyright">Images by NASA (public domain), ESO (CC BY 4.0) and Adam Evans (CC BY 2.0)</string>
     <string name="show_discovered_services">LAN discovery</string>
-    <string name="go_to_database">Go-to database</string>
+    <string name="go_to_database">Go-To database</string>
     <string name="indi_control_panel">INDI control panel</string>
     <string name="device_remove">Device removed:</string>
     <string name="new_device">New device:</string>
@@ -631,4 +629,24 @@
     <string name="tracking_error">Tracking error!</string>
     <string name="unknown_error">Unknown error!</string>
     <string name="invalid_port">Invalid port!</string>
+    <string name="aladin_sky_atlas">Aladin Sky Atlas</string>
+    <string name="dark_mode_not_supported">Cannot toggle dark mode in Aladin!</string>
+    <string name="no_internet_connection">No internet connection!</string>
+    <string name="aladin_api_error">The Aladin Sky Atlas requires Android 6.0 or greater. You can still try running it in your browser.</string>
+    <string name="open">Open</string>
+    <string name="cds_copyright">© Centre de Données astronomiques de Strasbourg, Unistra/CNRS.</string>
+    <string name="aladin_welcome">Aladin is an interactive sky atlas developed by the Strasbourg astronomical Data Center. It uses HiPS (Hierarchical Progressive Surveys) technology.\nTelescope.Touch integrates an Aladin client, so you can see your targets with extremely high quality before pointing the telescope! You can also slew the telescope from the map or search from objects, thanks to the Sesame object resolver.</string>
+    <string name="vizier_catalogue_service">VizieR Catalogue Service</string>
+    <string name="vizier_welcome">VizieR is an astronomical catalog service provided by Strasbourg astronomical Data Center.\nTelescope.Touch integrates the Common Stars and NGC 2000 catalogues to allow you to point your telescope.</string>
+    <string name="aladin_compatibility">Aladin compatibility mode</string>
+    <string name="aladin_compatibility_description">Allow running Aladin on older devices. Disclaimer: not stable, view might jitter or not load properly. Requires restart.</string>
+    <string name="open_source_licenses">Open Source Licences</string>
+    <string name="continue_button">Continue</string>
+    <string name="about_vizier_menu">About VizieR</string>
+    <string name="save_image">Save image</string>
+    <string name="about_aladin_menu">About Aladin</string>
+    <string name="aladin_search_fail">The object could not be found!</string>
+    <string name="below_horizon_warning">\n\nWarning! the object may be below the horizon!</string>
+    <string name="refresh">Refresh</string>
+    <string name="aladin_j2000_note">\n\nNote: Aladin uses J2000 coordinates. They will be compensated, so the telescope crosshair will be in a slightly different point than you requested. The target will be centered.</string>
 </resources>

@@ -43,34 +43,29 @@ public class GestureInterpreter extends GestureDetector.SimpleOnGestureListener 
 
     @Override
     public boolean onDown(MotionEvent e) {
-        //Log.d(TAG, "Tap down");
         flinger.stop();
         return true;
     }
 
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        //Log.d(TAG, "Flinging " + velocityX + ", " + velocityY);
         flinger.fling(velocityX, velocityY);
         return true;
     }
 
     @Override
     public boolean onSingleTapUp(MotionEvent e) {
-        //Log.d(TAG, "Tap up");
-        fullscreenControlsManager.toggleControls();
-        return true;
+        return false;
     }
 
     @Override
     public boolean onDoubleTap(MotionEvent e) {
-        //Log.d(TAG, "Double tap");
         return false;
     }
 
     @Override
     public boolean onSingleTapConfirmed(MotionEvent e) {
-        //Log.d(TAG, "Confirmed single tap");
-        return false;
+        fullscreenControlsManager.toggleControls();
+        return true;
     }
 }

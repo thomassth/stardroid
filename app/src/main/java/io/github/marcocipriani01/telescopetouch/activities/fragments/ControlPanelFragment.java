@@ -83,7 +83,7 @@ public class ControlPanelFragment extends Fragment implements INDIServerConnecti
                 (tab, position) -> tab.setText(devices.get(position).getName()));
         searchMenu = rootView.<Toolbar>findViewById(R.id.control_panel_toolbar).getMenu().add(R.string.search);
         searchMenu.setIcon(R.drawable.search);
-        searchMenu.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        searchMenu.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         SearchView searchView = new SearchView(context);
         searchView.setMaxWidth(Integer.MAX_VALUE);
         searchView.setOnSearchClickListener(this);

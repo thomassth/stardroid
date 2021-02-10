@@ -46,7 +46,8 @@ import static io.github.marcocipriani01.telescopetouch.maths.Formatters.latitude
 import static io.github.marcocipriani01.telescopetouch.maths.Formatters.longitudeToString;
 import static io.github.marcocipriani01.telescopetouch.maths.Formatters.magDeclinationToString;
 
-public class CompassFragment extends ActionFragment implements Toolbar.OnMenuItemClickListener, LocationPermissionRequester {
+public class CompassFragment extends ActionFragment implements
+        Toolbar.OnMenuItemClickListener, LocationPermissionRequester {
 
     private CompassHelper compass;
 

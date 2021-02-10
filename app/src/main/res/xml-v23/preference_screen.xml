@@ -72,7 +72,7 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="Aladin and VizieR services"
+        android:title="@string/go_to_database"
         app:iconSpaceReserved="false">
 
         <CheckBoxPreference
@@ -89,13 +89,6 @@
             android:key="catalog_limit_mag"
             android:summary="@string/catalog_limit_mag_description"
             android:title="@string/catalog_limit_mag"
-            app:iconSpaceReserved="false" />
-
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="force_aladin"
-            android:summary="@string/aladin_compatibility_description"
-            android:title="@string/aladin_compatibility"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 

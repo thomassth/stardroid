@@ -8,8 +8,8 @@ android {
         applicationId "io.github.marcocipriani01.telescopetouch"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 14
-        versionName "1.4.4"
+        versionCode 15
+        versionName "1.5.0"
         multiDexEnabled true
         if (file('api.properties').exists()) {
             Properties properties = new Properties()
@@ -48,17 +48,20 @@ dependencies {
     implementation 'com.github.woxthebox:draglistview:1.7.2'
     implementation 'com.github.Baseflow:PhotoView:2.3.0'
     implementation 'com.github.myinnos:AlphabetIndex-Fast-Scroll-RecyclerView:1.0.95'
-    implementation 'com.google.dagger:dagger:2.31.2'
+    implementation 'com.google.dagger:dagger:2.32'
     implementation 'com.google.protobuf:protobuf-javalite:3.14.0'
     implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'com.google.dagger:dagger-android-support:2.31.2'
+    implementation 'com.google.dagger:dagger-android-support:2.32'
     implementation('org.jmdns:jmdns:3.5.6') {
         exclude group: 'org.slf4j', module: 'slf4j-api'
     }
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.android.gms:play-services-location:17.1.0'
     implementation 'com.google.android.libraries.places:places:2.4.0'
-    annotationProcessor 'com.google.dagger:dagger-android-processor:2.31.2'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.31.2'
+    annotationProcessor 'com.google.dagger:dagger-android-processor:2.32'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.32'
+    implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
     compileOnly 'javax.annotation:jsr250-api:1.0'
 }
+
+apply plugin: 'com.google.android.gms.oss-licenses-plugin'

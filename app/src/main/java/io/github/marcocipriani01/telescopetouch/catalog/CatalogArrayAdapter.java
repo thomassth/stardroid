@@ -33,6 +33,7 @@ import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoordinates;
 import io.github.marcocipriani01.telescopetouch.astronomy.HorizontalCoordinates;
 import io.github.marcocipriani01.telescopetouch.astronomy.TimeUtils;
 
@@ -145,7 +146,8 @@ public class CatalogArrayAdapter extends RecyclerView.Adapter<CatalogArrayAdapte
             double latitude = location.getLatitude(),
                     siderealTime = TimeUtils.meanSiderealTime(Calendar.getInstance(), location.getLongitude());
             for (CatalogEntry entry : entries) {
-                if (isVisible(entry) && HorizontalCoordinates.isObjectAboveHorizon(entry.coord, latitude, siderealTime))
+                if (isVisible(entry) && HorizontalCoordinates.isObjectAboveHorizon(
+                        entry.getCoordinates(), latitude, siderealTime))
                     shownEntries.add(entry);
             }
         } else {
@@ -164,13 +166,14 @@ public class CatalogArrayAdapter extends RecyclerView.Adapter<CatalogArrayAdapte
                     siderealTime = TimeUtils.meanSiderealTime(Calendar.getInstance(), location.getLongitude());
             for (CatalogEntry entry : entries) {
                 if (entry.magnitudeDouble <= limitMagnitude) {
+                    EquatorialCoordinates coordinates = entry.getCoordinates();
                     if (showStars && (entry instanceof StarEntry)) {
                         if (matches(((StarEntry) entry).getNames(), string.replace("HD ", "HD").replace("SAO ", "SAO"))
-                                && HorizontalCoordinates.isObjectAboveHorizon(entry.coord, latitude, siderealTime))
+                                && HorizontalCoordinates.isObjectAboveHorizon(coordinates, latitude, siderealTime))
                             shownEntries.add(entry);
                     } else if (((showDso && (entry instanceof DSOEntry)) ||
                             (showPlanets && (entry instanceof PlanetEntry))) && matches(entry.getName(), string)
-                            && HorizontalCoordinates.isObjectAboveHorizon(entry.coord, latitude, siderealTime)) {
+                            && HorizontalCoordinates.isObjectAboveHorizon(coordinates, latitude, siderealTime)) {
                         shownEntries.add(entry);
                     }
                 }

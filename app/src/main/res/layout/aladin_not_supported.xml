@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="?android:attr/actionBarSize"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/aladin_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.MaterialComponents.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.MaterialComponents"
+        app:title="@string/aladin_sky_atlas" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <ImageView
+            android:id="@+id/aladin_logo"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_alignParentTop="true"
+            android:contentDescription="@string/aladin_sky_atlas"
+            android:paddingHorizontal="@dimen/activity_horizontal_margin"
+            android:scaleType="centerInside"
+            android:src="@drawable/aladin" />
+
+        <TextView
+            android:id="@+id/aladin_api_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/aladin_logo"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/activity_horizontal_margin"
+            android:text="@string/aladin_api_error"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+        <Button
+            android:id="@+id/aladin_browser_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/aladin_api_error"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="@string/open" />
+    </RelativeLayout>
+</RelativeLayout>

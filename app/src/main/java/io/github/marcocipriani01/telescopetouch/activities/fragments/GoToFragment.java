@@ -14,19 +14,25 @@
 
 package io.github.marcocipriani01.telescopetouch.activities.fragments;
 
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -35,9 +41,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
+import com.github.chrisbanes.photoview.PhotoView;
 
 import org.indilib.i4j.Constants;
 import org.indilib.i4j.client.INDIValueException;
@@ -49,23 +58,27 @@ import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.MainActivity;
+import io.github.marcocipriani01.telescopetouch.activities.views.AladinView;
 import io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoordinates;
+import io.github.marcocipriani01.telescopetouch.astronomy.Planet;
 import io.github.marcocipriani01.telescopetouch.astronomy.StarsPrecession;
 import io.github.marcocipriani01.telescopetouch.catalog.Catalog;
 import io.github.marcocipriani01.telescopetouch.catalog.CatalogArrayAdapter;
 import io.github.marcocipriani01.telescopetouch.catalog.CatalogEntry;
 import io.github.marcocipriani01.telescopetouch.catalog.DSOEntry;
+import io.github.marcocipriani01.telescopetouch.catalog.PlanetEntry;
 import io.github.marcocipriani01.telescopetouch.catalog.StarEntry;
 import io.github.marcocipriani01.telescopetouch.indi.PropUpdater;
 import io.github.marcocipriani01.telescopetouch.sensors.LocationHelper;
 
+import static io.github.marcocipriani01.telescopetouch.ApplicationConstants.VIZIER_WELCOME;
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 
 /**
  * Allows the user to look for an astronomical object and slew the telescope.
  */
 public class GoToFragment extends ActionFragment implements SearchView.OnQueryTextListener,
-        Catalog.CatalogLoadingListener, CatalogArrayAdapter.CatalogItemListener {
+        Catalog.CatalogLoadingListener, CatalogArrayAdapter.CatalogItemListener, Toolbar.OnMenuItemClickListener {
 
     private static final String TAG = TelescopeTouchApp.getTag(GoToFragment.class);
     private static final Catalog catalog = new Catalog();
@@ -81,6 +94,7 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
     private LocationHelper locationHelper;
     private Location location = null;
     private boolean searching = false;
+    private MenuItem aboutMenu;
 
     public static void setRequestedSearch(String query) {
         requestedSearch = query;
@@ -90,6 +104,7 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_goto, container, false);
+        setHasOptionsMenu(true);
         searchMenu = rootView.<Toolbar>findViewById(R.id.goto_toolbar).getMenu().add(R.string.mount_goto);
         searchMenu.setIcon(R.drawable.search);
         searchMenu.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
@@ -133,7 +148,29 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
                     ((MainActivity) activity).requestLocationPermission();
             }
         };
+        if (!preferences.getBoolean(VIZIER_WELCOME, false))
+            vizierDialog();
         return rootView;
+    }
+
+    private void vizierDialog() {
+        new AlertDialog.Builder(context).setView(R.layout.dialog_vizier_welcome)
+                .setPositiveButton(R.string.continue_button, (dialog, which) -> preferences.edit().putBoolean(VIZIER_WELCOME, true).apply()).show();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        aboutMenu = menu.add(R.string.about_vizier_menu);
+        aboutMenu.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        if (item == aboutMenu) {
+            vizierDialog();
+        }
+        return false;
     }
 
     @Override
@@ -246,7 +283,10 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
     @Override
     public void onCatalogItemClick(View v) {
         int position = list.getChildLayoutPosition(v);
-        if (position != -1) onListItemClick0(position);
+        if (position != -1) {
+            onListItemClick0(position);
+            searchView.clearFocus();
+        }
     }
 
     private void onListItemClick0(int position) {
@@ -255,6 +295,59 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
         AlertDialog.Builder builder = new AlertDialog.Builder(context)
                 .setMessage(entry.createDescription(context, location))
                 .setTitle(entry.getName());
+        if (entry instanceof PlanetEntry) {
+            Planet planet = ((PlanetEntry) entry).getPlanet();
+            if (planet == Planet.Moon) {
+                ImageView moonView = new ImageView(context);
+                FrameLayout container = new FrameLayout(context);
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 600);
+                int margin = getResources().getDimensionPixelSize(R.dimen.padding_medium);
+                params.leftMargin = margin;
+                params.bottomMargin = margin;
+                params.topMargin = margin;
+                params.rightMargin = margin;
+                moonView.setLayoutParams(params);
+                moonView.setImageResource(planet.getImageResourceId(Calendar.getInstance()));
+                container.addView(moonView);
+                builder.setView(container);
+            } else {
+                int galleryImage = planet.getGalleryResourceId();
+                if (galleryImage != 0) {
+                    PhotoView planetView = new PhotoView(context);
+                    FrameLayout container = new FrameLayout(context);
+                    FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 600);
+                    int margin = getResources().getDimensionPixelSize(R.dimen.padding_medium);
+                    params.leftMargin = margin;
+                    params.bottomMargin = margin;
+                    params.topMargin = margin;
+                    params.rightMargin = margin;
+                    planetView.setLayoutParams(params);
+                    planetView.setImageResource(galleryImage);
+                    container.addView(planetView);
+                    builder.setView(container);
+                }
+            }
+        } else if (internetAvailable() && AladinView.isSupported(preferences)) {
+            AladinView aladinView = new AladinView(context);
+            FrameLayout container = new FrameLayout(context);
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            int margin = getResources().getDimensionPixelSize(R.dimen.padding_medium);
+            params.leftMargin = margin;
+            params.bottomMargin = margin;
+            params.topMargin = margin;
+            params.rightMargin = margin;
+            aladinView.setLayoutParams(params);
+            aladinView.setHeight(500);
+            aladinView.setAladinListener(new AladinView.AladinListener() {
+                @Override
+                public void onAladinError() {
+                    aladinView.setVisibility(View.GONE);
+                }
+            });
+            container.addView(aladinView);
+            aladinView.start(coordinates);
+            builder.setView(container);
+        }
         // Only display buttons if the telescope is ready
         if ((connectionManager.telescopeCoordP != null) && (connectionManager.telescopeOnCoordSetP != null)) {
             builder.setPositiveButton(R.string.go_to, (dialog, which) -> {
@@ -270,7 +363,7 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
                     Log.e(TAG, e.getLocalizedMessage(), e);
                     requestActionSnack(R.string.sync_slew_error);
                 }
-                hideKeyboard();
+                searchView.clearFocus();
             });
             builder.setNeutralButton(R.string.sync, (dialog, which) -> {
                 try {
@@ -285,11 +378,24 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
                     Log.e(TAG, e.getLocalizedMessage(), e);
                     requestActionSnack(R.string.sync_slew_error);
                 }
-                hideKeyboard();
+                searchView.clearFocus();
             });
         }
         builder.setNegativeButton(android.R.string.cancel, null)
                 .setIcon(entry.getIconResource()).show();
+    }
+
+    @SuppressWarnings("deprecation")
+    private boolean internetAvailable() {
+        ConnectivityManager connectivityManager = ContextCompat.getSystemService(context, ConnectivityManager.class);
+        if (connectivityManager == null) return false;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            Network network = connectivityManager.getActiveNetwork();
+            return (network != null);
+        } else {
+            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+            return (activeNetwork != null) && activeNetwork.isConnectedOrConnecting();
+        }
     }
 
     private void setCoordinatesMaybePrecess(CatalogEntry selectedEntry, EquatorialCoordinates coordinates) throws INDIValueException {
@@ -302,11 +408,6 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
             connectionManager.telescopeCoordRA.setDesiredValue(coordinates.getRATelescopeFormat());
             connectionManager.telescopeCoordDec.setDesiredValue(coordinates.getDecTelescopeFormat());
         }
-    }
-
-    private void hideKeyboard() {
-        ((InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE))
-                .hideSoftInputFromWindow(searchMenu.getActionView().getWindowToken(), 0);
     }
 
     @Override

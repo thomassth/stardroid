@@ -17,8 +17,11 @@
 package io.github.marcocipriani01.telescopetouch.touch;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.DisplayMetrics;
+import android.widget.Toast;
 
+import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.control.ControllerGroup;
 import io.github.marcocipriani01.telescopetouch.maths.MathsUtils;
@@ -31,13 +34,18 @@ import io.github.marcocipriani01.telescopetouch.maths.MathsUtils;
  */
 public class MapMover implements DragRotateZoomGestureDetector.DragRotateZoomGestureDetectorListener {
 
+    private static final int MANUAL_MODE_THRESHOLD = 100;
     private final AstronomerModel model;
     private final ControllerGroup controllerGroup;
     private final float sizeTimesRadiansToDegrees;
+    private final Context context;
+    private final SharedPreferences preferences;
 
-    public MapMover(AstronomerModel model, ControllerGroup controllerGroup, Context context) {
+    public MapMover(AstronomerModel model, ControllerGroup controllerGroup, Context context, SharedPreferences preferences) {
         this.model = model;
         this.controllerGroup = controllerGroup;
+        this.context = context;
+        this.preferences = preferences;
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         int screenLongSize = metrics.heightPixels;
         //Log.i(TAG, "Screen height is " + screenLongSize + " pixels.");
@@ -46,6 +54,11 @@ public class MapMover implements DragRotateZoomGestureDetector.DragRotateZoomGes
 
     @Override
     public void onDrag(float xPixels, float yPixels) {
+        if (controllerGroup.isAutoMode() &&
+                ((Math.abs(xPixels) > MANUAL_MODE_THRESHOLD || Math.abs(yPixels) > MANUAL_MODE_THRESHOLD))) {
+            Toast.makeText(context, "Toggling manual mode", Toast.LENGTH_SHORT).show();
+            preferences.edit().putBoolean(ApplicationConstants.AUTO_MODE_PREF, false).apply();
+        }
         // Log.d(TAG, "Dragging by " + xPixels + ", " + yPixels);
         final float pixelsToRadians = model.getFieldOfView() / sizeTimesRadiansToDegrees;
         controllerGroup.changeUpDown(-yPixels * pixelsToRadians);
