@@ -54,7 +54,6 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.indilib.i4j.Constants;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -362,7 +361,6 @@ public class SkyMapActivity extends InjectableActivity implements OnSharedPrefer
         }
     }
 
-    @SuppressLint("SimpleDateFormat")
     public void setTimeTravelMode(Date newTime) {
         Log.d(TAG, "Showing TimePlayer UI.");
         pointingText.setVisibility(View.GONE);
@@ -463,7 +461,6 @@ public class SkyMapActivity extends InjectableActivity implements OnSharedPrefer
         multipleSearchResultsDialogFragment.show(fragmentManager, "Multiple Search Results");
     }
 
-    @SuppressLint("SimpleDateFormat")
     private void initializeModelViewController() {
         Log.i(TAG, "Initializing Model, View and Controller");
         setContentView(R.layout.skyrenderer);
@@ -533,14 +530,16 @@ public class SkyMapActivity extends InjectableActivity implements OnSharedPrefer
         onResumeRunnables.add(new Runnable() {
             private final TextView timeTravelTimeReadout = findViewById(R.id.time_travel_time_readout);
             private final TextView timeTravelStatusLabel = findViewById(R.id.time_travel_status_label);
-            private final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy.MM.dd G  HH:mm:ss z");
+            private final java.text.DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(SkyMapActivity.this);
+            private final java.text.DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(SkyMapActivity.this);
             private final Date date = new Date();
 
+            @SuppressLint("SetTextI18n")
             @Override
             public void run() {
                 long time = model.getTimeMillis();
                 date.setTime(time);
-                timeTravelTimeReadout.setText(dateFormatter.format(date));
+                timeTravelTimeReadout.setText(dateFormat.format(date) + ", " + timeFormat.format(date));
                 if (time > System.currentTimeMillis()) {
                     timeTravelStatusLabel.setText(R.string.time_travel_label_future);
                 } else {

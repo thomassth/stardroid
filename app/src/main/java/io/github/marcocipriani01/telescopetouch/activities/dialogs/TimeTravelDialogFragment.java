@@ -16,7 +16,6 @@
 
 package io.github.marcocipriani01.telescopetouch.activities.dialogs;
 
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -35,7 +34,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -56,12 +54,12 @@ public class TimeTravelDialogFragment extends DialogFragment {
 
     private static final String TAG = TelescopeTouchApp.getTag(TimeTravelDialogFragment.class);
     private static final int MIN_CLICK_TIME = 1000;
-    @SuppressLint("SimpleDateFormat")
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z");
     // This is the date we will apply to the controller when the user hits go.
     private final Calendar calendar = Calendar.getInstance();
     @Inject
-    SkyMapActivity parentActivity;
+    SkyMapActivity skyMapActivity;
+    private java.text.DateFormat dateFormat;
+    private java.text.DateFormat timeFormat;
     private Spinner popularDatesMenu;
     private TextView dateTimeReadout;
     private long lastClickTime = 0;
@@ -73,10 +71,10 @@ public class TimeTravelDialogFragment extends DialogFragment {
         // Activities using this dialog MUST implement this interface.  Obviously.
         ((HasComponent<ActivityComponent>) requireActivity()).getComponent().inject(this);
 
-        View root = View.inflate(parentActivity, R.layout.time_dialog, null);
-        AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity)
+        View root = View.inflate(skyMapActivity, R.layout.time_dialog, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(skyMapActivity)
                 .setView(root).setTitle(R.string.menu_time)
-                .setPositiveButton(R.string.go, (dialog, which) -> parentActivity.setTimeTravelMode(calendar.getTime()))
+                .setPositiveButton(R.string.go, (dialog, which) -> skyMapActivity.setTimeTravelMode(calendar.getTime()))
                 .setNegativeButton(android.R.string.cancel, null);
         dateTimeReadout = root.findViewById(R.id.dateDisplay);
 
@@ -154,6 +152,8 @@ public class TimeTravelDialogFragment extends DialogFragment {
         // the first time the dialog is shown.  Thereafter it will remember the
         // last value set.
         calendar.setTime(new Date());
+        dateFormat = android.text.format.DateFormat.getDateFormat(skyMapActivity);
+        timeFormat = android.text.format.DateFormat.getTimeFormat(skyMapActivity);
         updateDisplay();
 
         return builder.create();
@@ -168,11 +168,13 @@ public class TimeTravelDialogFragment extends DialogFragment {
     }
 
     private void updateDisplay() {
-        dateTimeReadout.setText(parentActivity.getString(R.string.now_visiting, dateFormat.format(calendar.getTime())));
+        Date time = calendar.getTime();
+        dateTimeReadout.setText(skyMapActivity.getString(R.string.now_visiting,
+                dateFormat.format(time) + ", " + timeFormat.format(time)));
     }
 
     private void setToNextSunRiseOrSet(Planet.RiseSetIndicator indicator) {
-        Calendar riseSet = Planet.Sun.calcNextRiseSetTime(calendar, parentActivity.getModel().getLocation(), indicator);
+        Calendar riseSet = Planet.Sun.calcNextRiseSetTime(calendar, skyMapActivity.getModel().getLocation(), indicator);
         if (riseSet == null) {
             Toast.makeText(this.getContext(), R.string.sun_wont_set_message, Toast.LENGTH_SHORT).show();
         } else {

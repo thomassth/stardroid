@@ -14,7 +14,9 @@
 
 package io.github.marcocipriani01.telescopetouch.activities.fragments;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -23,6 +25,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Spannable;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,7 +37,9 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -47,6 +53,13 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.github.chrisbanes.photoview.PhotoView;
+import com.google.android.material.tabs.TabLayout;
+import com.jjoe64.graphview.DefaultLabelFormatter;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GridLabelRenderer;
+import com.jjoe64.graphview.Viewport;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
 import org.indilib.i4j.Constants;
 import org.indilib.i4j.client.INDIValueException;
@@ -62,6 +75,7 @@ import io.github.marcocipriani01.telescopetouch.activities.views.AladinView;
 import io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoordinates;
 import io.github.marcocipriani01.telescopetouch.astronomy.Planet;
 import io.github.marcocipriani01.telescopetouch.astronomy.StarsPrecession;
+import io.github.marcocipriani01.telescopetouch.astronomy.TimeUtils;
 import io.github.marcocipriani01.telescopetouch.catalog.Catalog;
 import io.github.marcocipriani01.telescopetouch.catalog.CatalogArrayAdapter;
 import io.github.marcocipriani01.telescopetouch.catalog.CatalogEntry;
@@ -71,8 +85,14 @@ import io.github.marcocipriani01.telescopetouch.catalog.StarEntry;
 import io.github.marcocipriani01.telescopetouch.indi.PropUpdater;
 import io.github.marcocipriani01.telescopetouch.sensors.LocationHelper;
 
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static io.github.marcocipriani01.telescopetouch.ApplicationConstants.VIZIER_WELCOME;
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
+import static java.lang.Math.asin;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+import static java.lang.Math.toDegrees;
+import static java.lang.Math.toRadians;
 
 /**
  * Allows the user to look for an astronomical object and slew the telescope.
@@ -192,6 +212,10 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
             if (!catalog.isLoading()) new Thread(catalog::load).start();
         }
         locationHelper.start();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (context instanceof Activity && ((Activity) context).isInMultiWindowMode())
+                list.setIndexBarVisibility(false);
+        }
         handler.postDelayed(this::maybeStartIntentSearch, 300);
     }
 
@@ -291,63 +315,91 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
 
     private void onListItemClick0(int position) {
         final CatalogEntry entry = entriesAdapter.getEntryAt(position);
-        final EquatorialCoordinates coordinates = entry.getCoordinates();
-        AlertDialog.Builder builder = new AlertDialog.Builder(context)
-                .setMessage(entry.createDescription(context, location))
-                .setTitle(entry.getName());
+        AlertDialog.Builder builder = new AlertDialog.Builder(context).setTitle(entry.getName());
+        EquatorialCoordinates coordinates = entry.getCoordinates();
+
+        Spannable description = entry.createDescription(context, location);
         if (entry instanceof PlanetEntry) {
             Planet planet = ((PlanetEntry) entry).getPlanet();
             if (planet == Planet.Moon) {
+                TextView text = new TextView(context);
+                text.setText(description);
                 ImageView moonView = new ImageView(context);
-                FrameLayout container = new FrameLayout(context);
-                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 600);
-                int margin = getResources().getDimensionPixelSize(R.dimen.padding_medium);
-                params.leftMargin = margin;
-                params.bottomMargin = margin;
-                params.topMargin = margin;
-                params.rightMargin = margin;
-                moonView.setLayoutParams(params);
                 moonView.setImageResource(planet.getImageResourceId(Calendar.getInstance()));
-                container.addView(moonView);
-                builder.setView(container);
+                builder.setView(createScrollview(text, moonView));
             } else {
                 int galleryImage = planet.getGalleryResourceId();
-                if (galleryImage != 0) {
+                if (galleryImage == 0) {
+                    builder.setMessage(description);
+                } else {
+                    TextView text = new TextView(context);
+                    text.setText(description);
                     PhotoView planetView = new PhotoView(context);
-                    FrameLayout container = new FrameLayout(context);
-                    FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 600);
-                    int margin = getResources().getDimensionPixelSize(R.dimen.padding_medium);
-                    params.leftMargin = margin;
-                    params.bottomMargin = margin;
-                    params.topMargin = margin;
-                    params.rightMargin = margin;
-                    planetView.setLayoutParams(params);
                     planetView.setImageResource(galleryImage);
-                    container.addView(planetView);
-                    builder.setView(container);
+                    builder.setView(createScrollview(text, planetView));
                 }
             }
-        } else if (internetAvailable() && AladinView.isSupported(preferences)) {
-            AladinView aladinView = new AladinView(context);
-            FrameLayout container = new FrameLayout(context);
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            int margin = getResources().getDimensionPixelSize(R.dimen.padding_medium);
-            params.leftMargin = margin;
-            params.bottomMargin = margin;
-            params.topMargin = margin;
-            params.rightMargin = margin;
-            aladinView.setLayoutParams(params);
-            aladinView.setHeight(500);
-            aladinView.setAladinListener(new AladinView.AladinListener() {
+        } else if (AladinView.isSupported(preferences)) {
+            View rootView = View.inflate(context, R.layout.dialog_object_details, null);
+            rootView.<TextView>findViewById(R.id.details_text).setText(description);
+
+            FrameLayout aladinContainer = rootView.findViewById(R.id.details_aladin_container);
+            TextView noInternet = rootView.findViewById(R.id.details_no_internet);
+            AladinView aladinView = rootView.findViewById(R.id.details_aladin);
+            if (internetAvailable()) {
+                aladinView.setHeight(600);
+                aladinView.setAladinListener(new AladinView.AladinListener() {
+                    @Override
+                    public void onAladinError() {
+                        aladinView.setVisibility(View.GONE);
+                        noInternet.setVisibility(View.VISIBLE);
+                    }
+                });
+                aladinView.start(coordinates);
+            } else {
+                aladinView.setVisibility(View.GONE);
+                noInternet.setVisibility(View.VISIBLE);
+            }
+
+            FrameLayout graphContainer = rootView.findViewById(R.id.details_graph_container);
+            GraphView graph = rootView.findViewById(R.id.details_graph);
+            if (location == null) {
+                rootView.<TextView>findViewById(R.id.details_no_location).setVisibility(View.VISIBLE);
+                graph.setVisibility(View.GONE);
+            } else {
+                initGraph(graph, coordinates);
+            }
+
+            TabLayout tabLayout = rootView.findViewById(R.id.details_tabs);
+            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
-                public void onAladinError() {
-                    aladinView.setVisibility(View.GONE);
+                public void onTabSelected(TabLayout.Tab tab) {
+                    if (tab.getPosition() == 0) {
+                        aladinContainer.setVisibility(View.VISIBLE);
+                        graphContainer.setVisibility(View.GONE);
+                    } else {
+                        aladinContainer.setVisibility(View.GONE);
+                        graphContainer.setVisibility(View.VISIBLE);
+                    }
+                }
+
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+                }
+
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
                 }
             });
-            container.addView(aladinView);
-            aladinView.start(coordinates);
-            builder.setView(container);
+            builder.setView(rootView);
+        } else if (location != null) {
+            GraphView graph = new GraphView(context);
+            initGraph(graph, coordinates);
+            ScrollView scrollView = new ScrollView(context);
+            scrollView.addView(graph);
+            builder.setView(graph);
         }
+
         // Only display buttons if the telescope is ready
         if ((connectionManager.telescopeCoordP != null) && (connectionManager.telescopeOnCoordSetP != null)) {
             builder.setPositiveButton(R.string.go_to, (dialog, which) -> {
@@ -381,8 +433,39 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
                 searchView.clearFocus();
             });
         }
+
         builder.setNegativeButton(android.R.string.cancel, null)
                 .setIcon(entry.getIconResource()).show();
+    }
+
+    private void initGraph(GraphView graph, EquatorialCoordinates coordinates) {
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
+        Calendar calendar = Calendar.getInstance();
+        long now = calendar.getTimeInMillis();
+        calendar.add(Calendar.DATE, 1);
+        long tomorrow = calendar.getTimeInMillis();
+        double latitude = location.getLatitude(),
+                longitude = location.getLongitude();
+        for (long millis = now; millis < tomorrow; millis += 120000) {
+            calendar.setTimeInMillis(millis);
+            double latRadians = toRadians(latitude),
+                    dec = toRadians(coordinates.dec);
+            series.appendData(new DataPoint((double) millis,
+                    toDegrees(asin(sin(dec) * sin(latRadians) + cos(dec) * cos(latRadians) *
+                            cos(toRadians(TimeUtils.meanSiderealTime(calendar, longitude) - coordinates.ra))))), false, 720);
+        }
+        graph.addSeries(series);
+        GridLabelRenderer gridLabel = graph.getGridLabelRenderer();
+        gridLabel.setLabelFormatter(new TimeFormatter());
+        gridLabel.setNumHorizontalLabels(3);
+        gridLabel.setNumVerticalLabels(6);
+        gridLabel.setHorizontalLabelsAngle(45);
+        Viewport viewport = graph.getViewport();
+        viewport.setMinX(now);
+        viewport.setMaxX(tomorrow);
+        viewport.setXAxisBoundsManual(true);
+        viewport.setYAxisBoundsManual(true);
+        viewport.setScalable(true);
     }
 
     @SuppressWarnings("deprecation")
@@ -398,9 +481,29 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
         }
     }
 
-    private void setCoordinatesMaybePrecess(CatalogEntry selectedEntry, EquatorialCoordinates coordinates) throws INDIValueException {
+    private ScrollView createScrollview(View... views) {
+        LinearLayout layout = new LinearLayout(context);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        Resources res = context.getResources();
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(WRAP_CONTENT,
+                res.getDimensionPixelSize(R.dimen.details_photo_height));
+        int margin = res.getDimensionPixelSize(R.dimen.padding_medium);
+        params.leftMargin = margin;
+        params.bottomMargin = margin;
+        params.topMargin = margin;
+        params.rightMargin = margin;
+        for (View v : views) {
+            v.setLayoutParams(params);
+            layout.addView(v, params);
+        }
+        ScrollView scrollView = new ScrollView(context);
+        scrollView.addView(layout);
+        return scrollView;
+    }
+
+    private void setCoordinatesMaybePrecess(CatalogEntry entry, EquatorialCoordinates coordinates) throws INDIValueException {
         if ((preferences.getBoolean(ApplicationConstants.COMPENSATE_PRECESSION_PREF, true)) &&
-                ((selectedEntry instanceof StarEntry) || (selectedEntry instanceof DSOEntry))) {
+                ((entry instanceof StarEntry) || (entry instanceof DSOEntry))) {
             EquatorialCoordinates precessed = StarsPrecession.precess(Calendar.getInstance(), coordinates);
             connectionManager.telescopeCoordRA.setDesiredValue(precessed.getRATelescopeFormat());
             connectionManager.telescopeCoordDec.setDesiredValue(precessed.getDecTelescopeFormat());
@@ -427,5 +530,23 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
                         .show();
             }
         });
+    }
+
+    private class TimeFormatter extends DefaultLabelFormatter {
+
+        java.text.DateFormat formatter;
+
+        TimeFormatter() {
+            formatter = DateFormat.getTimeFormat(context);
+        }
+
+        @Override
+        public String formatLabel(double value, boolean isValueX) {
+            if (isValueX) {
+                return formatter.format((long) value);
+            } else {
+                return super.formatLabel(value, isValueX);
+            }
+        }
     }
 }

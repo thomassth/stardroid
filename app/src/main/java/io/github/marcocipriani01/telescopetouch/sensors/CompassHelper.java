@@ -16,6 +16,7 @@
 
 package io.github.marcocipriani01.telescopetouch.sensors;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.hardware.GeomagneticField;
@@ -24,6 +25,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
+import android.os.Build;
 import android.view.Display;
 
 import androidx.preference.PreferenceManager;
@@ -38,16 +40,21 @@ public abstract class CompassHelper extends LocationHelper implements SensorEven
     private final Sensor magnetometer;
     private final float[] gravity = new float[3];
     private final float[] geomagnetic = new float[3];
-    private final Display display;
     private final SharedPreferences preferences;
     private final SensorAccuracyMonitor sensorAccuracyMonitor;
+    private Display display = null;
     private boolean enableDeclination = true;
     private float magneticDeclination = 0.0f;
 
+    @SuppressWarnings("deprecation")
     public CompassHelper(Context context) {
         super(context);
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        display = context.getDisplay();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            display = context.getDisplay();
+        } else if (context instanceof Activity) {
+            display = ((Activity) context).getWindowManager().getDefaultDisplay();
+        }
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -102,8 +109,8 @@ public abstract class CompassHelper extends LocationHelper implements SensorEven
                 float azimuth = (float) Math.toDegrees(orientation[0]);
                 if (enableDeclination)
                     azimuth += magneticDeclination;
-                float displayRotation = display.getRotation() * 90.0f;
-                onAzimuth((360.0f - azimuth - displayRotation) % 360.0f, -((azimuth + displayRotation) % 360.0f));
+                float displayRotation = (display == null) ? 0f : (display.getRotation() * 90f);
+                onAzimuth((360f - azimuth - displayRotation) % 360f, -((azimuth + displayRotation) % 360f));
             }
         }
     }

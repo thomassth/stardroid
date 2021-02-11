@@ -573,4 +573,7 @@
     <string name="below_horizon_warning">\n\nAttenzione! L\'oggetto potrebbe trovarsi sotto l\'orizzonte!</string>
     <string name="refresh">Ricarica</string>
     <string name="aladin_j2000_note">\n\nNota: Aladin usa coordinate J2000. Verranno compensate, quindi il segnaposto del telescopio sarà in un punto leggermente diverso da quello richiesto. L\'oggetto sarà centrato</string>
+    <string name="aladin">Aladin</string>
+    <string name="altitude">Altezza</string>
+    <string name="no_location">GPS non attivo</string>
 </resources>

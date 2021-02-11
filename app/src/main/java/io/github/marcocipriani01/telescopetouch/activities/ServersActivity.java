@@ -48,7 +48,7 @@ import io.github.marcocipriani01.telescopetouch.activities.util.ServersItemAdapt
  *
  * @author marcocipriani01
  */
-public class ServersActivity extends AppCompatActivity {
+public class ServersActivity extends AppCompatActivity implements NewServerDialog.Callback {
 
     private final static Gson gson = new Gson();
     private final static Type STRING_ARRAY_TYPE = new TypeToken<ArrayList<String>>() {
@@ -89,17 +89,7 @@ public class ServersActivity extends AppCompatActivity {
         }
         findViewById(R.id.addServerFab).setOnClickListener(v -> {
             saveFromListView();
-            new NewServerDialog(this, preferences) {
-                @Override
-                protected void createSnackbar(int msg) {
-                    Snackbar.make(coordinator, msg, Snackbar.LENGTH_SHORT).show();
-                }
-
-                @Override
-                protected void loadServers(ArrayList<String> servers) {
-                    ServersActivity.this.loadServers(servers);
-                }
-            };
+            NewServerDialog.show(this, preferences, this);
         });
         serversListView = findViewById(R.id.serversList);
         serversListView.setLayoutManager(new LinearLayoutManager(this));
@@ -142,6 +132,12 @@ public class ServersActivity extends AppCompatActivity {
                 gson.toJson(((ServersItemAdapter) serversListView.getAdapter()).getItemList(), STRING_ARRAY_TYPE)).apply();
     }
 
+    @Override
+    public void requestActionSnack(int msg) {
+        Snackbar.make(coordinator, msg, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void loadServers(ArrayList<String> servers) {
         serversListView.setAdapter(new ServersItemAdapter(servers, R.layout.servers_list_item, R.id.listview_drag, false) {
             @Override

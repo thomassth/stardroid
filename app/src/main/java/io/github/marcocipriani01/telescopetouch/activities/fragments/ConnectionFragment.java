@@ -66,7 +66,7 @@ import static io.github.marcocipriani01.telescopetouch.activities.ServersActivit
  * @author marcocipriani01
  */
 public class ConnectionFragment extends ActionFragment implements ConnectionManager.ManagerListener,
-        NSDHelper.NSDListener, Toolbar.OnMenuItemClickListener {
+        NSDHelper.NSDListener, Toolbar.OnMenuItemClickListener, NewServerDialog.Callback {
 
     private static int selectedSpinnerItem = 0;
     private static boolean nsdUnavailableWarned = false;
@@ -112,7 +112,7 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
             String host = String.valueOf(selectedItem);
             if (host.equals(context.getString(R.string.host_add))) {
                 serversSpinner.post(() -> serversSpinner.setSelection(0));
-                new NewServersDialogImpl();
+                NewServerDialog.show(context, preferences, ConnectionFragment.this);
             } else if (host.equals(context.getString(R.string.host_manage))) {
                 serversSpinner.post(() -> serversSpinner.setSelection(0));
                 if (activity instanceof MainActivity)
@@ -154,7 +154,7 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
                 String selected = parent.getItemAtPosition(pos).toString();
                 if (selected.equals(context.getString(R.string.host_add))) {
                     serversSpinner.post(() -> serversSpinner.setSelection(0));
-                    new NewServersDialogImpl();
+                    NewServerDialog.show(context, preferences, ConnectionFragment.this);
                 } else if (selected.equals(context.getString(R.string.host_manage))) {
                     serversSpinner.post(() -> serversSpinner.setSelection(0));
                     if (activity instanceof MainActivity)
@@ -264,6 +264,7 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
         }
     }
 
+    @Override
     public void loadServers(ArrayList<String> servers) {
         if (nsdHelper != null) {
             HashMap<String, String> services = nsdHelper.getDiscoveredServices();
@@ -343,23 +344,6 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
             super(itemView);
             log = itemView.findViewById(R.id.logs_item1);
             timestamp = itemView.findViewById(R.id.logs_item2);
-        }
-    }
-
-    private class NewServersDialogImpl extends NewServerDialog {
-
-        public NewServersDialogImpl() {
-            super(context, preferences);
-        }
-
-        @Override
-        protected void createSnackbar(int msg) {
-            requestActionSnack(msg);
-        }
-
-        @Override
-        protected void loadServers(ArrayList<String> servers) {
-            ConnectionFragment.this.loadServers(servers);
         }
     }
 }

@@ -1,3 +1,17 @@
+/*
+ * Copyright (C) 2020  Marco Cipriani (@marcocipriani01)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
 package io.github.marcocipriani01.telescopetouch.activities.dialogs;
 
 import android.annotation.SuppressLint;
@@ -20,13 +34,13 @@ import io.github.marcocipriani01.telescopetouch.activities.ServersActivity;
 
 import static io.github.marcocipriani01.telescopetouch.activities.ServersActivity.getServers;
 
-public abstract class NewServerDialog {
+public class NewServerDialog {
 
     private static AlertDialog lastDialog = null;
 
     @SuppressLint("SetTextI18n")
     @SuppressWarnings("SpellCheckingInspection")
-    public NewServerDialog(Context context, SharedPreferences preferences) {
+    public static void show(Context context, SharedPreferences preferences, Callback callback) {
         final EditText input = new EditText(context);
         input.setText("192.168.");
         input.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
@@ -72,13 +86,13 @@ public abstract class NewServerDialog {
                     String server = input.getText().toString();
                     if (!server.equals("")) {
                         if (!isIp(server))
-                            createSnackbar(R.string.not_valid_ip);
+                            callback.requestActionSnack(R.string.not_valid_ip);
                         ArrayList<String> list = getServers(preferences);
                         list.add(0, server);
                         ServersActivity.saveServers(preferences, list);
-                        loadServers(list);
+                        callback.loadServers(list);
                     } else {
-                        createSnackbar(R.string.empty_host);
+                        callback.requestActionSnack(R.string.empty_host);
                     }
                     lastDialog = null;
                 })
@@ -93,7 +107,10 @@ public abstract class NewServerDialog {
         return ip.matches("^((0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)\\.){3}(0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)$");
     }
 
-    protected abstract void createSnackbar(int msg);
+    public interface Callback {
 
-    protected abstract void loadServers(ArrayList<String> servers);
+        void requestActionSnack(int msg);
+
+        void loadServers(ArrayList<String> servers);
+    }
 }

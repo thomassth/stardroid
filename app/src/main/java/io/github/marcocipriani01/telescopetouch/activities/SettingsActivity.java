@@ -21,7 +21,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -31,6 +31,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Objects;
 
@@ -56,9 +58,11 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent intent = result.getData();
                     if (intent == null) return;
-                    String latitude = intent.getStringExtra(ApplicationConstants.LATITUDE_PREF), longitude = intent.getStringExtra(ApplicationConstants.LONGITUDE_PREF);
+                    String latitude = intent.getStringExtra(ApplicationConstants.LATITUDE_PREF),
+                            longitude = intent.getStringExtra(ApplicationConstants.LONGITUDE_PREF);
                     if ((latitude == null) || (longitude == null)) return;
-                    preferences.edit().putString(ApplicationConstants.LATITUDE_PREF, latitude).putString(ApplicationConstants.LONGITUDE_PREF, longitude).apply();
+                    preferences.edit().putString(ApplicationConstants.LATITUDE_PREF, latitude)
+                            .putString(ApplicationConstants.LONGITUDE_PREF, longitude).apply();
                     if (latitudePref != null)
                         latitudePref.setSummary(latitude);
                     if (longitudePref != null)
@@ -69,6 +73,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
     private AppPreferenceFragment preferenceFragment;
     private DarkerModeManager darkerModeManager;
     private Preference gyroPref;
+    private View rootView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,6 +82,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
         darkerModeManager = new DarkerModeManager(getWindow(), null, PreferenceManager.getDefaultSharedPreferences(this));
         preferenceFragment = new AppPreferenceFragment();
         getSupportFragmentManager().beginTransaction().replace(android.R.id.content, preferenceFragment).commit();
+        rootView = getWindow().getDecorView().getRootView();
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -127,7 +133,8 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
     }
 
     private void enableGyroPrefs(boolean enabled) {
-        Objects.<Preference>requireNonNull(preferenceFragment.findPreference(ApplicationConstants.REVERSE_MAGNETIC_Z_PREF)).setEnabled(enabled);
+        Objects.<Preference>requireNonNull(
+                preferenceFragment.findPreference(ApplicationConstants.REVERSE_MAGNETIC_Z_PREF)).setEnabled(enabled);
     }
 
     @Override
@@ -137,33 +144,33 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
             try {
                 double latitude = Double.parseDouble(string);
                 if ((latitude > 90.0) || (latitude < -90.0)) {
-                    Toast.makeText(this, R.string.out_of_bounds_loc_error, Toast.LENGTH_SHORT).show();
+                    Snackbar.make(rootView, R.string.out_of_bounds_loc_error, Snackbar.LENGTH_SHORT).show();
                 } else {
                     latitudePref.setSummary(string);
                     return true;
                 }
             } catch (NumberFormatException e) {
-                Toast.makeText(this, R.string.malformed_loc_error, Toast.LENGTH_SHORT).show();
+                Snackbar.make(rootView, R.string.malformed_loc_error, Snackbar.LENGTH_SHORT).show();
             }
         } else if (preference == longitudePref) {
             String string = (String) newValue;
             try {
                 double longitude = Double.parseDouble(string);
                 if ((longitude > 180.0) || (longitude < -180.0)) {
-                    Toast.makeText(this, R.string.out_of_bounds_loc_error, Toast.LENGTH_SHORT).show();
+                    Snackbar.make(rootView, R.string.out_of_bounds_loc_error, Snackbar.LENGTH_SHORT).show();
                 } else {
                     longitudePref.setSummary(string);
                     return true;
                 }
             } catch (NumberFormatException e) {
-                Toast.makeText(this, R.string.malformed_loc_error, Toast.LENGTH_SHORT).show();
+                Snackbar.make(rootView, R.string.malformed_loc_error, Snackbar.LENGTH_SHORT).show();
             }
         } else if (preference == limitMagPref) {
             try {
                 Double.parseDouble((String) newValue);
                 return true;
             } catch (NumberFormatException e) {
-                Toast.makeText(this, R.string.not_a_number, Toast.LENGTH_SHORT).show();
+                Snackbar.make(rootView, R.string.not_a_number, Snackbar.LENGTH_SHORT).show();
                 return false;
             }
         } else if (preference == gyroPref) {

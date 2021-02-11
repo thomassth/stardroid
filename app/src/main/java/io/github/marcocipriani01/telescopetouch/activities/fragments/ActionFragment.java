@@ -23,20 +23,20 @@ public abstract class ActionFragment extends Fragment implements Runnable {
 
     public abstract boolean isActionEnabled();
 
-    protected void notifyActionChange() {
+    public void notifyActionChange() {
         if (listener != null) listener.setActionEnabled(isActionEnabled());
     }
 
-    protected void notifyActionDrawableChange() {
+    public void notifyActionDrawableChange() {
         if (listener != null) listener.onActionDrawableChange(getActionDrawable());
     }
 
-    protected void requestActionSnack(int msgRes) {
+    public void requestActionSnack(int msgRes) {
         if (listener != null) listener.actionSnackRequested(msgRes);
     }
 
     @SuppressWarnings("SameParameterValue")
-    protected void requestActionSnack(int msgRes, int actionName, View.OnClickListener action) {
+    public void requestActionSnack(int msgRes, int actionName, View.OnClickListener action) {
         if (listener != null) listener.actionSnackRequested(msgRes, actionName, action);
     }
 
