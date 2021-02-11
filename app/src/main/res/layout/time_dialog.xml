@@ -23,7 +23,7 @@
         android:paddingBottom="5dp"
         android:text="@string/popular_dates_prompt" />
 
-    <Spinner
+    <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/popular_dates_spinner"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

@@ -60,7 +60,8 @@ public class GestureInterpreter extends GestureDetector.SimpleOnGestureListener 
 
     @Override
     public boolean onDoubleTap(MotionEvent e) {
-        return false;
+        mapMover.onStretch(2f);
+        return true;
     }
 
     @Override

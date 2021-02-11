@@ -66,6 +66,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="fullUser"
             android:theme="@style/AppThemeNoActionBar"
+            android:configChanges="uiMode"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
             <meta-data
                 android:name="android.app.shortcuts"
