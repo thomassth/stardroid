@@ -115,17 +115,17 @@ public class ImageGalleryActivity extends InjectableActivity {
         startActivity(intent);
     }
 
-    private class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder> {
+    private class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
 
         @NonNull
         @Override
-        public ImageAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.gallery_item, parent, false);
-            return new MyViewHolder(view);
+            return new ImageViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(ImageAdapter.MyViewHolder holder, final int position) {
+        public void onBindViewHolder(ImageViewHolder holder, final int position) {
             holder.galleryImage.setImageResource(galleryImages.get(position).getImageId());
             holder.galleryTitle.setText(galleryImages.get(position).getName(ImageGalleryActivity.this));
             holder.galleryItemLayout.setOnClickListener(v -> showImage(position));
@@ -140,13 +140,13 @@ public class ImageGalleryActivity extends InjectableActivity {
             return galleryImages.size();
         }
 
-        class MyViewHolder extends RecyclerView.ViewHolder {
+        public class ImageViewHolder extends RecyclerView.ViewHolder {
 
             ImageView galleryImage;
             TextView galleryTitle;
             LinearLayout galleryItemLayout;
 
-            MyViewHolder(View v) {
+            ImageViewHolder(View v) {
                 super(v);
                 this.galleryImage = v.findViewById(R.id.image_gallery_image);
                 this.galleryTitle = v.findViewById(R.id.image_gallery_title);

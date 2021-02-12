@@ -7,8 +7,6 @@
     <string name="force_gps_pref">Zawsze używaj odbiornika GPS</string>
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">jeśli jest włączony, nawet gdy dostępna jest lokalizacja sieciowa</string>
     <string name="no_use_gps_pref">Ustaw lokalizację ręcznie</string>
-    <string name="location_placename">Nazwa miejsca</string>
-    <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">np. ulica Orla 171, 30-244 Kraków.</string>
     <string name="location_lat_pref">Szerokość geograficzna</string>
     <string name="location_long_pref">Długość geograficzna</string>
     <string name="degrees">Stopnie</string>
@@ -16,11 +14,7 @@
     <string name="location_offer_to_enable">Automatyczne wyznaczanie lokalizacji jest wyłączone. Czy chcesz je włączyć?</string>
     <string name="location_offer_to_enable_gps_title">Automatyczne wyznaczanie lokalizacji jest wyłączone</string>
     <string name="location_set_auto">Ustawienie lokalizacji z %1$s na %2$s</string>
-    <string name="location_unable_to_geocode">Nie można rozpoznać Twojej lokalizacji – być może Twoja sieć jest niedostępna.</string>
-    <string name="location_not_found_title" translation_description="dialog box title when location not found">Niestety</string>
-    <string name="location_not_found" translation_description="dialog message when placename not found">Nie znaleziono: %s.</string>
     <string name="location_long_lat">Długość geograficzna:%1$f, szerokość geograficzna:%2$f</string>
-    <string name="location_place_found">Znaleziono miejsce. Ustawianie szerokości %1$f i długości %2$f geograficznych</string>
     <string name="use_magnetic_correction">Użyj poprawki magnetycznej</string>
     <string name="stars">Gwiazdy</string>
     <string name="constellations">Gwiazdozbiory</string>
@@ -43,7 +37,6 @@
     <string name="no_search_results_text">Nie znaleziono żadnych wyników.</string>
     <string name="many_search_results_title">Czy chodziło Ci o?</string>
     <string name="menu_time">Podróż w czasie</string>
-    <string name="time_travel_start_message_alt">Podróż w czasie do %s…</string>
     <string name="time_travel_close_message">Powrót do teraźniejszości…</string>
     <string name="popular_dates_prompt" translation_description="label for a list of dates the user can choose from">Popularne daty</string>
     <string name="custom_date_prompt" translation_description="label telling the user to manually specify a data">Lub wybierz żądaną datę</string>
@@ -66,8 +59,6 @@
     <string name="time_travel_day_speed_back" translation_description="label showing rate of travel through time">Podróż &lt; 1 dzień/s</string>
     <string name="time_travel_week_speed_back" translation_description="label showing rate of travel through time">Podróż &lt; 1 tydzień/s</string>
     <string name="gallery_image_search_btn">Znajdź na niebie</string>
-    <string name="gallery_image_back_btn">Powrót do galerii</string>
-    <string name="hubble_image_gallery_title">Galeria teleskopu Hubble’a w programie Sky Map</string>
     <string name="search_overlay_title" translation_description="title for search overlay">Skieruj telefon zgodnie ze wskazaniem strzałki</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">Wyszukiwanie:</string>
     <string name="sun_wont_set_message">W Twojej bieżącej lokalizacji Słońce nie zajdzie w ciągu następnych 24 godzin.</string>

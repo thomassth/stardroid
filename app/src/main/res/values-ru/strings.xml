@@ -7,8 +7,6 @@
     <string name="force_gps_pref">Всегда исп. GPS</string>
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">если вкл., даже при сетевом опр. м/п</string>
     <string name="no_use_gps_pref">Задать м/п вручную</string>
-    <string name="location_placename">Название места</string>
-    <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">например РФ, Санкт-Петербург, пл. Островского, д. 1/3</string>
     <string name="location_lat_pref">Широта</string>
     <string name="location_long_pref">Долгота</string>
     <string name="degrees">Градусы</string>
@@ -16,11 +14,7 @@
     <string name="location_offer_to_enable">Автоопределение местоположения откл. Включить?</string>
     <string name="location_offer_to_enable_gps_title">Автоопред. м/п откл.</string>
     <string name="location_set_auto">М/п изменено с %1$s на %2$s</string>
-    <string name="location_unable_to_geocode">Невозможно определить местоположение – возможно, недоступна сеть.</string>
-    <string name="location_not_found_title" translation_description="dialog box title when location not found">Извините</string>
-    <string name="location_not_found" translation_description="dialog message when placename not found">Не найдено: %s.</string>
     <string name="location_long_lat">Долгота:%1$f, широта:%2$f</string>
-    <string name="location_place_found">Место найдено. Уст. широта %1$f и долгота %2$f</string>
     <string name="use_magnetic_correction">Исп. поправку на магн. склон.</string>
     <string name="stars">Звезды</string>
     <string name="constellations">Созвездия</string>
@@ -43,7 +37,6 @@
     <string name="no_search_results_text">Ничего не найдено.</string>
     <string name="many_search_results_title">Возможно, вы имели в виду:</string>
     <string name="menu_time">Путешествие во времени</string>
-    <string name="time_travel_start_message_alt">Путешествие во времени к объекту %s…</string>
     <string name="time_travel_close_message">Назад в настоящее…</string>
     <string name="popular_dates_prompt" translation_description="label for a list of dates the user can choose from">Популярные даты</string>
     <string name="custom_date_prompt" translation_description="label telling the user to manually specify a data">Или выберите другую дату</string>
@@ -66,8 +59,6 @@
     <string name="time_travel_day_speed_back" translation_description="label showing rate of travel through time">Путешествие со скоростью &lt; @ 1 дн/с</string>
     <string name="time_travel_week_speed_back" translation_description="label showing rate of travel through time">Путешествие со скоростью &lt; @ 1 нед/с</string>
     <string name="gallery_image_search_btn">Найти в небе</string>
-    <string name="gallery_image_back_btn">Назад в галерею</string>
-    <string name="hubble_image_gallery_title">Галерея Хаббл для Карты звездного неба</string>
     <string name="search_overlay_title" translation_description="title for search overlay">Поверните телефон в направлении стрелки</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">Поиск:</string>
     <string name="sun_wont_set_message">В течение ближайших 24 часов захода Солнца в вашем местоположении не будет.</string>
@@ -367,8 +358,6 @@
     </string>
     <string name="do_not_show_again">Не показывать это сообщение снова</string>
     <string name="title_activity_diagnostic">Диагностика</string>
-    <string name="location_rationale_title">Почему мы спрашиваем ваше местоположение?</string>
-    <string name="location_rationale_text">Звезды, которые вы видите, зависят от того, где вы находитесь на планете Земля. Без вашего местоположения мы не сможем показать вам точную карту. Если вы не хотите, чтобы ваш телефон сообщал нам ваше местоположение, вы можете указать его вручную в настройках. Вам нужно только предоставить ближайший город.</string>
     <string name="sensor_absent">Отсутствует</string>
     <string name="sensor_accuracy_unknown">Точность: неизвестна</string>
     <string name="sensor_accuracy_unreliable">Точность: Ненадежна</string>
@@ -404,7 +393,6 @@
     <string name="disconnected">Не соединено</string>
     <string name="cell_network">" (мобильный)"</string>
     <string name="menu_calibrate">Калибровка</string>
-    <string name="compass_calibration_activity_heading_compass">Компас -</string>
     <string name="compass_calibration_activity_do_not_show_this_again">Не показывать это снова</string>
     <string name="compass_calibration_activity_warning">Ваш компас должен быть откалиброван</string>
     <string name="sensor_reverse_preference_title">Обратный магнитный Z</string>

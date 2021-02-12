@@ -9,8 +9,6 @@
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">si está activado, incluso si la ubicación de red está disponible</string>
     <string name="no_use_gps_pref">Definir ubicación manual</string>
     <string name="no_use_gps_pref_hint">Ingresa el lugar o la lat/long abajo</string>
-    <string name="location_placename">Nombre del lugar</string>
-    <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">p.ej. 1400 West Mars Hill Road, Flagstaff, AZ.</string>
     <string name="location_lat_pref">Latitud</string>
     <string name="location_long_pref">Longitud</string>
     <string name="degrees" translation_description="angular degrees">Grados</string>
@@ -18,11 +16,7 @@
     <string name="location_offer_to_enable">Ubicación automática desactivada. ¿Te gustaría habilitarla?</string>
     <string name="location_offer_to_enable_gps_title">Ubicación automática desactivada</string>
     <string name="location_set_auto">Ubicación definida de %1$s a %2$s</string>
-    <string name="location_unable_to_geocode">No se puede decodificar tu ubicación, ¿quizás tu red no está disponible?</string>
-    <string name="location_not_found_title" translation_description="dialog box title when location not found">Lo sentimos</string>
-    <string name="location_not_found" translation_description="dialog message when placename not found">%s no fue encontrado.</string>
     <string name="location_long_lat">Longitude:%1$f, Latitude:%2$f</string>
-    <string name="location_place_found">Lugar encontrado. Ajustando latitud %1$f y longitud %2$f</string>
     <string name="use_magnetic_correction">Usar corrección magnética</string>
     <!-- This string is too long and currently unused -->
     <string name="stars">Estrellas</string>
@@ -48,7 +42,6 @@
     <string name="no_search_results_text">Sin resultados.</string>
     <string name="many_search_results_title">¿Quisiste decir…?</string>
     <string name="menu_time">Viaje en el tiempo</string>
-    <string name="time_travel_start_message_alt">Viajando en el tiempo a %s…</string>
     <string name="time_travel_close_message">Volver al presente…</string>
     <!--  -->
     <string name="popular_dates_prompt" translation_description="Label for a list of dates the user can choose from">Fechas populares</string>
@@ -75,8 +68,6 @@
     <string name="time_travel_week_speed_back" translation_description="Label showing rate of travel through time">Viajando a &lt; @ 1 semana/seg</string>
 
     <string name="gallery_image_search_btn">Buscar en el cielo</string>
-    <string name="gallery_image_back_btn">Volver a la galería</string>
-    <string name="hubble_image_gallery_title">Galería de Sky Map</string>
     <string name="search_overlay_title" translation_description="title for search overlay">Apunta tu teléfono hacia la flecha</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">Buscando:</string>
     <string name="sun_wont_set_message">El sol no se pondrá durante las próximas 24 horas en tu ubicación actual.</string>
@@ -377,8 +368,6 @@
     </string>
     <string name="do_not_show_again">No mostrar este mensaje otra vez</string>
     <string name="title_activity_diagnostic">Diagnósticos</string>
-    <string name="location_rationale_title">¿Por qué pedimos tu ubicación?</string>
-    <string name="location_rationale_text">Las estrellas que puedes ver dependen del lugar en el que te encuentres. Sin tu ubicación, no podemos mostrarte un mapa preciso. Si no deseas que tu teléfono nos dé la ubicación, puedes proporcionarla manualmente en los ajustes. Solo necesitas proporcionar la ciudad más cercana.</string>
     <string name="sensor_absent">Ausente</string>
     <string name="sensor_accuracy_unknown">Exactitud: Desconocida</string>
     <string name="sensor_accuracy_unreliable">Exactitud: No confiable</string>
@@ -414,7 +403,6 @@
     <string name="disconnected">Desconectado</string>
     <string name="cell_network">" (móvil)"</string>
     <string name="menu_calibrate">Calibrar</string>
-    <string name="compass_calibration_activity_heading_compass">Brújula -</string>
     <string name="compass_calibration_activity_do_not_show_this_again">No mostrar esto otra vez</string>
     <string name="compass_calibration_activity_warning">Tu brújula debe ser calibrada</string>
     <string name="sensor_reverse_preference_title">Z magnético inverso</string>

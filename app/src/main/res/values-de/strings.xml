@@ -7,8 +7,6 @@
     <string name="force_gps_pref">Immer GPS verwenden</string>
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">Auch wenn Netzwerkstandort verfügbar</string>
     <string name="no_use_gps_pref">Ort manuell festlegen</string>
-    <string name="location_placename">Ortsname</string>
-    <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">z. B. 1400 West Mars Hill Road, Flagstaff, AZ.</string>
     <string name="location_lat_pref">Geogr. Breite</string>
     <string name="location_long_pref">Geogr. Länge</string>
     <string name="degrees">Grad</string>
@@ -16,11 +14,7 @@
     <string name="location_offer_to_enable">Der autom. Standort ist deaktiviert. Aktivieren?</string>
     <string name="location_offer_to_enable_gps_title">Autom. Standort deaktiviert</string>
     <string name="location_set_auto">Ort von %1$s auf %2$s festgelegt</string>
-    <string name="location_unable_to_geocode">Ihr Standort konnte nicht ermittelt werden. Sind Sie mit einem Mobilfunknetz verbunden?</string>
-    <string name="location_not_found_title" translation_description="dialog box title when location not found">Sorry</string>
-    <string name="location_not_found" translation_description="dialog message when placename not found">%s nicht gefunden</string>
     <string name="location_long_lat">Längengrad:%1$f, Breitengrad:%2$f</string>
-    <string name="location_place_found">Ort gefunden. Breitengrad %1$f und Längengrad %2$f</string>
     <string name="use_magnetic_correction">Magnetische Korrektur verwenden</string>
     <string name="stars">Sterne</string>
     <string name="constellations">Konstellationen</string>
@@ -43,7 +37,6 @@
     <string name="no_search_results_text">Keine Ergebnisse gefunden</string>
     <string name="many_search_results_title">Meinten Sie?</string>
     <string name="menu_time">Zeitreise</string>
-    <string name="time_travel_start_message_alt">Zeitreise nach %s…</string>
     <string name="time_travel_close_message">Zurück in die Gegenwart…</string>
     <string name="popular_dates_prompt" translation_description="label for a list of dates the user can choose from">Beliebte Tage</string>
     <string name="custom_date_prompt" translation_description="label telling the user to manually specify a data">Oder eigenes Datum auswählen</string>
@@ -66,8 +59,6 @@
     <string name="time_travel_day_speed_back" translation_description="label showing rate of travel through time">Reise mit &lt; 1 Tag/Sek.</string>
     <string name="time_travel_week_speed_back" translation_description="label showing rate of travel through time">Reise mit &lt; 1 Woche/Sek.</string>
     <string name="gallery_image_search_btn">Suchen</string>
-    <string name="gallery_image_back_btn">Zurück zur Galerie</string>
-    <string name="hubble_image_gallery_title">Hubble-Galerie</string>
     <string name="search_overlay_title" translation_description="title for search overlay">Bewegen Sie Ihr Telefon in Richtung des Pfeils.</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">Suche nach:</string>
     <string name="sun_wont_set_message">Die Sonne geht in den nächsten 24 Stunden nicht an Ihrem aktuellen Standort unter.</string>
@@ -356,8 +347,6 @@
     <string name="disconnected">Getrennt</string>
     <string name="do_not_show_again">Diese Meldung nicht mehr anzeigen</string>
     <string name="enabled">Aktiviert</string>
-    <string name="location_rationale_title">Worum benötigen wir Ihren Standort?</string>
-    <string name="location_rationale_text">Die Sterne, die Sie am Himmel sehen können, hängen von Ihrer Position auf der Erde ab. Ohne Ihren Standort können wir Ihnen keine akkurate Sternenkarte darstellen. Wenn Sie der automatischen Standortbestimmung durch Ihr Gerät nicht zustimmen, können Sie in den Einstellungen manuell einen Standort festlegen. Es reicht dabei aus, die nächste Stadt anzugeben.</string>
     <string name="menu_calibrate">Kalibrieren</string>
     <string name="menu_diagnostics">Diagnose</string>
     <string name="permission_disabled">Berechtigung deaktiviert</string>
@@ -368,7 +357,6 @@
     <string name="sensor_accuracy_nocontact">Genauigkeit: Kein Kontakt</string>
     <string name="sensor_accuracy_unknown">Genauigkeit: Unbekannt</string>
     <string name="sensor_accuracy_unreliable">Genauigkeit: Nicht abrufbar</string>
-    <string name="compass_calibration_activity_heading_compass">Kompass -</string>
     <string name="no_gps">Kein GPS</string>
     <string name="sensor_reverse_preference_summary">Lösung für Geräte mit falsch implementierten Sensoren - Benötigt Neustart der App</string>
     <string name="sensor_reverse_preference_title">Magnetische Z-Achse invertieren</string>

@@ -7,8 +7,6 @@
     <string name="force_gps_pref">常にGPSを使用</string>
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">ネットワーク位置情報の設定よりも優先</string>
     <string name="no_use_gps_pref">手動で位置を設定</string>
-    <string name="location_placename">地名</string>
-    <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">例: 1400 ウェスト・マーズ・ヒル・ロード, フラッグスタッフ, AZ</string>
     <string name="location_lat_pref">緯度</string>
     <string name="location_long_pref">経度</string>
     <string name="degrees">度数</string>
@@ -16,11 +14,7 @@
     <string name="location_offer_to_enable">自動位置機能が無効です。有効にしますか？</string>
     <string name="location_offer_to_enable_gps_title">自動位置機能が無効です</string>
     <string name="location_set_auto">位置を%1$sから%2$sに設定</string>
-    <string name="location_unable_to_geocode">現在地がわかりません。ネットワークが利用できない可能性があります。</string>
-    <string name="location_not_found_title" translation_description="dialog box title when location not found">検索結果</string>
-    <string name="location_not_found" translation_description="dialog message when placename not found">%sが見つかりません</string>
     <string name="location_long_lat">経度: %1$f、緯度: %2$f</string>
-    <string name="location_place_found">場所が見つかりました。緯度: %1$f、経度: %2$f</string>
     <string name="use_magnetic_correction">磁気補正機能を使用</string>
     <string name="stars">恒星</string>
     <string name="constellations">星座</string>
@@ -43,7 +37,6 @@
     <string name="no_search_results_text">検索結果は0件です。</string>
     <string name="many_search_results_title">もしかして</string>
     <string name="menu_time">タイムトラベル</string>
-    <string name="time_travel_start_message_alt">%sにタイムトラベル中…</string>
     <string name="time_travel_close_message">現在へ…</string>
     <string name="popular_dates_prompt" translation_description="label for a list of dates the user can choose from">人気の日付</string>
     <string name="custom_date_prompt" translation_description="label telling the user to manually specify a data">または表示する日付を手動で選択</string>
@@ -66,8 +59,6 @@
     <string name="time_travel_day_speed_back" translation_description="label showing rate of travel through time">1日/秒で時間逆行中</string>
     <string name="time_travel_week_speed_back" translation_description="label showing rate of travel through time">1週/秒で時間逆行中</string>
     <string name="gallery_image_search_btn">Skyで検索</string>
-    <string name="gallery_image_back_btn">ギャラリーに戻る</string>
-    <string name="hubble_image_gallery_title">Skyマップのハッブルギャラリー</string>
     <string name="search_overlay_title" translation_description="title for search overlay">携帯を矢印の方に向けます</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">探しています:</string>
     <string name="sun_wont_set_message">この場所では今後24時間以内に太陽が沈むことはありません。</string>

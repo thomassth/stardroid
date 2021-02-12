@@ -8,8 +8,6 @@
     <string name="force_gps_pref">همیشه از سنسور مکان استفاده کن</string>
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">حتی اگر شبکه در دسترس باشد</string>
     <string name="no_use_gps_pref">تنظیم دستی مکان</string>
-    <string name="location_placename">نام مکان</string>
-    <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">مثلا: تهران</string>
     <string name="location_lat_pref">عرض جغرافیایی</string>
     <string name="location_long_pref">طول جغرافیایی</string>
     <string name="degrees" translation_description="angular degrees">درجه</string>
@@ -17,11 +15,7 @@
     <string name="location_offer_to_enable">تشخیص خودکار مکان غیرفعال شده. می‌خواهید فعالش کنید؟</string>
     <string name="location_offer_to_enable_gps_title">تشخیص خودکار مکان، غیرفعال شده است</string>
     <string name="location_set_auto">مکان از %1$s به %2$s تنظیم شد</string>
-    <string name="location_unable_to_geocode">مکان تشخیص داده نشد. شاید شبکه شما در دسترس نباشد؟</string>
-    <string name="location_not_found_title" translation_description="dialog box title when location not found">نامشخص</string>
-    <string name="location_not_found" translation_description="dialog message when placename not found">%s یافت نشد.</string>
     <string name="location_long_lat">طول جغرافیایی:%1$f, عرض جغرافیایی:%2$f</string>
-    <string name="location_place_found">مکان پیدا شد. عرض جغرافیایی %1$f و طول جغرافیایی %2$f</string>
     <string name="use_magnetic_correction">اصلاح با جهت‌نمای مغناطیسی</string>
     <!-- This string is too long and currently unused -->
     <string name="stars">ستاره‌ها</string>
@@ -47,7 +41,6 @@
     <string name="no_search_results_text">نتیجه‌ای یافت نشد.</string>
     <string name="many_search_results_title">آیا منظورتان این است؟</string>
     <string name="menu_time">سفر زمانی</string>
-    <string name="time_travel_start_message_alt">سفر در زمان تا %s …</string>
     <string name="time_travel_close_message">بازگشت به زمان حال…</string>
     <!--  -->
     <string name="popular_dates_prompt" translation_description="Label for a list of dates the user can choose from">تاریخ‌های مشهور</string>
@@ -73,8 +66,6 @@
     <string name="time_travel_day_speed_back" translation_description="Label showing rate of travel through time">سفر با سرعت &lt; @ 1 day/sec</string>
     <string name="time_travel_week_speed_back" translation_description="Label showing rate of travel through time">سفر با سرعت &lt; @ 1 week/sec</string>
     <string name="gallery_image_search_btn">جستجو در آسمان</string>
-    <string name="gallery_image_back_btn">بازگشت به آلبوم</string>
-    <string name="hubble_image_gallery_title">آلبوم برنامه</string>
     <string name="search_overlay_title" translation_description="title for search overlay">تلفن خود را به سمت فلش قرار دهید</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">جستجو برای:</string>
     <string name="sun_wont_set_message">در مکان انتخابی شما، خورشید تا ۲۴ ساعت آینده غروب نمی‌کند.</string>
@@ -368,8 +359,6 @@
     </string>
     <string name="do_not_show_again">دیگر این پیام را نمایش نده</string>
     <string name="title_activity_diagnostic">عیب یابی</string>
-    <string name="location_rationale_title">چرا مکان شما مهم است؟</string>
-    <string name="location_rationale_text">نمای ستاره‌هایی که می‌توانید ببینید، به مکان شما بستگی دارد. بدون موقعیت مکانی شما نمی‌توانیم نقشه دقیقی به شما نشان دهیم. اگر نمی‌خواهید تلفن شما موقعیت مکانی خود را به ما بدهد، می‌توانید آن را به صورت دستی در تنظیمات وارد کنید؛ شما کافی است نزدیک‌ترین شهر را درج کنید.</string>
     <string name="sensor_absent">غایب</string>
     <string name="sensor_accuracy_unknown">دقت: نامعلوم</string>
     <string name="sensor_accuracy_unreliable">دقت: غیرقابل اعتماد</string>
@@ -405,7 +394,6 @@
     <string name="disconnected">قطع</string>
     <string name="cell_network">" (دیتا)"</string>
     <string name="menu_calibrate">کالیبره</string>
-    <string name="compass_calibration_activity_heading_compass">قطب‌نما -</string>
     <string name="compass_calibration_activity_do_not_show_this_again">دوباره این را نمایش نده</string>
     <string name="compass_calibration_activity_warning">گوشی شما نیاز به کالیبره‌شدن دارد</string>
     <string name="sensor_reverse_preference_title">معکوس کردن حسگر مغناطیسی</string>

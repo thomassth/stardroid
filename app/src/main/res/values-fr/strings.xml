@@ -7,8 +7,6 @@
     <string name="force_gps_pref">Utiliser le GPS</string>
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">Même si la géolocalisation est activée.</string>
     <string name="no_use_gps_pref">Position manuelle</string>
-    <string name="location_placename">Nom de lieu</string>
-    <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">Exemple : 11 rue de l\'Université, Strasbourg</string>
     <string name="location_lat_pref">Latitude</string>
     <string name="location_long_pref">Longitude</string>
     <string name="degrees">Degrés</string>
@@ -16,11 +14,7 @@
     <string name="location_offer_to_enable">Position auto désactivée. Voulez-vous l\'activer ?</string>
     <string name="location_offer_to_enable_gps_title">Position auto désactivée</string>
     <string name="location_set_auto">Position %1$s remplacée par %2$s</string>
-    <string name="location_unable_to_geocode">Impossible de déterminer votre position. Votre réseau est-il accessible ?</string>
-    <string name="location_not_found_title" translation_description="dialog box title when location not found">Désolé</string>
-    <string name="location_not_found" translation_description="dialog message when placename not found">%s introuvable</string>
     <string name="location_long_lat">Longitude : %1$f, latitude : %2$f</string>
-    <string name="location_place_found">Lieu trouvé. Définir latitude %1$f et longitude %2$f</string>
     <string name="use_magnetic_correction">Correction magnétique</string>
     <string name="stars">Étoiles</string>
     <string name="constellations">Constellations</string>
@@ -42,7 +36,6 @@
     <string name="no_search_results_text">Aucun résultat trouvé</string>
     <string name="many_search_results_title">Essayez avec :</string>
     <string name="menu_time">Voyage dans le temps</string>
-    <string name="time_travel_start_message_alt">Voyage dans le temps vers %s…</string>
     <string name="time_travel_close_message">Retour dans le présent…</string>
     <string name="popular_dates_prompt" translation_description="label for a list of dates the user can choose from">Dates populaires</string>
     <string name="custom_date_prompt" translation_description="label telling the user to manually specify a data">Vous pouvez également sélectionner la date vous-même.</string>
@@ -65,8 +58,6 @@
     <string name="time_travel_day_speed_back" translation_description="label showing rate of travel through time">Voyage dans le passé (vitesse : 1 jour/s)</string>
     <string name="time_travel_week_speed_back" translation_description="label showing rate of travel through time">Voyage dans le passé (vitesse : 1 semaine/s)</string>
     <string name="gallery_image_search_btn">Rechercher dans Sky Map</string>
-    <string name="gallery_image_back_btn">Retour à la galerie</string>
-    <string name="hubble_image_gallery_title">Galerie Hubble</string>
     <string name="search_overlay_title" translation_description="title for search overlay">Dirigez votre téléphone vers la flèche</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">Vous recherchez :</string>
     <string name="sun_wont_set_message">À votre position actuelle, le soleil ne se couchera pas au cours des prochaines 24 heures.</string>
@@ -340,13 +331,10 @@
     <string name="host_add">Ajouter un serveur</string>
     <string name="host_prompt_text">Adresse IP de l\'hôte :</string>
     <string name="connecting">Connexion…</string>
-    <string name="menu_motion">Contrôle du mouvement</string>
-    <string name="menu_control_panel">Autres</string>
     <string name="mount_goto">Search</string>
     <string name="unavailable">Non disponble</string>
     <string name="send_request">Envoyer</string>
     <string name="back_request">Retour</string>
-    <string name="BLOB_not_supported">Non supporté</string>
     <string name="try_to_connect">Tentative de connexion à\u0020</string>
     <string name="connection_lost">Connexion perdue</string>
     <string name="connected">Connecté</string>
@@ -395,7 +383,6 @@
     <string name="slew_ok" >Pointage en cours</string>
     <string name="arcmin">arcmin</string>
     <string name="menu_connection">Connecter</string>
-    <string name="empty_catalog">Catalogue vide</string>
     <string name="error">Erreur:</string>
     <string name="hdf">Le champ profond de Hubble</string>
 </resources>

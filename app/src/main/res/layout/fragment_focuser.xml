@@ -16,7 +16,8 @@
         android:background="@color/colorPrimary"
         android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.MaterialComponents.Dark"
-        app:title="@string/focuser_control" />
+        app:title="@string/focuser_control"
+        tools:ignore="InconsistentLayout" />
 
     <RelativeLayout
         android:layout_width="match_parent"

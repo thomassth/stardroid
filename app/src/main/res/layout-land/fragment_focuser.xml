@@ -143,7 +143,8 @@
             android:gravity="center"
             android:paddingBottom="4dp"
             android:text="@string/focuser_control"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            tools:ignore="InconsistentLayout" />
 
         <LinearLayout
             android:layout_width="match_parent"

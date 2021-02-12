@@ -15,7 +15,8 @@
         android:background="@color/colorPrimary"
         android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.MaterialComponents.Dark"
-        app:title="@string/mount_control" />
+        app:title="@string/mount_control"
+        tools:ignore="InconsistentLayout" />
 
     <TableLayout
         android:layout_width="match_parent"

@@ -8,8 +8,6 @@
     <string name="force_gps_pref">Bruk alltid GPS</string>
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">hvis aktivert, selv om nettverksposisjonering er tilgjengelig</string>
     <string name="no_use_gps_pref">Still inn sted manuelt</string>
-    <string name="location_placename">Stedsnavn</string>
-    <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">f.eks. 1400 West Mars Hill Road, Flagstaff, AZ.</string>
     <string name="location_lat_pref">Breddegrad</string>
     <string name="location_long_pref">Lengdegrad</string>
     <string name="degrees" translation_description="angular degrees">Grader</string>
@@ -17,11 +15,7 @@
     <string name="location_offer_to_enable">Auto-posisjonering er deaktivert.  Aktivere?</string>
     <string name="location_offer_to_enable_gps_title">Auto-posisjonering deaktivert</string>
     <string name="location_set_auto">Sted bestemt fra %1$s til %2$s</string>
-    <string name="location_unable_to_geocode">Kan ikke bestemme posisjonen din - kanskje er ikke nettverket ditt tilgjengelig?</string>
-    <string name="location_not_found_title" translation_description="dialog box title when location not found">Beklager</string>
-    <string name="location_not_found" translation_description="dialog message when placename not found">%s ikke funnet.</string>
     <string name="location_long_lat">Lengdegrad:%1$f, breddegrad:%2$f</string>
-    <string name="location_place_found">Sted funnet. Breddegrad %1$f og lengdegrad %2$f</string>
     <string name="use_magnetic_correction">Bruk magnetisk korrigering</string>
     <!-- This string is too long and currently unused -->
     <string name="stars">Stjerner</string>
@@ -47,7 +41,6 @@
     <string name="no_search_results_text">Ingen resultater funnet.</string>
     <string name="many_search_results_title">Mente du?</string>
     <string name="menu_time">Tidsreise</string>
-    <string name="time_travel_start_message_alt">Reiser gjennom tid til %s…</string>
     <string name="time_travel_close_message">Tilbake til nåtiden…</string>
     <!--  -->
     <string name="popular_dates_prompt" translation_description="Label for a list of dates the user can choose from">Populære datoer</string>
@@ -73,8 +66,6 @@
     <string name="time_travel_day_speed_back" translation_description="Label showing rate of travel through time">Reiser &lt; @ 1 døgn/sek</string>
     <string name="time_travel_week_speed_back" translation_description="Label showing rate of travel through time">Reiser &lt; @ 1 uke/sek</string>
     <string name="gallery_image_search_btn">Finn på himmelen</string>
-    <string name="gallery_image_back_btn">Tilbake til galleri</string>
-    <string name="hubble_image_gallery_title">Sky Map Galleri</string>
     <string name="search_overlay_title" translation_description="title for search overlay">Beveg telefonen din i pilretning</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">Ser etter:</string>
     <string name="sun_wont_set_message">Solen går ikke ned i løpet av de neste 24 timene på ditt nåværende sted.</string>
@@ -373,8 +364,6 @@
     </string>
     <string name="do_not_show_again">Ikke vis denne meldingen igjen</string>
     <string name="title_activity_diagnostic">Diagnostikk</string>
-    <string name="location_rationale_title">Why do we ask for your location?</string>
-    <string name="location_rationale_text">The stars you can see depend on where on planet earth you are.  Without your location we cannot show you an accurate map.  If you do not want your phone to give us your location you can provide it manually in the settings.  You need only provide the nearest city.</string>
     <string name="sensor_absent">Fraværende</string>
     <string name="sensor_accuracy_unknown">Nøyaktighet: Ukjent</string>
     <string name="sensor_accuracy_unreliable">Nøyaktighet: Upålitelig</string>
@@ -410,7 +399,6 @@
     <string name="disconnected">Frakoblet</string>
     <string name="cell_network">" (mobilnett)"</string>
     <string name="menu_calibrate">Kalibrer</string>
-    <string name="compass_calibration_activity_heading_compass">Kompass -</string>
     <string name="compass_calibration_activity_do_not_show_this_again">Ikke vis dette igjen</string>
     <string name="compass_calibration_activity_warning">Kompasset ditt må kalibreres</string>
     <string name="sensor_reverse_preference_title">Reverser Magnetisk Z</string>

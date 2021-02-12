@@ -8,8 +8,6 @@
     <string name="force_gps_pref">Πάντα χρήση GPS</string>
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">, ακόμη και αν η τοποθεσία δικτύου είναι διαθέσιμη</string>
     <string name="no_use_gps_pref">Ορισμός τοποθεσίας</string>
-    <string name="location_placename">Όνομα τοποθεσίας</string>
-    <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">π.χ. Σταμάτη Κριμιζή 42, 82100, Χίος.</string>
     <string name="location_lat_pref">Γεωγραφικό πλάτος</string>
     <string name="location_long_pref">Γεωγραφικό μήκος</string>
     <string name="degrees" translation_description="angular degrees">Μοίρες</string>
@@ -17,11 +15,7 @@
     <string name="location_offer_to_enable">Η αυτόματη τοποθεσία είναι απενεργοποιημένη. Θέλετε να την ενεργοποιήσετε;</string>
     <string name="location_offer_to_enable_gps_title">Αυτόματη τοποθεσία απενεργοποιημένη</string>
     <string name="location_set_auto">Η τοποθεσία ορίστηκε από %1$s σε %2$s</string>
-    <string name="location_unable_to_geocode">Αδυναμία εντοπισμού της τοποθεσίας σας - ίσως το δίκτυό σας δεν είναι διαθέσιμο;</string>
-    <string name="location_not_found_title" translation_description="dialog box title when location not found">Συγγνώμη</string>
-    <string name="location_not_found" translation_description="dialog message when placename not found">Το %s δε βρέθηκε.</string>
     <string name="location_long_lat">Γεωγ. μήκος:%1$f, Γεωγ. πλάτος:%2$f</string>
-    <string name="location_place_found">Η τοποθεσία βρέθηκε.  Ορίστηκε γεωγ. πλάτος %1$f και γεωγ. μήκος %2$f</string>
     <string name="use_magnetic_correction">Χρήση μαγνητικής διόρθωσης</string>
     <!-- This string is too long and currently unused -->
     <string name="stars">Αστέρια</string>
@@ -47,7 +41,6 @@
     <string name="no_search_results_text">Δεν βρέθηκαν αποτελέσματα.</string>
     <string name="many_search_results_title">Μήπως εννοούσατε;</string>
     <string name="menu_time">Ταξίδι στο χρόνο</string>
-    <string name="time_travel_start_message_alt">Ταξίδι στο χρόνο σε %s …</string>
     <string name="time_travel_close_message">Πίσω στο παρόν …</string>
     <!--  -->
     <string name="popular_dates_prompt" translation_description="Label for a list of dates the user can choose from">Συχνές ημερομηνίες</string>
@@ -74,8 +67,6 @@
     <string name="time_travel_week_speed_back" translation_description="Label showing rate of travel through time">Ταξίδι &lt; @ 1 εβδομάδα/δευτ</string>
 
     <string name="gallery_image_search_btn">Εντοπισμός στον ουρανό</string>
-    <string name="gallery_image_back_btn">Πίσω</string>
-    <string name="hubble_image_gallery_title">Συλλογή του Sky Map</string>
 
     <string name="search_overlay_title" translation_description="title for search overlay">Μετακινήστε τη συσκευή σας προς το βέλος</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">Αναζήτηση για:</string>
@@ -375,8 +366,6 @@
     </string>
     <string name="do_not_show_again">Να μην εμφανιστεί ξανά αυτό το μήνυμα</string>
     <string name="title_activity_diagnostic">Diagnostics</string>
-    <string name="location_rationale_title">Γιατί ζητάμε την τοποθεσία σας;</string>
-    <string name="location_rationale_text">Το ποιά αστέρια μπορείτε να δείτε εξαρτάται από το σημείο της Γης στο οποίο βρίσκεστε. Χωρίς την τοποθεσία σας δεν μπορούμε να σας εμφανίσουμε ακριβή χάρτη. Εάν δεν επιθυμείτε να μας αποστέλλει η συσκευή σας την τοποθεσία σας, μπορείτε να το ορίσετε στις ρυθμίσεις.  Το μόνο που χρειάζεται είναι να ορίσετε την κοντινότερή σας πόλη.</string>
     <string name="sensor_absent">Absent</string>
     <string name="sensor_accuracy_unknown">Accuracy: Unknown</string>
     <string name="sensor_accuracy_unreliable">Accuracy: Unreliable</string>
@@ -411,7 +400,6 @@
     <string name="disconnected">Disconnected</string>
     <string name="cell_network">" (cell)"</string>
     <string name="menu_calibrate">Βαθμονόμηση</string>
-    <string name="compass_calibration_activity_heading_compass">Πυξίδα -</string>
     <string name="compass_calibration_activity_do_not_show_this_again">Να μην εμφανιστεί ξανά</string>
     <string name="compass_calibration_activity_warning">Η πυξίδα σας χρειάζεται βαθμονόμηση</string>
     <string name="sensor_reverse_preference_title">Αντιστροφή του μαγνητικού Ζ</string>

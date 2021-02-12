@@ -8,8 +8,6 @@
     <string name="force_gps_pref">Defnyddio GPS o hyd</string>
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">os alluogir, hyd yn oed pan mae lleoliad rhwydwaith ar gael</string>
     <string name="no_use_gps_pref">Gosod lleoliad dy hun</string>
-    <string name="location_placename">Enw lle</string>
-    <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">e.e. 43 Ffordd Glyndŵr, Pen-y-cae, Wrecsam.</string>
     <string name="location_lat_pref">Lledred</string>
     <string name="location_long_pref">Hydred</string>
     <string name="degrees" translation_description="angular degrees">Graddau</string>
@@ -17,11 +15,7 @@
     <string name="location_offer_to_enable">Dyw adnabod lleoliad heb ei alluogi. Wyt ti am ei alluogi?</string>
     <string name="location_offer_to_enable_gps_title">Adnabod lleoliad wedi\'i analluogi</string>
     <string name="location_set_auto">Lleoliad wedi\'i osod o %1$s i %2$s</string>
-    <string name="location_unable_to_geocode">Methu ag adnabod dy leoliad. Efallai nad yw dy rwydwaith ar gael?</string>
-    <string name="location_not_found_title" translation_description="dialog box title when location not found">Ymddiheuriadau</string>
-    <string name="location_not_found" translation_description="dialog message when placename not found">%s heb ei ganfod.</string>
     <string name="location_long_lat">Hydred:%1$f, Ledred:%2$f</string>
-    <string name="location_place_found">Wedi canfod lleoliad. Yn gosod lledred %1$f a hydred %2$f</string>
     <string name="use_magnetic_correction">Defnyddio cywiriad magnetig</string>
     <!-- This string is too long and currently unused -->
     <string name="stars">Sêr</string>
@@ -47,7 +41,6 @@
     <string name="no_search_results_text">Ni chanfuwyd unrhyw ganlyniadau.</string>
     <string name="many_search_results_title">A oeddet yn meddwl?</string>
     <string name="menu_time">Teithio mewn Amser</string>
-    <string name="time_travel_start_message_alt">Yn teithio trwy amser i %s …</string>
     <string name="time_travel_close_message">Nôl i\'r presennol …</string>
     <!--  -->
     <string name="popular_dates_prompt" translation_description="Label for a list of dates the user can choose from">Dyddiadau poblogaidd</string>
@@ -74,8 +67,6 @@
     <string name="time_travel_week_speed_back" translation_description="Label showing rate of travel through time">Yn teithio &lt; 1 wythnos/eil</string>
 
     <string name="gallery_image_search_btn">Canfod yn yr awyr</string>
-    <string name="gallery_image_back_btn">Nôl i\'r oriel</string>
-    <string name="hubble_image_gallery_title">Oriel Sky Map</string>
     <string name="search_overlay_title" translation_description="title for search overlay">Pwyntia dy ddyfais tua\'r saeth</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">Yn chwilio am:</string>
     <string name="sun_wont_set_message">Dyw\'r haul ddim yn machlud o fewn y 24 awr nesaf yn dy leoliad cyfredol.</string>
@@ -368,8 +359,6 @@
     </string>
     <string name="do_not_show_again">Peidio â dangos y neges hon eto</string>
     <string name="title_activity_diagnostic">Diagnosteg</string>
-    <string name="location_rationale_title">Pam ydym yn gofyn am dy leoliad?</string>
-    <string name="location_rationale_text">Mae pa sêr rwyt yn eu gweld yn dibynnu o ba ran o\'r blaned rwyt yn edrych. Heb wybod dy leoliad, ni allwn ddangos map cywir i ti. Os nad wyt am i dy ddyfais rhannu dy leoliad gyda ni, gellir gosod unrhyw leoliad o dy ddewis yn y gosodiadau.</string>
     <string name="sensor_absent">Absennol</string>
     <string name="sensor_accuracy_unknown">Cywirdeb: Anhysbys</string>
     <string name="sensor_accuracy_unreliable">Cywirdeb: Annibynadwy</string>
@@ -405,7 +394,6 @@
     <string name="disconnected">Heb gysylltu</string>
     <string name="cell_network">" (symudol)"</string>
     <string name="menu_calibrate">Calibro</string>
-    <string name="compass_calibration_activity_heading_compass">Cwmpawd -</string>
     <string name="compass_calibration_activity_do_not_show_this_again">Peidio â dangos hyn eto</string>
     <string name="compass_calibration_activity_warning">Mae angen calibro dy gwmpawd</string>
     <string name="sensor_reverse_preference_title">Gwrthdroi Z Magnetig</string>

@@ -26,7 +26,8 @@
             android:layout_marginBottom="4dp"
             android:gravity="center"
             android:text="@string/mount_control"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            tools:ignore="InconsistentLayout" />
 
         <ToggleButton
             android:id="@+id/mount_parked_toggle"

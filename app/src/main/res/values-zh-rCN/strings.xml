@@ -8,8 +8,6 @@
     <string name="force_gps_pref">一律使用 GPS</string>
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">启用后（即使提供网络位置功能）</string>
     <string name="no_use_gps_pref">手动设置位置</string>
-    <string name="location_placename">地名</string>
-    <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">例如，江苏省南京市北京西路 2 号</string>
     <string name="location_lat_pref">纬度</string>
     <string name="location_long_pref">经度</string>
     <string name="degrees">度数</string>
@@ -17,11 +15,7 @@
     <string name="location_offer_to_enable">已停用自动定位。是否要启用它？</string>
     <string name="location_offer_to_enable_gps_title">已停用自动定位</string>
     <string name="location_set_auto">从“%1$s”到“%2$s”的位置集合</string>
-    <string name="location_unable_to_geocode">系统不能对您的位置进行解码，可能是您的网络无法使用？</string>
-    <string name="location_not_found_title" translation_description="dialog box title when location not found">抱歉</string>
-    <string name="location_not_found" translation_description="dialog message when placename not found">找不到“%s”。</string>
     <string name="location_long_lat">经度：%1$f，纬度：%2$f</string>
-    <string name="location_place_found">地点已找到。正在设置纬度 %1$f 和经度 %2$f</string>
     <string name="use_magnetic_correction">使用磁力修正</string>
     <!-- This string is too long and currently unused -->
     <string name="stars">恒星</string>
@@ -47,7 +41,6 @@
     <string name="no_search_results_text">未找到结果。</string>
     <string name="many_search_results_title">您是不是要找？</string>
     <string name="menu_time">时间旅行</string>
-    <string name="time_travel_start_message_alt">正在进行时光穿梭到达“%s”…</string>
     <string name="time_travel_close_message">回到现在…</string>
     <string name="popular_dates_prompt" translation_description="label for a list of dates the user can choose from">热门日期</string>
     <string name="custom_date_prompt" translation_description="label telling the user to manually specify a data">或选择您自己的日期</string>
@@ -70,8 +63,6 @@
     <string name="time_travel_day_speed_back" translation_description="label showing rate of travel through time">穿梭速率 &lt; 1 天/秒</string>
     <string name="time_travel_week_speed_back" translation_description="label showing rate of travel through time">穿梭速率 &lt; 1 周/秒</string>
     <string name="gallery_image_search_btn">在星空中查找</string>
-    <string name="gallery_image_back_btn">返回图片库</string>
-    <string name="hubble_image_gallery_title">星空地图哈勃图片库</string>
     <string name="search_overlay_title" translation_description="title for search overlay">将手机朝向箭头所指的方向</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">查找内容：</string>
     <string name="sun_wont_set_message">在未来 24 小时内太阳不会在您当前所在的位置落下。</string>
