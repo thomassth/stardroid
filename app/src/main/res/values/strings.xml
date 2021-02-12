@@ -628,7 +628,7 @@
     <string name="save_image">Save image</string>
     <string name="about_aladin_menu">About Aladin</string>
     <string name="aladin_search_fail">The object could not be found!</string>
-    <string name="below_horizon_warning">\n\nWarning! the object may be below the horizon!</string>
+    <string name="below_horizon_warning">\n\nWarning! object below the horizon.</string>
     <string name="refresh">Refresh</string>
     <string name="aladin_j2000_note">\n\nNote: Aladin uses J2000 coordinates. They will be compensated, so the telescope crosshair will be in a slightly different point than you requested. The target will be centered.</string>
     <string name="aladin">Aladin</string>

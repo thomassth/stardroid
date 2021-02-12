@@ -555,7 +555,7 @@
     <string name="save_image">Salva immagina</string>
     <string name="about_aladin_menu">Riguardo Aladin</string>
     <string name="aladin_search_fail">L\'oggetto non è stato trovato!</string>
-    <string name="below_horizon_warning">\n\nAttenzione! L\'oggetto potrebbe trovarsi sotto l\'orizzonte!</string>
+    <string name="below_horizon_warning">\n\nAttenzione! oggetto sotto l\'orizzonte.</string>
     <string name="refresh">Ricarica</string>
     <string name="aladin_j2000_note">\n\nNota: Aladin usa coordinate J2000. Verranno compensate, quindi il segnaposto del telescopio sarà in un punto leggermente diverso da quello richiesto. L\'oggetto sarà centrato</string>
     <string name="aladin">Aladin</string>

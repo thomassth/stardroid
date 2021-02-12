@@ -13,7 +13,7 @@
             android:id="@+id/details_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/activity_vertical_margin" />
+            android:paddingHorizontal="@dimen/dialog_margin" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/details_tabs"
