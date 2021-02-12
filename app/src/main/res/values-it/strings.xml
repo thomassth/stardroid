@@ -7,8 +7,6 @@
     <string name="force_gps_pref">Usa sempre GPS</string>
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">Se abilitato, anche se è disponibile la posizione di rete</string>
     <string name="no_use_gps_pref">Imposta località manual.</string>
-    <string name="location_placename">Nome luogo</string>
-    <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">ad es. 1400 West Mars Hill Road, Flagstaff, AZ.</string>
     <string name="location_lat_pref">Latitudine</string>
     <string name="location_long_pref">Longitudine</string>
     <string name="degrees">Gradi</string>
@@ -16,11 +14,7 @@
     <string name="location_offer_to_enable">Localizzazione automatica disabilitata. Abilitarla?</string>
     <string name="location_offer_to_enable_gps_title">Localizzazione autom. disattivata</string>
     <string name="location_set_auto">Località impostata da %1$s a %2$s</string>
-    <string name="location_unable_to_geocode">Impossibile decodificare la tua località: rete non disponibile?</string>
-    <string name="location_not_found_title" translation_description="dialog box title when location not found">Spiacenti</string>
-    <string name="location_not_found" translation_description="dialog message when placename not found">%s non trovata.</string>
     <string name="location_long_lat">Longitudine:%1$f, latitudine:%2$f</string>
-    <string name="location_place_found">Luogo trovato. Impostazione latitudine %1$f e longitudine %2$f</string>
     <string name="use_magnetic_correction">Usa correzione magnetica</string>
     <string name="stars">Stelle</string>
     <string name="constellations">Costellazioni</string>
@@ -42,7 +36,6 @@
     <string name="no_search_results_text">0 risultati trovati.</string>
     <string name="many_search_results_title">Forse cercavi:</string>
     <string name="menu_time">Viaggio nel tempo</string>
-    <string name="time_travel_start_message_alt">Viaggio nel tempo con destinazione %s…</string>
     <string name="time_travel_close_message">Torna al presente…</string>
     <string name="popular_dates_prompt" translation_description="label for a list of dates the user can choose from">Date popolari</string>
     <string name="custom_date_prompt" translation_description="label telling the user to manually specify a data">Oppure seleziona una data</string>
@@ -65,8 +58,6 @@
     <string name="time_travel_day_speed_back" translation_description="label showing rate of travel through time">Velocità di viaggio &lt; 1 giorno/sec</string>
     <string name="time_travel_week_speed_back" translation_description="label showing rate of travel through time">Velocità di viaggio &lt; 1 settimana/sec</string>
     <string name="gallery_image_search_btn">Trova nel cielo</string>
-    <string name="gallery_image_back_btn">Torna alla galleria</string>
-    <string name="hubble_image_gallery_title">Galleria Hubble di Sky Map</string>
     <string name="search_overlay_title" translation_description="title for search overlay">Punta il telefono verso la freccia</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">Ricerca di:</string>
     <string name="sun_wont_set_message">Nella tua località corrente, il sole non tramonterà per le prossime 24 ore</string>
@@ -340,14 +331,11 @@
     <string name="host_add">Aggiungi server</string>
     <string name="host_prompt_text">Indirizzo IP del server:</string>
     <string name="connecting">Connessione…</string>
-    <string name="menu_motion">Controllo movimento</string>
     <string name="menu_connection">Connessione</string>
-    <string name="menu_control_panel">Pannello di controllo</string>
     <string name="mount_goto">Cerca</string>
     <string name="unavailable">Non disponibile</string>
     <string name="send_request">Invia</string>
     <string name="back_request">Indietro</string>
-    <string name="BLOB_not_supported">Non supportato</string>
     <string name="try_to_connect">"Tentativo di connessione a "</string>
     <string name="connection_lost">Connessione persa</string>
     <string name="connected">Connesso</string>
@@ -394,7 +382,6 @@
     <string name="sync_slew_error">Errore: impossibile richiedere sincronizzazione o vai a</string>
     <string name="slew_ok">Goto iniziato</string>
     <string name="sync_ok">Sincronizzazione effettuata</string>
-    <string name="empty_catalog">Catalogo vuoto</string>
     <string name="menu_about">Informazioni</string>
     <string name="app_description"><b>Telescope.Touch</b> è nato come un tentativo di unire l\'app Sky Map e il progetto IPARCOS, un client INDI per Android.
         \nPermette il controllo completo di un telescopio e la visualizzazione di una mappa stellare, con un\'interfaccia utente completamente rinnovata e un code sorgente moderno.
@@ -421,7 +408,6 @@
     <string name="absolute_position">Posizione assoluta:</string>
     <string name="no_indi_elements">Proprietà senza elementi.</string>
     <string name="slide_to_reorganize">Trascina per riorganizzare</string>
-    <string name="clear_logs">Cancella log</string>
     <string name="add_server">Aggiungi server</string>
     <string name="ip_address">Indirizzo IP</string>
     <string name="focus_in">Focus in</string>
@@ -443,7 +429,7 @@
     <string name="telescope_parking_confirm">Sei sicuro di voler cambiare lo stato della montatura?</string>
     <string name="dark_nebula">Nebulosa oscura</string>
     <string name="search">Cerca</string>
-    <string name="menu_gallery">Galleria di Sky Map</string>
+    <string name="sky_map_gallery">Galleria di Sky Map</string>
     <string name="hdf">Campo profondo Hubble (HDF)</string>
     <string name="shortcuts_not_supported">Il tuo dispositivo non supporta le scorciatoie.</string>
     <string name="add_sky_map_shortcut">Aggiungi scorciatoia alla mappa stellare</string>
@@ -455,7 +441,6 @@
     <string name="point_telescope">Punta telescopio</string>
     <string name="connect_telescope_first">Connettere il telescopio prima.</string>
     <string name="gallery_copyright">Immagini di NASA (dominio pubblico), ESO (CC BY 4.0) e Adam Evans (CC BY 2.0)</string>
-    <string name="show_discovered_services">Ricerca in LAN</string>
     <string name="telescope_control">Controllo telescopio</string>
     <string name="go_to_database">Database go-to</string>
     <string name="indi_control_panel">Pannello di controllo INDI</string>

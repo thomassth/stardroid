@@ -10,8 +10,6 @@
     <string name="force_gps_pref">استخدم الموقع دائما</string>
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">if enabled, even if network location is available</string>
     <string name="no_use_gps_pref">تحديد يدوي للموقع</string>
-    <string name="location_placename">اسم المكان</string>
-    <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">e.g. 1400 West Mars Hill Road, Flagstaff, AZ.</string>
     <string name="location_lat_pref">خط العرض</string>
     <string name="location_long_pref">خط الطول</string>
     <string name="degrees" translation_description="angular degrees">الدرجة</string>
@@ -19,11 +17,7 @@
     <string name="location_offer_to_enable">Auto-location is disabled.  Would you like to enable it?</string>
     <string name="location_offer_to_enable_gps_title">Auto-location disabled</string>
     <string name="location_set_auto">Location set from %1$s to %2$s</string>
-    <string name="location_unable_to_geocode">Unable to decode your location - perhaps your network isn\'t available?</string>
-    <string name="location_not_found_title" translation_description="dialog box title when location not found">Sorry</string>
-    <string name="location_not_found" translation_description="dialog message when placename not found">%s not found.</string>
     <string name="location_long_lat">Longitude:%1$f, Latitude:%2$f</string>
-    <string name="location_place_found">Place found.  Setting latitude %1$f and longitude %2$f</string>
     <string name="use_magnetic_correction">Use magnetic correction</string>
     <!-- This string is too long and currently unused -->
     <string name="stars">النجوم</string>
@@ -49,7 +43,6 @@
     <string name="no_search_results_text">لا توجد بيانات.</string>
     <string name="many_search_results_title">هل تقصد</string>
     <string name="menu_time">السفر عبر الزمن</string>
-    <string name="time_travel_start_message_alt">Traveling through time to %s…</string>
     <string name="time_travel_close_message">Back to the present…</string>
     <!--  -->
     <string name="popular_dates_prompt" translation_description="Label for a list of dates the user can choose from">تواريخ مشهورة</string>
@@ -76,8 +69,6 @@
     <string name="time_travel_week_speed_back" translation_description="Label showing rate of travel through time">Traveling &lt; @ 1 week/sec</string>
 
     <string name="gallery_image_search_btn">ابحث في السماء</string>
-    <string name="gallery_image_back_btn">الرجوع إلى المعرض</string>
-    <string name="hubble_image_gallery_title">Sky Map Hubble Gallery</string>
     <string name="search_overlay_title" translation_description="title for search overlay">Point your phone toward the arrow</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">Looking for:</string>
     <string name="sun_wont_set_message">The sun will not set during the next 24 hours at your current location.</string>

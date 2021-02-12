@@ -1,50 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="antlia" translation_description="Name of the Antlia constellation">Αντλία</string>
-    <string name="apus" translation_description="Name of the Apus constellation">Πτηνόν</string>
-    <string name="ara" translation_description="Name of the Ara constellation">Βωμός</string>
-    <string name="caelum" translation_description="Name of the Caelum constellation">Γλυφείον</string>
-    <string name="camelopardalis" translation_description="Name of the Camelopardalis constellation">Καμηλοπάρδαλις</string>
-    <string name="canes_venatici" translation_description="Name of the Canes Venatici constellation">Κύνες Θηρευτικοί</string>
-    <string name="canis_minor" translation_description="Name of the Canis Minor constellation">Μικρός Κύων</string>
-    <string name="cepheus" translation_description="Name of the Cepheus constellation">Κηφεύς</string>
-    <string name="chamaeleon" translation_description="Name of the Chamaeleon constellation">Χαμαιλέων</string>
-    <string name="circinus" translation_description="Name of the Circinus constellation">Διαβήτης</string>
-    <string name="columba" translation_description="Name of the Columba constellation">Περιστερά</string>
-    <string name="coma_berenices" translation_description="Name of the Coma Berenices constellation">Κόμη Βερενίκης</string>
-    <string name="corona_australis" translation_description="Name of the Corona Australis constellation">Νότιος Στέφανος</string>
-    <string name="corona_borealis" translation_description="Name of the Corona Borealis constellation">Βόρειος Στέφανος</string>
-    <string name="corvus" translation_description="Name of the Corvus constellation">Κόραξ</string>
-    <string name="crater" translation_description="Name of the Crater constellation">Κρατήρ</string>
-    <string name="delphinus" translation_description="Name of the Delphinus constellation">Δελφίν</string>
-    <string name="dorado" translation_description="Name of the Dorado constellation">Δοράς</string>
-    <string name="equuleus" translation_description="Name of the Equuleus constellation">Ιππάριον</string>
-    <string name="fornax" translation_description="Name of the Fornax constellation">Κάμινος</string>
-    <string name="horologium" translation_description="Name of the Horologium constellation">Ωρολόγιον</string>
-    <string name="hydra" translation_description="Name of the Hydra constellation">Ύδρα</string>
-    <string name="indus" translation_description="Name of the Indus constellation">Ινδός</string>
-    <string name="lacerta" translation_description="Name of the Lacerta constellation">Σαύρα</string>
-    <string name="leo_minor" translation_description="Name of the Leo Minor constellation">Μικρός Λέων</string>
-    <string name="lepus" translation_description="Name of the Lepus constellation">Λαγωός</string>
-    <string name="lynx" translation_description="Name of the Lynx constellation">Λυγξ</string>
-    <string name="mensa" translation_description="Name of the Mensa constellation">Τράπεζα</string>
-    <string name="microscopium" translation_description="Name of the Microscopium constellation">Μικροσκόπιον</string>
-    <string name="monoceros" translation_description="Name of the Monoceros constellation">Μονόκερως</string>
-    <string name="musca" translation_description="Name of the Musca constellation">Μυία</string>
-    <string name="norma" translation_description="Name of the Norma constellation">Γνώμων</string>
-    <string name="octans" translation_description="Name of the Octans constellation">Οκτάς</string>
-    <string name="pictor" translation_description="Name of the Pictor constellation">Οκρίβας</string>
-    <string name="pyxis" translation_description="Name of the Pyxis constellation">Πυξίς</string>
-    <string name="reticulum" translation_description="Name of the Reticulum constellation">Δίκτυον</string>
-    <string name="sagitta" translation_description="Name of the Sagitta constellation">Τοξότης</string>
-    <string name="sculptor" translation_description="Name of the Sculptor constellation">Γλύπτης</string>
-    <string name="scutum" translation_description="Name of the Scutum constellation">Ασπίς</string>
-    <string name="serpens_caput" translation_description="Name of the Serpens Caput constellation">Κεφαλή του Όφεως</string>
-    <string name="serpens_cauda" translation_description="Name of the Serpens Cauda constellation">Ουρά του Όφεως</string>
-    <string name="sextans" translation_description="Name of the Sextans constellation">Εξάς</string>
-    <string name="telescopium" translation_description="Name of the Telescopium constellation">Τηλεσκόπιον</string>
-    <string name="triangulum" translation_description="Name of the Triangulum constellation">Τρίγωνον</string>
-    <string name="triangulum_australe" translation_description="Name of the Triangulum Australe constellation">Τρίγωνον Νότιον</string>
-    <string name="volans" translation_description="Name of the Volans constellation">Ιχθύς Ιπτάμενος</string>
-    <string name="vulpecula" translation_description="Name of the Vulpecula constellation">Αλώπηξ</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="antlia" translation_description="Name of the Antlia constellation" tools:keep="@string/antlia">Αντλία</string>
+    <string name="apus" translation_description="Name of the Apus constellation" tools:keep="@string/apus">Πτηνόν</string>
+    <string name="ara" translation_description="Name of the Ara constellation" tools:keep="@string/ara">Βωμός</string>
+    <string name="caelum" translation_description="Name of the Caelum constellation" tools:keep="@string/caelum">Γλυφείον</string>
+    <string name="camelopardalis" translation_description="Name of the Camelopardalis constellation" tools:keep="@string/camelopardalis">Καμηλοπάρδαλις</string>
+    <string name="canes_venatici" translation_description="Name of the Canes Venatici constellation" tools:keep="@string/canes_venatici">Κύνες Θηρευτικοί</string>
+    <string name="canis_minor" translation_description="Name of the Canis Minor constellation" tools:keep="@string/canis_minor">Μικρός Κύων</string>
+    <string name="cepheus" translation_description="Name of the Cepheus constellation" tools:keep="@string/cepheus">Κηφεύς</string>
+    <string name="chamaeleon" translation_description="Name of the Chamaeleon constellation" tools:keep="@string/chamaeleon">Χαμαιλέων</string>
+    <string name="circinus" translation_description="Name of the Circinus constellation" tools:keep="@string/circinus">Διαβήτης</string>
+    <string name="columba" translation_description="Name of the Columba constellation" tools:keep="@string/columba">Περιστερά</string>
+    <string name="coma_berenices" translation_description="Name of the Coma Berenices constellation" tools:keep="@string/coma_berenices">Κόμη Βερενίκης</string>
+    <string name="corona_australis" translation_description="Name of the Corona Australis constellation" tools:keep="@string/corona_australis">Νότιος Στέφανος</string>
+    <string name="corona_borealis" translation_description="Name of the Corona Borealis constellation" tools:keep="@string/corona_borealis">Βόρειος Στέφανος</string>
+    <string name="corvus" translation_description="Name of the Corvus constellation" tools:keep="@string/corvus">Κόραξ</string>
+    <string name="crater" translation_description="Name of the Crater constellation" tools:keep="@string/crater">Κρατήρ</string>
+    <string name="delphinus" translation_description="Name of the Delphinus constellation" tools:keep="@string/delphinus">Δελφίν</string>
+    <string name="dorado" translation_description="Name of the Dorado constellation" tools:keep="@string/dorado">Δοράς</string>
+    <string name="equuleus" translation_description="Name of the Equuleus constellation" tools:keep="@string/equuleus">Ιππάριον</string>
+    <string name="fornax" translation_description="Name of the Fornax constellation" tools:keep="@string/fornax">Κάμινος</string>
+    <string name="horologium" translation_description="Name of the Horologium constellation" tools:keep="@string/horologium">Ωρολόγιον</string>
+    <string name="hydra" translation_description="Name of the Hydra constellation" tools:keep="@string/hydra">Ύδρα</string>
+    <string name="indus" translation_description="Name of the Indus constellation" tools:keep="@string/indus">Ινδός</string>
+    <string name="lacerta" translation_description="Name of the Lacerta constellation" tools:keep="@string/lacerta">Σαύρα</string>
+    <string name="leo_minor" translation_description="Name of the Leo Minor constellation" tools:keep="@string/leo_minor">Μικρός Λέων</string>
+    <string name="lepus" translation_description="Name of the Lepus constellation" tools:keep="@string/lepus">Λαγωός</string>
+    <string name="lynx" translation_description="Name of the Lynx constellation" tools:keep="@string/lynx">Λυγξ</string>
+    <string name="mensa" translation_description="Name of the Mensa constellation" tools:keep="@string/mensa">Τράπεζα</string>
+    <string name="microscopium" translation_description="Name of the Microscopium constellation" tools:keep="@string/microscopium">Μικροσκόπιον</string>
+    <string name="monoceros" translation_description="Name of the Monoceros constellation" tools:keep="@string/monoceros">Μονόκερως</string>
+    <string name="musca" translation_description="Name of the Musca constellation" tools:keep="@string/musca">Μυία</string>
+    <string name="norma" translation_description="Name of the Norma constellation" tools:keep="@string/norma">Γνώμων</string>
+    <string name="octans" translation_description="Name of the Octans constellation" tools:keep="@string/octans">Οκτάς</string>
+    <string name="pictor" translation_description="Name of the Pictor constellation" tools:keep="@string/pictor">Οκρίβας</string>
+    <string name="pyxis" translation_description="Name of the Pyxis constellation" tools:keep="@string/pyxis">Πυξίς</string>
+    <string name="reticulum" translation_description="Name of the Reticulum constellation" tools:keep="@string/reticulum">Δίκτυον</string>
+    <string name="sagitta" translation_description="Name of the Sagitta constellation" tools:keep="@string/sagitta">Τοξότης</string>
+    <string name="sculptor" translation_description="Name of the Sculptor constellation" tools:keep="@string/sculptor">Γλύπτης</string>
+    <string name="scutum" translation_description="Name of the Scutum constellation" tools:keep="@string/scutum">Ασπίς</string>
+    <string name="serpens_caput" translation_description="Name of the Serpens Caput constellation" tools:keep="@string/serpens_caput">Κεφαλή του Όφεως</string>
+    <string name="serpens_cauda" translation_description="Name of the Serpens Cauda constellation" tools:keep="@string/serpens_cauda">Ουρά του Όφεως</string>
+    <string name="sextans" translation_description="Name of the Sextans constellation" tools:keep="@string/sextans">Εξάς</string>
+    <string name="telescopium" translation_description="Name of the Telescopium constellation" tools:keep="@string/telescopium">Τηλεσκόπιον</string>
+    <string name="triangulum" translation_description="Name of the Triangulum constellation" tools:keep="@string/triangulum">Τρίγωνον</string>
+    <string name="triangulum_australe" translation_description="Name of the Triangulum Australe constellation" tools:keep="@string/triangulum_australe">Τρίγωνον Νότιον</string>
+    <string name="volans" translation_description="Name of the Volans constellation" tools:keep="@string/volans">Ιχθύς Ιπτάμενος</string>
+    <string name="vulpecula" translation_description="Name of the Vulpecula constellation" tools:keep="@string/vulpecula">Αλώπηξ</string>
 </resources>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group
         android:id="@+id/menu_group_telescope"
         android:checkableBehavior="none">
@@ -51,7 +50,7 @@
         <item
             android:id="@+id/menu_skymap_gallery"
             android:icon="@drawable/images"
-            android:title="@string/menu_gallery" />
+            android:title="@string/sky_map_gallery" />
     </group>
 
     <group

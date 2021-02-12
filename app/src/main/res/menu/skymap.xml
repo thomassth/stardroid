@@ -26,7 +26,7 @@
     <item
         android:id="@+id/menu_skymap_gallery"
         android:orderInCategory="4"
-        android:title="@string/menu_gallery"
+        android:title="@string/sky_map_gallery"
         app:showAsAction="never" />
 
     <item

@@ -537,7 +537,7 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
 
     private class TimeFormatter extends DefaultLabelFormatter {
 
-        java.text.DateFormat formatter;
+        private final java.text.DateFormat formatter;
 
         TimeFormatter() {
             formatter = DateFormat.getTimeFormat(context);

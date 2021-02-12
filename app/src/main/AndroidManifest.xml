@@ -58,6 +58,7 @@
         android:requestLegacyExternalStorage="true"
         android:resizeableActivity="true"
         android:roundIcon="@mipmap/app_icon"
+        android:supportsRtl="false"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="n">
@@ -109,12 +110,12 @@
             android:screenOrientation="fullUser" />
         <activity
             android:name=".activities.ImageGalleryActivity"
-            android:label="@string/menu_gallery"
+            android:label="@string/sky_map_gallery"
             android:launchMode="singleTop"
             android:screenOrientation="fullUser" />
         <activity
             android:name=".activities.ImageDisplayActivity"
-            android:label="@string/menu_gallery"
+            android:label="@string/sky_map_gallery"
             android:screenOrientation="fullUser">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

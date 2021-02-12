@@ -8,8 +8,6 @@
     <string name="force_gps_pref">永遠使用 GPS</string>
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">啟用時一律使用 GPS (即使系統可提供網路位置資訊)</string>
     <string name="no_use_gps_pref">手動設定位置</string>
-    <string name="location_placename">地點名稱</string>
-    <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">例如，台北市信義區信義路 5 段 7 號</string>
     <string name="location_lat_pref">緯度</string>
     <string name="location_long_pref">經度</string>
     <string name="degrees">度</string>
@@ -17,11 +15,7 @@
     <string name="location_offer_to_enable">自動定位功能已關閉，是否要予以啟用？</string>
     <string name="location_offer_to_enable_gps_title">已關閉自動定位</string>
     <string name="location_set_auto">已將地點設定由%1$s改為%2$s</string>
-    <string name="location_unable_to_geocode">無法解譯您的位置資訊，您的網路系統目前的連線狀態是否正常？</string>
-    <string name="location_not_found_title" translation_description="dialog box title when location not found">抱歉</string>
-    <string name="location_not_found" translation_description="dialog message when placename not found">找不到%s。</string>
     <string name="location_long_lat">經度：%1$f，緯度：%2$f</string>
-    <string name="location_place_found">已找到地點，正在設定緯度%1$f與經度%2$f</string>
     <string name="use_magnetic_correction">使用地磁校正</string>
     <!-- This string is too long and currently unused -->
     <string name="stars">星體</string>
@@ -47,7 +41,6 @@
     <string name="no_search_results_text">找不到相符的結果。</string>
     <string name="many_search_results_title">您是不是要查：</string>
     <string name="menu_time">時光旅行</string>
-    <string name="time_travel_start_message_alt">時光轉移到 %s…</string>
     <string name="time_travel_close_message">回到現在…</string>
     <!--  -->
     <string name="popular_dates_prompt" translation_description="Label for a list of dates the user can choose from">熱門日期</string>
@@ -73,8 +66,6 @@
     <string name="time_travel_day_speed_back" translation_description="Label showing rate of travel through time">時光倒轉，速度：1 天/秒</string>
     <string name="time_travel_week_speed_back" translation_description="Label showing rate of travel through time">時光倒轉，速度：1 週/秒</string>
     <string name="gallery_image_search_btn">搜尋星空</string>
-    <string name="gallery_image_back_btn">返回圖庫</string>
-    <string name="hubble_image_gallery_title">星空圖哈伯望遠鏡圖庫</string>
     <string name="search_overlay_title" translation_description="title for search overlay">將手機指向箭頭方向</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">正在尋找：</string>
     <string name="sun_wont_set_message">您目前的位置未來 24 小時之內看不到日落。</string>
@@ -368,8 +359,6 @@
     </string>
     <string name="do_not_show_again">不要再顯示這個訊息</string>
     <string name="title_activity_diagnostic">診斷</string>
-    <string name="location_rationale_title">我們為何詢問您的位置？</string>
-    <string name="location_rationale_text">您所能看到的星空是由您所在的位置而定，沒有位置資訊我們無法顯示精確的星空圖，如果不願意提供您的位置，可以在設定選單裡手動設定您附近的城市。</string>
 
     <string name="sensor_absent">不存在</string>
     <string name="sensor_accuracy_unknown">精確度：未知</string>
@@ -406,7 +395,6 @@
     <string name="disconnected">已斷線</string>
     <string name="cell_network">" (電信網路)"</string>
     <string name="menu_calibrate">校正</string>
-    <string name="compass_calibration_activity_heading_compass">羅盤 -</string>
     <string name="compass_calibration_activity_do_not_show_this_again">不要再顯示這個訊息</string>
     <string name="compass_calibration_activity_warning">您的羅盤需要校正</string>
     <string name="sensor_reverse_preference_title">磁場反向</string>

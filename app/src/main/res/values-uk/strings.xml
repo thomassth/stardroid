@@ -7,8 +7,6 @@
     <string name="force_gps_pref">Завжди викор. GPS</string>
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">якщо ввімк., навіть якщо доступне знаходження місця розташування через інтернет мережу</string>
     <string name="no_use_gps_pref">Задати м/р вручну</string>
-    <string name="location_placename">Назва місця</string>
-    <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">наприклад Україна, Київ, вул. Грушевського, б. 5/3</string>
     <string name="location_lat_pref">Широта</string>
     <string name="location_long_pref">Довгота</string>
     <string name="degrees">Градуси</string>
@@ -16,11 +14,7 @@
     <string name="location_offer_to_enable">Автовизначення місця розташування вимкнене. Хочете ввімкнути?</string>
     <string name="location_offer_to_enable_gps_title">Автовизн. м/р вимкн.</string>
     <string name="location_set_auto">М/р змінено з %1$s на %2$s</string>
-    <string name="location_unable_to_geocode">Неможливо визначити місце розташування – ймовірно, недоступна мережа.</string>
-    <string name="location_not_found_title" translation_description="dialog box title when location not found">Вибачте</string>
-    <string name="location_not_found" translation_description="dialog message when placename not found">Не знайдено: %s.</string>
     <string name="location_long_lat">Довгота:%1$f, широта:%2$f</string>
-    <string name="location_place_found">Місце знайдене. Встан. широта %1$f і довгота %2$f</string>
     <string name="use_magnetic_correction">Викор. магнітну корекцію</string>
     <string name="stars">Зірки</string>
     <string name="constellations">Сузір\'я</string>
@@ -43,7 +37,6 @@
     <string name="no_search_results_text">Нічого не знайдено.</string>
     <string name="many_search_results_title">Можливо, ви мали на увазі:</string>
     <string name="menu_time">Подорож у часі</string>
-    <string name="time_travel_start_message_alt">Подорож у часі до об\'єкта %s…</string>
     <string name="time_travel_close_message">Назад в сьогодення…</string>
     <string name="popular_dates_prompt" translation_description="label for a list of dates the user can choose from">Популярні дати</string>
     <string name="custom_date_prompt" translation_description="label telling the user to manually specify a data">Або виберіть іншу дату</string>
@@ -66,8 +59,6 @@
     <string name="time_travel_day_speed_back" translation_description="label showing rate of travel through time">Подорож зі швидкістю &lt; @ 1 дн/с</string>
     <string name="time_travel_week_speed_back" translation_description="label showing rate of travel through time">Подорож зі швидкістю &lt; @ 1 тжд/с</string>
     <string name="gallery_image_search_btn">Знайти на небі</string>
-    <string name="gallery_image_back_btn">Назад в галерею</string>
-    <string name="hubble_image_gallery_title">Галерея Хаббл для Sky Map</string>
     <string name="search_overlay_title" translation_description="title for search overlay">Поверніть телефон в напрямку стрілки</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">Пошук:</string>
     <string name="sun_wont_set_message">Протягом найближчих 24 годин заходу Сонця в вашому місці розташування не буде.</string>
@@ -360,8 +351,6 @@
     </string>
     <string name="do_not_show_again">Більше не показувати це повідомлення</string>
     <string name="title_activity_diagnostic">Діагностика</string>
-    <string name="location_rationale_title">Чому ми запитуємо про ваше місце розташування?</string>
-    <string name="location_rationale_text">Зірки, які ви можете бачити, залежать від того, де ви знаходитесь на планеті Земля. Без вашого розташування ми не можемо показати точну карту. Якщо ви не хочете, щоб ваш телефон дав нам своє місцеположення, ви можете надати його вручну в налаштуваннях. Вам потрібно лише ввести найближче місто.</string>
     <string name="sensor_absent">Відсутня</string>
     <string name="sensor_accuracy_unknown">Точність: невідомо</string>
     <string name="sensor_accuracy_unreliable">Точність: ненадійна</string>
@@ -397,7 +386,6 @@
     <string name="disconnected">Роз\'єднано</string>
     <string name="cell_network">" (виклик)"</string>
     <string name="menu_calibrate">Калібрувати</string>
-    <string name="compass_calibration_activity_heading_compass">Компас -</string>
     <string name="compass_calibration_activity_do_not_show_this_again">Більше не показувати</string>
     <string name="compass_calibration_activity_warning">Ваш компас потрібно відкалібрувати</string>
     <string name="sensor_reverse_preference_title">Зворотне магнітне Z</string>

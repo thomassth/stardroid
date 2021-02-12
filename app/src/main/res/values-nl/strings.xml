@@ -7,8 +7,6 @@
     <string name="force_gps_pref">Altijd GPS gebruiken</string>
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">indien ingeschakeld, zelfs als een netwerklocatie beschikbaar is</string>
     <string name="no_use_gps_pref">Locatie handmatig instellen</string>
-    <string name="location_placename">Plaatsnaam</string>
-    <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">Bijvoorbeeld: Oude Hoogeveensedijk 4, Dwingeloo.</string>
     <string name="location_lat_pref">Breedtegraad</string>
     <string name="location_long_pref">Geografische lengte</string>
     <string name="degrees">Graden</string>
@@ -16,11 +14,7 @@
     <string name="location_offer_to_enable">Automatische locatiedetectie is uitgeschakeld. Wilt u deze functie inschakelen?</string>
     <string name="location_offer_to_enable_gps_title">Automatische locatiedetectie uitgeschakeld</string>
     <string name="location_set_auto">Locatie ingesteld van %1$s naar %2$s</string>
-    <string name="location_unable_to_geocode">Kan uw locatie niet decoderen - misschien is uw netwerk niet beschikbaar?</string>
-    <string name="location_not_found_title" translation_description="dialog box title when location not found">Sorry</string>
-    <string name="location_not_found" translation_description="dialog message when placename not found">%s niet gevonden.</string>
     <string name="location_long_lat">Lengtegraad:%1$f, breedtegraad:%2$f</string>
-    <string name="location_place_found">Plaats gevonden. Breedtegraad %1$f en lengtegraad %2$f worden ingesteld</string>
     <string name="use_magnetic_correction">Magnetische correctie gebruiken</string>
     <string name="stars">Sterren</string>
     <string name="constellations">Sterrenbeelden</string>
@@ -43,7 +37,6 @@
     <string name="no_search_results_text">Er zijn geen resultaten gevonden.</string>
     <string name="many_search_results_title">Bedoelde u?</string>
     <string name="menu_time">Tijdreizen</string>
-    <string name="time_travel_start_message_alt">We reizen door de tijd naar %s …</string>
     <string name="time_travel_close_message">Terug naar het heden …</string>
     <string name="popular_dates_prompt" translation_description="label for a list of dates the user can choose from">Populaire datums</string>
     <string name="custom_date_prompt" translation_description="label telling the user to manually specify a data">Of selecteer uw eigen datum</string>
@@ -66,8 +59,6 @@
     <string name="time_travel_day_speed_back" translation_description="label showing rate of travel through time">Beweegt &lt; @ 1 dag/sec</string>
     <string name="time_travel_week_speed_back" translation_description="label showing rate of travel through time">Beweegt &lt; @ 1 week/sec</string>
     <string name="gallery_image_search_btn">Vinden in de sterrenhemel</string>
-    <string name="gallery_image_back_btn">Terug naar galerij</string>
-    <string name="hubble_image_gallery_title">Hubble-galerij met sterrenkaarten</string>
     <string name="search_overlay_title" translation_description="title for search overlay">Richt uw telefoon in de richting van de pijl</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">Zoeken naar:</string>
     <string name="sun_wont_set_message">De zon gaat op uw huidige locatie niet onder in de komende 24 uur.</string>

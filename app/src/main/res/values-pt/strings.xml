@@ -7,8 +7,6 @@
     <string name="force_gps_pref">Sempre usar GPS</string>
     <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">se ativado, mesmo se local de rede estiver disponível</string>
     <string name="no_use_gps_pref">Definir local manualm.</string>
-    <string name="location_placename">Nome do lugar</string>
-    <string name="location_placename_hint" translation_description="An example address.  Translators: please pick an address suitable for your country.  If it has an astronomical connection (e.g. the address of an observatory or famous astronomer) then that would be even better.">Por exemplo, 1400 West Mars Hill Road, Flagstaff, AZ.</string>
     <string name="location_lat_pref">Latitude</string>
     <string name="location_long_pref">Longitude</string>
     <string name="degrees">Graus</string>
@@ -16,11 +14,7 @@
     <string name="location_offer_to_enable">A localização automática está desativada. Deseja ativá-la?</string>
     <string name="location_offer_to_enable_gps_title">Local. autom. desativada</string>
     <string name="location_set_auto">Local definido de %1$s a %2$s</string>
-    <string name="location_unable_to_geocode">Não é possível decodificar o local. Talvez a rede não esteja disponível.</string>
-    <string name="location_not_found_title" translation_description="dialog box title when location not found">Desculpe</string>
-    <string name="location_not_found" translation_description="dialog message when placename not found">%s não encontrado.</string>
     <string name="location_long_lat">Longitude:%1$f, Latitude:%2$f</string>
-    <string name="location_place_found">Lugar encontrado.  Definindo latitude %1$f e longitude %2$f</string>
     <string name="use_magnetic_correction">Usar correção magnética</string>
     <string name="stars">Estrelas</string>
     <string name="constellations">Constelações</string>
@@ -43,7 +37,6 @@
     <string name="no_search_results_text">Nenhum resultado encontrado.</string>
     <string name="many_search_results_title">Você quis dizer?</string>
     <string name="menu_time">Viagem no tempo</string>
-    <string name="time_travel_start_message_alt">Viajando no tempo para %s…</string>
     <string name="time_travel_close_message">Voltar ao presente…</string>
     <string name="popular_dates_prompt" translation_description="label for a list of dates the user can choose from">Datas populares</string>
     <string name="custom_date_prompt" translation_description="label telling the user to manually specify a data">Ou selecione uma data</string>
@@ -66,8 +59,6 @@
     <string name="time_travel_day_speed_back" translation_description="label showing rate of travel through time">Viajando &lt; à 1 dia/s</string>
     <string name="time_travel_week_speed_back" translation_description="label showing rate of travel through time">Viajando &lt; à 1 semana/s</string>
     <string name="gallery_image_search_btn">Localizar no céu</string>
-    <string name="gallery_image_back_btn">Voltar para galeria</string>
-    <string name="hubble_image_gallery_title">Galeria do Hubble do Sky Map</string>
     <string name="search_overlay_title" translation_description="title for search overlay">Aponte o seu telefone em direção à seta</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">Procurando:</string>
     <string name="sun_wont_set_message">O sol não irá se pôr durante as próximas 24 horas no seu local atual.</string>
