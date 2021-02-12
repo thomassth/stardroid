@@ -29,6 +29,7 @@ import android.os.Looper;
 import android.text.Spannable;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -484,21 +485,29 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
         }
     }
 
-    private ScrollView createScrollview(View... views) {
+    private ScrollView createScrollview(TextView text, ImageView image) {
         LinearLayout layout = new LinearLayout(context);
         layout.setOrientation(LinearLayout.VERTICAL);
         Resources res = context.getResources();
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(WRAP_CONTENT,
+        final int margin = res.getDimensionPixelSize(R.dimen.dialog_margin);
+        final int marginSmall = res.getDimensionPixelSize(R.dimen.dialog_margin_small);
+
+        LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
+        textParams.topMargin = marginSmall;
+        textParams.leftMargin = margin;
+        textParams.rightMargin = margin;
+        textParams.bottomMargin = marginSmall;
+        text.setLayoutParams(textParams);
+        layout.addView(text, textParams);
+
+        LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(WRAP_CONTENT,
                 res.getDimensionPixelSize(R.dimen.details_photo_height));
-        int margin = res.getDimensionPixelSize(R.dimen.padding_medium);
-        params.leftMargin = margin;
-        params.bottomMargin = margin;
-        params.topMargin = margin;
-        params.rightMargin = margin;
-        for (View v : views) {
-            v.setLayoutParams(params);
-            layout.addView(v, params);
-        }
+        imageParams.leftMargin = marginSmall;
+        imageParams.rightMargin = marginSmall;
+        imageParams.gravity = Gravity.CENTER_HORIZONTAL;
+        image.setLayoutParams(imageParams);
+        layout.addView(image, imageParams);
+
         ScrollView scrollView = new ScrollView(context);
         scrollView.addView(layout);
         return scrollView;
