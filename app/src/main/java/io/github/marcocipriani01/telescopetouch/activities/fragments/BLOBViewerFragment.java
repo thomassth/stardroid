@@ -337,7 +337,7 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
         } else if (buttonView == fitsStretchSwitch) {
             blobLoader.setStretch(isChecked);
             preferences.edit().putBoolean(ApplicationConstants.STRETCH_FITS_PREF, isChecked).apply();
-            INDIBLOBProperty selectedItem = selectionAdapter.getItem(selectionSpinner.getSelectedItemPosition());
+            INDIBLOBProperty selectedItem = (INDIBLOBProperty) selectionSpinner.getSelectedItem();
             if (selectedItem != null)
                 loadBlob(selectedItem);
         }
