@@ -176,7 +176,7 @@ public class TimeTravelDialogFragment extends DialogFragment {
     private void setToNextSunRiseOrSet(Planet.RiseSetIndicator indicator) {
         Calendar riseSet = Planet.Sun.calcNextRiseSetTime(calendar, skyMapActivity.getModel().getLocation(), indicator);
         if (riseSet == null) {
-            Toast.makeText(this.getContext(), R.string.sun_wont_set_message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(skyMapActivity, R.string.sun_wont_set_message, Toast.LENGTH_SHORT).show();
         } else {
             Log.d(TAG, "Sun rise or set is at: " + TimeUtils.normalizeHours(
                     riseSet.get(Calendar.HOUR_OF_DAY)) + ":" + riseSet.get(Calendar.MINUTE));

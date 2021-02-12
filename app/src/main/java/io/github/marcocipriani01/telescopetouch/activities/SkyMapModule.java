@@ -38,7 +38,8 @@ import io.github.marcocipriani01.telescopetouch.inject.PerActivity;
 
 /**
  * Dagger module
- * Created by johntaylor on 3/29/16.
+ *
+ * @author johntaylor
  */
 @Module
 public class SkyMapModule {

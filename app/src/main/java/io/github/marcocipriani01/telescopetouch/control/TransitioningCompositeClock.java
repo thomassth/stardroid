@@ -48,8 +48,7 @@ public class TransitioningCompositeClock implements Clock {
      * when in realtime mode, and also to count the beats during the transition
      * between realtime and timetravel modes to ensure a smooth transition.
      */
-    public TransitioningCompositeClock(TimeTravelClock timeTravelClock,
-                                       Clock realClock) {
+    public TransitioningCompositeClock(TimeTravelClock timeTravelClock, Clock realClock) {
         this.timeTravelClock = timeTravelClock;
         this.realClock = realClock;
     }

@@ -512,7 +512,7 @@
     <string name="polaris_star_finder">Polaris</string>
     <string name="wifi">" (Wi-Fi)"</string>
     <string name="loading">Caricamento…</string>
-    <string name="toast_manual_location_on">Attivo la locatilità manuale…</string>
+    <string name="msg_manual_location_on">Attivo la locatilità manuale…</string>
     <string name="east_short">E</string>
     <string name="west_short">O</string>
     <string name="north_short">N</string>

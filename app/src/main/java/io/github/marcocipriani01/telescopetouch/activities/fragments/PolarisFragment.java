@@ -90,7 +90,7 @@ public class PolarisFragment extends ActionFragment implements LocationPermissio
         gpsText = rootView.findViewById(R.id.polaris_gps);
         spotText = rootView.findViewById(R.id.polaris_spot);
         hourAngleText = rootView.findViewById(R.id.polaris_hour_angle);
-        locationHelper = new LocationHelper(context) {
+        locationHelper = new LocationHelper(getActivity()) {
             @Override
             protected void onLocationOk(Location location) {
                 polaris.setLocation(location.getLatitude(), location.getLongitude());

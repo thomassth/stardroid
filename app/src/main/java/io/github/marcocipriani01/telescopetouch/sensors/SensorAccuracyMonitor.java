@@ -16,7 +16,7 @@
 
 package io.github.marcocipriani01.telescopetouch.sensors;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.Sensor;
@@ -24,7 +24,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
-import android.widget.Toast;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import javax.inject.Inject;
 
@@ -32,6 +33,7 @@ import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.CompassCalibrationActivity;
+import io.github.marcocipriani01.telescopetouch.activities.SkyMapActivity;
 import io.github.marcocipriani01.telescopetouch.astronomy.TimeUtils;
 
 /**
@@ -45,18 +47,22 @@ public class SensorAccuracyMonitor implements SensorEventListener {
     private static final long MIN_INTERVAL_BETWEEN_WARNINGS = 180 * TimeUtils.MILLISECONDS_PER_SECOND;
     private final SensorManager sensorManager;
     private final Sensor compassSensor;
-    private final Context context;
+    private final Activity activity;
     private final SharedPreferences sharedPreferences;
     private boolean started = false;
     private boolean hasReading = false;
 
-    @Inject
-    public SensorAccuracyMonitor(SensorManager sensorManager, Context context, SharedPreferences sharedPreferences) {
+    public SensorAccuracyMonitor(SensorManager sensorManager, Activity activity, SharedPreferences sharedPreferences) {
         Log.d(TAG, "Creating new accuracy monitor");
         this.sensorManager = sensorManager;
-        this.context = context;
+        this.activity = activity;
         this.sharedPreferences = sharedPreferences;
         compassSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+    }
+
+    @Inject
+    public SensorAccuracyMonitor(SensorManager sensorManager, SkyMapActivity activity, SharedPreferences sharedPreferences) {
+        this(sensorManager, (Activity) activity, sharedPreferences);
     }
 
     /**
@@ -104,12 +110,13 @@ public class SensorAccuracyMonitor implements SensorEventListener {
         }
         sharedPreferences.edit().putLong(LAST_CALIBRATION_WARNING_PREF_KEY, System.currentTimeMillis()).apply();
         if (sharedPreferences.getBoolean(ApplicationConstants.NO_SHOW_CALIBRATION_DIALOG_PREF, false)) {
-            Toast.makeText(context, R.string.inaccurate_compass_warning, Toast.LENGTH_SHORT).show();
+            Snackbar.make(activity.getWindow().getDecorView().getRootView(),
+                    R.string.inaccurate_compass_warning, Snackbar.LENGTH_SHORT).show();
         } else {
-            Intent intent = new Intent(context, CompassCalibrationActivity.class);
+            Intent intent = new Intent(activity, CompassCalibrationActivity.class);
             intent.putExtra(CompassCalibrationActivity.HIDE_CHECKBOX, false);
             intent.putExtra(CompassCalibrationActivity.AUTO_DISMISSABLE, true);
-            context.startActivity(intent);
+            activity.startActivity(intent);
         }
     }
 }

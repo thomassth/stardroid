@@ -302,8 +302,7 @@ public class AstronomerModel {
     }
 
     // TODO(jontayler): with the switch to using the rotation vector sensor this is rather
-    // convoluted and doing too much work.  It can be greatly simplified when we rewrite the
-    // rendering module.
+    // convoluted and doing too much work.  It can be greatly simplified when we rewrite the rendering module.
 
     /**
      * Calculates local North and Up vectors in terms of the phone's coordinate

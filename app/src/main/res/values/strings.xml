@@ -591,7 +591,7 @@
     <string name="sigma_octantis">Sigma Octantis</string>
     <string name="polaris_star_finder">Polaris</string>
     <string name="loading">Loading…</string>
-    <string name="toast_manual_location_on">Switching manual location on…</string>
+    <string name="msg_manual_location_on">Switching manual location on…</string>
     <string name="precession_pref">Compensate precession</string>
     <string name="precession_pref_description">The catalog\'s coordinates correspond to the J2000 astronomical epoch. Check this box to compensate them for precession. If the app slews telescope to the wrong place, try disabling this setting.</string>
     <string name="telescope">Telescope</string>
@@ -634,4 +634,5 @@
     <string name="aladin">Aladin</string>
     <string name="altitude">Altitude</string>
     <string name="no_location">No location</string>
+    <string name="toggling_manual_mode">Toggling manual mode</string>
 </resources>

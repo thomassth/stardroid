@@ -61,7 +61,7 @@ public class CompassFragment extends ActionFragment implements
         final TextView heading = rootView.findViewById(R.id.compass_heading);
         final TextView gps = rootView.findViewById(R.id.compass_gps);
         final TextView declination = rootView.findViewById(R.id.compass_declination);
-        compass = new CompassHelper(context) {
+        compass = new CompassHelper(getActivity()) {
             private float lastAzimuth = 0;
 
             @Override
