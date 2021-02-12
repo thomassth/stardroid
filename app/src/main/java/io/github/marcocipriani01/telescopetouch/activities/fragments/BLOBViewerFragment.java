@@ -36,13 +36,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.SwitchCompat;
-import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.preference.PreferenceManager;
 
 import com.github.chrisbanes.photoview.PhotoView;
@@ -95,7 +95,7 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
     private TextView bppText;
     private TextView errorText;
     private PhotoView blobViewer;
-    private ContentLoadingProgressBar progressBar;
+    private ProgressBar progressBar;
     private AppCompatSpinner selectionSpinner;
     private BLOBArrayAdapter selectionAdapter;
 
@@ -222,7 +222,7 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
             errorText.setVisibility(View.GONE);
             bitmapSaved = false;
         }
-        progressBar.hide();
+        progressBar.setVisibility(View.INVISIBLE);
         notifyActionChange();
     }
 
@@ -258,7 +258,7 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
                 break;
             case 1:
                 if (blobLoader.queue(property.getElementsAsList().get(0)))
-                    progressBar.show();
+                    progressBar.setVisibility(View.VISIBLE);
                 break;
             default:
                 errorText.setText(R.string.error_multi_image_prop);
@@ -271,7 +271,7 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
     private void clearBitmap() {
         setBlobInfo(null);
         blobViewer.setVisibility(View.GONE);
-        progressBar.hide();
+        progressBar.setVisibility(View.INVISIBLE);
         errorText.setVisibility(View.VISIBLE);
         recycleBitmap();
     }

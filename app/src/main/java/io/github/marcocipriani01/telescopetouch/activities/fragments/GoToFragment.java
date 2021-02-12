@@ -16,6 +16,7 @@ package io.github.marcocipriani01.telescopetouch.activities.fragments;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.location.Location;
 import android.net.ConnectivityManager;
@@ -216,6 +217,8 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
             if (context instanceof Activity && ((Activity) context).isInMultiWindowMode())
                 list.setIndexBarVisibility(false);
         }
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+            list.setIndexBarVisibility(false);
         handler.postDelayed(this::maybeStartIntentSearch, 300);
     }
 
@@ -542,11 +545,8 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
 
         @Override
         public String formatLabel(double value, boolean isValueX) {
-            if (isValueX) {
-                return formatter.format((long) value);
-            } else {
-                return super.formatLabel(value, isValueX);
-            }
+            if (isValueX) return formatter.format((long) value);
+            return super.formatLabel(value, false);
         }
     }
 }

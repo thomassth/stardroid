@@ -8,7 +8,7 @@
     android:orientation="vertical"
     tools:context=".activities.fragments.BLOBViewerFragment">
 
-    <androidx.core.widget.ContentLoadingProgressBar
+    <ProgressBar
         android:id="@+id/blob_loading"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
