@@ -160,6 +160,7 @@ public class MountControlFragment extends ActionFragment implements INDIServerCo
         }
     };
     private TextView mountName = null;
+    private Toolbar toolbar = null;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -194,6 +195,7 @@ public class MountControlFragment extends ActionFragment implements INDIServerCo
         btnStop = rootView.findViewById(R.id.buttonStop);
         slewRateSpinner = rootView.findViewById(R.id.mount_slew_rate);
         mountName = rootView.findViewById(R.id.mount_name);
+        toolbar = rootView.findViewById(R.id.mount_control_toolbar);
         btnMoveN.setOnTouchListener(this);
         btnMoveNE.setOnTouchListener(this);
         btnMoveE.setOnTouchListener(this);
@@ -508,6 +510,7 @@ public class MountControlFragment extends ActionFragment implements INDIServerCo
                     property.addINDIPropertyListener(this);
                     handler.post(() -> {
                         if (mountName != null) mountName.setText(devName);
+                        if (toolbar != null) toolbar.setTitle(devName);
                     });
                 }
                 break;
@@ -569,6 +572,7 @@ public class MountControlFragment extends ActionFragment implements INDIServerCo
                 telescopeMotionSE = null;
                 handler.post(() -> {
                     if (mountName != null) mountName.setText(R.string.mount_control);
+                    if (toolbar != null) toolbar.setTitle(R.string.mount_control);
                 });
                 break;
             }

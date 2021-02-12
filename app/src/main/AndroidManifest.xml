@@ -15,6 +15,7 @@
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="29"
         tools:ignore="ScopedStorage" />
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
 
     <uses-feature
         android:name="android.hardware.location"
@@ -62,12 +63,16 @@
         tools:targetApi="n">
         <activity
             android:name=".activities.MainActivity"
+            android:configChanges="uiMode"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="fullUser"
             android:theme="@style/AppThemeNoActionBar"
-            android:configChanges="uiMode"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
+
+            <!--suppress AndroidElementNotAllowed -->
+            <layout android:minHeight="450dp" />
+
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
@@ -145,8 +150,8 @@
         </activity>
         <activity
             android:name=".activities.MapsActivity"
-            android:screenOrientation="fullUser"
-            android:label="@string/pick_location_pref" />
+            android:label="@string/pick_location_pref"
+            android:screenOrientation="fullUser" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

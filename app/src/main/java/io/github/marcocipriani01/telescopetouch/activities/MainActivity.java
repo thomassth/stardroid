@@ -22,6 +22,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -218,6 +219,12 @@ public class MainActivity extends AppCompatActivity implements
                                 .setShortLabel(getString(R.string.sky_map))
                                 .setIcon(IconCompat.createWithResource(this, R.mipmap.map_launcher))
                                 .build(), null);
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                    Intent home = new Intent(Intent.ACTION_MAIN);
+                    home.addCategory(Intent.CATEGORY_HOME);
+                    home.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(home);
+                }
             } else {
                 actionSnackRequested(R.string.shortcuts_not_supported);
             }

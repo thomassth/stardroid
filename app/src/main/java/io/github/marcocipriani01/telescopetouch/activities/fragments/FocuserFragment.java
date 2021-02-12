@@ -29,6 +29,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 
 import org.indilib.i4j.Constants;
 import org.indilib.i4j.client.INDIDevice;
@@ -92,6 +93,7 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
     private SeekBar speedBar = null;
     private CounterHandler stepsHandler;
     private TextView focuserName = null;
+    private Toolbar toolbar = null;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -108,6 +110,7 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
         positionEditText = rootView.findViewById(R.id.abs_pos_field);
         speedBar = rootView.findViewById(R.id.focus_speed_seekbar);
         focuserName = rootView.findViewById(R.id.focuser_name);
+        toolbar = rootView.findViewById(R.id.focuser_toolbar);
         stepsHandler = new CounterHandler(speedUpButton, speedDownButton, 1, 1000000, 100, 10, 100, false) {
             @Override
             protected void onIncrement() {
@@ -408,6 +411,8 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
                     handler.post(() -> {
                         if (focuserName != null)
                             focuserName.setText(devName);
+                        if (toolbar != null)
+                            toolbar.setTitle(devName);
                     });
                 }
                 return true;
@@ -454,6 +459,8 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
                 handler.post(() -> {
                     if (focuserName != null)
                         focuserName.setText(R.string.focuser_control);
+                    if (toolbar != null)
+                        toolbar.setTitle(R.string.focuser_control);
                 });
                 break;
             }

@@ -18,43 +18,6 @@
         android:layout_marginEnd="8dp"
         android:layout_weight="1">
 
-        <Button
-            android:id="@+id/focuser_slower"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/focuser_steps_box"
-            android:layout_marginEnd="32dp"
-            android:layout_toStartOf="@+id/focuser_steps_box"
-            android:text="-"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            tools:ignore="HardcodedText" />
-
-        <Button
-            android:id="@+id/focuser_faster"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/focuser_slower"
-            android:layout_marginStart="32dp"
-            android:layout_toEndOf="@+id/focuser_steps_box"
-            android:text="+"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            tools:ignore="HardcodedText" />
-
-        <EditText
-            android:id="@+id/focuser_steps_box"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/focus_speed_label"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="8dp"
-            android:ems="5"
-            android:hint="100"
-            android:imeOptions="flagNoExtractUi"
-            android:importantForAutofill="no"
-            android:inputType="number"
-            android:maxEms="8"
-            tools:ignore="HardcodedText" />
-
         <TextView
             android:id="@+id/abs_pos_label"
             android:layout_width="wrap_content"
@@ -71,37 +34,84 @@
             android:layout_alignStart="@+id/abs_pos_label"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:layout_toStartOf="@id/fok_abs_pos_button"
+            android:layout_toStartOf="@id/focuser_goto_controls"
             android:ems="10"
             android:hint="@string/position"
             android:imeOptions="flagNoExtractUi"
             android:importantForAutofill="no"
             android:inputType="number" />
 
-        <Button
-            android:id="@+id/fok_abs_pos_button"
+        <LinearLayout
+            android:id="@+id/focuser_goto_controls"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@id/abs_pos_field"
+            android:layout_alignTop="@+id/abs_pos_field"
             android:layout_alignParentEnd="true"
-            android:text="@string/go_to" />
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/fok_sync_pos_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/fok_abs_pos_button"
-            android:layout_alignStart="@id/fok_abs_pos_button"
-            android:text="@string/sync" />
+            <Button
+                android:id="@+id/fok_abs_pos_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/go_to" />
+
+            <Button
+                android:id="@+id/fok_sync_pos_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sync" />
+        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/focuser_slower"
+            android:layout_above="@+id/focuser_speed_control"
             android:layout_alignParentStart="true"
             android:layout_marginStart="8dp"
             android:layout_marginBottom="8dp"
             android:text="@string/steps_per_click" />
+
+        <LinearLayout
+            android:id="@+id/focuser_speed_control"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/focus_speed_label"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/focuser_slower"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="32dp"
+                android:layout_weight="0"
+                android:text="-"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                tools:ignore="HardcodedText" />
+
+            <EditText
+                android:id="@+id/focuser_steps_box"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_weight="1"
+                android:ems="5"
+                android:hint="100"
+                android:imeOptions="flagNoExtractUi"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                android:maxEms="8"
+                tools:ignore="HardcodedText" />
+
+            <Button
+                android:id="@+id/focuser_faster"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_weight="0"
+                android:text="+"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/focus_speed_label"
@@ -145,10 +155,9 @@
             <Button
                 android:id="@+id/focus_in"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="100dp"
                 android:layout_weight="1"
                 android:drawableBottom="@drawable/left"
-                android:minHeight="100dp"
                 android:paddingBottom="16dp"
                 android:text="@string/focus_in"
                 android:textSize="16sp"
@@ -157,10 +166,9 @@
             <Button
                 android:id="@+id/focuser_abort"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="100dp"
                 android:layout_weight="1"
                 android:drawableBottom="@drawable/stop"
-                android:minHeight="100dp"
                 android:paddingBottom="16dp"
                 android:text="@string/stop_motion"
                 android:textSize="16sp"
@@ -169,10 +177,9 @@
             <Button
                 android:id="@+id/focus_out"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="100dp"
                 android:layout_weight="1"
                 android:drawableBottom="@drawable/right"
-                android:minHeight="100dp"
                 android:paddingBottom="16dp"
                 android:text="@string/focus_out"
                 android:textSize="16sp"
