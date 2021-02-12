@@ -16,6 +16,8 @@
 
 package io.github.marcocipriani01.telescopetouch.control;
 
+import android.location.Location;
+import android.location.LocationManager;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -24,7 +26,10 @@ import java.util.Date;
 import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
+import io.github.marcocipriani01.telescopetouch.activities.SkyMapActivity;
 import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
+import io.github.marcocipriani01.telescopetouch.maths.Formatters;
+import io.github.marcocipriani01.telescopetouch.sensors.LocationHelper;
 
 /**
  * Manages all the different controllers that affect the model of the observer.
@@ -35,6 +40,7 @@ import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 public class ControllerGroup implements Controller {
 
     private final static String TAG = TelescopeTouchApp.getTag(ControllerGroup.class);
+    private static final float MIN_DIST_TO_SHOW_MSG_DEGREES = 0.01f;
     private final ArrayList<Controller> controllers = new ArrayList<>();
     private final ZoomController zoomController;
     private final ManualOrientationController manualDirectionController;
@@ -42,22 +48,39 @@ public class ControllerGroup implements Controller {
     private final TimeTravelClock timeTravelClock = new TimeTravelClock();
     private final TransitioningCompositeClock transitioningClock = new TransitioningCompositeClock(timeTravelClock, new RealClock());
     private final TeleportingController teleportingController;
+    private final LocationHelper locationHelper;
     private boolean usingAutoMode = true;
     private AstronomerModel model;
+    private Location location;
 
-    // TODO(jontayler): inject everything else.
     @Inject
-    ControllerGroup(SensorOrientationController sensorOrientationController, LocationController locationController) {
-        addController(locationController);
+    ControllerGroup(SkyMapActivity activity, LocationManager locationManager, SensorOrientationController sensorOrientationController) {
+        locationHelper = new LocationHelper(activity, locationManager) {
+            @Override
+            protected void onLocationOk(Location location) {
+                ControllerGroup.this.location = location;
+                if (model != null) setLocationInModel();
+            }
+        };
         this.sensorOrientationController = sensorOrientationController;
-        addController(sensorOrientationController);
+        controllers.add(sensorOrientationController);
         manualDirectionController = new ManualOrientationController();
-        addController(manualDirectionController);
+        controllers.add(manualDirectionController);
         zoomController = new ZoomController();
-        addController(zoomController);
+        controllers.add(zoomController);
         teleportingController = new TeleportingController();
-        addController(teleportingController);
+        controllers.add(teleportingController);
         setAutoMode(true);
+    }
+
+    private void setLocationInModel() {
+        if (Formatters.locationDistance(location, model.getLocation()) > MIN_DIST_TO_SHOW_MSG_DEGREES) {
+            Log.d(TAG, "Informing user of change of location");
+            locationHelper.showLocationToUser(location, location.getProvider());
+        } else {
+            Log.d(TAG, "Location not changed sufficiently to tell the user");
+        }
+        model.setLocation(location);
     }
 
     @Override
@@ -71,10 +94,12 @@ public class ControllerGroup implements Controller {
     @Override
     public void setModel(AstronomerModel model) {
         Log.i(TAG, "Setting model");
+        this.model = model;
+        if (location != null)
+            model.setLocation(location);
         for (Controller controller : controllers) {
             controller.setModel(model);
         }
-        this.model = model;
         model.setAutoUpdatePointing(usingAutoMode);
         model.setClock(transitioningClock);
     }
@@ -138,9 +163,8 @@ public class ControllerGroup implements Controller {
     public void setAutoMode(boolean enabled) {
         manualDirectionController.setEnabled(!enabled);
         sensorOrientationController.setEnabled(enabled);
-        if (model != null) {
+        if (model != null)
             model.setAutoUpdatePointing(enabled);
-        }
         usingAutoMode = enabled;
     }
 
@@ -150,6 +174,7 @@ public class ControllerGroup implements Controller {
         for (Controller controller : controllers) {
             controller.start();
         }
+        locationHelper.start();
     }
 
     @Override
@@ -158,6 +183,7 @@ public class ControllerGroup implements Controller {
         for (Controller controller : controllers) {
             controller.stop();
         }
+        locationHelper.start();
     }
 
     /**
@@ -194,13 +220,6 @@ public class ControllerGroup implements Controller {
      */
     public void teleport(GeocentricCoordinates target) {
         teleportingController.teleport(target);
-    }
-
-    /**
-     * Adds a new controller to this
-     */
-    private void addController(Controller controller) {
-        controllers.add(controller);
     }
 
     public void zoomBy(float ratio) {

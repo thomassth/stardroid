@@ -53,9 +53,9 @@ import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManage
 import io.github.marcocipriani01.telescopetouch.activities.util.SensorAccuracyDecoder;
 import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
-import io.github.marcocipriani01.telescopetouch.control.LocationController;
 import io.github.marcocipriani01.telescopetouch.control.MagneticDeclinationSwitcher;
 import io.github.marcocipriani01.telescopetouch.maths.Formatters;
+import io.github.marcocipriani01.telescopetouch.sensors.LocationHelper;
 
 public class DiagnosticActivity extends InjectableActivity implements SensorEventListener {
 
@@ -71,8 +71,6 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
     @Inject
     LocationManager locationManager;
     @Inject
-    LocationController locationController;
-    @Inject
     AstronomerModel model;
     @Inject
     MagneticDeclinationSwitcher magneticSwitcher;
@@ -86,6 +84,7 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
     private Sensor rotationVectorSensor;
     private Sensor lightSensor;
     private boolean continueUpdates;
+    private LocationHelper locationHelper;
     private DarkerModeManager darkerModeManager;
 
     @Override
@@ -97,6 +96,13 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
         darkerModeManager = new DarkerModeManager(getWindow(), null, PreferenceManager.getDefaultSharedPreferences(this));
         setTheme(darkerModeManager.getPref() ? R.style.DarkerAppTheme : R.style.AppTheme);
         setContentView(R.layout.activity_diagnostic);
+        locationHelper = new LocationHelper(this, locationManager) {
+            @Override
+            protected void onLocationOk(Location location) {
+                setText(R.id.diagnose_location_txt, Formatters.latitudeToString(location.getLatitude(), DiagnosticActivity.this)
+                        + ", " + Formatters.longitudeToString(location.getLongitude(), DiagnosticActivity.this));
+            }
+        };
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -129,7 +135,7 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
             }
         });
         darkerModeManager.start();
-        locationController.start();
+        locationHelper.start();
     }
 
     private void onResumeSensors() {
@@ -181,8 +187,6 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
             gpsStatusMessage = getString(R.string.permission_disabled);
         }
         setText(R.id.diagnose_gps_status_txt, gpsStatusMessage);
-        Location location = locationController.getCurrentLocation();
-        setText(R.id.diagnose_location_txt, Formatters.latitudeToString(location.getLatitude(), this) + ", " + Formatters.longitudeToString(location.getLongitude(), this));
     }
 
     @SuppressLint("DefaultLocale")
@@ -207,7 +211,7 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
         continueUpdates = false;
         sensorManager.unregisterListener(this);
         darkerModeManager.stop();
-        locationController.stop();
+        locationHelper.stop();
     }
 
     @Override

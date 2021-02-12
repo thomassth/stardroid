@@ -42,23 +42,23 @@ public abstract class CompassHelper extends LocationHelper implements SensorEven
     private final float[] geomagnetic = new float[3];
     private final SharedPreferences preferences;
     private final SensorAccuracyMonitor sensorAccuracyMonitor;
-    private Display display = null;
+    private final Display display;
     private boolean enableDeclination = true;
     private float magneticDeclination = 0.0f;
 
     @SuppressWarnings("deprecation")
-    public CompassHelper(Context context) {
-        super(context);
-        sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+    public CompassHelper(Activity activity) {
+        super(activity);
+        sensorManager = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            display = context.getDisplay();
-        } else if (context instanceof Activity) {
-            display = ((Activity) context).getWindowManager().getDefaultDisplay();
+            display = activity.getDisplay();
+        } else {
+            display = activity.getWindowManager().getDefaultDisplay();
         }
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        sensorAccuracyMonitor = new SensorAccuracyMonitor(sensorManager, context, preferences);
+        preferences = PreferenceManager.getDefaultSharedPreferences(activity);
+        sensorAccuracyMonitor = new SensorAccuracyMonitor(sensorManager, activity, preferences);
     }
 
     @Override

@@ -24,7 +24,8 @@
             android:id="@+id/goto_empy_label"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
+            android:paddingTop="50dp"
+            android:gravity="center_horizontal"
             android:visibility="gone"
             android:text="@string/no_matching_objects"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />

@@ -122,7 +122,7 @@ public class AladinFragment extends ActionFragment implements Toolbar.OnMenuItem
             aladinView = rootView.findViewById(R.id.aladin_web_view);
             aladinView.setAladinListener(this);
             aladinView.start();
-            locationHelper = new LocationHelper(context) {
+            locationHelper = new LocationHelper(getActivity()) {
                 @Override
                 protected void onLocationOk(Location location) {
                     AladinFragment.this.location = location;

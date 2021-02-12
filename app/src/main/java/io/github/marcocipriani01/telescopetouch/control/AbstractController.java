@@ -34,7 +34,6 @@ public abstract class AbstractController implements Controller {
     @Inject
     AstronomerModel model;
 
-    // TODO(jontayler): remove this
     @Override
     public void setModel(AstronomerModel model) {
         this.model = model;

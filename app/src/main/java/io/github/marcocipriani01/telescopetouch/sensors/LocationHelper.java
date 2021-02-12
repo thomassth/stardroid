@@ -16,7 +16,7 @@
 
 package io.github.marcocipriani01.telescopetouch.sensors;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Address;
@@ -30,12 +30,14 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
-import android.widget.Toast;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,18 +52,20 @@ public abstract class LocationHelper implements LocationListener {
     private static final String TAG = TelescopeTouchApp.getTag(LocationHelper.class);
     private static final int MINIMUM_DISTANCE_UPDATES_METRES = 2000;
     private static final int LOCATION_UPDATE_TIME_MS = 180000;
-    private final Context context;
+    private final Activity activity;
+    private final View rootView;
     private final LocationManager locationManager;
     private final SharedPreferences preferences;
 
-    public LocationHelper(Context context, LocationManager locationManager) {
-        this.context = context;
+    public LocationHelper(Activity activity, LocationManager locationManager) {
+        this.activity = activity;
+        rootView = activity.getWindow().getDecorView().getRootView();
         this.locationManager = locationManager;
-        preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        preferences = PreferenceManager.getDefaultSharedPreferences(activity);
     }
 
-    public LocationHelper(Context context) {
-        this(context, ContextCompat.getSystemService(context, LocationManager.class));
+    public LocationHelper(Activity activity) {
+        this(activity, ContextCompat.getSystemService(activity, LocationManager.class));
     }
 
     public boolean start() {
@@ -86,7 +90,7 @@ public abstract class LocationHelper implements LocationListener {
                     requestLocationPermission();
                     setLocationFromPrefs();
                 } else {
-                    new AlertDialog.Builder(context)
+                    new AlertDialog.Builder(activity)
                             .setTitle(R.string.location_offer_to_enable_gps_title).setCancelable(false)
                             .setMessage(R.string.location_offer_to_enable)
                             .setPositiveButton(android.R.string.ok, (dialog12, which) -> {
@@ -94,10 +98,10 @@ public abstract class LocationHelper implements LocationListener {
                                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                context.startActivity(intent);
+                                activity.startActivity(intent);
                             })
                             .setNegativeButton(android.R.string.cancel, (dialog1, which) -> {
-                                Toast.makeText(context, R.string.toast_manual_location_on, Toast.LENGTH_SHORT).show();
+                                Snackbar.make(rootView, R.string.msg_manual_location_on, Snackbar.LENGTH_SHORT).show();
                                 preferences.edit().putBoolean(ApplicationConstants.NO_AUTO_LOCATE_PREF, true).apply();
                                 setLocationFromPrefs();
                             }).show();
@@ -142,11 +146,11 @@ public abstract class LocationHelper implements LocationListener {
     }
 
     protected void requestLocationPermission() {
-        new AlertDialog.Builder(context)
+        new AlertDialog.Builder(activity)
                 .setTitle(R.string.warning).setCancelable(false)
                 .setMessage(R.string.location_no_auto)
                 .setNegativeButton(android.R.string.cancel, (dialog12, which) -> {
-                    Toast.makeText(context, R.string.toast_manual_location_on, Toast.LENGTH_SHORT).show();
+                    Snackbar.make(rootView, R.string.msg_manual_location_on, Snackbar.LENGTH_SHORT).show();
                     preferences.edit().putBoolean(ApplicationConstants.NO_AUTO_LOCATE_PREF, true).apply();
                     setLocationFromPrefs();
                 })
@@ -154,8 +158,8 @@ public abstract class LocationHelper implements LocationListener {
                     Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.setData(Uri.fromParts("package", context.getPackageName(), null));
-                    context.startActivity(intent);
+                    intent.setData(Uri.fromParts("package", activity.getPackageName(), null));
+                    activity.startActivity(intent);
                 }).show();
     }
 
@@ -167,9 +171,9 @@ public abstract class LocationHelper implements LocationListener {
             longitude = Double.parseDouble(preferences.getString(ApplicationConstants.LONGITUDE_PREF, "0"));
         } catch (NumberFormatException e) {
             Log.e(TAG, "Error parsing latitude or longitude preference");
-            Toast.makeText(context, R.string.malformed_loc_error, Toast.LENGTH_SHORT).show();
+            Snackbar.make(rootView, R.string.malformed_loc_error, Snackbar.LENGTH_SHORT).show();
         }
-        Location location = new Location(context.getString(R.string.preferences));
+        Location location = new Location(activity.getString(R.string.preferences));
         location.setLatitude(latitude);
         location.setLongitude(longitude);
         location.setAltitude(0.0f);
@@ -219,23 +223,23 @@ public abstract class LocationHelper implements LocationListener {
         List<Address> addresses = new ArrayList<>();
         String place;
         try {
-            addresses = new Geocoder(context).getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            addresses = new Geocoder(activity).getFromLocation(location.getLatitude(), location.getLongitude(), 1);
         } catch (IOException e) {
             Log.e(TAG, "Unable to reverse geocode location " + location);
         }
         if (addresses == null || addresses.isEmpty()) {
             Log.d(TAG, "No addresses returned");
-            place = String.format(context.getString(R.string.location_long_lat), location.getLongitude(), location.getLatitude());
+            place = String.format(activity.getString(R.string.location_long_lat), location.getLongitude(), location.getLatitude());
         } else {
             place = getPlaceSummary(location, addresses.get(0));
         }
         Log.d(TAG, "Location set to " + place);
-        Toast.makeText(context, String.format(context.getString(R.string.location_set_auto), provider, place),
-                Toast.LENGTH_SHORT).show();
+        Snackbar.make(rootView, String.format(activity.getString(R.string.location_set_auto), provider, place),
+                Snackbar.LENGTH_SHORT).show();
     }
 
     private String getPlaceSummary(Location location, Address address) {
-        String longLat = String.format(context.getString(R.string.location_long_lat),
+        String longLat = String.format(activity.getString(R.string.location_long_lat),
                 location.getLongitude(), location.getLatitude());
         if (address == null) {
             return longLat;

@@ -156,7 +156,7 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
         emptyLabel = rootView.findViewById(R.id.goto_empy_label);
         progressBar = rootView.findViewById(R.id.goto_loading);
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        locationHelper = new LocationHelper(context) {
+        locationHelper = new LocationHelper(getActivity()) {
             @Override
             protected void onLocationOk(Location location) {
                 GoToFragment.this.location = location;
@@ -293,6 +293,13 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
         if (requestedSearch != null) {
             if (entriesAdapter.visibleItemsCount() == 1) onListItemClick0(0);
             requestedSearch = null;
+        }
+        if (entriesAdapter.isEmpty()) {
+            emptyLabel.setVisibility(View.VISIBLE);
+            list.setVisibility(View.GONE);
+        } else {
+            list.setVisibility(View.VISIBLE);
+            emptyLabel.setVisibility(View.GONE);
         }
         return false;
     }
