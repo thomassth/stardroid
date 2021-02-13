@@ -21,6 +21,7 @@ import android.graphics.Color;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class HorizonLayer extends AbstractLayer {
     }
 
     @Override
-    protected void initializeAstroSources(ArrayList<AstronomicalSource> sources) {
+    protected void initializeAstroSources(List<AstronomicalSource> sources) {
         sources.add(new HorizonSource(model, getResources()));
     }
 
@@ -87,8 +88,8 @@ public class HorizonLayer extends AbstractLayer {
         private final GeocentricCoordinates east = new GeocentricCoordinates();
         private final GeocentricCoordinates west = new GeocentricCoordinates();
 
-        private final ArrayList<LineSource> lineSources = new ArrayList<>();
-        private final ArrayList<TextSource> textSources = new ArrayList<>();
+        private final List<LineSource> lineSources = Collections.synchronizedList(new ArrayList<>());
+        private final List<TextSource> textSources = Collections.synchronizedList(new ArrayList<>());
         private final AstronomerModel model;
 
         private long lastUpdateTimeMs = 0L;

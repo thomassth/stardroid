@@ -59,11 +59,11 @@ public abstract class AbstractLayer implements Layer {
     private final ReentrantLock renderMapLock = new ReentrantLock();
     private final HashMap<Class<?>, RenderManager<?>> renderMap = new HashMap<>();
     private final Resources resources;
-    private final ArrayList<TextSource> textSources = new ArrayList<>();
-    private final ArrayList<ImageSource> imageSources = new ArrayList<>();
-    private final ArrayList<PointSource> pointSources = new ArrayList<>();
-    private final ArrayList<LineSource> lineSources = new ArrayList<>();
-    private final ArrayList<AstronomicalSource> astroSources = new ArrayList<>();
+    private final List<TextSource> textSources = Collections.synchronizedList(new ArrayList<>());
+    private final List<ImageSource> imageSources = Collections.synchronizedList(new ArrayList<>());
+    private final List<PointSource> pointSources = Collections.synchronizedList(new ArrayList<>());
+    private final List<LineSource> lineSources = Collections.synchronizedList(new ArrayList<>());
+    private final List<AstronomicalSource> astroSources = Collections.synchronizedList(new ArrayList<>());
     private final boolean shouldUpdate;
     private final HashMap<String, SearchResult> searchIndex = new HashMap<>();
     private final PrefixStore prefixStore = new PrefixStore();
@@ -78,17 +78,13 @@ public abstract class AbstractLayer implements Layer {
     @Override
     public void initialize() {
         astroSources.clear();
-
         initializeAstroSources(astroSources);
-
         for (AstronomicalSource astroSource : astroSources) {
             AstronomicalSource sources = astroSource.initialize();
-
             textSources.addAll(sources.getLabels());
             imageSources.addAll(sources.getImages());
             pointSources.addAll(sources.getPoints());
             lineSources.addAll(sources.getLines());
-
             List<String> names = astroSource.getNames();
             if (!names.isEmpty()) {
                 GeocentricCoordinates searchLoc = astroSource.getSearchLocation();
@@ -98,7 +94,6 @@ public abstract class AbstractLayer implements Layer {
                 }
             }
         }
-
         // update the renderer
         updateLayerForControllerChange();
     }
@@ -107,7 +102,7 @@ public abstract class AbstractLayer implements Layer {
      * Subclasses should override this method and add all their
      * {@link AstronomicalSource} to the given {@link ArrayList}.
      */
-    protected abstract void initializeAstroSources(ArrayList<AstronomicalSource> sources);
+    protected abstract void initializeAstroSources(List<AstronomicalSource> sources);
 
     /**
      * Redraws the sources on this layer, after first refreshing them based on
@@ -174,32 +169,13 @@ public abstract class AbstractLayer implements Layer {
     }
 
     protected void addUpdateClosure(UpdateClosure closure) {
-        if (renderer != null) {
+        if (renderer != null)
             renderer.addUpdateClosure(closure);
-        }
     }
 
     protected void removeUpdateClosure(UpdateClosure closure) {
-        if (renderer != null) {
+        if (renderer != null)
             renderer.removeUpdateCallback(closure);
-        }
-    }
-
-    /**
-     * Forces a redraw of this layer, clearing all of the information about this
-     * layer in the renderer and repopulating it.
-     */
-    protected void redraw() {
-        refreshSources(EnumSet.of(UpdateType.Reset));
-    }
-
-    private void redraw(EnumSet<UpdateType> updateTypes) {
-        redraw(textSources, pointSources, lineSources, imageSources, updateTypes);
-    }
-
-    protected void redraw(final ArrayList<TextSource> textSources, final ArrayList<PointSource> pointSources,
-                          final ArrayList<LineSource> lineSources, final ArrayList<ImageSource> imageSources) {
-        redraw(textSources, pointSources, lineSources, imageSources, EnumSet.of(UpdateType.Reset));
     }
 
     /**
@@ -208,8 +184,7 @@ public abstract class AbstractLayer implements Layer {
      * either have their state updated, or will be overwritten by the given set
      * of UI elements.
      */
-    protected void redraw(final ArrayList<TextSource> textSources, final ArrayList<PointSource> pointSources,
-                          final ArrayList<LineSource> lineSources, final ArrayList<ImageSource> imageSources, EnumSet<UpdateType> updateTypes) {
+    private void redraw(EnumSet<UpdateType> updateTypes) {
         // Log.d(TAG, getLayerName() + " Updating renderer: " + updateTypes);
         if (renderer == null) {
             Log.w(TAG, "Renderer not set - aborting: " + this.getClass().getSimpleName());
@@ -234,9 +209,8 @@ public abstract class AbstractLayer implements Layer {
      * Sets the objects on the {@link RenderManager} to the given values,
      * creating (or disabling) the {@link RenderManager} if necessary.
      */
-    private <E> void setSources(ArrayList<E> sources, EnumSet<UpdateType> updateType, Class<E> clazz, AtomicSection atomic) {
-
-        @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
+    private <E> void setSources(List<E> sources, EnumSet<UpdateType> updateType, Class<E> clazz, AtomicSection atomic) {
         RenderManager<E> manager = (RenderManager<E>) renderMap.get(clazz);
         if (sources == null || sources.isEmpty()) {
             if (manager != null) {

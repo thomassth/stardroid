@@ -50,7 +50,7 @@ public class ProtobufAstronomicalSource extends AstronomicalSource {
     private final AstronomicalSourceProto proto;
     private final Resources resources;
     // Lazily construct the names.
-    private ArrayList<String> names;
+    private List<String> names;
 
     public ProtobufAstronomicalSource(AstronomicalSourceProto originalProto, Resources resources) {
         this.resources = resources;
@@ -95,7 +95,7 @@ public class ProtobufAstronomicalSource extends AstronomicalSource {
     }
 
     @Override
-    public synchronized ArrayList<String> getNames() {
+    public synchronized List<String> getNames() {
         if (names == null) {
             names = new ArrayList<>(proto.getNameIntIdsCount());
             for (int id : proto.getNameIntIdsList()) {
@@ -115,7 +115,7 @@ public class ProtobufAstronomicalSource extends AstronomicalSource {
         if (proto.getPointCount() == 0) {
             return Collections.emptyList();
         }
-        ArrayList<PointSource> points = new ArrayList<>(proto.getPointCount());
+        List<PointSource> points = Collections.synchronizedList(new ArrayList<>(proto.getPointCount()));
         for (PointElementProto element : proto.getPointList()) {
             points.add(new PointSource(getCoords(element.getLocation()), element.getColor(), element.getSize()));
         }
@@ -127,7 +127,7 @@ public class ProtobufAstronomicalSource extends AstronomicalSource {
         if (proto.getLabelCount() == 0) {
             return Collections.emptyList();
         }
-        ArrayList<TextSource> points = new ArrayList<>(proto.getLabelCount());
+        List<TextSource> points = Collections.synchronizedList(new ArrayList<>(proto.getLabelCount()));
         for (LabelElementProto element : proto.getLabelList()) {
             Log.d(TAG, "Label " + element.getStringsIntId() + " : " + element.getStringsStrId());
             points.add(new TextSource(getCoords(element.getLocation()),
@@ -142,10 +142,9 @@ public class ProtobufAstronomicalSource extends AstronomicalSource {
         if (proto.getLineCount() == 0) {
             return Collections.emptyList();
         }
-        ArrayList<LineSource> points = new ArrayList<>(proto.getLineCount());
+        List<LineSource> points = Collections.synchronizedList(new ArrayList<>(proto.getLineCount()));
         for (LineElementProto element : proto.getLineList()) {
-            ArrayList<GeocentricCoordinates> vertices =
-                    new ArrayList<>(element.getVertexCount());
+            List<GeocentricCoordinates> vertices = new ArrayList<>(element.getVertexCount());
             for (GeocentricCoordinatesProto elementVertex : element.getVertexList()) {
                 vertices.add(getCoords(elementVertex));
             }

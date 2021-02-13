@@ -55,7 +55,7 @@ public class PlanetsLayer extends AbstractLayer {
     }
 
     @Override
-    protected void initializeAstroSources(ArrayList<AstronomicalSource> sources) {
+    protected void initializeAstroSources(List<AstronomicalSource> sources) {
         for (Planet planet : Planet.values()) {
             sources.add(new PlanetSource(planet));
         }
@@ -83,9 +83,9 @@ public class PlanetsLayer extends AbstractLayer {
      */
     private class PlanetSource extends AstronomicalSource {
 
-        private final ArrayList<PointSource> pointSources = new ArrayList<>();
-        private final ArrayList<ImageSource> imageSources = new ArrayList<>();
-        private final ArrayList<TextSource> labelSources = new ArrayList<>();
+        private final List<PointSource> pointSources = Collections.synchronizedList(new ArrayList<>());
+        private final List<ImageSource> imageSources = Collections.synchronizedList(new ArrayList<>());
+        private final List<TextSource> labelSources = Collections.synchronizedList(new ArrayList<>());
         private final Planet planet;
         private final String name;
         private final GeocentricCoordinates currentCoords = new GeocentricCoordinates();

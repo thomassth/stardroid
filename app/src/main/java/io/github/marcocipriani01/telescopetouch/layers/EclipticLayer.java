@@ -20,6 +20,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
@@ -44,7 +45,7 @@ public class EclipticLayer extends AbstractLayer {
     }
 
     @Override
-    protected void initializeAstroSources(ArrayList<AstronomicalSource> sources) {
+    protected void initializeAstroSources(List<AstronomicalSource> sources) {
         sources.add(new EclipticSource(getResources()));
     }
 
@@ -71,8 +72,8 @@ public class EclipticLayer extends AbstractLayer {
         private static final float EPSILON = 23.439281f;
         private static final int LINE_COLOR = Color.argb(20, 248, 239, 188);
 
-        private final ArrayList<LineSource> lineSources = new ArrayList<>();
-        private final ArrayList<TextSource> textSources = new ArrayList<>();
+        private final List<LineSource> lineSources = Collections.synchronizedList(new ArrayList<>());
+        private final List<TextSource> textSources = Collections.synchronizedList(new ArrayList<>());
 
         public EclipticSource(Resources res) {
             String title = res.getString(R.string.ecliptic);

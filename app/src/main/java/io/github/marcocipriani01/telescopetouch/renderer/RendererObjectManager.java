@@ -27,68 +27,64 @@ import io.github.marcocipriani01.telescopetouch.renderer.util.TextureManager;
 
 public abstract class RendererObjectManager implements Comparable<RendererObjectManager> {
 
+    private static final float MAX_RADIUS_OF_VIEW = 360f;
     /**
      * Used to distinguish between different renderers, so we can have sets of them.
      */
     private static int sIndex = 0;
-    private final TextureManager mTextureManager;
-    private final int mLayer;
-    private final int mIndex;
-    private boolean mEnabled = true;
-    private SkyRenderer.RenderState mRenderState = null;
-    private UpdateListener mListener = null;
-    private float mMaxRadiusOfView = 360;  // in degrees
+    private final TextureManager textureManager;
+    private final int layer;
+    private final int index;
+    private boolean enabled = true;
+    private SkyRenderer.RenderState renderState = null;
+    private UpdateListener listener = null;
 
     public RendererObjectManager(int layer, TextureManager textureManager) {
-        mLayer = layer;
-        mTextureManager = textureManager;
+        this.layer = layer;
+        this.textureManager = textureManager;
         synchronized (RendererObjectManager.class) {
-            mIndex = sIndex++;
+            index = sIndex++;
         }
     }
 
     public void enable(boolean enable) {
-        mEnabled = enable;
-    }
-
-    public void setMaxRadiusOfView(float radiusOfView) {
-        mMaxRadiusOfView = radiusOfView;
+        enabled = enable;
     }
 
     public int compareTo(RendererObjectManager rom) {
         if (getClass() != rom.getClass()) {
             return getClass().getName().compareTo(rom.getClass().getName());
         }
-        return Integer.compare(mIndex, rom.mIndex);
+        return Integer.compare(index, rom.index);
     }
 
     final int getLayer() {
-        return mLayer;
+        return layer;
     }
 
     final void draw(GL10 gl) {
-        if (mEnabled && mRenderState.getRadiusOfView() <= mMaxRadiusOfView) {
+        if (enabled && renderState.getRadiusOfView() <= MAX_RADIUS_OF_VIEW) {
             drawInternal(gl);
         }
     }
 
     final SkyRenderer.RenderState getRenderState() {
-        return mRenderState;
+        return renderState;
     }
 
     final void setRenderState(SkyRenderer.RenderState state) {
-        mRenderState = state;
+        renderState = state;
     }
 
     final void setUpdateListener(UpdateListener listener) {
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
      * Notifies the renderer that the manager must be reloaded before the next time it is drawn.
      */
     final void queueForReload() {
-        mListener.queueForReload(this);
+        listener.queueForReload(this);
     }
 
     protected void logUpdateMismatch(String managerType, int expectedLength, int actualLength,
@@ -102,7 +98,7 @@ public abstract class RendererObjectManager implements Comparable<RendererObject
     }
 
     protected TextureManager textureManager() {
-        return mTextureManager;
+        return textureManager;
     }
 
     /**
