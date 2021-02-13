@@ -65,7 +65,7 @@ public abstract class AbstractFileBasedLayer extends AbstractLayer {
     }
 
     @Override
-    protected void initializeAstroSources(ArrayList<AstronomicalSource> sources) {
+    protected void initializeAstroSources(List<AstronomicalSource> sources) {
         sources.addAll(fileSources);
     }
 

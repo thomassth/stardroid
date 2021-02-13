@@ -44,7 +44,6 @@ public class LineSource extends AbstractSource implements Colorable {
 
     public LineSource(int color, List<GeocentricCoordinates> vertices, float lineWidth) {
         super(color);
-
         this.vertices = vertices;
         this.raDecs = new ArrayList<>();
         this.lineWidth = lineWidth;

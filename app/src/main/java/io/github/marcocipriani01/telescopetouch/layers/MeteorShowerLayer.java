@@ -21,6 +21,7 @@ import android.text.format.DateFormat;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -125,7 +126,7 @@ public class MeteorShowerLayer extends AbstractLayer {
     }
 
     @Override
-    protected void initializeAstroSources(ArrayList<AstronomicalSource> sources) {
+    protected void initializeAstroSources(List<AstronomicalSource> sources) {
         for (Shower shower : showers) {
             sources.add(new MeteorRadiantSource(model, shower, getResources()));
         }
@@ -169,19 +170,18 @@ public class MeteorShowerLayer extends AbstractLayer {
     }
 
     private static class MeteorRadiantSource extends AstronomicalSource {
+
         private static final int LABEL_COLOR = 0xf67e81;
         private static final long UPDATE_FREQ_MS = TimeUtils.MILLISECONDS_PER_DAY;
         private static final float SCALE_FACTOR = 0.03f;
-
-        private final List<ImageSource> imageSources = new ArrayList<>();
-        private final List<TextSource> labelSources = new ArrayList<>();
-
+        private final List<ImageSource> imageSources = Collections.synchronizedList(new ArrayList<>());
+        private final List<TextSource> labelSources = Collections.synchronizedList(new ArrayList<>());
+        private final List<String> searchNames = Collections.synchronizedList(new ArrayList<>());
         private final AstronomerModel model;
         private final ImageSource theImage;
         private final TextSource label;
         private final Shower shower;
         private final String name;
-        private final List<String> searchNames = new ArrayList<>();
         private long lastUpdateTimeMs = 0L;
 
         public MeteorRadiantSource(AstronomerModel model, Shower shower, Resources resources) {

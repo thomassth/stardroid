@@ -153,7 +153,7 @@ public abstract class RendererControllerBase {
      * Must be called once to register an object manager to the renderer.
      */
     public <E> void queueAddManager(final RenderManager<E> rom) {
-        queueRunnable("Adding manager: " + rom, CommandType.Data, () -> mRenderer.addObjectManager(rom.mManager));
+        queueRunnable("Adding manager: " + rom, CommandType.Data, () -> mRenderer.addObjectManager(rom.manager));
     }
 
     public void waitUntilFinished() {
@@ -188,20 +188,15 @@ public abstract class RendererControllerBase {
      */
     public static abstract class RenderManager<E> {
 
-        final protected RendererObjectManager mManager;
+        final protected RendererObjectManager manager;
 
         private RenderManager(RendererObjectManager mgr) {
-            mManager = mgr;
+            manager = mgr;
         }
 
         public void queueEnabled(final boolean enable, RendererControllerBase controller) {
-            final String msg = (enable ? "Enabling" : "Disabling") + " manager " + mManager;
-            controller.queueRunnable(msg, CommandType.Data, () -> mManager.enable(enable));
-        }
-
-        public void queueMaxFieldOfView(final float fov, RendererControllerBase controller) {
-            final String msg = "Setting manager max field of view: " + fov;
-            controller.queueRunnable(msg, CommandType.Data, () -> mManager.setMaxRadiusOfView(fov));
+            final String msg = (enable ? "Enabling" : "Disabling") + " manager " + manager;
+            controller.queueRunnable(msg, CommandType.Data, () -> manager.enable(enable));
         }
 
         public abstract void queueObjects(
@@ -214,6 +209,7 @@ public abstract class RendererControllerBase {
      * Class for managing a set of point objects.
      */
     public static class PointManager extends RenderManager<PointSource> {
+
         private PointManager(PointObjectManager manager) {
             super(manager);
         }
@@ -223,7 +219,7 @@ public abstract class RendererControllerBase {
                                  final EnumSet<RendererObjectManager.UpdateType> updateType,
                                  RendererControllerBase controller) {
             String msg = "Setting point objects";
-            controller.queueRunnable(msg, CommandType.Data, () -> ((PointObjectManager) mManager).updateObjects(points, updateType));
+            controller.queueRunnable(msg, CommandType.Data, () -> ((PointObjectManager) manager).updateObjects(points, updateType));
         }
     }
 
@@ -231,6 +227,7 @@ public abstract class RendererControllerBase {
      * Class for managing a set of polyline objects.
      */
     public static class LineManager extends RenderManager<LineSource> {
+
         private LineManager(PolyLineObjectManager manager) {
             super(manager);
         }
@@ -240,7 +237,7 @@ public abstract class RendererControllerBase {
                                  final EnumSet<RendererObjectManager.UpdateType> updateType,
                                  RendererControllerBase controller) {
             String msg = "Setting line objects";
-            controller.queueRunnable(msg, CommandType.Data, () -> ((PolyLineObjectManager) mManager).updateObjects(lines, updateType));
+            controller.queueRunnable(msg, CommandType.Data, () -> ((PolyLineObjectManager) manager).updateObjects(lines, updateType));
         }
     }
 
@@ -257,7 +254,7 @@ public abstract class RendererControllerBase {
                                  final EnumSet<RendererObjectManager.UpdateType> updateType,
                                  RendererControllerBase controller) {
             String msg = "Setting label objects";
-            controller.queueRunnable(msg, CommandType.Data, () -> ((LabelObjectManager) mManager).updateObjects(labels, updateType));
+            controller.queueRunnable(msg, CommandType.Data, () -> ((LabelObjectManager) manager).updateObjects(labels, updateType));
         }
     }
 
@@ -274,7 +271,7 @@ public abstract class RendererControllerBase {
                                  final EnumSet<RendererObjectManager.UpdateType> updateType,
                                  RendererControllerBase controller) {
             String msg = "Setting image objects";
-            controller.queueRunnable(msg, CommandType.Data, () -> ((ImageObjectManager) mManager).updateObjects(images, updateType));
+            controller.queueRunnable(msg, CommandType.Data, () -> ((ImageObjectManager) manager).updateObjects(images, updateType));
         }
     }
 }

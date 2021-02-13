@@ -28,7 +28,7 @@ public class TelescopeLayer extends AbstractLayer {
     }
 
     @Override
-    protected void initializeAstroSources(ArrayList<AstronomicalSource> sources) {
+    protected void initializeAstroSources(List<AstronomicalSource> sources) {
         sources.add(new TelescopeSource());
     }
 
@@ -48,8 +48,8 @@ public class TelescopeLayer extends AbstractLayer {
 
     private class TelescopeSource extends AstronomicalSource {
 
-        private final ArrayList<ImageSource> imageSources = new ArrayList<>();
-        private final ArrayList<TextSource> labelSources = new ArrayList<>();
+        private final List<ImageSource> imageSources = Collections.synchronizedList(new ArrayList<>());
+        private final List<TextSource> labelSources = Collections.synchronizedList(new ArrayList<>());
         private final GeocentricCoordinates coordinates = new GeocentricCoordinates();
         private long lastUpdateTimeMs = 0L;
         private TextSource textSource;

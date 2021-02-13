@@ -54,29 +54,32 @@ public class PointObjectManager extends RendererObjectManager {
         skyRegions.setRegionDataFactory(RegionData::new);
     }
 
-    public void updateObjects(List<PointSource> points, EnumSet<UpdateType> updateType) {
-        if (updateType.contains(UpdateType.UpdatePositions)) {
-            // Sanity check: make sure the number of points is unchanged.
-            if (points.size() != numPoints) {
-                Log.e("PointObjectManager", "Updating PointObjectManager a different number of points: update had " +
-                        points.size() + " vs " + numPoints + " before");
+    @SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
+    public synchronized void updateObjects(List<PointSource> points, EnumSet<UpdateType> updateType) {
+        synchronized (points) {
+            if (updateType.contains(UpdateType.UpdatePositions)) {
+                // Sanity check: make sure the number of points is unchanged.
+                if (points.size() != numPoints) {
+                    Log.e("PointObjectManager", "Updating PointObjectManager a different number of points: update had " +
+                            points.size() + " vs " + numPoints + " before");
+                    return;
+                }
+            } else if (!updateType.contains(UpdateType.Reset)) {
                 return;
             }
-        } else if (!updateType.contains(UpdateType.Reset)) {
-            return;
-        }
 
-        numPoints = points.size();
-        skyRegions.clear();
+            numPoints = points.size();
+            skyRegions.clear();
 
-        if (COMPUTE_REGIONS) {
-            // Find the region for each point, and put it in a separate list for that region.
-            for (PointSource point : points) {
-                skyRegions.getRegionData(points.size() < MINIMUM_NUM_POINTS_FOR_REGIONS ?
-                        SkyRegionMap.CATCHALL_REGION_ID : SkyRegionMap.getObjectRegion(point.getLocation())).sources.add(point);
+            if (COMPUTE_REGIONS) {
+                // Find the region for each point, and put it in a separate list for that region.
+                for (PointSource point : points) {
+                    skyRegions.getRegionData(points.size() < MINIMUM_NUM_POINTS_FOR_REGIONS ?
+                            SkyRegionMap.CATCHALL_REGION_ID : SkyRegionMap.getObjectRegion(point.getLocation())).sources.add(point);
+                }
+            } else {
+                skyRegions.getRegionData(SkyRegionMap.CATCHALL_REGION_ID).sources = points;
             }
-        } else {
-            skyRegions.getRegionData(SkyRegionMap.CATCHALL_REGION_ID).sources = points;
         }
 
         // Generate the resources for all of the regions.

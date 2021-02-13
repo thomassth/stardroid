@@ -21,6 +21,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
@@ -57,7 +58,7 @@ public class GridLayer extends AbstractLayer {
     }
 
     @Override
-    protected void initializeAstroSources(ArrayList<AstronomicalSource> sources) {
+    protected void initializeAstroSources(List<AstronomicalSource> sources) {
         sources.add(new GridSource(getResources(), numRightAscentionLines, numDeclinationLines));
     }
 
@@ -91,8 +92,8 @@ public class GridLayer extends AbstractLayer {
          */
         private static final int NUM_RA_VERTICES = 36;
 
-        private final ArrayList<LineSource> lineSources = new ArrayList<>();
-        private final ArrayList<TextSource> textSources = new ArrayList<>();
+        private final List<LineSource> lineSources = Collections.synchronizedList(new ArrayList<>());
+        private final List<TextSource> textSources = Collections.synchronizedList(new ArrayList<>());
 
         public GridSource(Resources res, int numRaSources, int numDecSources) {
             for (int r = 0; r < numRaSources; r++) {
