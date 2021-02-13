@@ -68,6 +68,7 @@ import java.util.Date;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
+import io.github.marcocipriani01.telescopetouch.ProUtils;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.indi.AsyncBlobLoader;
@@ -335,11 +336,19 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
             connectionManager.setBlobEnabled(isChecked);
             preferences.edit().putBoolean(ApplicationConstants.RECEIVE_BLOB_PREF, isChecked).apply();
         } else if (buttonView == fitsStretchSwitch) {
-            blobLoader.setStretch(isChecked);
-            preferences.edit().putBoolean(ApplicationConstants.STRETCH_FITS_PREF, isChecked).apply();
-            INDIBLOBProperty selectedItem = (INDIBLOBProperty) selectionSpinner.getSelectedItem();
-            if (selectedItem != null)
-                loadBlob(selectedItem);
+            if (ProUtils.isPro) {
+                blobLoader.setStretch(isChecked);
+                preferences.edit().putBoolean(ApplicationConstants.STRETCH_FITS_PREF, isChecked).apply();
+                INDIBLOBProperty selectedItem = (INDIBLOBProperty) selectionSpinner.getSelectedItem();
+                if (selectedItem != null)
+                    loadBlob(selectedItem);
+            } else {
+                fitsStretchSwitch.setOnCheckedChangeListener(null);
+                fitsStretchSwitch.setSelected(false);
+                fitsStretchSwitch.setChecked(false);
+                fitsStretchSwitch.setOnCheckedChangeListener(this);
+                ProUtils.toast(context);
+            }
         }
     }
 
