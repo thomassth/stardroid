@@ -635,4 +635,10 @@
     <string name="altitude">Altitude</string>
     <string name="no_location">No location</string>
     <string name="toggling_manual_mode">Toggling manual mode</string>
+    <string name="polaris_finder_reticle">Polar finder reticle</string>
+    <string name="background_service">Background service</string>
+    <string name="mount">Mount</string>
+    <string name="exit">Exit</string>
+    <string name="exit_action">Exit action</string>
+    <string name="general">General</string>
 </resources>

@@ -49,7 +49,6 @@ import java.util.HashMap;
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.NSDHelper;
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.MainActivity;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.NewServerDialog;
 import io.github.marcocipriani01.telescopetouch.activities.util.ImprovedSpinnerListener;
@@ -117,8 +116,8 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
                 if (activity instanceof MainActivity)
                     ((MainActivity) activity).launchServersActivity();
             } else {
-                ConnectionManager.ConnectionState state = connectionManager.getState();
-                if (state == ConnectionManager.ConnectionState.DISCONNECTED) {
+                ConnectionManager.State state = connectionManager.getState();
+                if (state == ConnectionManager.State.DISCONNECTED) {
                     if (host.contains("@")) {
                         String[] split = host.split("@");
                         if (split.length == 2) host = split[1];
@@ -142,7 +141,7 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
                     }
                     preferences.edit().putInt(ApplicationConstants.INDI_PORT_PREF, port).apply();
                     connectionManager.connect(host, port);
-                } else if (state == ConnectionManager.ConnectionState.CONNECTED) {
+                } else if (state == ConnectionManager.State.CONNECTED) {
                     connectionManager.disconnect();
                 }
             }
@@ -214,7 +213,7 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
     }
 
     @Override
-    public void updateConnectionState(ConnectionManager.ConnectionState state) {
+    public void updateConnectionState(ConnectionManager.State state) {
         refreshUi(state);
     }
 
@@ -231,7 +230,7 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
         notifyActionChange();
     }
 
-    private void refreshUi(ConnectionManager.ConnectionState state) {
+    private void refreshUi(ConnectionManager.State state) {
         switch (state) {
             case CONNECTED: {
                 connectionButton.post(() -> {
