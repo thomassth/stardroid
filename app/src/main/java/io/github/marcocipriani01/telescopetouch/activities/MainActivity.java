@@ -15,6 +15,8 @@
 package io.github.marcocipriani01.telescopetouch.activities;
 
 import android.Manifest;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -34,6 +36,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.pm.ShortcutInfoCompat;
 import androidx.core.content.pm.ShortcutManagerCompat;
 import androidx.core.graphics.drawable.IconCompat;
@@ -162,9 +165,15 @@ public class MainActivity extends AppCompatActivity implements
         super.onStart();
         connectionManager.addManagerListener(this);
         preferences.registerOnSharedPreferenceChangeListener(this);
-        Intent intent = new Intent(this, AppForegroundService.class);
-        intent.setAction(AppForegroundService.ACTION_STOP_SERVICE);
-        startService(intent);
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (AppForegroundService.class.getName().equals(service.service.getClassName())) {
+                Intent intent = new Intent(this, AppForegroundService.class);
+                intent.setAction(AppForegroundService.ACTION_STOP_SERVICE);
+                ContextCompat.startForegroundService(this, intent);
+                return;
+            }
+        }
     }
 
     @Override
@@ -185,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements
         if (exitAction.equals("1") || (exitAction.equals("2") && connectionManager.isConnected())) {
             Intent intent = new Intent(this, AppForegroundService.class);
             intent.setAction(AppForegroundService.ACTION_START_SERVICE);
-            startService(intent);
+            ContextCompat.startForegroundService(this, intent);
         }
     }
 
