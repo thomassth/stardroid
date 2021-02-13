@@ -16,6 +16,8 @@
 
 package io.github.marcocipriani01.telescopetouch.activities.util;
 
+import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.provider.Settings;
@@ -39,10 +41,12 @@ public class DarkerModeManager implements OnSharedPreferenceChangeListener {
     private final SharedPreferences preferences;
     private final NightModeListener nightModeListener;
     private final Window window;
+    private final ContentResolver contentResolver;
     private boolean nightMode = false;
 
-    public DarkerModeManager(Window window, NightModeListener nightModeListener, SharedPreferences preferences) {
-        this.window = window;
+    public DarkerModeManager(Activity activity, NightModeListener nightModeListener, SharedPreferences preferences) {
+        this.window = activity.getWindow();
+        contentResolver = activity.getContentResolver();
         this.nightModeListener = nightModeListener;
         this.preferences = preferences;
     }
@@ -53,8 +57,7 @@ public class DarkerModeManager implements OnSharedPreferenceChangeListener {
         WindowManager.LayoutParams params = window.getAttributes();
         if (nightMode) {
             try {
-                float brightness = android.provider.Settings.System.getInt(
-                        TelescopeTouchApp.getContext().getContentResolver(), Settings.System.SCREEN_BRIGHTNESS) / 255.0f;
+                float brightness = Settings.System.getInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS) / 255.0f;
                 if (brightness > BRIGHTNESS_DIM)
                     params.screenBrightness = BRIGHTNESS_DIM;
             } catch (Settings.SettingNotFoundException e) {

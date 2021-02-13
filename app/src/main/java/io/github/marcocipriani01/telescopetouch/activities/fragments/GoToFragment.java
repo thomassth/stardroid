@@ -211,7 +211,8 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
             setListShown(false);
             catalog.setListener(this);
             // List loading
-            if (!catalog.isLoading()) new Thread(catalog::load).start();
+            if (!catalog.isLoading())
+                new Thread(() -> catalog.load(context.getResources())).start();
         }
         locationHelper.start();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        darkerModeManager = new DarkerModeManager(getWindow(), this, preferences);
+        darkerModeManager = new DarkerModeManager(this, this, preferences);
         darkerMode = darkerModeManager.getPref();
         setTheme(darkerMode ? R.style.DarkerAppThemeNoActionBar : R.style.AppThemeNoActionBar);
         setContentView(R.layout.activity_main);

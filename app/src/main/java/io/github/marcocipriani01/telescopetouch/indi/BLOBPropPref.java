@@ -14,9 +14,7 @@
 
 package io.github.marcocipriani01.telescopetouch.indi;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.widget.EditText;
@@ -24,13 +22,9 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentActivity;
 
 import org.indilib.i4j.client.INDIBLOBElement;
-import org.indilib.i4j.client.INDIBLOBProperty;
 import org.indilib.i4j.client.INDIProperty;
 
 import java.util.List;
@@ -63,34 +57,14 @@ public class BLOBPropPref extends PropPref<INDIBLOBElement> {
             stringBuilder.append(elements.get(i).getValueAsString());
             return new SpannableString(stringBuilder.toString());
         } else {
-            return new SpannableString(getContext().getString(R.string.no_indi_elements));
+            return new SpannableString(resources.getString(R.string.no_indi_elements));
         }
     }
 
     @Override
     protected void onClick() {
         Context context = getContext();
-        if (!getSummary().toString().equals(context.getString(R.string.no_indi_elements))) {
-            BlobViewFragment requestFragment = new BlobViewFragment();
-            requestFragment.setArguments((INDIBLOBProperty) prop);
-            requestFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "request");
-        }
-    }
-
-    public static class BlobViewFragment extends DialogFragment {
-
-        private INDIBLOBProperty prop;
-        private Context context;
-
-        @Override
-        public void onAttach(@NonNull Context context) {
-            this.context = context;
-            super.onAttach(context);
-        }
-
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
+        if (!getSummary().toString().equals(resources.getString(R.string.no_indi_elements))) {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             final List<INDIBLOBElement> elements = prop.getElementsAsList();
             LinearLayout layout = new LinearLayout(context);
@@ -116,13 +90,9 @@ public class BLOBPropPref extends PropPref<INDIBLOBElement> {
             layout.addView(textView, layoutParams);
             ScrollView scrollView = new ScrollView(context);
             scrollView.addView(layout);
-            return builder.setView(scrollView).setTitle(prop.getLabel())
+            builder.setView(scrollView).setTitle(prop.getLabel())
                     .setNegativeButton(R.string.back_request, null)
-                    .setIcon(R.drawable.edit).create();
-        }
-
-        private void setArguments(INDIBLOBProperty prop) {
-            this.prop = prop;
+                    .setIcon(R.drawable.edit).show();
         }
     }
 }

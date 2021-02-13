@@ -18,7 +18,6 @@ import android.util.Log;
 
 import org.indilib.i4j.client.INDIProperty;
 
-import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
 /**
@@ -44,8 +43,7 @@ public class PropUpdater extends Thread {
             prop.sendChangesToDriver();
         } catch (Exception e) {
             Log.e(TAG, "Property update error!", e);
-            TelescopeTouchApp.connectionManager.log(
-                    TelescopeTouchApp.getContext().getString(R.string.error) + " " + e.getLocalizedMessage());
+            TelescopeTouchApp.connectionManager.log(e);
         }
     }
 }

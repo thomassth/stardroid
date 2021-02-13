@@ -14,9 +14,7 @@
 
 package io.github.marcocipriani01.telescopetouch.indi;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.widget.EditText;
@@ -25,15 +23,11 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentActivity;
 
 import org.indilib.i4j.Constants;
 import org.indilib.i4j.client.INDIProperty;
 import org.indilib.i4j.client.INDITextElement;
-import org.indilib.i4j.client.INDITextProperty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,27 +69,6 @@ public class TextPropPref extends PropPref<INDITextElement> {
     protected void onClick() {
         Context context = getContext();
         if (!getSummary().toString().equals(context.getString(R.string.no_indi_elements))) {
-            TextRequestFragment requestFragment = new TextRequestFragment();
-            requestFragment.setArguments((INDITextProperty) prop, this);
-            requestFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "request");
-        }
-    }
-
-    public static class TextRequestFragment extends DialogFragment {
-
-        private INDITextProperty prop;
-        private PropPref<INDITextElement> propPref;
-        private Context context;
-
-        @Override
-        public void onAttach(@NonNull Context context) {
-            this.context = context;
-            super.onAttach(context);
-        }
-
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             final List<INDITextElement> elements = prop.getElementsAsList();
             final ArrayList<EditText> editTextViews = new ArrayList<>(elements.size());
@@ -131,20 +104,15 @@ public class TextPropPref extends PropPref<INDITextElement> {
                         }
                     } catch (Exception e) {
                         Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                        TelescopeTouchApp.connectionManager.log(context.getResources().getString(R.string.error) + e.getLocalizedMessage());
+                        TelescopeTouchApp.connectionManager.log(e);
                     }
-                    propPref.sendChanges();
+                    sendChanges();
                 });
                 builder.setNegativeButton(android.R.string.cancel, null);
             } else {
                 builder.setNegativeButton(R.string.back_request, null);
             }
-            return builder.setIcon(R.drawable.edit).create();
-        }
-
-        private void setArguments(INDITextProperty prop, PropPref<INDITextElement> propPref) {
-            this.prop = prop;
-            this.propPref = propPref;
+            builder.setIcon(R.drawable.edit).show();
         }
     }
 }

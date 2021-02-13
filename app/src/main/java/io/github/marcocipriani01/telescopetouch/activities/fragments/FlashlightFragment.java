@@ -49,10 +49,8 @@ public class FlashlightFragment extends ActionFragment {
     @SuppressWarnings("deprecation")
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_flashlight, container, false);
-
         ToggleButton flashToggle = rootView.findViewById(R.id.flashlight_button);
-        if (!TelescopeTouchApp.getContext().getPackageManager()
-                .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)) {
+        if (!context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)) {
             requestActionSnack(R.string.flashlight_unavailable);
             flashToggle.setEnabled(false);
         }

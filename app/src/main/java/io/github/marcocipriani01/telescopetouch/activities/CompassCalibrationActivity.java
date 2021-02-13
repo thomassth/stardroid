@@ -61,7 +61,7 @@ public class CompassCalibrationActivity extends InjectableActivity implements Se
         DaggerCompassCalibrationComponent.builder()
                 .applicationComponent(getApplicationComponent())
                 .compassCalibrationModule(new CompassCalibrationModule(this)).build().inject(this);
-        darkerModeManager = new DarkerModeManager(getWindow(), null, PreferenceManager.getDefaultSharedPreferences(this));
+        darkerModeManager = new DarkerModeManager(this, null, PreferenceManager.getDefaultSharedPreferences(this));
         setTheme(darkerModeManager.getPref() ? R.style.DarkerAppTheme : R.style.AppTheme);
         setContentView(R.layout.activity_compass_calibration);
 

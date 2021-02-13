@@ -14,19 +14,14 @@
 
 package io.github.marcocipriani01.telescopetouch.indi;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentActivity;
 
 import org.indilib.i4j.Constants;
 import org.indilib.i4j.client.INDIProperty;
@@ -84,27 +79,6 @@ public class SwitchPropPref extends PropPref<INDISwitchElement> {
     protected void onClick() {
         Context context = getContext();
         if (!getSummary().toString().equals(context.getString(R.string.no_indi_elements))) {
-            SwitchRequestFragment requestFragment = new SwitchRequestFragment();
-            requestFragment.setArguments((INDISwitchProperty) prop, this);
-            requestFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "request");
-        }
-    }
-
-    public static class SwitchRequestFragment extends DialogFragment {
-
-        private INDISwitchProperty prop;
-        private PropPref<INDISwitchElement> propPref;
-        private Context context;
-
-        @Override
-        public void onAttach(@NonNull Context context) {
-            this.context = context;
-            super.onAttach(context);
-        }
-
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             final List<INDISwitchElement> elements = prop.getElementsAsList();
             String[] elementsString = new String[elements.size()];
@@ -118,7 +92,7 @@ public class SwitchPropPref extends PropPref<INDISwitchElement> {
                 if (b) singleCheckedItem = i;
             }
 
-            Constants.SwitchRules rule = prop.getRule();
+            Constants.SwitchRules rule = ((INDISwitchProperty) prop).getRule();
             if (rule == Constants.SwitchRules.ANY_OF_MANY) {
                 builder.setMultiChoiceItems(elementsString, elementsChecked,
                         (dialog, which, isChecked) -> elementsChecked[which] = isChecked);
@@ -140,20 +114,15 @@ public class SwitchPropPref extends PropPref<INDISwitchElement> {
                         }
                     } catch (Exception e) {
                         Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                        TelescopeTouchApp.connectionManager.log(context.getResources().getString(R.string.error) + e.getLocalizedMessage());
+                        TelescopeTouchApp.connectionManager.log(e);
                     }
-                    propPref.sendChanges();
+                    sendChanges();
                 });
                 builder.setNegativeButton(android.R.string.cancel, null);
             } else {
                 builder.setNegativeButton(R.string.back_request, null);
             }
-            return builder.setIcon(R.drawable.edit).create();
-        }
-
-        private void setArguments(INDISwitchProperty prop, PropPref<INDISwitchElement> propPref) {
-            this.prop = prop;
-            this.propPref = propPref;
+            builder.setIcon(R.drawable.edit).show();
         }
     }
 }

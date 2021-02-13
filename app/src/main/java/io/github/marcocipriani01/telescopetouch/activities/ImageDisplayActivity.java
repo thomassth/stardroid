@@ -57,7 +57,7 @@ public class ImageDisplayActivity extends InjectableActivity {
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         getApplicationComponent().inject(this);
-        darkerModeManager = new DarkerModeManager(getWindow(), null, PreferenceManager.getDefaultSharedPreferences(this));
+        darkerModeManager = new DarkerModeManager(this, null, PreferenceManager.getDefaultSharedPreferences(this));
         setTheme(darkerModeManager.getPref() ? R.style.DarkerAppTheme : R.style.AppTheme);
         setContentView(R.layout.activity_gallery_image);
         ActionBar actionBar = getSupportActionBar();
