@@ -63,4 +63,5 @@ public class ApplicationConstants {
     public static final String ALADIN_WELCOME = "aladin_welcome";
     public static final String ALADIN_J2000_NOTE = "aladin_j2000_note";
     public static final String VIZIER_WELCOME = "vizier_welcome";
+    public static final String EXIT_ACTION_PREF = "exit_action";
 }

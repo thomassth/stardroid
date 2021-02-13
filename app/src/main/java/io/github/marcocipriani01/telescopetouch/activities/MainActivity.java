@@ -26,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -51,6 +52,8 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Objects;
 
+import io.github.marcocipriani01.telescopetouch.AppForegroundService;
+import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.AboutFragment;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.ActionFragment;
@@ -159,6 +162,18 @@ public class MainActivity extends AppCompatActivity implements
         super.onStart();
         connectionManager.addManagerListener(this);
         preferences.registerOnSharedPreferenceChangeListener(this);
+        Intent intent = new Intent(this, AppForegroundService.class);
+        intent.setAction(AppForegroundService.ACTION_STOP_SERVICE);
+        startService(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (preferences.getString(ApplicationConstants.EXIT_ACTION_PREF, "0").equals("3") && connectionManager.isConnected()) {
+            connectionManager.disconnect();
+            Toast.makeText(this, R.string.disconnected, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -166,6 +181,12 @@ public class MainActivity extends AppCompatActivity implements
         super.onStop();
         connectionManager.removeManagerListener(this);
         preferences.registerOnSharedPreferenceChangeListener(this);
+        String exitAction = preferences.getString(ApplicationConstants.EXIT_ACTION_PREF, "0");
+        if (exitAction.equals("1") || (exitAction.equals("2") && connectionManager.isConnected())) {
+            Intent intent = new Intent(this, AppForegroundService.class);
+            intent.setAction(AppForegroundService.ACTION_START_SERVICE);
+            startService(intent);
+        }
     }
 
     @Override

@@ -111,9 +111,9 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
         }).start();
     }
 
-    public ConnectionState getState() {
-        return busy ? ConnectionState.BUSY :
-                (((indiConnection != null) && indiConnection.isConnected()) ? ConnectionState.CONNECTED : ConnectionState.DISCONNECTED);
+    public State getState() {
+        return busy ? State.BUSY :
+                (((indiConnection != null) && indiConnection.isConnected()) ? State.CONNECTED : State.DISCONNECTED);
     }
 
     public boolean isConnected() {
@@ -123,7 +123,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
     /**
      * @param state the new state of the Connection button.
      */
-    public void updateState(ConnectionState state) {
+    public void updateState(State state) {
         for (ManagerListener listener : managerListeners) {
             listener.updateConnectionState(state);
         }
@@ -143,8 +143,8 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
      * @param port the port of the INDI server
      */
     public void connect(String host, int port) {
-        if (getState() == ConnectionState.DISCONNECTED) {
-            updateState(ConnectionState.BUSY);
+        if (getState() == State.DISCONNECTED) {
+            updateState(State.BUSY);
             busy = true;
             log(resources.getString(R.string.try_to_connect) + host + ":" + port);
             new Thread(() -> {
@@ -157,12 +157,12 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
                     indiConnection.connect();
                     indiConnection.askForDevices();
                     busy = false;
-                    updateState(ConnectionState.CONNECTED);
+                    updateState(State.CONNECTED);
                     log(resources.getString(R.string.connected));
                 } catch (Exception e) {
                     Log.e(TAG, e.getLocalizedMessage(), e);
                     busy = false;
-                    updateState(ConnectionState.DISCONNECTED);
+                    updateState(State.DISCONNECTED);
                     log(e.getLocalizedMessage());
                 }
             }).start();
@@ -235,7 +235,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
      * Breaks the connection.
      */
     public void disconnect() {
-        if (getState() == ConnectionState.CONNECTED) {
+        if (getState() == State.CONNECTED) {
             new Thread(() -> {
                 busy = true;
                 try {
@@ -245,7 +245,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
                 }
                 indiConnection = null;
                 busy = false;
-                updateState(ConnectionState.DISCONNECTED);
+                updateState(State.DISCONNECTED);
             }).start();
         } else {
             log(resources.getString(R.string.connection_busy));
@@ -300,7 +300,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
         busy = false;
         this.indiConnection = null;
         clearTelescopeVars();
-        updateState(ConnectionState.DISCONNECTED);
+        updateState(State.DISCONNECTED);
         log(resources.getString(R.string.connection_lost));
         for (ManagerListener listener : managerListeners) {
             listener.onConnectionLost();
@@ -396,7 +396,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
         }
     }
 
-    public enum ConnectionState {
+    public enum State {
         DISCONNECTED, CONNECTED, BUSY
     }
 
@@ -413,7 +413,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
         default void deviceLog(LogItem log) {
         }
 
-        default void updateConnectionState(ConnectionState state) {
+        default void updateConnectionState(State state) {
         }
 
         default void onConnectionLost() {

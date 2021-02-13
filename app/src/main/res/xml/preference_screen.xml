@@ -1,11 +1,19 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:key="stardroid.preferences"
     app:iconSpaceReserved="false">
 
     <PreferenceCategory
-        android:title="@string/network"
+        android:title="@string/general"
         app:iconSpaceReserved="false">
+
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/exit_action_pref"
+            android:entryValues="@array/exit_action_pref_values"
+            android:key="exit_action"
+            android:summary="%s"
+            android:title="@string/exit_action"
+            app:iconSpaceReserved="false" />
 
         <CheckBoxPreference
             android:defaultValue="true"
@@ -39,8 +47,7 @@
             android:layout="?android:attr/preferenceLayoutChild"
             android:summary="@string/pick_location_description"
             android:title="@string/pick_location_pref"
-            app:iconSpaceReserved="false">
-        </Preference>
+            app:iconSpaceReserved="false" />
 
         <EditTextPreference
             android:defaultValue="0"
@@ -78,8 +85,8 @@
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="compensate_precession"
-            android:title="@string/precession_pref"
             android:summary="@string/precession_pref_description"
+            android:title="@string/precession_pref"
             app:iconSpaceReserved="false" />
 
         <EditTextPreference
@@ -118,7 +125,7 @@
             android:entryValues="@array/reticle_pref_values"
             android:key="polaris_reticle"
             android:summary="%s"
-            android:title="Polar finder reticle"
+            android:title="@string/polaris_finder_reticle"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
