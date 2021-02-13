@@ -77,12 +77,14 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
     private volatile boolean busy = false;
     private volatile boolean blobEnabled = false;
     private SharedPreferences preferences;
+    private Resources resources;
 
     public ArrayList<LogItem> getLogs() {
         return logs;
     }
 
     public void init(Context context) {
+        this.resources = context.getResources();
         dateFormat = DateFormat.getDateFormat(context);
         timeFormat = DateFormat.getTimeFormat(context);
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -141,7 +143,6 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
      * @param port the port of the INDI server
      */
     public void connect(String host, int port) {
-        final Resources resources = TelescopeTouchApp.getAppResources();
         if (getState() == ConnectionState.DISCONNECTED) {
             updateState(ConnectionState.BUSY);
             busy = true;
@@ -166,7 +167,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
                 }
             }).start();
         } else {
-            log(TelescopeTouchApp.getAppResources().getString(R.string.connection_busy_2));
+            log(resources.getString(R.string.connection_busy_2));
         }
     }
 
@@ -186,6 +187,10 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
                 }
             });
         }
+    }
+
+    public void log(Exception e) {
+        log(resources.getString(R.string.error) + " " + e.getLocalizedMessage());
     }
 
     /**
@@ -243,7 +248,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
                 updateState(ConnectionState.DISCONNECTED);
             }).start();
         } else {
-            log(TelescopeTouchApp.getAppResources().getString(R.string.connection_busy));
+            log(resources.getString(R.string.connection_busy));
         }
     }
 
@@ -272,7 +277,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
     @Override
     public void newDevice(INDIServerConnection connection, INDIDevice device) {
         device.addINDIDeviceListener(this);
-        log(TelescopeTouchApp.getAppResources().getString(R.string.new_device) + " " + device.getName());
+        log(resources.getString(R.string.new_device) + " " + device.getName());
         new Thread(() -> {
             try {
                 device.blobsEnable(this.blobEnabled ? Constants.BLOBEnables.ALSO : Constants.BLOBEnables.NEVER);
@@ -285,7 +290,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
     @Override
     public void removeDevice(INDIServerConnection connection, INDIDevice device) {
         device.removeINDIDeviceListener(this);
-        log(TelescopeTouchApp.getAppResources().getString(R.string.device_remove) + " " + device.getName());
+        log(resources.getString(R.string.device_remove) + " " + device.getName());
         if (device.getName().equals(telescopeName))
             clearTelescopeVars();
     }
@@ -296,7 +301,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
         this.indiConnection = null;
         clearTelescopeVars();
         updateState(ConnectionState.DISCONNECTED);
-        log(TelescopeTouchApp.getAppResources().getString(R.string.connection_lost));
+        log(resources.getString(R.string.connection_lost));
         for (ManagerListener listener : managerListeners) {
             listener.onConnectionLost();
         }

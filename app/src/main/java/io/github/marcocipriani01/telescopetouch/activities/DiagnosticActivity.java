@@ -93,7 +93,7 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
         DaggerDiagnosticActivityComponent.builder().applicationComponent(
                 getApplicationComponent()).diagnosticActivityModule(new DiagnosticActivityModule(this))
                 .build().inject(this);
-        darkerModeManager = new DarkerModeManager(getWindow(), null, PreferenceManager.getDefaultSharedPreferences(this));
+        darkerModeManager = new DarkerModeManager(this, null, PreferenceManager.getDefaultSharedPreferences(this));
         setTheme(darkerModeManager.getPref() ? R.style.DarkerAppTheme : R.style.AppTheme);
         setContentView(R.layout.activity_diagnostic);
         locationHelper = new LocationHelper(this, locationManager) {

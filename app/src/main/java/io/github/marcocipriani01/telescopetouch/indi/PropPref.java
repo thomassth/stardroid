@@ -41,9 +41,11 @@ public abstract class PropPref<Element extends INDIElement> extends Preference i
 
     protected final INDIProperty<Element> prop;
     protected View title = null;
+    protected Resources resources;
 
     protected PropPref(Context context, INDIProperty<Element> prop) {
         super(context);
+        resources = context.getResources();
         this.prop = prop;
         prop.addINDIPropertyListener(this);
         setTitle(createTitle());
@@ -84,7 +86,6 @@ public abstract class PropPref<Element extends INDIElement> extends Preference i
     protected Spannable createTitle() {
         Spannable titleText = new SpannableString(prop.getLabel());
         int color;
-        Resources resources = getContext().getResources();
         switch (prop.getState()) {
             case ALERT: {
                 color = resources.getColor(R.color.light_red);

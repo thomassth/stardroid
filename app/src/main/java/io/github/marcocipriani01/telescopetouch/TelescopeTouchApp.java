@@ -14,14 +14,11 @@
 
 package io.github.marcocipriani01.telescopetouch;
 
-import android.annotation.SuppressLint;
 import android.app.Application;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.Resources;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -53,12 +50,7 @@ public class TelescopeTouchApp extends Application {
      */
     public static final ConnectionManager connectionManager = new ConnectionManager();
     private static final String TAG = getTag(TelescopeTouchApp.class);
-    /**
-     * The context of the whole app.
-     */
-    @SuppressLint("StaticFieldLeak")
-    private static Context context;
-    private static NSDHelper serviceDiscoveryHelper;
+    public static NSDHelper nsdHelper;
     @Inject
     SharedPreferences preferences;
     // We keep a reference to this just to start it initializing.
@@ -76,10 +68,6 @@ public class TelescopeTouchApp extends Application {
         return "Sensor type: " + sensor.getStringType() + ": " + sensor.getType();
     }
 
-    public static NSDHelper getServiceDiscoveryHelper() {
-        return serviceDiscoveryHelper;
-    }
-
     /**
      * Returns the Tag for a class to be used in Android logging statements
      */
@@ -90,38 +78,24 @@ public class TelescopeTouchApp extends Application {
         return ApplicationConstants.APP_NAME + "." + o.getClass().getSimpleName();
     }
 
-    public static Resources getAppResources() {
-        return context.getResources();
-    }
-
-    /**
-     * @return the context of the whole app.
-     */
-    public static Context getContext() {
-        return context;
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();
-        context = getApplicationContext();
-
         component = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this)).build();
         component.inject(this);
-        // This populates the default values from the preferences XML file. See
-        // {@link DefaultValues} for more details.
+        // This populates the default values from the preferences XML file. See DefaultValues for more details.
         PreferenceManager.setDefaultValues(this, R.xml.preference_screen, false);
         performFeatureCheck();
 
-        connectionManager.init(context);
-        if ((serviceDiscoveryHelper == null) && preferences.getBoolean(ApplicationConstants.NSD_PREF, true))
-            serviceDiscoveryHelper = new NSDHelper(this);
+        connectionManager.init(this);
+        if ((nsdHelper == null) && preferences.getBoolean(ApplicationConstants.NSD_PREF, true))
+            nsdHelper = new NSDHelper(this);
     }
 
     @Override
     public void onTerminate() {
-        if (serviceDiscoveryHelper != null) serviceDiscoveryHelper.terminate();
+        if (nsdHelper != null) nsdHelper.terminate();
         super.onTerminate();
     }
 

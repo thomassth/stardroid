@@ -15,7 +15,6 @@
 package io.github.marcocipriani01.telescopetouch.indi;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -27,7 +26,6 @@ import org.indilib.i4j.client.INDIProperty;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
 public class LightPropPref extends PropPref<INDILightElement> {
 
@@ -55,7 +53,6 @@ public class LightPropPref extends PropPref<INDILightElement> {
                 ends[i] = stringBuilder.length();
             }
             Spannable summaryText = new SpannableString(stringBuilder.toString());
-            Resources resources = TelescopeTouchApp.getContext().getResources();
             for (int i = 0; i < count; i++) {
                 int color;
                 switch (elements.get(i).getValue()) {

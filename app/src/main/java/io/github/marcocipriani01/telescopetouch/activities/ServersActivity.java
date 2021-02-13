@@ -78,7 +78,7 @@ public class ServersActivity extends AppCompatActivity implements NewServerDialo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        darkerModeManager = new DarkerModeManager(getWindow(), null, PreferenceManager.getDefaultSharedPreferences(this));
+        darkerModeManager = new DarkerModeManager(this, null, PreferenceManager.getDefaultSharedPreferences(this));
         setTheme(darkerModeManager.getPref() ? R.style.DarkerAppTheme : R.style.AppTheme);
         setContentView(R.layout.activity_servers);
         coordinator = findViewById(R.id.servers_coordinator);

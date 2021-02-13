@@ -193,8 +193,8 @@ public class SkyMapActivity extends InjectableActivity implements OnSharedPrefer
         // Search related
         setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
 
-        darkerModeManager = new DarkerModeManager(
-                window, b -> this.rendererController.queueNightVisionMode(b), preferences);
+        darkerModeManager = new DarkerModeManager(this,
+                b -> this.rendererController.queueNightVisionMode(b), preferences);
 
         Intent intent = getIntent();
         String intentAction = intent.getAction();

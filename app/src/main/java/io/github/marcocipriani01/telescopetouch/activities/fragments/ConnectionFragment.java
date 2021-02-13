@@ -57,6 +57,7 @@ import io.github.marcocipriani01.telescopetouch.activities.views.SameSelectionSp
 import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
 
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
+import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.nsdHelper;
 import static io.github.marcocipriani01.telescopetouch.activities.ServersActivity.getServers;
 
 /**
@@ -74,7 +75,6 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
     private SharedPreferences preferences;
     private Button connectionButton;
     private SameSelectionSpinner serversSpinner;
-    private NSDHelper nsdHelper;
     private EditText portEditText;
     private LogAdapter logAdapter;
 
@@ -96,7 +96,6 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
 
         connectionButton = rootView.findViewById(R.id.connectionButton);
         serversSpinner = rootView.findViewById(R.id.spinnerHost);
-        nsdHelper = TelescopeTouchApp.getServiceDiscoveryHelper();
         loadServers(getServers(preferences));
         portEditText = rootView.findViewById(R.id.port_edittext);
         portEditText.setText(String.valueOf(preferences.getInt(ApplicationConstants.INDI_PORT_PREF, 7624)));

@@ -40,9 +40,8 @@ public class Catalog {
     private boolean loading = false;
     private CatalogLoadingListener listener = null;
 
-    public void load() {
+    public void load(Resources resources) {
         if (ready || loading) throw new IllegalStateException("Catalog already loaded/loading!");
-        Resources resources = TelescopeTouchApp.getAppResources();
         try {
             loading = true;
             Log.i("CatalogManager", "Loading planets...");

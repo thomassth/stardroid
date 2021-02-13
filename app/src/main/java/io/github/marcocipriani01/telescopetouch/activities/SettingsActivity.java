@@ -79,7 +79,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((TelescopeTouchApp) getApplication()).getApplicationComponent().inject(this);
-        darkerModeManager = new DarkerModeManager(getWindow(), null, PreferenceManager.getDefaultSharedPreferences(this));
+        darkerModeManager = new DarkerModeManager(this, null, PreferenceManager.getDefaultSharedPreferences(this));
         preferenceFragment = new AppPreferenceFragment();
         getSupportFragmentManager().beginTransaction().replace(android.R.id.content, preferenceFragment).commit();
         rootView = getWindow().getDecorView().getRootView();

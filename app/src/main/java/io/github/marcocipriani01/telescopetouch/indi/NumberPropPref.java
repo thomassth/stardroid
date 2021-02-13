@@ -14,9 +14,7 @@
 
 package io.github.marcocipriani01.telescopetouch.indi;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.Spannable;
@@ -29,15 +27,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentActivity;
 
 import org.indilib.i4j.Constants;
 import org.indilib.i4j.client.INDIElement;
 import org.indilib.i4j.client.INDINumberElement;
-import org.indilib.i4j.client.INDINumberProperty;
 import org.indilib.i4j.client.INDIProperty;
 
 import java.util.ArrayList;
@@ -46,7 +40,12 @@ import java.util.List;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
-public class NumberPropPref extends PropPref<INDINumberElement> {
+public class NumberPropPref extends PropPref<INDINumberElement>
+        implements TextWatcher, SeekBar.OnSeekBarChangeListener {
+
+    private SeekBar seekBar;
+    private EditText editText;
+    private double step, min, max;
 
     public NumberPropPref(Context context, INDIProperty<INDINumberElement> prop) {
         super(context, prop);
@@ -72,47 +71,23 @@ public class NumberPropPref extends PropPref<INDINumberElement> {
             stringBuilder.append(elements.get(i).getValueAsString().trim());
             return new SpannableString(stringBuilder.toString());
         } else {
-            return new SpannableString(getContext().getString(R.string.no_indi_elements));
+            return new SpannableString(resources.getString(R.string.no_indi_elements));
         }
     }
 
     @Override
     protected void onClick() {
         Context context = getContext();
-        if (!getSummary().toString().equals(context.getString(R.string.no_indi_elements))) {
-            NumberRequestFragment requestFragment = new NumberRequestFragment();
-            requestFragment.setArguments((INDINumberProperty) prop, this);
-            requestFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "request");
-        }
-    }
-
-    public static class NumberRequestFragment extends DialogFragment implements
-            TextWatcher, SeekBar.OnSeekBarChangeListener {
-
-        private INDINumberProperty prop;
-        private PropPref<INDINumberElement> propPref;
-        private Context context;
-        private SeekBar seekBar;
-        private EditText editText;
-        private double step, min, max;
-
-        @Override
-        public void onAttach(@NonNull Context context) {
-            this.context = context;
-            super.onAttach(context);
-        }
-
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        if (!getSummary().toString().equals(resources.getString(R.string.no_indi_elements))) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context)
+                    .setTitle(prop.getLabel()).setIcon(R.drawable.edit);
             final List<INDINumberElement> elements = prop.getElementsAsList();
             final ArrayList<EditText> editTextViews = new ArrayList<>(elements.size());
             LinearLayout layout = new LinearLayout(context);
             layout.setOrientation(LinearLayout.VERTICAL);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            int padding = context.getResources().getDimensionPixelSize(R.dimen.padding_medium);
+            int padding = resources.getDimensionPixelSize(R.dimen.padding_medium);
             layoutParams.setMargins(padding, 0, padding, 0);
 
             for (INDINumberElement element : elements) {
@@ -144,7 +119,7 @@ public class NumberPropPref extends PropPref<INDINumberElement> {
 
             ScrollView scrollView = new ScrollView(context);
             scrollView.addView(layout);
-            builder.setView(scrollView).setTitle(prop.getLabel());
+            builder.setView(scrollView);
 
             if (prop.getPermission() != Constants.PropertyPermissions.RO) {
                 builder.setPositiveButton(R.string.send_request, (dialog, id) -> {
@@ -156,59 +131,54 @@ public class NumberPropPref extends PropPref<INDINumberElement> {
                         }
                     } catch (Exception e) {
                         Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                        TelescopeTouchApp.connectionManager.log(context.getResources().getString(R.string.error) + e.getLocalizedMessage());
+                        TelescopeTouchApp.connectionManager.log(e);
                     }
-                    propPref.sendChanges();
+                    sendChanges();
                 });
                 builder.setNegativeButton(android.R.string.cancel, null);
             } else {
                 builder.setNegativeButton(R.string.back_request, null);
             }
-            return builder.setIcon(R.drawable.edit).create();
+            builder.show();
         }
+    }
 
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        }
+    }
 
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-        }
+    }
 
-        @Override
-        public void afterTextChanged(Editable s) {
-            try {
-                double value = Double.parseDouble(s.toString());
-                if ((value >= min) && (value <= max)) {
-                    seekBar.setOnSeekBarChangeListener(null);
-                    seekBar.setProgress((int) ((value - min) / step));
-                    seekBar.setOnSeekBarChangeListener(this);
-                }
-            } catch (NumberFormatException ignored) {
-
+    @Override
+    public void afterTextChanged(Editable s) {
+        try {
+            double value = Double.parseDouble(s.toString());
+            if ((value >= min) && (value <= max)) {
+                seekBar.setOnSeekBarChangeListener(null);
+                seekBar.setProgress((int) ((value - min) / step));
+                seekBar.setOnSeekBarChangeListener(this);
             }
-        }
-
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            editText.setText(String.valueOf((int) (min + (progress * step))));
-        }
-
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
+        } catch (NumberFormatException ignored) {
 
         }
+    }
 
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        editText.setText(String.valueOf((int) (min + (progress * step))));
+    }
 
-        }
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
 
-        private void setArguments(INDINumberProperty prop, PropPref<INDINumberElement> propPref) {
-            this.prop = prop;
-            this.propPref = propPref;
-        }
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
     }
 }
