@@ -28,6 +28,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -57,6 +58,7 @@ import java.util.Objects;
 
 import io.github.marcocipriani01.telescopetouch.AppForegroundService;
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
+import io.github.marcocipriani01.telescopetouch.ProUtils;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.AboutFragment;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.ActionFragment;
@@ -116,9 +118,11 @@ public class MainActivity extends AppCompatActivity implements
     private boolean darkerMode = false;
     private BottomAppBar bottomBar;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ProUtils.update(this);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         darkerModeManager = new DarkerModeManager(this, this, preferences);
         darkerMode = darkerModeManager.getPref();
@@ -138,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements
                 ((ActionFragment) currentPage.lastInstance).run();
         });
         intentAndFragment(getIntent());
+        if (!ProUtils.isPro) ProUtils.maybeProVersionDialog(preferences, this);
     }
 
     @Override
@@ -174,6 +179,7 @@ public class MainActivity extends AppCompatActivity implements
                 return;
             }
         }
+        ProUtils.update(this);
     }
 
     @Override
@@ -303,16 +309,23 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void showFragment(Pages page, boolean animate) {
+        if (page == Pages.ALADIN) {
+            // PRO
+            if (!ProUtils.isPro) {
+                ProUtils.toast(this);
+                ProUtils.playStore(this);
+                return;
+            }
+            // END PRO
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_USER);
+        }
         currentPage = page;
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         if (animate)
             transaction.setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out);
         Fragment fragment = currentPage.newInstance();
-        if (currentPage == Pages.ALADIN) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
-        } else {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_USER);
-        }
         transaction.replace(R.id.content_frame, fragment).commit();
         if (fragment instanceof ActionFragment) {
             ActionFragment actionFragment = (ActionFragment) fragment;
@@ -472,6 +485,9 @@ public class MainActivity extends AppCompatActivity implements
             setContentView(R.layout.bottom_drawer);
             getWindow().getAttributes().width = WindowManager.LayoutParams.MATCH_PARENT;
             getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
+            Button proButton = findViewById(R.id.navigation_pro_button);
+            Objects.requireNonNull(proButton).setVisibility(ProUtils.isPro ? View.GONE : View.VISIBLE);
+            proButton.setOnClickListener(v -> ProUtils.playStore(getContext()));
             NavigationView navigation = findViewById(R.id.navigation_view);
             Objects.requireNonNull(navigation).setNavigationItemSelectedListener(item -> {
                 dismiss();

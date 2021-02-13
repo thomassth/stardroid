@@ -89,7 +89,7 @@ public class TelescopeTouchApp extends Application {
         performFeatureCheck();
 
         connectionManager.init(this);
-        if ((nsdHelper == null) && preferences.getBoolean(ApplicationConstants.NSD_PREF, true))
+        if ((nsdHelper == null) && preferences.getBoolean(ApplicationConstants.NSD_PREF, false))
             nsdHelper = new NSDHelper(this);
     }
 

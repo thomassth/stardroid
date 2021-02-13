@@ -37,6 +37,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -70,6 +71,7 @@ import java.util.Calendar;
 
 import in.myinnos.alphabetsindexfastscrollrecycler.IndexFastScrollRecyclerView;
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
+import io.github.marcocipriani01.telescopetouch.ProUtils;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.MainActivity;
@@ -331,86 +333,99 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
         EquatorialCoordinates coordinates = entry.getCoordinates();
 
         Spannable description = entry.createDescription(context, location);
-        if (entry instanceof PlanetEntry) {
-            Planet planet = ((PlanetEntry) entry).getPlanet();
-            if (planet == Planet.Moon) {
-                TextView text = new TextView(context);
-                text.setText(description);
-                ImageView moonView = new ImageView(context);
-                moonView.setImageResource(planet.getImageResourceId(Calendar.getInstance()));
-                builder.setView(createScrollview(text, moonView));
-            } else {
-                int galleryImage = planet.getGalleryResourceId();
-                if (galleryImage == 0) {
-                    builder.setMessage(description);
-                } else {
+        // PRO
+        if (ProUtils.isPro) {
+            // END PRO
+            if (entry instanceof PlanetEntry) {
+                Planet planet = ((PlanetEntry) entry).getPlanet();
+                if (planet == Planet.Moon) {
                     TextView text = new TextView(context);
                     text.setText(description);
-                    PhotoView planetView = new PhotoView(context);
-                    planetView.setImageResource(galleryImage);
-                    builder.setView(createScrollview(text, planetView));
+                    ImageView moonView = new ImageView(context);
+                    moonView.setImageResource(planet.getImageResourceId(Calendar.getInstance()));
+                    builder.setView(createScrollview(text, moonView));
+                } else {
+                    int galleryImage = planet.getGalleryResourceId();
+                    if (galleryImage == 0) {
+                        builder.setMessage(description);
+                    } else {
+                        TextView text = new TextView(context);
+                        text.setText(description);
+                        PhotoView planetView = new PhotoView(context);
+                        planetView.setImageResource(galleryImage);
+                        builder.setView(createScrollview(text, planetView));
+                    }
                 }
-            }
-        } else if (AladinView.isSupported(preferences)) {
-            View rootView = View.inflate(context, R.layout.dialog_object_details, null);
-            rootView.<TextView>findViewById(R.id.details_text).setText(description);
+            } else if (AladinView.isSupported(preferences)) {
+                View rootView = View.inflate(context, R.layout.dialog_object_details, null);
+                rootView.<TextView>findViewById(R.id.details_text).setText(description);
 
-            FrameLayout aladinContainer = rootView.findViewById(R.id.details_aladin_container);
-            TextView noInternet = rootView.findViewById(R.id.details_no_internet);
-            AladinView aladinView = rootView.findViewById(R.id.details_aladin);
-            if (internetAvailable()) {
-                aladinView.setHeight(600);
-                aladinView.setAladinListener(new AladinView.AladinListener() {
+                FrameLayout aladinContainer = rootView.findViewById(R.id.details_aladin_container);
+                TextView noInternet = rootView.findViewById(R.id.details_no_internet);
+                AladinView aladinView = rootView.findViewById(R.id.details_aladin);
+                if (internetAvailable()) {
+                    aladinView.setHeight(600);
+                    aladinView.setAladinListener(new AladinView.AladinListener() {
+                        @Override
+                        public void onAladinError() {
+                            aladinView.setVisibility(View.GONE);
+                            noInternet.setVisibility(View.VISIBLE);
+                        }
+                    });
+                    aladinView.start(coordinates);
+                } else {
+                    aladinView.setVisibility(View.GONE);
+                    noInternet.setVisibility(View.VISIBLE);
+                }
+
+                FrameLayout graphContainer = rootView.findViewById(R.id.details_graph_container);
+                GraphView graph = rootView.findViewById(R.id.details_graph);
+                if (location == null) {
+                    rootView.<TextView>findViewById(R.id.details_no_location).setVisibility(View.VISIBLE);
+                    graph.setVisibility(View.GONE);
+                } else {
+                    initGraph(graph, coordinates);
+                }
+
+                TabLayout tabLayout = rootView.findViewById(R.id.details_tabs);
+                tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                     @Override
-                    public void onAladinError() {
-                        aladinView.setVisibility(View.GONE);
-                        noInternet.setVisibility(View.VISIBLE);
+                    public void onTabSelected(TabLayout.Tab tab) {
+                        if (tab.getPosition() == 0) {
+                            aladinContainer.setVisibility(View.VISIBLE);
+                            graphContainer.setVisibility(View.GONE);
+                        } else {
+                            aladinContainer.setVisibility(View.GONE);
+                            graphContainer.setVisibility(View.VISIBLE);
+                        }
+                    }
+
+                    @Override
+                    public void onTabUnselected(TabLayout.Tab tab) {
+                    }
+
+                    @Override
+                    public void onTabReselected(TabLayout.Tab tab) {
                     }
                 });
-                aladinView.start(coordinates);
-            } else {
-                aladinView.setVisibility(View.GONE);
-                noInternet.setVisibility(View.VISIBLE);
-            }
-
-            FrameLayout graphContainer = rootView.findViewById(R.id.details_graph_container);
-            GraphView graph = rootView.findViewById(R.id.details_graph);
-            if (location == null) {
-                rootView.<TextView>findViewById(R.id.details_no_location).setVisibility(View.VISIBLE);
-                graph.setVisibility(View.GONE);
-            } else {
+                builder.setView(rootView);
+            } else if (location != null) {
+                GraphView graph = new GraphView(context);
                 initGraph(graph, coordinates);
+                ScrollView scrollView = new ScrollView(context);
+                scrollView.addView(graph);
+                builder.setView(graph);
             }
-
-            TabLayout tabLayout = rootView.findViewById(R.id.details_tabs);
-            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-                @Override
-                public void onTabSelected(TabLayout.Tab tab) {
-                    if (tab.getPosition() == 0) {
-                        aladinContainer.setVisibility(View.VISIBLE);
-                        graphContainer.setVisibility(View.GONE);
-                    } else {
-                        aladinContainer.setVisibility(View.GONE);
-                        graphContainer.setVisibility(View.VISIBLE);
-                    }
-                }
-
-                @Override
-                public void onTabUnselected(TabLayout.Tab tab) {
-                }
-
-                @Override
-                public void onTabReselected(TabLayout.Tab tab) {
-                }
-            });
-            builder.setView(rootView);
-        } else if (location != null) {
-            GraphView graph = new GraphView(context);
-            initGraph(graph, coordinates);
-            ScrollView scrollView = new ScrollView(context);
-            scrollView.addView(graph);
-            builder.setView(graph);
+            // PRO
+        } else {
+            builder.setMessage(description);
+            Button proButton = new Button(context);
+            proButton.setTextAppearance(context, R.style.TextAppearance_AppCompat_Medium);
+            proButton.setText("Upgrade to pro to see preview and altitude graph");
+            proButton.setOnClickListener(v -> ProUtils.playStore(context));
+            builder.setView(proButton);
         }
+        // END PRO
 
         // Only display buttons if the telescope is ready
         if ((connectionManager.telescopeCoordP != null) && (connectionManager.telescopeOnCoordSetP != null)) {

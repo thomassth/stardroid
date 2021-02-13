@@ -33,10 +33,10 @@ import java.util.regex.Pattern;
 public class AsyncBlobLoader {
 
     private final Handler handler;
-    private volatile LoadListener listener;
+    private volatile LoadListener listener = null;
     private volatile Thread loadingThread = null;
     private volatile INDIBLOBValue queuedValue = null;
-    private volatile boolean stretch;
+    private volatile boolean stretch = false;
 
     public AsyncBlobLoader(Handler handler) {
         this.handler = handler;

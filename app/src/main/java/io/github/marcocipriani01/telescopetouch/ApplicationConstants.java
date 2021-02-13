@@ -44,7 +44,7 @@ public class ApplicationConstants {
     public static final String LATITUDE_PREF = "latitude";
     public static final String INDI_SERVERS_PREF = "INDI_SERVERS_PREF";
     public static final String INDI_PORT_PREF = "indi_port";
-    public static final String NSD_PREF = "enable_nsd";
+    public static final String NSD_PREF = "network_service_discovery";
     public static final String POLARIS_HEMISPHERE_PREF = "polaris_hemisphere_selection";
     public static final String POLARIS_RETICLE_PREF = "polaris_reticle";
     public static final String MAGNETIC_DECLINATION_PREF = "use_magnetic_correction";
@@ -53,7 +53,7 @@ public class ApplicationConstants {
     public static final String COMPENSATE_PRECESSION_PREF = "compensate_precession";
     public static final String CATALOG_LIMIT_MAGNITUDE = "catalog_limit_mag";
     public static final String RECEIVE_BLOB_PREF = "receive_blob";
-    public static final String STRETCH_FITS_PREF = "stretch_fits";
+    public static final String STRETCH_FITS_PREF = "stretch_fits_blob";
     public static final String SHOW_STARS_PREF = "show_stars_catalog";
     public static final String SHOW_DSO_PREF = "show_dso_catalog";
     public static final String SHOW_PLANETS_PREF = "show_planets_catalog";
@@ -64,4 +64,5 @@ public class ApplicationConstants {
     public static final String ALADIN_J2000_NOTE = "aladin_j2000_note";
     public static final String VIZIER_WELCOME = "vizier_welcome";
     public static final String EXIT_ACTION_PREF = "exit_action";
+    public static final String PICK_LOCATION_PREF = "pick_location_map";
 }
