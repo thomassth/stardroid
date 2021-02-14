@@ -1,6 +1,7 @@
 package io.github.marcocipriani01.telescopetouch;
 
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,16 +24,16 @@ public class ProUtils {
     public static final String[] PRO_PREFERENCES = {
             NSD_PREF, EXIT_ACTION_PREF, POLARIS_HEMISPHERE_PREF, POLARIS_RETICLE_PREF
     };
-    private static final boolean ENABLE_PRO_CHECK = true;
-    private static final boolean DUMMY_PRO_VERSION = false;
+    private static final boolean ENABLE_PRO_CHECK = false;
+    private static final boolean DUMMY_PRO_VERSION = true;
     public static boolean isPro = false;
 
     public static void maybeProVersionDialog(SharedPreferences preferences, Context context) {
         if (preferences.getBoolean(PRO_MESSAGE_PREF, true)) {
             new AlertDialog.Builder(context).setTitle(R.string.app_name)
-                    .setMessage("Telescope.Touch Pro is now available! Added features include: the Aladin Sky Atlas, galaxies and nebulae previews, altitude graphs and advanced settings!")
+                    .setMessage(R.string.pro_new_msg)
                     .setIcon(R.drawable.new_icon).setCancelable(false)
-                    .setPositiveButton("Get it!", (a, b) -> ProUtils.playStore(context))
+                    .setPositiveButton(R.string.get_it, (a, b) -> ProUtils.playStore(context))
                     .setNegativeButton(android.R.string.cancel, null).show();
             preferences.edit().putBoolean(PRO_MESSAGE_PREF, false).apply();
         }
@@ -52,13 +53,13 @@ public class ProUtils {
     }
 
     public static void toast(Context context) {
-        Toast.makeText(context, "Pro feature!", Toast.LENGTH_LONG).show();
+        Toast.makeText(context, R.string.pro_feature, Toast.LENGTH_LONG).show();
     }
 
     public static void playStore(Context context) {
         try {
             context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + PRO_ID)));
-        } catch (android.content.ActivityNotFoundException anfe) {
+        } catch (ActivityNotFoundException e) {
             context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + PRO_ID)));
         }
     }

@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
         android:drawableStart="@drawable/new_icon"
-        android:text="Get Telescope.Touch Pro!"
+        android:text="@string/get_telescope_touch_pro"
         android:theme="@style/AppThemeNoActionBar"
         android:visibility="gone" />
 

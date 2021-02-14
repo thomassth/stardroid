@@ -507,7 +507,6 @@
     <string name="reticle_big_dipper">Grande Carro/Cassiopea</string>
     <string name="pick_location_description">Scegli una località da Google Maps</string>
     <string name="pick_location_pref">Scegli sulla mappa</string>
-    <string name="network">Rete</string>
     <string name="sigma_octantis">Sigma Octantis</string>
     <string name="polaris_star_finder">Polaris</string>
     <string name="wifi">" (Wi-Fi)"</string>
