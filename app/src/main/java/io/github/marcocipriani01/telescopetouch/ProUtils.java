@@ -24,7 +24,7 @@ public class ProUtils {
     public static final String[] PRO_PREFERENCES = {
             NSD_PREF, EXIT_ACTION_PREF, POLARIS_HEMISPHERE_PREF, POLARIS_RETICLE_PREF
     };
-    private static final boolean ENABLE_PRO_CHECK = false;
+    private static final boolean ENABLE_PRO_CHECK = true;
     private static final boolean DUMMY_PRO_VERSION = true;
     public static boolean isPro = false;
 
