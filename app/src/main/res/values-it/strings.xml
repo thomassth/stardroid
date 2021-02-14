@@ -560,4 +560,11 @@
     <string name="aladin">Aladin</string>
     <string name="altitude">Altezza</string>
     <string name="no_location">GPS non attivo</string>
+    <string name="toggling_manual_mode">Modalità manuale attivata</string>
+    <string name="polaris_finder_reticle">Reticolo cercatore polare</string>
+    <string name="background_service">Servizio in background</string>
+    <string name="mount">Montatura</string>
+    <string name="exit">Esci</string>
+    <string name="exit_action">Azione all\'uscita</string>
+    <string name="general">Generale</string>
 </resources>
