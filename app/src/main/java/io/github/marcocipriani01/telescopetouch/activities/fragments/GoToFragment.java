@@ -421,8 +421,9 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
             builder.setMessage(description);
             Button proButton = new Button(context);
             proButton.setTextAppearance(context, R.style.TextAppearance_AppCompat_Medium);
-            proButton.setText("Upgrade to pro to see preview and altitude graph");
+            proButton.setText(R.string.goto_dialog_pro);
             proButton.setOnClickListener(v -> ProUtils.playStore(context));
+            proButton.setTextColor(context.getResources().getColor(R.color.colorAccent));
             builder.setView(proButton);
         }
         // END PRO

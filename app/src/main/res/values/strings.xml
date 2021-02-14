@@ -587,7 +587,6 @@
     <string name="reticle_big_dipper">Big Dipper/Cassiopeia</string>
     <string name="pick_location_description">Choose a location from Google Maps</string>
     <string name="pick_location_pref">Pick on map</string>
-    <string name="network">Network</string>
     <string name="sigma_octantis">Sigma Octantis</string>
     <string name="polaris_star_finder">Polaris</string>
     <string name="loading">Loading…</string>

@@ -115,7 +115,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
         if (!ProUtils.isPro) {
             for (String s : ProUtils.PRO_PREFERENCES) {
                 ((Preference) Objects.requireNonNull(preferenceFragment.findPreference(s))).setOnPreferenceChangeListener((preference, newValue) -> {
-                    Snackbar.make(rootView, "Cannot change - Pro feature!", Snackbar.LENGTH_SHORT).setTextColor(getResources().getColor(R.color.colorAccent)).show();
+                    Snackbar.make(rootView, R.string.cannot_change_pro, Snackbar.LENGTH_SHORT).setTextColor(getResources().getColor(R.color.colorAccent)).show();
                     return false;
                 });
             }
