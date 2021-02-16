@@ -8,11 +8,15 @@ and mobile sky chart functionality, with a completely renewed user interface and
 
 The project's main page is [on GitHub](https://github.com/marcocipriani01/Telescope.Touch)
 
+## Telescope.Touch Pro
+
+Dear users, I've been working on Telescope.Touch almost full-time for a month and a half straight. That is all time I took away from my hobbies and studies (I'm in university!). To support the project, I decided to create the **Telescope.Touch Pro extension pack**, which will be release on Google Play very soon. It adds some very cool features, like altitude graphs and HD previews in the Go-To database. If you want to support the development, please consider buying it. When all the development costs are covered, I'll remove the Pro version and bring all the features to the free app. If, instead, you don't want to support me, you can download the source code here, and remove the locks that prevent you from using Pro features in the free app. Just please, don't share your unlocked app.
+
 <a href="https://www.paypal.com/donate?hosted_button_id=P4SBCHY837WMY" target="_blank"><img alt="Donate via PayPal" border="0" src="https://raw.githubusercontent.com/marcocipriani01/Telescope.Touch/master/res/Paypal_donate.png" height="70" align="right"/></a>
 
-### Support the project!
+### Donating via PayPal
 
-**If you like this app and want to support the development, please consider donating via PayPal. Thank you!**
+If you feel extra-generous, you can also donate via PayPal. **Thank you!**
 
 ### Screenshots
 
