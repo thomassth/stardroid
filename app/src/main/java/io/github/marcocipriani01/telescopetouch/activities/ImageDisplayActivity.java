@@ -108,7 +108,9 @@ public class ImageDisplayActivity extends InjectableActivity {
                 gotoIntent.putExtra(MainActivity.ACTION, MainActivity.ACTION_CONNECT);
                 gotoIntent.putExtra(MainActivity.MESSAGE, R.string.connect_telescope_first);
             }
+            gotoIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(gotoIntent);
+            finish();
         });
     }
 
