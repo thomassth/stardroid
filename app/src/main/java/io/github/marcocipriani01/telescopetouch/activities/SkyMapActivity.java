@@ -212,7 +212,9 @@ public class SkyMapActivity extends InjectableActivity implements OnSharedPrefer
                 gotoIntent.putExtra(MainActivity.ACTION, MainActivity.ACTION_CONNECT);
                 gotoIntent.putExtra(MainActivity.MESSAGE, R.string.connect_telescope_first);
             }
+            gotoIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(gotoIntent);
+            finish();
         });
         this.<Button>findViewById(R.id.search_in_database).setOnClickListener(v -> {
             Intent mainIntent = new Intent(SkyMapActivity.this, MainActivity.class);
@@ -223,7 +225,9 @@ public class SkyMapActivity extends InjectableActivity implements OnSharedPrefer
                 mainIntent.putExtra(MainActivity.ACTION, MainActivity.ACTION_CONNECT);
                 mainIntent.putExtra(MainActivity.MESSAGE, R.string.connect_telescope_first);
             }
+            mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(mainIntent);
+            finish();
         });
         pointingText = findViewById(R.id.skymap_pointing);
 

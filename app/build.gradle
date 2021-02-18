@@ -8,8 +8,8 @@ android {
         applicationId "io.github.marcocipriani01.telescopetouch"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 15
-        versionName "1.5.0"
+        versionCode 16
+        versionName "1.5.1"
         multiDexEnabled true
         if (file('api.properties').exists()) {
             Properties properties = new Properties()
