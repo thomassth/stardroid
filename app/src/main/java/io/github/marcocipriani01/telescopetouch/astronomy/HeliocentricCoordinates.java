@@ -64,19 +64,19 @@ public class HeliocentricCoordinates extends Vector3 {
      * Subtracts the values of the given heliocentric coordinates from this
      * object.
      */
-    public void Subtract(HeliocentricCoordinates other) {
+    public void subtract(HeliocentricCoordinates other) {
         this.x -= other.x;
         this.y -= other.y;
         this.z -= other.z;
     }
 
-    public HeliocentricCoordinates CalculateEquatorialCoordinates() {
+    public HeliocentricCoordinates calculateEquatorialCoordinates() {
         return new HeliocentricCoordinates(this.radius, this.x,
                 (this.y * Math.cos(OBLIQUITY) - this.z * Math.sin(OBLIQUITY)),
                 (this.y * Math.sin(OBLIQUITY) + this.z * Math.cos(OBLIQUITY)));
     }
 
-    public double DistanceFrom(HeliocentricCoordinates other) {
+    public double distanceFrom(HeliocentricCoordinates other) {
         double dx = this.x - other.x;
         double dy = this.y - other.y;
         double dz = this.z - other.z;

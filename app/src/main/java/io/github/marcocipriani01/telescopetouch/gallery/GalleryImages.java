@@ -27,6 +27,7 @@ import io.github.marcocipriani01.telescopetouch.R;
  * @author marcocipriani01
  */
 public enum GalleryImages {
+    SUN(R.drawable.gallery_sun, R.string.sun, R.string.sun),
     MERCURY(R.drawable.gallery_mercury, R.string.mercury, R.string.mercury),
     VENUS(R.drawable.gallery_venus, R.string.venus, R.string.venus),
     MARS(R.drawable.gallery_mars, R.string.mars, R.string.mars),

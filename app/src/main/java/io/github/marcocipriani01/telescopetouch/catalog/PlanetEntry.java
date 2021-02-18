@@ -56,7 +56,7 @@ public class PlanetEntry extends CatalogEntry {
     }
 
     public int getGalleryResourceId() {
-        return (planet == Planet.Moon) ? planet.getImageResourceId(Calendar.getInstance()) : planet.getGalleryResourceId();
+        return (planet == Planet.Moon) ? planet.getMapResourceId(Calendar.getInstance()) : planet.getGalleryResourceId();
     }
 
     @Override
