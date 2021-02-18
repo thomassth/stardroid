@@ -17,7 +17,6 @@ package io.github.marcocipriani01.telescopetouch.activities.fragments;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -29,7 +28,6 @@ import android.os.Looper;
 import android.text.Spannable;
 import android.text.format.DateFormat;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,8 +37,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -77,6 +73,7 @@ import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.MainActivity;
 import io.github.marcocipriani01.telescopetouch.activities.views.AladinView;
 import io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoordinates;
+import io.github.marcocipriani01.telescopetouch.astronomy.HeliocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.astronomy.Planet;
 import io.github.marcocipriani01.telescopetouch.astronomy.StarsPrecession;
 import io.github.marcocipriani01.telescopetouch.astronomy.TimeUtils;
@@ -89,7 +86,6 @@ import io.github.marcocipriani01.telescopetouch.catalog.StarEntry;
 import io.github.marcocipriani01.telescopetouch.indi.PropUpdater;
 import io.github.marcocipriani01.telescopetouch.sensors.LocationHelper;
 
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static io.github.marcocipriani01.telescopetouch.ApplicationConstants.VIZIER_WELCOME;
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 import static java.lang.Math.asin;
@@ -338,29 +334,15 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
             // END PRO
             if (entry instanceof PlanetEntry) {
                 Planet planet = ((PlanetEntry) entry).getPlanet();
-                if (planet == Planet.Moon) {
-                    TextView text = new TextView(context);
-                    text.setText(description);
-                    ImageView moonView = new ImageView(context);
-                    moonView.setImageResource(planet.getImageResourceId(Calendar.getInstance()));
-                    builder.setView(createScrollview(text, moonView));
-                } else {
-                    int galleryImage = planet.getGalleryResourceId();
-                    if (galleryImage == 0) {
-                        builder.setMessage(description);
-                    } else {
-                        TextView text = new TextView(context);
-                        text.setText(description);
-                        PhotoView planetView = new PhotoView(context);
-                        planetView.setImageResource(galleryImage);
-                        builder.setView(createScrollview(text, planetView));
-                    }
-                }
+                View rootView = View.inflate(context, R.layout.dialog_planet_details, null);
+                rootView.<TextView>findViewById(R.id.details_text).setText(description);
+                PhotoView photoView = rootView.findViewById(R.id.details_image);
+                photoView.setImageResource(planet.getGalleryResourceId());
+                createDetailsBox(rootView, description, photoView, null, planet);
+                builder.setView(rootView);
             } else if (AladinView.isSupported(preferences)) {
                 View rootView = View.inflate(context, R.layout.dialog_object_details, null);
                 rootView.<TextView>findViewById(R.id.details_text).setText(description);
-
-                FrameLayout aladinContainer = rootView.findViewById(R.id.details_aladin_container);
                 TextView noInternet = rootView.findViewById(R.id.details_no_internet);
                 AladinView aladinView = rootView.findViewById(R.id.details_aladin);
                 if (internetAvailable()) {
@@ -377,41 +359,11 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
                     aladinView.setVisibility(View.GONE);
                     noInternet.setVisibility(View.VISIBLE);
                 }
-
-                FrameLayout graphContainer = rootView.findViewById(R.id.details_graph_container);
-                GraphView graph = rootView.findViewById(R.id.details_graph);
-                if (location == null) {
-                    rootView.<TextView>findViewById(R.id.details_no_location).setVisibility(View.VISIBLE);
-                    graph.setVisibility(View.GONE);
-                } else {
-                    initGraph(graph, coordinates);
-                }
-
-                TabLayout tabLayout = rootView.findViewById(R.id.details_tabs);
-                tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-                    @Override
-                    public void onTabSelected(TabLayout.Tab tab) {
-                        if (tab.getPosition() == 0) {
-                            aladinContainer.setVisibility(View.VISIBLE);
-                            graphContainer.setVisibility(View.GONE);
-                        } else {
-                            aladinContainer.setVisibility(View.GONE);
-                            graphContainer.setVisibility(View.VISIBLE);
-                        }
-                    }
-
-                    @Override
-                    public void onTabUnselected(TabLayout.Tab tab) {
-                    }
-
-                    @Override
-                    public void onTabReselected(TabLayout.Tab tab) {
-                    }
-                });
+                createDetailsBox(rootView, description, rootView.findViewById(R.id.details_aladin_container), coordinates, null);
                 builder.setView(rootView);
             } else if (location != null) {
                 GraphView graph = new GraphView(context);
-                initGraph(graph, coordinates);
+                initGraph(graph, coordinates, null);
                 ScrollView scrollView = new ScrollView(context);
                 scrollView.addView(graph);
                 builder.setView(graph);
@@ -466,36 +418,6 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
                 .setIcon(entry.getIconResource()).show();
     }
 
-    private void initGraph(GraphView graph, EquatorialCoordinates coordinates) {
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
-        Calendar calendar = Calendar.getInstance();
-        long now = calendar.getTimeInMillis();
-        calendar.add(Calendar.DATE, 1);
-        long tomorrow = calendar.getTimeInMillis();
-        double latitude = location.getLatitude(),
-                longitude = location.getLongitude();
-        for (long millis = now; millis < tomorrow; millis += 120000) {
-            calendar.setTimeInMillis(millis);
-            double latRadians = toRadians(latitude),
-                    dec = toRadians(coordinates.dec);
-            series.appendData(new DataPoint((double) millis,
-                    toDegrees(asin(sin(dec) * sin(latRadians) + cos(dec) * cos(latRadians) *
-                            cos(toRadians(TimeUtils.meanSiderealTime(calendar, longitude) - coordinates.ra))))), false, 720);
-        }
-        graph.addSeries(series);
-        GridLabelRenderer gridLabel = graph.getGridLabelRenderer();
-        gridLabel.setLabelFormatter(new TimeFormatter());
-        gridLabel.setNumHorizontalLabels(3);
-        gridLabel.setNumVerticalLabels(6);
-        gridLabel.setHorizontalLabelsAngle(45);
-        Viewport viewport = graph.getViewport();
-        viewport.setMinX(now);
-        viewport.setMaxX(tomorrow);
-        viewport.setXAxisBoundsManual(true);
-        viewport.setYAxisBoundsManual(true);
-        viewport.setScalable(true);
-    }
-
     @SuppressWarnings("deprecation")
     private boolean internetAvailable() {
         ConnectivityManager connectivityManager = ContextCompat.getSystemService(context, ConnectivityManager.class);
@@ -509,32 +431,85 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
         }
     }
 
-    private ScrollView createScrollview(TextView text, ImageView image) {
-        LinearLayout layout = new LinearLayout(context);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        Resources res = context.getResources();
-        final int margin = res.getDimensionPixelSize(R.dimen.dialog_margin);
-        final int marginSmall = res.getDimensionPixelSize(R.dimen.dialog_margin_small);
+    private void createDetailsBox(View rootView, Spannable description, View preview, EquatorialCoordinates dsoCoord, Planet planet) {
+        rootView.<TextView>findViewById(R.id.details_text).setText(description);
+        FrameLayout graphContainer = rootView.findViewById(R.id.details_graph_container);
+        GraphView graph = rootView.findViewById(R.id.details_graph);
+        if (location == null) {
+            rootView.<TextView>findViewById(R.id.details_no_location).setVisibility(View.VISIBLE);
+            graph.setVisibility(View.GONE);
+        } else {
+            initGraph(graph, dsoCoord, planet);
+        }
 
-        LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
-        textParams.topMargin = marginSmall;
-        textParams.leftMargin = margin;
-        textParams.rightMargin = margin;
-        textParams.bottomMargin = marginSmall;
-        text.setLayoutParams(textParams);
-        layout.addView(text, textParams);
+        TabLayout tabLayout = rootView.findViewById(R.id.details_tabs);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int pos = tab.getPosition();
+                preferences.edit().putInt(ApplicationConstants.GOTO_DETAILS_LAST_TAB, pos).apply();
+                if (pos == 0) {
+                    preview.setVisibility(View.VISIBLE);
+                    graphContainer.setVisibility(View.GONE);
+                } else {
+                    preview.setVisibility(View.GONE);
+                    graphContainer.setVisibility(View.VISIBLE);
+                }
+            }
 
-        LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(WRAP_CONTENT,
-                res.getDimensionPixelSize(R.dimen.details_photo_height));
-        imageParams.leftMargin = marginSmall;
-        imageParams.rightMargin = marginSmall;
-        imageParams.gravity = Gravity.CENTER_HORIZONTAL;
-        image.setLayoutParams(imageParams);
-        layout.addView(image, imageParams);
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
 
-        ScrollView scrollView = new ScrollView(context);
-        scrollView.addView(layout);
-        return scrollView;
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+        if (preferences.getInt(ApplicationConstants.GOTO_DETAILS_LAST_TAB, 0) == 1)
+            tabLayout.selectTab(tabLayout.getTabAt(1));
+    }
+
+    private void initGraph(GraphView graph, EquatorialCoordinates dsoCoord, Planet planet) {
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
+        Calendar calendar = Calendar.getInstance();
+        long now = calendar.getTimeInMillis();
+        calendar.add(Calendar.DATE, 1);
+        long tomorrow = calendar.getTimeInMillis();
+        double latitude = location.getLatitude(),
+                longitude = location.getLongitude();
+        if (dsoCoord == null) {
+            for (long millis = now; millis < tomorrow; millis += 120000) {
+                calendar.setTimeInMillis(millis);
+                EquatorialCoordinates coordinates = planet.getEquatorialCoordinates(calendar,
+                        HeliocentricCoordinates.getInstance(Planet.Sun, calendar));
+                double latRadians = toRadians(latitude),
+                        dec = toRadians(coordinates.dec);
+                series.appendData(new DataPoint((double) millis,
+                        toDegrees(asin(sin(dec) * sin(latRadians) + cos(dec) * cos(latRadians) *
+                                cos(toRadians(TimeUtils.meanSiderealTime(calendar, longitude) - coordinates.ra))))), false, 720);
+            }
+        } else {
+            for (long millis = now; millis < tomorrow; millis += 120000) {
+                calendar.setTimeInMillis(millis);
+                double latRadians = toRadians(latitude),
+                        dec = toRadians(dsoCoord.dec);
+                series.appendData(new DataPoint((double) millis,
+                        toDegrees(asin(sin(dec) * sin(latRadians) + cos(dec) * cos(latRadians) *
+                                cos(toRadians(TimeUtils.meanSiderealTime(calendar, longitude) - dsoCoord.ra))))), false, 720);
+            }
+        }
+        graph.addSeries(series);
+        GridLabelRenderer gridLabel = graph.getGridLabelRenderer();
+        gridLabel.setLabelFormatter(new TimeFormatter());
+        gridLabel.setNumHorizontalLabels(3);
+        gridLabel.setNumVerticalLabels(6);
+        gridLabel.setHorizontalLabelsAngle(45);
+        Viewport viewport = graph.getViewport();
+        viewport.setMinX(now);
+        viewport.setMaxX(tomorrow);
+        viewport.setXAxisBoundsManual(true);
+        viewport.setYAxisBoundsManual(true);
+        viewport.setScalable(true);
     }
 
     private void setCoordinatesMaybePrecess(CatalogEntry entry, EquatorialCoordinates coordinates) throws INDIValueException {

@@ -121,7 +121,7 @@ public class PlanetsLayer extends AbstractLayer {
         public AstronomicalSource initialize() {
             Calendar time = model.getTime();
             updateCoords(time);
-            this.imageId = planet.getImageResourceId(time);
+            this.imageId = planet.getMapResourceId(time);
             Resources resources = getResources();
             if (planet == Planet.Moon) {
                 imageSources.add(new ImageSource(currentCoords, resources, imageId, sunCoords, planet.getPlanetaryImageSize()));
@@ -145,7 +145,7 @@ public class PlanetsLayer extends AbstractLayer {
                     // Update up vector.
                     imageSources.get(0).setUpVector(sunCoords);
                     // update image:
-                    int newImageId = planet.getImageResourceId(modelTime);
+                    int newImageId = planet.getMapResourceId(modelTime);
                     if (newImageId != imageId) {
                         imageId = newImageId;
                         imageSources.get(0).setImageId(imageId);

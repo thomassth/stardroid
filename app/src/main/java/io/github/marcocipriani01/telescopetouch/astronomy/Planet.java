@@ -32,16 +32,16 @@ import static io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoord
 public enum Planet {
     // The order here is the order in which they are drawn.  To ensure that during
     // conjunctions they display "naturally" order them in reverse distance from Earth.
-    Pluto(R.drawable.pluto, R.string.pluto, R.drawable.gallery_pluto, TimeUtils.MILLISECONDS_PER_HOUR),
-    Neptune(R.drawable.neptune, R.string.neptune, R.drawable.gallery_neptune, TimeUtils.MILLISECONDS_PER_HOUR),
-    Uranus(R.drawable.uranus, R.string.uranus, R.drawable.gallery_uranus, TimeUtils.MILLISECONDS_PER_HOUR),
-    Saturn(R.drawable.saturn, R.string.saturn, R.drawable.gallery_saturn, TimeUtils.MILLISECONDS_PER_HOUR),
-    Jupiter(R.drawable.jupiter, R.string.jupiter, R.drawable.gallery_jupiter, TimeUtils.MILLISECONDS_PER_HOUR),
-    Mars(R.drawable.mars, R.string.mars, R.drawable.gallery_mars, TimeUtils.MILLISECONDS_PER_HOUR),
-    Sun(R.drawable.sun, R.string.sun, TimeUtils.MILLISECONDS_PER_HOUR),
-    Mercury(R.drawable.mercury, R.string.mercury, R.drawable.gallery_mercury, TimeUtils.MILLISECONDS_PER_HOUR),
-    Venus(R.drawable.venus, R.string.venus, R.drawable.gallery_venus, TimeUtils.MILLISECONDS_PER_HOUR),
-    Moon(R.drawable.moon4, R.string.moon, TimeUtils.MILLISECONDS_PER_MINUTE);
+    Pluto(R.drawable.pluto, R.drawable.gallery_pluto, R.string.pluto, TimeUtils.MILLISECONDS_PER_HOUR),
+    Neptune(R.drawable.neptune, R.drawable.gallery_neptune, R.string.neptune, TimeUtils.MILLISECONDS_PER_HOUR),
+    Uranus(R.drawable.uranus, R.drawable.gallery_uranus, R.string.uranus, TimeUtils.MILLISECONDS_PER_HOUR),
+    Saturn(R.drawable.saturn, R.drawable.gallery_saturn, R.string.saturn, TimeUtils.MILLISECONDS_PER_HOUR),
+    Jupiter(R.drawable.jupiter, R.drawable.gallery_jupiter, R.string.jupiter, TimeUtils.MILLISECONDS_PER_HOUR),
+    Mars(R.drawable.mars, R.drawable.gallery_mars, R.string.mars, TimeUtils.MILLISECONDS_PER_HOUR),
+    Sun(R.drawable.sun, R.drawable.gallery_sun, R.string.sun, TimeUtils.MILLISECONDS_PER_HOUR),
+    Mercury(R.drawable.mercury, R.drawable.gallery_mercury, R.string.mercury, TimeUtils.MILLISECONDS_PER_HOUR),
+    Venus(R.drawable.venus, R.drawable.gallery_venus, R.string.venus, TimeUtils.MILLISECONDS_PER_HOUR),
+    Moon(R.drawable.moon4, R.drawable.moon4, R.string.moon, TimeUtils.MILLISECONDS_PER_MINUTE);
 
     private static final String TAG = TelescopeTouchApp.getTag(Planet.class);
     /**
@@ -53,24 +53,17 @@ public enum Planet {
     /**
      * Resource ID to use for a planet's image.
      */
-    private final int imageResourceId;
+    private final int mapResourceId;
     private final int galleryResourceId;
     /**
      * String ID
      */
     private final int nameResourceId;
 
-    Planet(int imageResourceId, int nameResourceId, long updateFreqMs) {
-        this.imageResourceId = imageResourceId;
-        this.nameResourceId = nameResourceId;
-        this.galleryResourceId = 0;
-        this.updateFreqMs = updateFreqMs;
-    }
-
-    Planet(int imageResourceId, int nameResourceId, int galleryResourceId, long updateFreqMs) {
-        this.imageResourceId = imageResourceId;
-        this.nameResourceId = nameResourceId;
+    Planet(int mapResourceId, int galleryResourceId, int nameResourceId, long updateFreqMs) {
+        this.mapResourceId = mapResourceId;
         this.galleryResourceId = galleryResourceId;
+        this.nameResourceId = nameResourceId;
         this.updateFreqMs = updateFreqMs;
     }
 
@@ -165,6 +158,7 @@ public enum Planet {
     }
 
     public int getGalleryResourceId() {
+        if (this == Planet.Moon) return getLunarPhaseImageId(Calendar.getInstance());
         return galleryResourceId;
     }
 
@@ -179,9 +173,9 @@ public enum Planet {
                     earthCoordinates.y * -1.0f, earthCoordinates.z * -1.0f);
         } else {
             coords = HeliocentricCoordinates.getInstance(this, time);
-            coords.Subtract(earthCoordinates);
+            coords.subtract(earthCoordinates);
         }
-        HeliocentricCoordinates equ = coords.CalculateEquatorialCoordinates();
+        HeliocentricCoordinates equ = coords.calculateEquatorialCoordinates();
         return getInstance(equ);
     }
 
@@ -204,9 +198,9 @@ public enum Planet {
     /**
      * Returns the resource id for the planet's image.
      */
-    public int getImageResourceId(Calendar time) {
+    public int getMapResourceId(Calendar time) {
         if (this == Planet.Moon) return getLunarPhaseImageId(time);
-        return this.imageResourceId;
+        return this.mapResourceId;
     }
 
     /**
@@ -371,7 +365,7 @@ public enum Planet {
         HeliocentricCoordinates planetCoords = HeliocentricCoordinates.getInstance(this, time);
         // Second, determine position relative to Earth
         HeliocentricCoordinates earthCoords = HeliocentricCoordinates.getInstance(Planet.Sun, time);
-        double earthDistance = planetCoords.DistanceFrom(earthCoords);
+        double earthDistance = planetCoords.distanceFrom(earthCoords);
         // Finally, calculate the phase of the body.
         return Math.acos((earthDistance * earthDistance +
                 planetCoords.radius * planetCoords.radius -
@@ -396,7 +390,7 @@ public enum Planet {
         HeliocentricCoordinates planetCoords = HeliocentricCoordinates.getInstance(this, time);
         // Second, determine position relative to Earth
         HeliocentricCoordinates earthCoords = HeliocentricCoordinates.getInstance(Planet.Sun, time);
-        double earthDistance = planetCoords.DistanceFrom(earthCoords);
+        double earthDistance = planetCoords.distanceFrom(earthCoords);
         // Third, calculate the phase of the body.
         double phase = Math.acos((earthDistance * earthDistance +
                 planetCoords.radius * planetCoords.radius -

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/details_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/dialog_margin" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/details_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="8dp"
+            android:paddingTop="4dp">
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/photo" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/altitude" />
+        </com.google.android.material.tabs.TabLayout>
+
+        <com.github.chrisbanes.photoview.PhotoView
+            android:id="@+id/details_image"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/details_photo_height"
+            android:layout_marginHorizontal="8dp" />
+
+        <FrameLayout
+            android:id="@+id/details_graph_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="8dp"
+            android:visibility="gone">
+
+            <com.jjoe64.graphview.GraphView
+                android:id="@+id/details_graph"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/graph_height" />
+
+            <TextView
+                android:id="@+id/details_no_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawablePadding="8dp"
+                android:paddingTop="8dp"
+                android:text="@string/no_location"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:visibility="gone"
+                app:drawableBottomCompat="@drawable/gps_off" />
+        </FrameLayout>
+    </LinearLayout>
+</ScrollView>
