@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/no_image_background"
+    android:contentDescription="@string/ccd_images"
+    tools:context=".activities.FlyingBLOBViewActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/ccd_images"
+        android:scaleType="centerInside"
+        android:src="@drawable/no_image" />
+
+    <io.github.marcocipriani01.livephotoview.PhotoView
+        android:id="@+id/pip_blob_view"
+        android:padding="1dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/ccd_images" />
+</FrameLayout>

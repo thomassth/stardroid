@@ -22,23 +22,31 @@ import android.os.Handler;
 
 import org.indilib.i4j.INDIBLOBValue;
 import org.indilib.i4j.client.INDIBLOBElement;
+import org.indilib.i4j.client.INDIBLOBProperty;
+import org.indilib.i4j.client.INDIProperty;
+import org.indilib.i4j.client.INDIPropertyListener;
 
 import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AsyncBlobLoader {
+public class AsyncBLOBLoader implements INDIPropertyListener {
 
     private final Handler handler;
-    private volatile LoadListener listener = null;
+    private final Set<BLOBListener> listeners = new HashSet<>();
     private volatile Thread loadingThread = null;
     private volatile INDIBLOBValue queuedValue = null;
     private volatile boolean stretch = false;
+    private volatile Bitmap lastBitmap = null;
+    private volatile INDIBLOBProperty prop = null;
+    private INDIBLOBElement element = null;
 
-    public AsyncBlobLoader(Handler handler) {
+    public AsyncBLOBLoader(Handler handler) {
         this.handler = handler;
     }
 
@@ -50,16 +58,90 @@ public class AsyncBlobLoader {
         return -1;
     }
 
-    public synchronized void setListener(LoadListener listener) {
-        this.listener = listener;
+    public INDIBLOBProperty getProp() {
+        return prop;
     }
 
-    @SuppressLint("DefaultLocale")
-    public synchronized boolean queue(final INDIBLOBElement element) {
-        if (listener == null) return false;
-        queuedValue = element.getValue();
-        if ((loadingThread == null) || (!loadingThread.isAlive())) startProcessing();
-        return true;
+    public void attach(INDIBLOBProperty prop, INDIBLOBElement element) {
+        if (!prop.getElementsAsList().contains(element))
+            throw new IllegalArgumentException("Element not associated with property!");
+        if ((prop == this.prop) && (element == this.element)) {
+            if ((!listeners.isEmpty()) && (lastBitmap == null)) {
+                queuedValue = element.getValue();
+                if ((loadingThread == null) || (!loadingThread.isAlive())) startProcessing();
+            }
+            return;
+        }
+        if (this.prop != null) this.prop.removeINDIPropertyListener(this);
+        this.prop = prop;
+        this.element = element;
+        this.prop.addINDIPropertyListener(this);
+        if (!listeners.isEmpty()) {
+            queuedValue = element.getValue();
+            if ((loadingThread == null) || (!loadingThread.isAlive())) startProcessing();
+        }
+    }
+
+    public void reload() {
+        if (!listeners.isEmpty() && (element != null)) {
+            queuedValue = element.getValue();
+            if ((loadingThread == null) || (!loadingThread.isAlive())) startProcessing();
+        }
+    }
+
+    public void detach() {
+        if (this.prop != null) this.prop.removeINDIPropertyListener(this);
+        this.prop = null;
+        this.element = null;
+    }
+
+    public boolean hasBitmap() {
+        return lastBitmap != null;
+    }
+
+    public synchronized Bitmap getLastBitmap() {
+        return lastBitmap;
+    }
+
+    public void recycle() {
+        handler.post(() -> {
+            synchronized (listeners) {
+                for (BLOBListener listener : listeners) {
+                    listener.onBitmapDestroy();
+                }
+            }
+            if (lastBitmap != null) {
+                lastBitmap.recycle();
+                lastBitmap = null;
+            }
+        });
+    }
+
+    public void addListener(BLOBListener listener) {
+        synchronized (listeners) {
+            this.listeners.add(listener);
+        }
+    }
+
+    public void removeListener(BLOBListener listener) {
+        synchronized (listeners) {
+            this.listeners.remove(listener);
+        }
+    }
+
+    private void onException(Throwable throwable) {
+        handler.post(() -> {
+            synchronized (listeners) {
+                for (BLOBListener listener : listeners) {
+                    listener.onBitmapDestroy();
+                    listener.onBLOBException(throwable);
+                }
+            }
+            if (lastBitmap != null) {
+                lastBitmap.recycle();
+                lastBitmap = null;
+            }
+        });
     }
 
     public synchronized void setStretch(boolean stretch) {
@@ -67,47 +149,75 @@ public class AsyncBlobLoader {
     }
 
     private synchronized void onThreadFinish(Bitmap bitmap, String[] metadata) {
+        if (listeners.isEmpty()) {
+            if (lastBitmap != null) {
+                lastBitmap.recycle();
+                lastBitmap = null;
+            }
+            if (bitmap != null) bitmap.recycle();
+            return;
+        }
         handler.post(() -> {
-            if (listener != null)
-                listener.onBitmapLoaded(bitmap, metadata);
+            synchronized (listeners) {
+                for (BLOBListener listener : listeners) {
+                    listener.onBitmapLoaded(bitmap, metadata);
+                }
+            }
+            if (lastBitmap != null) lastBitmap.recycle();
+            lastBitmap = bitmap;
         });
         if (queuedValue != null) startProcessing();
     }
 
     private synchronized void startProcessing() {
-        loadingThread = new LoadingThread(queuedValue, stretch);
+        loadingThread = new LoadingThread(queuedValue);
         loadingThread.start();
         queuedValue = null;
+        synchronized (listeners) {
+            for (BLOBListener listener : listeners) {
+                handler.post(listener::onBLOBLoading);
+            }
+        }
     }
 
-    public interface LoadListener {
+    @Override
+    public synchronized void propertyChanged(INDIProperty<?> indiProperty) {
+        if (indiProperty == prop) {
+            if (listeners.isEmpty()) return;
+            queuedValue = element.getValue();
+            if ((loadingThread == null) || (!loadingThread.isAlive())) startProcessing();
+        }
+    }
+
+    public interface BLOBListener {
+        void onBLOBLoading();
+
         void onBitmapLoaded(Bitmap bitmap, String[] metadata);
 
-        void onBlobException(Throwable e);
+        void onBitmapDestroy();
+
+        void onBLOBException(Throwable e);
     }
 
     private class LoadingThread extends Thread {
 
         private final INDIBLOBValue blobValue;
-        private final boolean stretch;
 
-        private LoadingThread(INDIBLOBValue blobValue, boolean stretch) {
+        private LoadingThread(INDIBLOBValue blobValue) {
             this.blobValue = blobValue;
-            this.stretch = stretch;
         }
 
         @SuppressLint("DefaultLocale")
         @Override
-        public synchronized void run() {
+        public void run() {
             try {
                 String format = blobValue.getFormat();
                 int blobSize = blobValue.getSize();
+                if (format.equals("") || (blobSize == 0))
+                    throw new FileNotFoundException();
                 String blobSizeString = String.format("%.2f MB", blobSize / 1000000.0);
                 byte[] blobData = blobValue.getBlobData();
-                Bitmap bitmap;
-                if (format.equals("") || (blobSize == 0)) {
-                    throw new FileNotFoundException();
-                } else if (format.equals(".fits")) {
+                if (format.equals(".fits")) {
                     try (InputStream stream = new ByteArrayInputStream(blobData)) {
                         int width = 0, height = 0;
                         byte bitPerPix = 0;
@@ -139,7 +249,7 @@ public class AsyncBlobLoader {
                                 }
                             }
                         }
-                        bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+                        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
                         if (stretch) {
                             int[][] img = new int[width][height];
                             int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
@@ -215,7 +325,7 @@ public class AsyncBlobLoader {
                                 blobSizeString, width + "x" + height, format, String.valueOf(bitPerPix)});
                     }
                 } else {
-                    bitmap = BitmapFactory.decodeByteArray(blobData, 0, blobSize);
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(blobData, 0, blobSize);
                     if (bitmap == null) {
                         onThreadFinish(null, new String[]{blobSizeString, null, format, null});
                     } else {
@@ -224,8 +334,8 @@ public class AsyncBlobLoader {
                                 (format.equals(".jpg") || format.equals(".jpeg")) ? "8" : null});
                     }
                 }
-            } catch (Throwable e) {
-                handler.post(() -> listener.onBlobException(e));
+            } catch (Throwable t) {
+                onException(t);
             }
         }
     }

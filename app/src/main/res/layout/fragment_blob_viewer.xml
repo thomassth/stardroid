@@ -130,7 +130,7 @@
             </TableRow>
         </TableLayout>
 
-        <com.github.chrisbanes.photoview.PhotoView
+        <io.github.marcocipriani01.livephotoview.PhotoView
             android:id="@+id/blob_viewer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

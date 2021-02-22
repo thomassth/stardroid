@@ -18,13 +18,14 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         tools:ignore="HardcodedText" />
 
-    <com.github.chrisbanes.photoview.PhotoView
+    <io.github.marcocipriani01.livephotoview.PhotoView
         android:id="@+id/gallery_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/gallery_buttons"
         android:layout_below="@id/gallery_image_title"
         android:adjustViewBounds="true"
+        android:transitionName="ImageDisplayActivity"
         tools:ignore="ContentDescription" />
 
     <LinearLayout

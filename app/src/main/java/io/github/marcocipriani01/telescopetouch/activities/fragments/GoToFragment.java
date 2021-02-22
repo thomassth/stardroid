@@ -51,7 +51,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.material.tabs.TabLayout;
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
@@ -66,6 +65,7 @@ import org.indilib.i4j.client.INDIValueException;
 import java.util.Calendar;
 
 import in.myinnos.alphabetsindexfastscrollrecycler.IndexFastScrollRecyclerView;
+import io.github.marcocipriani01.livephotoview.PhotoView;
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.ProUtils;
 import io.github.marcocipriani01.telescopetouch.R;
