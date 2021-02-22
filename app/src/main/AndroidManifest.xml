@@ -154,6 +154,13 @@
             android:name=".activities.MapsActivity"
             android:label="@string/pick_location_pref"
             android:screenOrientation="fullUser" />
+        <activity
+            android:name=".activities.FlyingBLOBViewActivity"
+            android:label="@string/mount_control"
+            android:theme="@style/AppThemeNoActionBar"
+            android:launchMode="singleTask"
+            android:supportsPictureInPicture="true"
+            android:screenOrientation="fullUser" />
 
         <service
             android:name=".AppForegroundService"

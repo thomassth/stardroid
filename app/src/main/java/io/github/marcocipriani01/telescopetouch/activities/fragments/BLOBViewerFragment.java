@@ -15,6 +15,7 @@
 package io.github.marcocipriani01.telescopetouch.activities.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.AppOpsManager;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -31,6 +32,9 @@ import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -43,17 +47,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
 
-import com.github.chrisbanes.photoview.PhotoView;
-
 import org.indilib.i4j.client.INDIBLOBProperty;
-import org.indilib.i4j.client.INDIDevice;
-import org.indilib.i4j.client.INDIDeviceListener;
-import org.indilib.i4j.client.INDIProperty;
-import org.indilib.i4j.client.INDIPropertyListener;
-import org.indilib.i4j.client.INDIServerConnection;
-import org.indilib.i4j.client.INDIServerConnectionListener;
 
 import java.io.EOFException;
 import java.io.File;
@@ -63,30 +60,29 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import io.github.marcocipriani01.livephotoview.PhotoView;
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.ProUtils;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
-import io.github.marcocipriani01.telescopetouch.indi.AsyncBlobLoader;
+import io.github.marcocipriani01.telescopetouch.activities.FlyingBLOBViewActivity;
+import io.github.marcocipriani01.telescopetouch.activities.util.ImprovedSpinnerListener;
+import io.github.marcocipriani01.telescopetouch.indi.AsyncBLOBLoader;
+import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
 
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 
-public class BLOBViewerFragment extends ActionFragment implements INDIServerConnectionListener,
-        INDIDeviceListener, INDIPropertyListener, AsyncBlobLoader.LoadListener,
-        CompoundButton.OnCheckedChangeListener, AdapterView.OnItemSelectedListener,
-        SharedPreferences.OnSharedPreferenceChangeListener {
+public class BLOBViewerFragment extends ActionFragment implements AsyncBLOBLoader.BLOBListener,
+        CompoundButton.OnCheckedChangeListener, SharedPreferences.OnSharedPreferenceChangeListener,
+        Toolbar.OnMenuItemClickListener, ConnectionManager.ManagerListener {
 
     private static final String TAG = TelescopeTouchApp.getTag(BLOBViewerFragment.class);
-    private static int selectedProperty = 0;
     private final Handler handler = new Handler(Looper.getMainLooper());
-    private final AsyncBlobLoader blobLoader = new AsyncBlobLoader(handler);
-    private final List<INDIBLOBProperty> properties = Collections.synchronizedList(new ArrayList<>());
+    private final List<INDIBLOBProperty> properties = new ArrayList<>();
     private SharedPreferences preferences;
-    private Bitmap bitmap = null;
     private boolean bitmapSaved = false;
     private SwitchCompat blobsEnableSwitch;
     private SwitchCompat fitsStretchSwitch;
@@ -97,13 +93,43 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
     private TextView errorText;
     private PhotoView blobViewer;
     private ProgressBar progressBar;
+    private final ImprovedSpinnerListener spinnerListener = new ImprovedSpinnerListener() {
+        @Override
+        protected void onImprovedItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+            if ((errorText == null) || (progressBar == null) || (blobViewer == null)) return;
+            load(properties.get(pos));
+        }
+    };
     private AppCompatSpinner selectionSpinner;
     private BLOBArrayAdapter selectionAdapter;
+    private boolean pipSupported = false;
+    private MenuItem pipMenuItem = null;
+
+    private void load(INDIBLOBProperty property) {
+        if (property == null) {
+            onError(R.string.empty_property);
+            notifyActionChange();
+        }
+        switch (property.getElementCount()) {
+            case 0:
+                onError(R.string.empty_property);
+                notifyActionChange();
+                break;
+            case 1:
+                connectionManager.blobLoader.attach(property, property.getElementsAsList().get(0));
+                break;
+            default:
+                onError(R.string.error_multi_image_prop);
+                break;
+        }
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_blob_viewer, container, false);
+        pipSupported = FlyingBLOBViewActivity.isSupported(context);
+        if (pipSupported) setHasOptionsMenu(true);
         blobsEnableSwitch = rootView.findViewById(R.id.switch_image_receive);
         fitsStretchSwitch = rootView.findViewById(R.id.switch_image_stretch);
         fileSizeText = rootView.findViewById(R.id.blob_size);
@@ -117,6 +143,7 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
         selectionAdapter = new BLOBArrayAdapter(context);
         selectionSpinner = rootView.findViewById(R.id.spinner_select_image_blob);
         selectionSpinner.setAdapter(selectionAdapter);
+        spinnerListener.attach(selectionSpinner);
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return rootView;
     }
@@ -124,7 +151,6 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
     @Override
     public void onStart() {
         super.onStart();
-        blobLoader.setListener(this);
         boolean blobEnabled = preferences.getBoolean(ApplicationConstants.RECEIVE_BLOB_PREF, false);
         blobsEnableSwitch.setOnCheckedChangeListener(null);
         connectionManager.setBlobEnabled(blobEnabled);
@@ -133,46 +159,100 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
         blobsEnableSwitch.setOnCheckedChangeListener(this);
 
         boolean stretchEnabled = preferences.getBoolean(ApplicationConstants.STRETCH_FITS_PREF, false);
-        blobLoader.setStretch(stretchEnabled);
+        connectionManager.blobLoader.setStretch(stretchEnabled);
         fitsStretchSwitch.setOnCheckedChangeListener(null);
         fitsStretchSwitch.setChecked(stretchEnabled);
         fitsStretchSwitch.setSelected(stretchEnabled);
         fitsStretchSwitch.setOnCheckedChangeListener(this);
 
-        connectionManager.addINDIListener(this);
+        connectionManager.addManagerListener(this);
+        properties.clear();
         if (connectionManager.isConnected()) {
-            List<INDIDevice> list = connectionManager.getIndiConnection().getDevicesAsList();
-            for (INDIDevice device : list) {
-                device.addINDIDeviceListener(this);
-                List<INDIProperty<?>> properties = device.getPropertiesAsList();
-                for (INDIProperty<?> property : properties) {
-                    newProperty(device, property);
+            properties.addAll(connectionManager.getBlobProperties());
+            selectionAdapter.notifyDataSetChanged();
+            if (properties.isEmpty()) {
+                selectionSpinner.setEnabled(false);
+            } else {
+                selectionSpinner.setEnabled(true);
+                INDIBLOBProperty selected = connectionManager.blobLoader.getProp();
+                if (selected == null) {
+                    load(properties.get(0));
+                } else {
+                    int loaderPropIndex = properties.indexOf(selected);
+                    if (loaderPropIndex == -1) {
+                        connectionManager.blobLoader.detach();
+                    } else {
+                        selectionSpinner.setSelection(loaderPropIndex);
+                    }
+                }
+                Bitmap lastBitmap = connectionManager.blobLoader.getLastBitmap();
+                blobViewer.setImageBitmap(lastBitmap);
+                if (lastBitmap == null) {
+                    errorText.setText(R.string.no_incoming_data);
+                    blobViewer.setVisibility(View.GONE);
+                    errorText.setVisibility(View.VISIBLE);
+                } else {
+                    blobViewer.setVisibility(View.VISIBLE);
+                    errorText.setVisibility(View.GONE);
+                    bitmapSaved = false;
                 }
             }
-            if (properties.isEmpty())
-                selectionSpinner.setEnabled(false);
         } else {
+            selectionAdapter.notifyDataSetChanged();
             selectionSpinner.setEnabled(false);
+            errorText.setText(R.string.no_incoming_data);
+            blobViewer.setVisibility(View.GONE);
+            errorText.setVisibility(View.VISIBLE);
         }
-
-        selectionSpinner.setOnItemSelectedListener(null);
-        if (properties.size() > selectedProperty)
-            selectionSpinner.setSelection(selectedProperty);
-        selectionSpinner.setOnItemSelectedListener(this);
+        progressBar.setVisibility(View.INVISIBLE);
+        notifyActionChange();
+        connectionManager.blobLoader.addListener(this);
         preferences.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        connectionManager.removeINDIListener(this);
+        connectionManager.removeManagerListener(this);
         preferences.unregisterOnSharedPreferenceChangeListener(this);
-        blobLoader.setListener(null);
+        blobViewer.setImageBitmap(null);
+        connectionManager.blobLoader.removeListener(this);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        if (pipSupported) {
+            pipMenuItem = menu.add(R.string.floating_image);
+            pipMenuItem.setIcon(R.drawable.picture_in_picture);
+            pipMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        }
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        if (item == pipMenuItem) {
+            if (ProUtils.isPro) {
+                if (FlyingBLOBViewActivity.isVisible()) {
+                    FlyingBLOBViewActivity.finishInstance();
+                } else if (((AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE))
+                        .checkOpNoThrow(AppOpsManager.OPSTR_PICTURE_IN_PICTURE, android.os.Process.myUid(),
+                                context.getPackageName()) != AppOpsManager.MODE_ALLOWED) {
+                    requestActionSnack(R.string.pip_permission_required);
+                } else {
+                    startActivity(new Intent(context, FlyingBLOBViewActivity.class));
+                }
+            } else {
+                requestActionSnack(R.string.pro_feature);
+            }
+            return true;
+        }
+        return false;
     }
 
     @Override
     public boolean isActionEnabled() {
-        return (bitmap != null) && (!bitmapSaved);
+        return connectionManager.blobLoader.hasBitmap() && (!bitmapSaved);
     }
 
     @Override
@@ -186,7 +266,8 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
         new Thread(() -> {
             if (isActionEnabled()) {
                 try {
-                    final Uri uri = saveImage(context, bitmap, context.getString(R.string.app_name),
+                    final Uri uri = saveImage(context, connectionManager.blobLoader.getLastBitmap(),
+                            context.getString(R.string.app_name),
                             new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date()));
                     bitmapSaved = true;
                     handler.post(() -> {
@@ -209,15 +290,18 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
     }
 
     @Override
+    public void onBLOBLoading() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
     public void onBitmapLoaded(Bitmap bitmap, String[] metadata) {
-        recycleBitmap();
         setBlobInfo(metadata);
         if (bitmap == null) {
             errorText.setText(R.string.unsupported_format);
             blobViewer.setVisibility(View.GONE);
             errorText.setVisibility(View.VISIBLE);
         } else {
-            this.bitmap = bitmap;
             blobViewer.setImageBitmap(bitmap);
             blobViewer.setVisibility(View.VISIBLE);
             errorText.setVisibility(View.GONE);
@@ -228,61 +312,37 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
     }
 
     @Override
-    public void onBlobException(Throwable e) {
-        Log.e("BLOBViewer", e.getLocalizedMessage(), e);
-        if (e instanceof Error) {
-            errorText.setText(R.string.out_of_memory);
-        } else if (e instanceof FileNotFoundException) {
-            errorText.setText(R.string.no_incoming_data);
-        } else if (e instanceof EOFException) {
-            errorText.setText(R.string.truncated_file);
-        } else if (e instanceof IndexOutOfBoundsException) {
-            errorText.setText(R.string.unsupported_color_fits);
-        } else if (e instanceof UnsupportedOperationException) {
-            errorText.setText(R.string.unsupported_bit_depth);
-        } else if (e instanceof IllegalStateException) {
-            errorText.setText(R.string.invalid_fits_image);
-        } else {
-            errorText.setText(R.string.unknown_exception);
-        }
-        clearBitmap();
+    public void onBitmapDestroy() {
+        blobViewer.setImageBitmap(null);
         notifyActionChange();
     }
 
-    private void loadBlob(INDIBLOBProperty property) {
-        if ((errorText == null) || (progressBar == null) || (blobViewer == null)) return;
-        switch (property.getElementCount()) {
-            case 0:
-                errorText.setText(R.string.empty_property);
-                clearBitmap();
-                notifyActionChange();
-                break;
-            case 1:
-                if (blobLoader.queue(property.getElementsAsList().get(0)))
-                    progressBar.setVisibility(View.VISIBLE);
-                break;
-            default:
-                errorText.setText(R.string.error_multi_image_prop);
-                clearBitmap();
-                notifyActionChange();
-                break;
+    @Override
+    public void onBLOBException(Throwable e) {
+        Log.e("BLOBViewer", e.getLocalizedMessage(), e);
+        if (e instanceof Error) {
+            onError(R.string.out_of_memory);
+        } else if (e instanceof FileNotFoundException) {
+            onError(R.string.no_incoming_data);
+        } else if (e instanceof EOFException) {
+            onError(R.string.truncated_file);
+        } else if (e instanceof IndexOutOfBoundsException) {
+            onError(R.string.unsupported_color_fits);
+        } else if (e instanceof UnsupportedOperationException) {
+            onError(R.string.unsupported_bit_depth);
+        } else if (e instanceof IllegalStateException) {
+            onError(R.string.invalid_fits_image);
+        } else {
+            onError(R.string.unknown_exception);
         }
     }
 
-    private void clearBitmap() {
+    private void onError(int errorMsg) {
         setBlobInfo(null);
+        errorText.setText(errorMsg);
         blobViewer.setVisibility(View.GONE);
         progressBar.setVisibility(View.INVISIBLE);
         errorText.setVisibility(View.VISIBLE);
-        recycleBitmap();
-    }
-
-    private void recycleBitmap() {
-        blobViewer.setImageDrawable(null);
-        if (bitmap != null) {
-            bitmap.recycle();
-            bitmap = null;
-        }
     }
 
     private void setBlobInfo(String[] info) {
@@ -302,7 +362,7 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
         }
     }
 
-    @SuppressWarnings({"deprecation", "ResultOfMethodCallIgnored"})
+    @SuppressWarnings({"ResultOfMethodCallIgnored"})
     private Uri saveImage(final Context context, final Bitmap bitmap, @NonNull String folderName, @NonNull String fileName) throws IOException {
         OutputStream stream;
         Uri uri;
@@ -337,11 +397,9 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
             preferences.edit().putBoolean(ApplicationConstants.RECEIVE_BLOB_PREF, isChecked).apply();
         } else if (buttonView == fitsStretchSwitch) {
             if (ProUtils.isPro) {
-                blobLoader.setStretch(isChecked);
+                connectionManager.blobLoader.setStretch(isChecked);
+                connectionManager.blobLoader.reload();
                 preferences.edit().putBoolean(ApplicationConstants.STRETCH_FITS_PREF, isChecked).apply();
-                INDIBLOBProperty selectedItem = (INDIBLOBProperty) selectionSpinner.getSelectedItem();
-                if (selectedItem != null)
-                    loadBlob(selectedItem);
             } else {
                 fitsStretchSwitch.setOnCheckedChangeListener(null);
                 fitsStretchSwitch.setSelected(false);
@@ -350,17 +408,6 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
                 ProUtils.toast(context);
             }
         }
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        selectedProperty = position;
-        loadBlob(selectionAdapter.getItem(position));
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
     @Override
@@ -375,63 +422,22 @@ public class BLOBViewerFragment extends ActionFragment implements INDIServerConn
     }
 
     @Override
-    public void newDevice(INDIServerConnection connection, INDIDevice device) {
-        device.addINDIDeviceListener(this);
+    public void onConnectionLost() {
+        properties.clear();
+        if (selectionAdapter != null)
+            selectionAdapter.notifyDataSetChanged();
+        if (selectionSpinner != null)
+            selectionSpinner.setEnabled(false);
     }
 
     @Override
-    public void removeDevice(INDIServerConnection connection, INDIDevice device) {
-        device.removeINDIDeviceListener(this);
-    }
-
-    @Override
-    public void connectionLost(INDIServerConnection connection) {
-
-    }
-
-    @Override
-    public void newProperty(INDIDevice device, INDIProperty<?> property) {
-        if (property instanceof INDIBLOBProperty) {
-            property.addINDIPropertyListener(this);
-            handler.post(() -> {
-                if (!properties.contains(property)) {
-                    properties.add((INDIBLOBProperty) property);
-                    selectionAdapter.notifyDataSetChanged();
-                }
-                selectionSpinner.setEnabled(true);
-            });
-        }
-    }
-
-    @Override
-    public void removeProperty(INDIDevice device, INDIProperty<?> property) {
-        if (property instanceof INDIBLOBProperty) {
-            property.removeINDIPropertyListener(this);
-            handler.post(() -> {
-                properties.remove(property);
-                if (selectionAdapter != null)
-                    selectionAdapter.notifyDataSetChanged();
-                if (properties.isEmpty() && (selectionSpinner != null))
-                    selectionSpinner.setEnabled(false);
-            });
-        }
-    }
-
-    @Override
-    public void propertyChanged(INDIProperty<?> property) {
-        if ((property instanceof INDIBLOBProperty) && (selectionSpinner != null) &&
-                (selectionSpinner.getSelectedItem() == property))
-            handler.post(() -> loadBlob((INDIBLOBProperty) property));
-    }
-
-    @Override
-    public void newMessage(INDIServerConnection connection, Date date, String s) {
-
-    }
-
-    @Override
-    public void messageChanged(INDIDevice indiDevice) {
-
+    public void onBLOBListChange() {
+        properties.clear();
+        properties.addAll(connectionManager.getBlobProperties());
+        if (selectionAdapter != null)
+            selectionAdapter.notifyDataSetChanged();
+        if (selectionSpinner != null)
+            selectionSpinner.setEnabled(!properties.isEmpty());
     }
 
     private static class ViewHolder {

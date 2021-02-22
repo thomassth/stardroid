@@ -640,4 +640,6 @@
     <string name="exit_action">Exit action</string>
     <string name="general">General</string>
     <string name="photo">Photo</string>
+    <string name="floating_image">Floating image</string>
+    <string name="pip_permission_required">Picture-in-picture permission required!</string>
 </resources>

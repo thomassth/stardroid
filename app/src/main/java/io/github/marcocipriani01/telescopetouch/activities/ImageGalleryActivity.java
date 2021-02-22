@@ -28,12 +28,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.Arrays;
-import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
@@ -51,8 +49,6 @@ public class ImageGalleryActivity extends InjectableActivity {
      * The index of the image id Intent extra.
      */
     public static final String IMAGE_ID = "image_id";
-
-    private List<GalleryImages> galleryImages;
     private DarkerModeManager darkerModeManager;
 
     @Override
@@ -62,8 +58,9 @@ public class ImageGalleryActivity extends InjectableActivity {
         darkerModeManager = new DarkerModeManager(this, null, PreferenceManager.getDefaultSharedPreferences(this));
         setTheme(darkerModeManager.getPref() ? R.style.DarkerAppTheme : R.style.AppTheme);
         setContentView(R.layout.activity_gallery);
-        this.galleryImages = Arrays.asList(GalleryImages.values());
-        addImagesToGallery();
+        RecyclerView recyclerView = findViewById(R.id.gallery_list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(new ImageAdapter());
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -98,23 +95,6 @@ public class ImageGalleryActivity extends InjectableActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void addImagesToGallery() {
-        RecyclerView mRecyclerView = findViewById(R.id.gallery_list);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        ImageAdapter imageAdapter = new ImageAdapter();
-        mRecyclerView.setAdapter(imageAdapter);
-    }
-
-    /**
-     * Starts the display image activity, and overrides the transition animation.
-     */
-    private void showImage(int position) {
-        Intent intent = new Intent(ImageGalleryActivity.this, ImageDisplayActivity.class);
-        intent.putExtra(ImageGalleryActivity.IMAGE_ID, position);
-        startActivity(intent);
-    }
-
     private class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
 
         @NonNull
@@ -126,9 +106,15 @@ public class ImageGalleryActivity extends InjectableActivity {
 
         @Override
         public void onBindViewHolder(ImageViewHolder holder, final int position) {
-            holder.galleryImage.setImageResource(galleryImages.get(position).getImageId());
-            holder.galleryTitle.setText(galleryImages.get(position).getName(ImageGalleryActivity.this));
-            holder.galleryItemLayout.setOnClickListener(v -> showImage(position));
+            GalleryImages galleryImages = GalleryImages.values()[position];
+            holder.galleryImage.setImageResource(galleryImages.getImageId());
+            holder.galleryTitle.setText(galleryImages.getName(ImageGalleryActivity.this));
+            holder.galleryItemLayout.setOnClickListener(v -> {
+                Intent intent = new Intent(ImageGalleryActivity.this, ImageDisplayActivity.class);
+                intent.putExtra(ImageGalleryActivity.IMAGE_ID, position);
+                startActivity(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        ImageGalleryActivity.this, holder.galleryImage, "ImageDisplayActivity").toBundle());
+            });
         }
 
         public long getItemId(int position) {
@@ -137,7 +123,7 @@ public class ImageGalleryActivity extends InjectableActivity {
 
         @Override
         public int getItemCount() {
-            return galleryImages.size();
+            return GalleryImages.values().length;
         }
 
         public class ImageViewHolder extends RecyclerView.ViewHolder {

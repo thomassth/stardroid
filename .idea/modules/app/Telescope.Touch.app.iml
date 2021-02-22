@@ -45,15 +45,15 @@
     <orderEntry type="library" name="Gradle: ./app/libs/INDIForJava.client-2.0-SNAPSHOT.jar" level="project" />
     <orderEntry type="library" name="Gradle: javax.annotation:jsr250-api:1.0" level="project" />
     <orderEntry type="module-library">
-      <library name="Gradle: com.google.protobuf:protobuf-javalite:3.14.0">
+      <library name="Gradle: com.google.protobuf:protobuf-javalite:3.15.1">
         <CLASSES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.protobuf/protobuf-javalite/3.14.0/1f3dcd6a80126749748b85e822c09428468423b3/protobuf-javalite-3.14.0.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.protobuf/protobuf-javalite/3.15.1/af4541ce25253497f794ec3c1bc69bbeb3e09d3c/protobuf-javalite-3.15.1.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.protobuf/protobuf-javalite/3.14.0/103d81b0e91d865fb52d45aee894ba04075fa1e2/protobuf-javalite-3.14.0-javadoc.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.protobuf/protobuf-javalite/3.15.1/df4210f7d3ed137424512835ac2592e50254edb8/protobuf-javalite-3.15.1-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.protobuf/protobuf-javalite/3.14.0/4064303b90e583ac5fc477416ec82586f0670d4c/protobuf-javalite-3.14.0-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.protobuf/protobuf-javalite/3.15.1/8fe375b36e09b8c2b96b574918db98f29cb819f8/protobuf-javalite-3.15.1-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -126,7 +126,7 @@
     <orderEntry type="library" name="Gradle: androidx.localbroadcastmanager:localbroadcastmanager:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.print:print:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.annotation:annotation-experimental:1.0.0@aar" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.Baseflow:PhotoView:2.3.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.marcocipriani01:PhotoView:d4cbdbbb95@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.github.myinnos:AlphabetIndex-Fast-Scroll-RecyclerView:1.0.95@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.dagger:dagger-lint-aar:2.32@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.volley:volley:1.1.1@aar" level="project" />
