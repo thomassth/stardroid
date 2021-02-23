@@ -66,4 +66,5 @@ public class ApplicationConstants {
     public static final String EXIT_ACTION_PREF = "exit_action";
     public static final String PICK_LOCATION_PREF = "pick_location_map";
     public static final String GOTO_DETAILS_LAST_TAB = "goto_details_tab";
+    public static final String DARKER_MODE_KEY = "DARKER_MODE";
 }

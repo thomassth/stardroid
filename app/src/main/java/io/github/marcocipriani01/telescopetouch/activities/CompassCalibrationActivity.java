@@ -31,7 +31,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.preference.PreferenceManager;
 
 import javax.inject.Inject;
 
@@ -49,7 +48,7 @@ public class CompassCalibrationActivity extends InjectableActivity implements Se
     @Inject
     SensorAccuracyDecoder accuracyDecoder;
     @Inject
-    SharedPreferences sharedPreferences;
+    SharedPreferences preferences;
     private Sensor magneticSensor;
     private CheckBox checkBoxView;
     private boolean accuracyReceived = false;
@@ -61,7 +60,7 @@ public class CompassCalibrationActivity extends InjectableActivity implements Se
         DaggerCompassCalibrationComponent.builder()
                 .applicationComponent(getApplicationComponent())
                 .compassCalibrationModule(new CompassCalibrationModule(this)).build().inject(this);
-        darkerModeManager = new DarkerModeManager(this, null, PreferenceManager.getDefaultSharedPreferences(this));
+        darkerModeManager = new DarkerModeManager(this, null, preferences);
         setTheme(darkerModeManager.getPref() ? R.style.DarkerAppTheme : R.style.AppTheme);
         setContentView(R.layout.activity_compass_calibration);
 
@@ -101,7 +100,7 @@ public class CompassCalibrationActivity extends InjectableActivity implements Se
         super.onPause();
         sensorManager.unregisterListener(this);
         if (checkBoxView.isChecked()) {
-            sharedPreferences.edit().putBoolean(ApplicationConstants.NO_SHOW_CALIBRATION_DIALOG_PREF, true).apply();
+            preferences.edit().putBoolean(ApplicationConstants.NO_SHOW_CALIBRATION_DIALOG_PREF, true).apply();
         }
         darkerModeManager.stop();
     }

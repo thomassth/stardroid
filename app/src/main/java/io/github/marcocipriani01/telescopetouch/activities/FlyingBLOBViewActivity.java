@@ -14,9 +14,11 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import io.github.marcocipriani01.livephotoview.PhotoView;
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
 import io.github.marcocipriani01.telescopetouch.indi.AsyncBLOBLoader;
 
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
@@ -26,6 +28,7 @@ public class FlyingBLOBViewActivity extends AppCompatActivity implements AsyncBL
     @SuppressLint("StaticFieldLeak")
     private static FlyingBLOBViewActivity instance;
     private PhotoView photoView;
+    private DarkerModeManager darkerModeManager;
 
     public static boolean isVisible() {
         return instance != null;
@@ -47,6 +50,7 @@ public class FlyingBLOBViewActivity extends AppCompatActivity implements AsyncBL
         super.onCreate(savedInstanceState);
         pip();
         setContentView(R.layout.activity_pip_blob);
+        darkerModeManager = new DarkerModeManager(this, null, PreferenceManager.getDefaultSharedPreferences(this));
         photoView = findViewById(R.id.pip_blob_view);
         photoView.setMaximumScale(20f);
         photoView.setImageBitmap(connectionManager.blobLoader.getLastBitmap());
@@ -86,6 +90,18 @@ public class FlyingBLOBViewActivity extends AppCompatActivity implements AsyncBL
         }
         connectionManager.blobLoader.addListener(this);
         instance = this;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        darkerModeManager.start();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        darkerModeManager.stop();
     }
 
     @Override
