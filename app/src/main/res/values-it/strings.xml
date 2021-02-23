@@ -569,4 +569,6 @@
     <string name="photo">Foto</string>
     <string name="floating_image">Immagine volante</string>
     <string name="pip_permission_required">Permesso Picture-in-picture richiesto!</string>
+    <string name="connection_indi_lost">Connessione con INDI persa.</string>
+    <string name="app_running_background">Telescope.Touch è in esecuzione in background</string>
 </resources>

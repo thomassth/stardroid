@@ -642,4 +642,6 @@
     <string name="photo">Photo</string>
     <string name="floating_image">Floating image</string>
     <string name="pip_permission_required">Picture-in-picture permission required!</string>
+    <string name="connection_indi_lost">Connection with INDI lost.</string>
+    <string name="app_running_background">Telescope.Touch is running in the background</string>
 </resources>
