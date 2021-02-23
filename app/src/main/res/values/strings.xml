@@ -620,7 +620,7 @@
     <string name="vizier_welcome">VizieR is an astronomical catalog service provided by Strasbourg astronomical Data Center.\nTelescope.Touch integrates the Common Stars and NGC 2000 catalogues to allow you to point your telescope.</string>
     <string name="aladin_compatibility">Aladin compatibility mode</string>
     <string name="aladin_compatibility_description">Allow running Aladin on older devices. Disclaimer: not stable, view might jitter or not load properly. Requires restart.</string>
-    <string name="open_source_licenses">Open Source Licences</string>
+    <string name="open_source_licenses">Open-source Licences</string>
     <string name="continue_button">Continue</string>
     <string name="about_vizier_menu">About VizieR</string>
     <string name="save_image">Save image</string>
