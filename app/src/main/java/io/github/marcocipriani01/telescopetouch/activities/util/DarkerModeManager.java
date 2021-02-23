@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
+import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
 /**
@@ -35,7 +36,6 @@ import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
  */
 public class DarkerModeManager implements OnSharedPreferenceChangeListener {
 
-    public static final String DARKER_MODE_KEY = "DARKER_MODE";
     private static final String TAG = TelescopeTouchApp.getTag(DarkerModeManager.class);
     private static final float BRIGHTNESS_DIM = 20f / 255f;
     private final SharedPreferences preferences;
@@ -52,7 +52,7 @@ public class DarkerModeManager implements OnSharedPreferenceChangeListener {
     }
 
     private void update() {
-        nightMode = preferences.getBoolean(DARKER_MODE_KEY, false);
+        nightMode = preferences.getBoolean(ApplicationConstants.DARKER_MODE_KEY, false);
         if (nightModeListener != null) nightModeListener.setNightMode(nightMode);
         WindowManager.LayoutParams params = window.getAttributes();
         if (nightMode) {
@@ -73,7 +73,7 @@ public class DarkerModeManager implements OnSharedPreferenceChangeListener {
     }
 
     public boolean getPref() {
-        return preferences.getBoolean(DARKER_MODE_KEY, false);
+        return preferences.getBoolean(ApplicationConstants.DARKER_MODE_KEY, false);
     }
 
     public void start() {
@@ -87,13 +87,13 @@ public class DarkerModeManager implements OnSharedPreferenceChangeListener {
 
     public boolean toggle() {
         boolean b = !nightMode;
-        preferences.edit().putBoolean(DarkerModeManager.DARKER_MODE_KEY, b).apply();
+        preferences.edit().putBoolean(ApplicationConstants.DARKER_MODE_KEY, b).apply();
         return b;
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(DARKER_MODE_KEY)) update();
+        if (key.equals(ApplicationConstants.DARKER_MODE_KEY)) update();
     }
 
     /**
