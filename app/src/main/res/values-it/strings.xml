@@ -547,7 +547,7 @@
     <string name="vizier_welcome">VizieR è un servizio di catalogo astronomico fornito dal Centro dati astronomici di Strasburgo.\nTelescope.Touch integra i cataloghi Stelle Comuni e NGC 2000 per permetterti di puntare il telescopio.</string>
     <string name="aladin_compatibility">Modalità compatibilità Aladin</string>
     <string name="aladin_compatibility_description">Permetti l\'esecuzione di Aladin su dispotivi più vecchi. Nota: instabile, la visualizzare è tremolante e la mappa potrebbe non caricare bene. Richiede il riavvio.</string>
-    <string name="open_source_licenses">License Open Source</string>
+    <string name="open_source_licenses">License open-source</string>
     <string name="continue_button">Continua</string>
     <string name="about_vizier_menu">Riguardo VizieR</string>
     <string name="save_image">Salva immagina</string>
