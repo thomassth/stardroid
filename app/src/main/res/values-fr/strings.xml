@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="menu_settings">Paramètres</string>
     <string name="menu_search">Rechercher</string>
     <string name="go">Atteindre</string>
@@ -19,7 +19,7 @@
     <string name="stars">Étoiles</string>
     <string name="constellations">Constellations</string>
     <string name="messier_objects" translation_description="The celestial objects catalogued by Charles Messier">Objets de Messier</string>
-    <string name="show_grid_pref">Grille RA/Dec</string>
+    <string name="show_grid_pref">Grille AD/Dec</string>
     <string name="horizon">Horizon</string>
     <string name="show_sky_gradient">Couleurs du ciel</string>
     <string name="ecliptic">Écliptique</string>
@@ -322,8 +322,7 @@
     <string name="beehive_cluster" translation_description="Name of the Messier object Beehive Cluster">Amas de la Ruche</string>
     <string name="praesepe" translation_description="Name of the Messier object Praesepe">Praesepe</string>
     <string name="seven_sisters" translation_description="Name of the Messier object Seven Sisters">Sept Sœurs</string>
-
-    <string name="indi_host">Hôte INDI</string>
+    <string name="indi_host">Hôte INDI:</string>
     <string name="connect">Connecter</string>
     <string name="disconnect">Déconnecter</string>
     <string name="log">Log:</string>
@@ -385,4 +384,254 @@
     <string name="menu_connection">Connecter</string>
     <string name="error">Erreur:</string>
     <string name="hdf">Le champ profond de Hubble</string>
+    <string name="no_use_gps_pref_hint">Choisir un lieu sur la carte ou entrer les coordonnées.</string>
+    <string name="solar_system">Système solaire</string>
+    <string name="show_meteors_pref">Pluie d\'étoiles filantes</string>
+    <string name="sensor_prefs">Paramètres Sky Map du capteur</string>
+    <string name="north_short">N</string>
+    <string name="south_short">S</string>
+    <string name="east_short">E</string>
+    <string name="west_short">O</string>
+    <string name="sky_map_gallery">Galerie Sky Map</string>
+    <string name="menu_diagnostics">Diagnostics</string>
+    <string name="alpha_centauri" translation_description="Name of the star Alpha Centauri" tools:keep="@string/alpha_centauri">Alpha du Centaure</string>
+    <string name="rigil_kent" translation_description="Name of the star Rigil Kent" tools:keep="@string/rigil_kent">Rigil Kentaurus</string>
+    <string name="e_lyrae" translation_description="Name of the star ε Lyrae" tools:keep="@string/e_lyrae">ε Lyre</string>
+    <string name="leonids" translation_description="Meteor Shower">Léonides</string>
+    <string name="geminids" translation_description="Meteor Shower">Géminides</string>
+    <string name="quadrantids" translation_description="Meteor Shower">Quadrantides</string>
+    <string name="lyrids" translation_description="Meteor Shower">Lyrides</string>
+    <string name="aquariids" translation_description="Meteor Shower">Eta Aquarides</string>
+    <string name="deltaaquariids" translation_description="Meteor Shower">Delta Aquarides</string>
+    <string name="perseids" translation_description="Meteor Shower">Perséides</string>
+    <string name="orionids" translation_description="Meteor Shower">Orionides</string>
+    <string name="puppidvelids" translation_description="Meteor Shower">Puppid-Velids</string>
+    <string name="ursids" translation_description="Meteor Shower">Ursides</string>
+    <string name="no_sensor_warning">Votre appareil ne possède pas de capteur d\'orientation !</string>
+    <string name="warning_dialog_title">Mauvaise nouvelle !</string>
+    <string name="missing_sensor_dialog_text">\n
+        Malheureusement votre appareil ne possède pas un des capteurs nécessaire à Sky Map.\n\n
+        Pour afficher le ciel dans la direction pointée par l\'appareil, Sky Map a besoin de la
+        boussole intégrée et de l\'accéléromètre.  Votre appareil informe qu\'il manque l\'un des deux.
+        Heureusement certain appareil (par exemple certain téléphones Moto E) signale ne pas
+        avoir de boussole même s\'il en possède une.\n\n
+
+        Si votre appareil n\'a pas de capteur, le mode auto ne fonctionnera pas. Cependant, vous
+        pouvez toujours utiliser Sky Map sur l\'appareil en mode manuel, en glissant, en faisant tourner
+        ou en étirant la carte avec vos doigts.
+    </string>
+    <string name="do_not_show_again">Ne plus montrer ce message</string>
+    <string name="title_activity_diagnostic">Diagnostics</string>
+    <string name="sensor_absent">Absent</string>
+    <string name="sensor_accuracy_unknown">Précision: Inconnue</string>
+    <string name="sensor_accuracy_unreliable">Précision: Non fiable</string>
+    <string name="sensor_accuracy_low">Précision: Faible</string>
+    <string name="sensor_accuracy_medium">Précision: Moyenne</string>
+    <string name="sensor_accuracy_high">Précision: Haute</string>
+    <string name="sensor_accuracy_nocontact">Précision: Pas de contact</string>
+    <string name="diagnostics_activity_general_heading">Général</string>
+    <string name="diagnostics_activity_phone">Appareil</string>
+    <string name="diagnostics_activity_android_version">Version d\'Android</string>
+    <string name="diagnostics_activity_sky_map_version">Version de l\'application</string>
+    <string name="diagnostics_activity_sensors_heading">Capteurs</string>
+    <string name="diagnostics_activity_compass">Boussole</string>
+    <string name="diagnostics_activity_accelerometer">Accéléromètre</string>
+    <string name="diagnostics_activity_rotation_vector">Rotation</string>
+    <string name="diagnostics_activity_gyroscope">Gyroscope</string>
+    <string name="diagnostics_activity_light_level">Luminosité</string>
+    <string name="diagnostics_activity_location_and_time_heading">Localisation et temps</string>
+    <string name="diagnostics_activity_gps">GPS</string>
+    <string name="diagnostics_activity_location">Localisation (lat, long)</string>
+    <string name="diagnostics_activity_pointing_ra_dec">Pointing snapshot</string><!--VC Need context-->
+    <string name="magnetic_declination">Déclination magn.</string>
+    <string name="diagnostics_activity_local_datetime">Temps local</string>
+    <string name="diagnostics_activity_universal_time">Temps universel</string>
+    <string name="diagnostics_activity_network_heading">Réseau</string>
+    <string name="diagnostics_activity_connection">Connection</string>
+    <string name="diagnostics_activity_rotation_matrix">Matrice rot</string>
+    <string name="enabled">Activé</string>
+    <string name="disabled">Désactivé</string>
+    <string name="permission_disabled">Permission désactivée</string>
+    <string name="no_gps">Pas de GPS</string>
+    <string name="disconnected">Déconnecté</string>
+    <string name="wifi">" (Wi-Fi)"</string>
+    <string name="cell_network">" (cell)"</string>
+    <string name="menu_calibrate">Calibrer</string>
+    <string name="compass_calibration_activity_do_not_show_this_again">Ne plus montrer ce message</string>
+    <string name="compass_calibration_activity_warning">Votre boussole doit être calibrée !</string>
+    <string name="sensor_reverse_preference_title">Inverser Magnetic Z</string>
+    <string name="sensor_reverse_preference_summary">Correction pour appareil avec capteurs implémenté incorrectement - Redémarrage nécessaire</string>
+    <string name="disable_gyro_preference_title">Désactiver le gyroscope</string>
+    <string name="disable_gyro_preference_summary">Not evert device has a gyro: if yours does then you\'ll get better results with it enabled. If it doesn\'t, Sky Map will probably not work if you uncheck this box.</string><!--VC Need context-->
+    <string name="rotate_horizon_preference_title">Rotation de l\'horizon</string>
+    <string name="rotate_horizon_preference_summary">Rotation à 90 degrés de l\'horizon (pour écran avec format paysage forcé, comme les smartglasses)</string>
+    <string name="host_manage">Gestion des serveurs</string>
+    <string name="entry_alt">Alt</string>
+    <string name="entry_az">Az</string>
+    <string name="menu_about">À propos de l\'app</string>
+    <string name="app_description"><b>Telescope.Touch</b> a été créé dans le but de fusionner l\'app Sky Map et le projet IPARCOS, un client INDI pour Android.
+        \nElle offre un contrôle total de téléscope et une fonction carte du ciel mobile, avec une interface utilistateur et un code de base renouvelés.
+        \n\nLe code source est disponible sur github.com/marcocipriani01/Telescope.Touch
+        \n\nDéveloppé par <b>Marco Cipriani</b> (marcocipriani01)
+        \n\n<b>Credits:</b>\n
+        ★ Le projet IPARCOS, Licence GPL v3\n
+        ★ Le projet SKY MAP, Licence Apache 2.0\n
+        ★ Les projets VizieR et Aladin\n
+        ★ INDIForJava, Licence LGPL v3\n
+        ★ Icônes matériels, Licence Apache 2.0\n
+        ★ Icône Telescope, Licence Flaticon\n
+        ★ Touch icon, Licence Flaticon\n
+        ★ Boussole par iutinvg, Licence MIT
+    </string>
+    <string name="error_no_devices">Aucun appareil trouvé!</string>
+    <string name="remove_server">Supprimer le serveur sélectionné?</string>
+    <string name="servers_list_snack_msg">Clic long pour supprimer, glisser pour réarranger</string>
+    <string name="focus_in">MAP vers l\'intérieur</string>
+    <string name="focus_out">MAP vers l\'extérieur</string>
+    <string name="menu_focuser">Focalisateur</string>
+    <string name="stop_motion">Abandonner</string>
+    <string name="absolute_position">Position absolue :</string>
+    <string name="no_indi_elements">Propriété vide</string>
+    <string name="slide_to_reorganize">Glisser pour réorganiser</string>
+    <string name="add_server">Ajouter un serveur</string>
+    <string name="ip_address">Adresse IP</string>
+    <string name="empty_host">Hôte vide</string>
+    <string name="not_valid_ip">Le texte entré ne semble pas être une adresse IP valide. </string>
+    <string name="position">Position</string>
+    <string name="mount_control">Contrôle de la monture</string>
+    <string name="focuser_control">Contrôle du focalisateur</string>
+    <string name="catalog_error">Une erreur est apparue lors du chargement du cataloge !</string>
+    <string name="catalog_manager">Gestion des catalogues</string>
+    <string name="slew_rate">Vitesse du déplacement :</string>
+    <string name="speed">vitesse :</string>
+    <string name="steps_per_click">Nb de pas par clic:</string>
+    <string name="mount_parked">Monture en position garage</string>
+    <string name="mount_not_parked">Monture non garée</string>
+    <string name="telescope_parking">Télescope vers la position garage</string>
+    <string name="telescope_parking_confirm">Êtes-vous sûr de vouloir changer la position garage ?</string>
+    <string name="dark_nebula">Nébuleuse obscure</string>
+    <string name="search">Chercher</string>
+    <string name="sky_map">Sky Map</string>
+    <string name="telescope_control">Contrôle du téléscope</string>
+    <string name="compass">Boussole</string>
+    <string name="shortcuts_not_supported">Your launcher does not support shortcuts.</string><!--VC Need context-->
+    <string name="add_sky_map_shortcut">Ajouter un raccourci vers Sky map</string>
+    <string name="deep_sky">Ciel profond</string>
+    <string name="location_no_auto">Sky Map ne peut pas accéder à votre localisation, nécessaire aux calculs de positions des étoiles. Vous pouvez autoriser la localisation dans les paramètres de l\'appareil.</string>
+    <string name="warning">Alarme</string>
+    <string name="take_me_there">Vers les réglages</string>
+    <string name="point_telescope">Pointer le télescope</string>
+    <string name="connect_telescope_first">S\'il vous plait connecter d\'abord le téléscope.</string>
+    <string name="gallery_copyright">Images de la NASA (domaine publique), ESO (CC BY 4.0) et Adam Evans (CC BY 2.0)</string>
+    <string name="go_to_database">Base de données Go-To</string>
+    <string name="indi_control_panel">Panneau de contrôle INDI</string>
+    <string name="device_remove">Appareil supprimé</string>
+    <string name="new_device">Nouvel appareil</string>
+    <string name="connection_busy">Non connecté ou occupé !</string>
+    <string name="connection_busy_2">Déjà connecté ou occupé !</string>
+    <string name="press_back_exit">Appuyer encore sur Retour pour sortir !</string>
+    <string name="invalid_abs_position">Position absolue invalide !</string>
+    <string name="nsd_not_available">Découverte du réseau désactivée !</string>
+    <string name="catalog_load_error">Erreur de chargement du cataloge !</string>
+    <string name="ccd_images">Images CCD</string>
+    <string name="receive_images">Réception de l\'image</string>
+    <string name="unknown">inconnu</string>
+    <string name="file_size">Taille du fichier :</string>
+    <string name="dimensions">Dimensions:</string>
+    <string name="format">Format:</string>
+    <string name="bit_depth">Nb de bits de codage couleur:</string><!--VC Need context-->
+    <string name="no_incoming_data">Pas de données reçues</string>
+    <string name="fits_image_stretching">Étirement image FITS</string>
+    <string name="image_info">Info image</string>
+    <string name="saved_snackbar">Sauvegardé!</string>
+    <string name="saving_error">Erreur de sauvegarde!</string>
+    <string name="nothing_to_save">Rien à sauvegarder!</string>
+    <string name="unsupported_format">Format non-supporté.</string>
+    <string name="empty_property">Propriété vide.</string>
+    <string name="error_multi_image_prop">Propriété multi-image non-supportée.</string>
+    <string name="open_host_in_browser">Ouvrir l\'hôte dans le navigateur</string>
+    <string name="out_of_memory">Pas assez de ressource mémoire!</string>
+    <string name="truncated_file">Fichier tronqué !</string>
+    <string name="unsupported_color_fits">Couleur FITS pas encore supportée.</string>
+    <string name="unsupported_bit_depth">Couleur 32 bit pas encore supportée.</string>
+    <string name="invalid_fits_image">Imange FITS invalide !</string>
+    <string name="unknown_exception">Exception inconnue !</string>
+    <string name="view_image">Vue</string>
+    <string name="open_photo">Ouvrir l\'image</string>
+    <string name="blob_open_viewer">Ouvrir l\'afficheur d\'image pour voir les propriétés.</string>
+    <string name="select_host_first">Choisir d\abord un hôte s\'il vous plait.</string>
+    <string name="database_filter">Filtre base de données</string>
+    <string name="compass_not_available">Boussole indisponible !</string>
+    <string name="red_screen_light">Lumière écran rouge</string>
+    <string name="flashlight_unavailable">Lampe-torche indisponible !</string>
+    <string name="inaccurate_compass_warning">Boussole imprécise - calibrer la s\'il vous plait !</string>
+    <string name="flashlight">Lampe-torche</string>
+    <string name="polaris_hour_angle">Angle horaire de l\'étoile polaire</string>
+    <string name="hour_angle">Angle horaire: %s</string>
+    <string name="in_finder">%s in finder: %s</string><!--VC Need context-->
+    <string name="hemisphere">Hémisphere</string>
+    <string name="hemisphere_description">Choisir l\'hémisphère et l\'étoile polaire.</string>
+    <string name="hemisphere_auto">Détection automatique</string>
+    <string name="hemisphere_northern">Nord (Étoile polaire)</string>
+    <string name="hemisphere_southern">Sud (Sigma Octant)</string>
+    <string name="nsd_pref_description">Automatically discover Zeroconf network services. Requires restart.</string><!--VC Need context-->
+    <string name="nsd_pref">Netword Service Discovery</string>
+    <string name="reticle_skywatcher">Nouveau réticule Sky-Watcher</string>
+    <string name="reticle_big_dipper">Grande ourse/Cassiopée</string>
+    <string name="pick_location_description">Choisir un lieu dans Google Map</string>
+    <string name="pick_location_pref">Pointer sur la carte</string>
+    <string name="sigma_octantis">Sigma Octant</string>
+    <string name="polaris_star_finder">Étoile polaire</string>
+    <string name="loading">Chargement…</string>
+    <string name="msg_manual_location_on">Basculement vers localisation man…</string>
+    <string name="precession_pref">Compensation de la précession</string>
+    <string name="precession_pref_description">Les coordonnées du catalogue correspondent à l\'année astronomique J2000. Cocher cette case pour compenser la précession. Si l\'application déplace le télescope vers une mauvaise direction, essayer de désactiver ce paramètre.</string>
+    <string name="telescope">Télescope</string>
+    <string name="search_in_goto_database">Rechercher dans la bas de données GoTo</string>
+    <string name="out_of_bounds_loc_error">Latitude ou longitude hors limite !</string>
+    <string name="planet">Planète</string>
+    <string name="catalog_limit_mag">Limite de magnitude du catalogue</string>
+    <string name="catalog_limit_mag_description">Définir la magnitude maximale des étoiles du catalogue.</string>
+    <string name="only_visible">Seulement les objects visibles</string>
+    <string name="not_a_number">Pas un nombre!</string>
+    <string name="no_matching_objects">Pas d\'objets correspondant!</string>
+    <string name="no_telescope">Pas de télescope</string>
+    <string name="no_telescope_found">Aucun télescope trouvé!</string>
+    <string name="point_telescope_message">Êtes-vous sûr de pointer \"%s vers %s, %s?</string>
+    <string name="toggle_tracking">Activer le suivi</string>
+    <string name="tracking_toggled">Suivi activé!</string>
+    <string name="tracking_error">Erreur de suivi!</string>
+    <string name="unknown_error">Erreur inconnue!</string>
+    <string name="invalid_port">Port invalide!</string>
+    <string name="aladin_sky_atlas">Atlas Aladin Sky</string>
+    <string name="dark_mode_not_supported">Impossible de basculer vers le mode nuit!</string>
+    <string name="no_internet_connection">Pas de connection internet!</string>
+    <string name="aladin_api_error">L\'atlas Aladin Sky nécessite Android 6.0 ou plus.Vous pouvez quand même essayer de le lancer dans votre navigateur.</string>
+    <string name="open">Ouvrir</string>
+    <string name="cds_copyright">© Centre de Données astronomiques de Strasbourg, Unistra/CNRS.</string>
+    <string name="aladin_welcome">Aladin est un atlas intéractif développé par le Centre de Données astronomiques de Strasbourg. Il utilise la technologie HipS (Hierarchical Progressive Surveys).\nTelescope.Touch intégre un client Aladin, ainsi vous pouvez voir les cibles en haute définition avant de pointer le télescope ! Vous pouvez aussi déplacer le télescope à partir de la carte ou de la base de données objects, grâce au résolveur d\'objet SESAME.</string>
+    <string name="vizier_catalogue_service">Service catalogue VizieR</string>
+    <string name="aladin_compatibility">Mode de compatibilité Aladin</string>
+    <string name="aladin_compatibility_description">Allow running Aladin on older devices. Disclaimer: not stable, view might jitter or not load properly. Requires restart.</string> <!--VC Need context-->
+    <string name="open_source_licenses">Licences open-source</string>
+    <string name="continue_button">Continuer</string>
+    <string name="about_vizier_menu">Â propos de VizieR</string>
+    <string name="save_image">Sauvegarder l\'image</string>
+    <string name="about_aladin_menu">Â propos de Aladin</string>
+    <string name="aladin_search_fail">L\'objet ne peut pas être trouvé!</string>
+    <string name="below_horizon_warning">\n\nAttention! Objet sous l\'horizon.</string>
+    <string name="refresh">Rafraichir</string>
+    <string name="aladin_j2000_note">\n\nNote: Aladin utilise les coordonnées J2000. Elles seront corrigées, ainsi le télescope pointera vers un direction légèrement différente à celle souhaitée. La cible devrait être centrée.</string>
+    <string name="aladin">Aladin</string>
+    <string name="altitude">Altitude</string>
+    <string name="no_location">Pas de localisation</string>
+    <string name="toggling_manual_mode">Basculer vers le mode </string>
+    <string name="polaris_finder_reticle">Réticule du viseur polaire</string>
+    <string name="background_service">Service en arrière plan</string>
+    <string name="mount">Monture</string>
+    <string name="exit">Sortir</string>
+    <string name="exit_action">Action Sortir</string>
+    <string name="general">Général</string>
+    <string name="photo">Photo</string>
+    <string name="floating_image">Image flottante</string>
 </resources>

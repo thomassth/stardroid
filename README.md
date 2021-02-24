@@ -74,6 +74,11 @@ with a renewed user interface and high-definition planet thumbnails.
 - **Romain Fafet** (@farom57): [IPARCOS](https://github.com/INDIForJava/IPARCOS) codebase
 - **Sky Map team**: [Sky Map](https://github.com/sky-map-team/stardroid) codebase
 
+### Contributors
+
+- Valentin Chevalier, for the French translation and his support
+- theChef613 for his help in bringing the app to the Google Play Store
+
 ### Libraries and credits
 
 - The [IPARCOS](https://github.com/INDIForJava/IPARCOS) project, GPL v3 license
@@ -84,7 +89,7 @@ with a renewed user interface and high-definition planet thumbnails.
 - [Touch icon](https://www.flaticon.com/free-icon/touch_941563?term=touch&page=1&position=6&related_item_id=941563), Flaticon License
 - [Compass by iutinvg](https://github.com/iutinvg/compass), MIT License
 
-The licenses for each software library used in the project can be found in the app (About this app > menu > Open Source Licenses)
+The licenses for each software library used in the project can be found in the app (About this app > menu > Open-source Licenses)
 
 ### License notice
 
