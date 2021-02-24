@@ -142,7 +142,7 @@
         <activity
             android:name=".activities.ScreenLightActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="Tap screen to exit"
+            android:label="@string/tap_to_exit"
             android:screenOrientation="fullUser"
             android:theme="@style/FullscreenTheme">
 

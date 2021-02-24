@@ -20,11 +20,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
-import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +59,7 @@ public class FlashlightFragment extends ActionFragment {
                     String[] list = cameraManager.getCameraIdList();
                     if (list.length == 0) {
                         requestActionSnack(R.string.flashlight_unavailable);
+                        flashToggle.setEnabled(false);
                         return;
                     }
                     cameraManager.setTorchMode(list[0], isChecked);
@@ -74,6 +73,7 @@ public class FlashlightFragment extends ActionFragment {
                         parameters.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
                     } else {
                         requestActionSnack(R.string.flashlight_unavailable);
+                        flashToggle.setEnabled(false);
                         return;
                     }
                     camera.setParameters(parameters);
@@ -83,9 +83,9 @@ public class FlashlightFragment extends ActionFragment {
                         camera.stopPreview();
                     }
                 }
-            } catch (CameraAccessException e) {
+            } catch (Exception e) {
                 requestActionSnack(R.string.flashlight_unavailable);
-                Log.e(TAG, e.getLocalizedMessage(), e);
+                flashToggle.setEnabled(false);
             }
         });
         rootView.<Button>findViewById(R.id.screen_flashlight_button)

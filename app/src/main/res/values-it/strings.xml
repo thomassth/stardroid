@@ -571,4 +571,5 @@
     <string name="pip_permission_required">Permesso Picture-in-picture richiesto!</string>
     <string name="connection_indi_lost">Connessione con INDI persa.</string>
     <string name="app_running_background">Telescope.Touch è in esecuzione in background</string>
+    <string name="tap_to_exit">Tocca lo schermo per uscire</string>
 </resources>
