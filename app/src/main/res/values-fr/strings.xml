@@ -74,7 +74,7 @@
     <string name="crab_nebula" translation_description="hubble object">Nébuleuse du Crabe</string>
     <string name="eagle_nebula" translation_description="hubble object">Nébuleuse de l\'Aigle</string>
     <string name="andromeda_galaxy" translation_description="hubble object">Galaxie d\'Andromède</string>
-    <string name="orion_nebula" translation_description="hubble object">Nébuleuse d\'Orion</string>
+    <string name="orion_nebula" translation_description="hubble object"> Grande Nébuleuse d\'Orion</string>
     <string name="whirlpool_galaxy" translation_description="hubble object">Galaxie du Tourbillon (Whirlpool)</string>
     <string name="ring_nebula" translation_description="hubble object">Nébuleuse de l\'Anneau</string>
     <string name="pinwheel_galaxy" translation_description="hubble object">Galaxie du Moulinet (Pinwheel)</string>
@@ -322,16 +322,16 @@
     <string name="beehive_cluster" translation_description="Name of the Messier object Beehive Cluster">Amas de la Ruche</string>
     <string name="praesepe" translation_description="Name of the Messier object Praesepe">Praesepe</string>
     <string name="seven_sisters" translation_description="Name of the Messier object Seven Sisters">Sept Sœurs</string>
-    <string name="indi_host">Sélectionner un serveur INDI:</string>
+    <string name="indi_host">Sélectionner un serveur INDI</string>
     <string name="connect">Connecter</string>
     <string name="disconnect">Déconnecter</string>
     <string name="log">Log:</string>
-    <string name="host_prompt">Adresse du serveur:</string>
+    <string name="host_prompt">Adresse du serveur :</string>
     <string name="host_add">Ajouter un serveur</string>
     <string name="host_prompt_text">Adresse IP du serveur:</string>
     <string name="connecting">Connexion…</string>
     <string name="mount_goto">Chercher</string>
-    <string name="unavailable">Non disponble</string>
+    <string name="unavailable">Indisponible</string>
     <string name="send_request">Envoyer</string>
     <string name="back_request">Retour</string>
     <string name="try_to_connect">Tentative de connexion au\u0020</string>
