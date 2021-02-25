@@ -384,7 +384,7 @@
     <string name="menu_connection">Connecter</string>
     <string name="error">Erreur:</string>
     <string name="hdf">Champ profond de Hubble</string>
-    <string name="no_use_gps_pref_hint">Choisir un lieu sur la carte ou entrer les coordonnées.</string>
+    <string name="no_use_gps_pref_hint">Choisir un lieu sur la carte ou entrer les coordonnées</string>
     <string name="solar_system">Système solaire</string>
     <string name="show_meteors_pref">Pluie d\'étoiles filantes</string>
     <string name="sensor_prefs">Paramètres Sky Map du capteur</string>
