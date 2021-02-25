@@ -455,11 +455,11 @@
     <string name="no_gps">Pas de GPS</string>
     <string name="disconnected">Déconnecté</string>
     <string name="wifi">" (Wi-Fi)"</string>
-    <string name="cell_network">" (cell)"</string>
+    <string name="cell_network">" (cell.)"</string>
     <string name="menu_calibrate">Calibrer</string>
     <string name="compass_calibration_activity_do_not_show_this_again">Ne plus montrer ce message</string>
-    <string name="compass_calibration_activity_warning">Votre boussole doit être calibrée!</string>
-    <string name="sensor_reverse_preference_title">Inverser Z magnetique</string>
+    <string name="compass_calibration_activity_warning">Votre boussole doit être calibrée !</string>
+    <string name="sensor_reverse_preference_title">Inverser Z magnétique</string>
     <string name="sensor_reverse_preference_summary">Correction pour appareil avec capteur incorrectement implémenté - Redémarrage nécessaire</string>
     <string name="disable_gyro_preference_title">Désactiver le gyroscope</string>
     <string name="disable_gyro_preference_summary">Tout les appareils n\'ont pas de gyroscope: Si oui, l\'activer améliorera les résultats. si non, Sky Map ne fonctionnera pas si vous décochez la case.</string>
@@ -549,7 +549,7 @@
     <string name="unsupported_format">Format non-supporté.</string>
     <string name="empty_property">Propriété vide.</string>
     <string name="error_multi_image_prop">Propriété multi-image non-supportée.</string>
-    <string name="open_host_in_browser">Ouvrir l\'hôte dans le navigateur</string>
+    <string name="open_host_in_browser">Ouvrir le serveur dans le navigateur</string>
     <string name="out_of_memory">Pas assez de ressource mémoire!</string>
     <string name="truncated_file">Fichier tronqué!</string>
     <string name="unsupported_color_fits">Couleur FITS pas encore supportée.</string>
@@ -559,7 +559,7 @@
     <string name="view_image">Vue</string>
     <string name="open_photo">Ouvrir l\'image</string>
     <string name="blob_open_viewer">Ouvrir l\'afficheur d\'image pour voir les propriétés.</string>
-    <string name="select_host_first">Choisir d\abord un hôte s\'il vous plait.</string>
+    <string name="select_host_first">Choisir d\'abord un serveur s\'il vous plait.</string>
     <string name="database_filter">Filtre base de données</string>
     <string name="compass_not_available">Boussole indisponible!</string>
     <string name="red_screen_light">Lumière écran rouge</string>
@@ -574,7 +574,7 @@
     <string name="hemisphere_auto">Détection automatique</string>
     <string name="hemisphere_northern">Nord (Étoile polaire)</string>
     <string name="hemisphere_southern">Sud (Sigma Octant)</string>
-    <string name="nsd_pref_description">Décourir automatiquement les service de réseau ZeronConf. Demande un redémarrage.</string>
+    <string name="nsd_pref_description">Décourir automatiquement les service de réseau ZeronConf- Redémarrage nécessaire.</string>
     <string name="nsd_pref">Service de découverte du réseau</string>
     <string name="reticle_skywatcher">Nouveau réticule Sky-Watcher</string>
     <string name="reticle_big_dipper">Grande ourse/Cassiopée</string>
@@ -612,7 +612,7 @@
     <string name="aladin_welcome">Aladin est un atlas intéractif développé par le Centre de Données astronomiques de Strasbourg. Il utilise la technologie HipS (Hierarchical Progressive Surveys).\nTelescope.Touch intégre un client Aladin, ainsi vous pouvez voir les cibles en haute définition avant de pointer le télescope! Vous pouvez aussi déplacer le télescope à partir de la carte ou de la base de données objects, grâce au résolveur d\'objet SESAME.</string>
     <string name="vizier_catalogue_service">Service catalogue VizieR</string>
     <string name="aladin_compatibility">Mode de compatibilité Aladin</string>
-    <string name="aladin_compatibility_description">Permettre de lancer Aladin sur des appareils anciens. Note: pas stable, peut provoquer du jitter ou ne pas se charger proprement. Demande un redémarrage.</string>
+    <string name="aladin_compatibility_description">Permettre de lancer Aladin sur des appareils anciens. Note: pas stable, peut provoquer du jitter ou ne pas se charger proprement- Redémarrage nécessaire</string>
     <string name="open_source_licenses">Licences Open Source</string>
     <string name="continue_button">Continuer</string>
     <string name="about_vizier_menu">Â propos de VizieR</string>
