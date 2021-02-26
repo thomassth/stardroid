@@ -12,7 +12,7 @@
             android:entryValues="@array/exit_action_pref_values"
             android:key="exit_action"
             android:summary="%s"
-            android:title="@string/exit_action"
+            android:title="Exit action"
             app:iconSpaceReserved="false" />
 
         <CheckBoxPreference
