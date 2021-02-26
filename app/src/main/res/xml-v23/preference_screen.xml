@@ -12,7 +12,7 @@
             android:entryValues="@array/exit_action_pref_values"
             android:key="exit_action"
             android:summary="%s"
-            android:title="Exit action"
+            android:title="@string/exit_action"
             app:iconSpaceReserved="false" />
 
         <CheckBoxPreference
@@ -118,7 +118,7 @@
             android:entryValues="@array/reticle_pref_values"
             android:key="polaris_reticle"
             android:summary="%s"
-            android:title="Polar finder reticle"
+            android:title="@string/polaris_finder_reticle"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
