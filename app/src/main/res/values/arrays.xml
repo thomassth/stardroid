@@ -32,10 +32,10 @@
         <item>1</item>
     </string-array>
     <string-array name="exit_action_pref">
-        <item>Do nothing</item>
-        <item>Continue in background</item>
-        <item>Continue in background if connected</item>
-        <item>Disconnect and exit</item>
+        <item>@string/do_nothing</item>
+        <item>@string/app_running_background</item>
+        <item>@string/app_running_background_if_connected</item>
+        <item>@string/Disconnect_exit</item>
     </string-array>
     <string-array name="exit_action_pref_values">
         <item>0</item>
