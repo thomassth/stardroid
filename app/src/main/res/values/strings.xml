@@ -519,7 +519,7 @@
     <string name="search">Search</string>
     <string name="sky_map">Sky Map</string>
     <string name="telescope_control">Telescope control</string>
-    <string name="compass">Compass</string>
+    <string name="compass">Compass and level</string>
     <string name="shortcuts_not_supported">Your launcher does not support shortcuts.</string>
     <string name="add_sky_map_shortcut">Add Sky Map shortcut</string>
     <string name="deep_sky">Deep sky</string>
