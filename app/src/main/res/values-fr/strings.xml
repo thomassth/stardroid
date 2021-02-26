@@ -5,7 +5,7 @@
     <string name="go">Atteindre</string>
     <string name="location_prefs">Paramètres de position</string>
     <string name="force_gps_pref">Utiliser le GPS</string>
-    <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">Même si la géolocalisation est activée.</string>
+    <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">Même si la géolocalisation est activée</string>
     <string name="no_use_gps_pref">Position manuelle</string>
     <string name="location_lat_pref">Latitude</string>
     <string name="location_long_pref">Longitude</string>
@@ -14,7 +14,7 @@
     <string name="location_offer_to_enable">Position auto désactivée. Voulez-vous l\'activer ?</string>
     <string name="location_offer_to_enable_gps_title">Position auto désactivée</string>
     <string name="location_set_auto">Position %1$s remplacée par %2$s</string>
-    <string name="location_long_lat">Longitude : %1$f, latitude : %2$f</string>
+    <string name="location_long_lat">Longitude : %1$f; latitude : %2$f</string>
     <string name="use_magnetic_correction">Correction magnétique</string>
     <string name="stars">Étoiles</string>
     <string name="constellations">Constellations</string>
@@ -23,7 +23,7 @@
     <string name="horizon">Horizon</string>
     <string name="show_sky_gradient">Couleurs du ciel</string>
     <string name="ecliptic">Écliptique</string>
-    <string name="malformed_loc_error">Indiquez un nombre pour la latitude/longitude.</string>
+    <string name="malformed_loc_error">Indiquez un nombre pour la latitude/longitude</string>
     <string name="menu_toggle_dim">Activer/Dés. mode nuit</string>
     <string name="zenith">ZÉNITH</string>
     <string name="nadir">NADIR</string>
@@ -32,7 +32,7 @@
     <string name="west">OUEST</string>
     <string name="south">SUD</string>
     <string name="search_label">Rechercher</string>
-    <string name="no_search_title">0 résultat</string>
+    <string name="no_search_title">Aucun résultat</string>
     <string name="no_search_results_text">Aucun résultat trouvé</string>
     <string name="many_search_results_title">Essayez avec :</string>
     <string name="menu_time">Voyage dans le temps</string>
@@ -74,7 +74,7 @@
     <string name="crab_nebula" translation_description="hubble object">Nébuleuse du Crabe</string>
     <string name="eagle_nebula" translation_description="hubble object">Nébuleuse de l\'Aigle</string>
     <string name="andromeda_galaxy" translation_description="hubble object">Galaxie d\'Andromède</string>
-    <string name="orion_nebula" translation_description="hubble object"> Grande Nébuleuse d\'Orion</string>
+    <string name="orion_nebula" translation_description="hubble object">Grande Nébuleuse d\'Orion</string>
     <string name="whirlpool_galaxy" translation_description="hubble object">Galaxie du Tourbillon (Whirlpool)</string>
     <string name="ring_nebula" translation_description="hubble object">Nébuleuse de l\'Anneau</string>
     <string name="pinwheel_galaxy" translation_description="hubble object">Galaxie du Moulinet (Pinwheel)</string>
@@ -137,10 +137,58 @@
     <string name="big_dipper" translation_description="Name of the Big Dipper constellation">Grande Ourse</string>
     <string name="great_bear" translation_description="Name of the Great Bear constellation">Grande Ourse</string>
     <string name="plough" translation_description="Name of the Plough constellation">Grande Ourse</string>
+    <string name="antlia" translation_description="Name of the Antlia constellation" tools:keep="@string/antlia">Machine Pneumatique</string>
+    <string name="apus" translation_description="Name of the Apus constellation" tools:keep="@string/apus">Oiseau de Paradis</string>
+    <string name="ara" translation_description="Name of the Ara constellation" tools:keep="@string/ara">Autel</string>
+    <string name="caelum" translation_description="Name of the Caelum constellation" tools:keep="@string/caelum">Burin</string>
+    <string name="camelopardalis" translation_description="Name of the Camelopardalis constellation" tools:keep="@string/camelopardalis">Girafe</string>
+    <string name="canes_venatici" translation_description="Name of the Canes Venatici constellation" tools:keep="@string/canes_venatici">Chiens de Chasse</string>
+    <string name="canis_minor" translation_description="Name of the Canis Minor constellation" tools:keep="@string/canis_minor">Petit Chien</string>
+    <string name="cepheus" translation_description="Name of the Cepheus constellation" tools:keep="@string/cepheus">Céphée</string>
+    <string name="chamaeleon" translation_description="Name of the Chamaeleon constellation" tools:keep="@string/chamaeleon">Caméléon</string>
+    <string name="circinus" translation_description="Name of the Circinus constellation" tools:keep="@string/circinus">Compas</string>
+    <string name="columba" translation_description="Name of the Columba constellation" tools:keep="@string/columba">Colombe</string>
+    <string name="coma_berenices" translation_description="Name of the Coma Berenices constellation" tools:keep="@string/coma_berenices">Chevelure de Bérénice</string>
+    <string name="corona_australis" translation_description="Name of the Corona Australis constellation" tools:keep="@string/corona_australis">Couronne Australe</string>
+    <string name="corona_borealis" translation_description="Name of the Corona Borealis constellation" tools:keep="@string/corona_borealis">Couronne Boréale</string>
+    <string name="corvus" translation_description="Name of the Corvus constellation" tools:keep="@string/corvus">Corbeau</string>
+    <string name="crater" translation_description="Name of the Crater constellation" tools:keep="@string/crater">Coupe</string>
+    <string name="delphinus" translation_description="Name of the Delphinus constellation" tools:keep="@string/delphinus">Dauphin</string>
+    <string name="dorado" translation_description="Name of the Dorado constellation" tools:keep="@string/dorado">Dorade</string>
+    <string name="equuleus" translation_description="Name of the Equuleus constellation" tools:keep="@string/equuleus">Petit Cheval</string>
+    <string name="fornax" translation_description="Name of the Fornax constellation" tools:keep="@string/fornax">Fourneau</string>
+    <string name="horologium" translation_description="Name of the Horologium constellation" tools:keep="@string/horologium">Horloge</string>
+    <string name="hydra" translation_description="Name of the Hydra constellation" tools:keep="@string/hydra">Hydre femelle</string>
+    <string name="indus" translation_description="Name of the Indus constellation" tools:keep="@string/indus">Indien</string>
+    <string name="lacerta" translation_description="Name of the Lacerta constellation" tools:keep="@string/lacerta">Lézard</string>
+    <string name="leo_minor" translation_description="Name of the Leo Minor constellation" tools:keep="@string/leo_minor">Petit Lion</string>
+    <string name="lepus" translation_description="Name of the Lepus constellation" tools:keep="@string/lepus">Lièvre</string>
+    <string name="lynx" translation_description="Name of the Lynx constellation" tools:keep="@string/lynx">Lynx</string>
+    <string name="mensa" translation_description="Name of the Mensa constellation" tools:keep="@string/mensa">Table</string>
+    <string name="microscopium" translation_description="Name of the Microscopium constellation" tools:keep="@string/microscopium">Microscope</string>
+    <string name="monoceros" translation_description="Name of the Monoceros constellation" tools:keep="@string/monoceros">Licorne</string>
+    <string name="musca" translation_description="Name of the Musca constellation" tools:keep="@string/musca">Mouche</string>
+    <string name="norma" translation_description="Name of the Norma constellation" tools:keep="@string/norma">Règle</string>
+    <string name="octans" translation_description="Name of the Octans constellation" tools:keep="@string/octans">Octant</string>
+    <string name="pictor" translation_description="Name of the Pictor constellation" tools:keep="@string/pictor">Peintre</string>
+    <string name="pyxis" translation_description="Name of the Pyxis constellation" tools:keep="@string/pyxis">Boussole</string>
+    <string name="reticulum" translation_description="Name of the Reticulum constellation" tools:keep="@string/reticulum">Réticule</string>
+    <string name="sagitta" translation_description="Name of the Sagitta constellation" tools:keep="@string/sagitta">Flèche</string>
+    <string name="sculptor" translation_description="Name of the Sculptor constellation" tools:keep="@string/sculptor">Sculpteur</string>
+    <string name="scutum" translation_description="Name of the Scutum constellation" tools:keep="@string/scutum">Ecu de Sobieski</string>
+    <string name="serpens_caput" translation_description="Name of the Serpens Caput constellation" tools:keep="@string/serpens_caput">Tête du Serpent</string>
+    <string name="serpens_cauda" translation_description="Name of the Serpens Cauda constellation" tools:keep="@string/serpens_cauda">Queue du Serpent</string>
+    <string name="sextans" translation_description="Name of the Sextans constellation" tools:keep="@string/sextans">Sextant</string>
+    <string name="telescopium" translation_description="Name of the Telescopium constellation" tools:keep="@string/telescopium">Télescope</string>
+    <string name="triangulum" translation_description="Name of the Triangulum constellation" tools:keep="@string/triangulum">Triangle</string>
+    <string name="triangulum_australe" translation_description="Name of the Triangulum Australe constellation" tools:keep="@string/triangulum_australe">Triangle Australe</string>
+    <string name="volans" translation_description="Name of the Volans constellation" tools:keep="@string/volans">Poisson Volant</string>
+    <string name="vulpecula" translation_description="Name of the Vulpecula constellation" tools:keep="@string/vulpecula">Petit Renard</string>
     <string name="sirius" translation_description="Name of the Star Sirius">Sirius</string>
     <string name="canopus" translation_description="Name of the Star Canopus">Canopus</string>
     <string name="arcturus" translation_description="Name of the Star Arcturus">Arcturus</string>
     <string name="rigel_kentaurus_a" translation_description="Name of the Star Rigel Kentaurus A">Rigel Kentaurus A</string>
+    <string name="rigil_kentaurus_a" translation_description="Name of the Star Rigil Kentaurus A" tools:keep="@string/rigil_kentaurus_a">Rigil Kentaurus A</string>
     <string name="vega" translation_description="Name of the Star Vega">Véga</string>
     <string name="rigel" translation_description="Name of the Star Rigel">Rigel</string>
     <string name="procyon" translation_description="Name of the Star Procyon">Procyon</string>
@@ -325,10 +373,10 @@
     <string name="indi_host">Sélectionner un serveur INDI</string>
     <string name="connect">Connecter</string>
     <string name="disconnect">Déconnecter</string>
-    <string name="log">Log:</string>
+    <string name="log">Log :</string>
     <string name="host_prompt">Adresse du serveur :</string>
     <string name="host_add">Ajouter un serveur</string>
-    <string name="host_prompt_text">Adresse IP du serveur:</string>
+    <string name="host_prompt_text">Adresse IP du serveur</string>
     <string name="connecting">Connexion…</string>
     <string name="mount_goto">Chercher</string>
     <string name="unavailable">Indisponible</string>
@@ -377,12 +425,12 @@
     <string name="entry_short_uncertain">Incertain</string>
     <string name="entry_triStar">Étoile triple</string>
     <string name="entry_uncertain">Incertain</string>
-    <string name="sync_slew_error" >Erreur: impossible de demander le pointage ou la synchronisation</string>
-    <string name="sync_ok" >Synchronisation…</string>
+    <string name="sync_slew_error" >Erreur : impossible de demander le pointage ou la synchronisation</string>
+    <string name="sync_ok" >Synchronisation effectuée</string>
     <string name="slew_ok" >Pointage en cours</string>
     <string name="arcmin">arcmin</string>
     <string name="menu_connection">Connecter</string>
-    <string name="error">Erreur:</string>
+    <string name="error">Erreur :</string>
     <string name="hdf">Champ profond de Hubble</string>
     <string name="no_use_gps_pref_hint">Choisir un lieu sur la carte ou entrer les coordonnées</string>
     <string name="solar_system">Système solaire</string>
@@ -392,7 +440,7 @@
     <string name="south_short">S</string>
     <string name="east_short">E</string>
     <string name="west_short">O</string>
-    <string name="sky_map_gallery">Galerie Sky Map</string>
+    <string name="sky_map_gallery">Galerie d\'image Sky Map</string>
     <string name="menu_diagnostics">Diagnostics</string>
     <string name="alpha_centauri" translation_description="Name of the star Alpha Centauri" tools:keep="@string/alpha_centauri">Alpha du Centaure</string>
     <string name="rigil_kent" translation_description="Name of the star Rigil Kent" tools:keep="@string/rigil_kent">Rigil Kentaurus</string>
@@ -407,8 +455,8 @@
     <string name="orionids" translation_description="Meteor Shower">Orionides</string>
     <string name="puppidvelids" translation_description="Meteor Shower">Puppid-Velids</string>
     <string name="ursids" translation_description="Meteor Shower">Ursides</string>
-    <string name="no_sensor_warning">Votre appareil ne possède pas de capteur d\'orientation!</string>
-    <string name="warning_dialog_title">Mauvaise nouvelle!</string>
+    <string name="no_sensor_warning">Votre appareil ne possède pas de capteur d\'orientation !</string>
+    <string name="warning_dialog_title">Mauvaise nouvelle !</string>
     <string name="missing_sensor_dialog_text">\n
         Malheureusement votre appareil ne possède pas un des capteurs nécessaire à Sky Map.\n\n
         Pour afficher le ciel dans la direction pointée par l\'appareil, Sky Map a besoin de la
@@ -423,12 +471,12 @@
     <string name="do_not_show_again">Ne plus montrer ce message</string>
     <string name="title_activity_diagnostic">Diagnostics</string>
     <string name="sensor_absent">Absent</string>
-    <string name="sensor_accuracy_unknown">Précision: Inconnue</string>
-    <string name="sensor_accuracy_unreliable">Précision: Non fiable</string>
-    <string name="sensor_accuracy_low">Précision: Faible</string>
-    <string name="sensor_accuracy_medium">Précision: Moyenne</string>
-    <string name="sensor_accuracy_high">Précision: Haute</string>
-    <string name="sensor_accuracy_nocontact">Précision: Pas de contact</string>
+    <string name="sensor_accuracy_unknown">Précision : inconnue</string>
+    <string name="sensor_accuracy_unreliable">Précision : non fiable</string>
+    <string name="sensor_accuracy_low">Précision : faible</string>
+    <string name="sensor_accuracy_medium">Précision : moyenne</string>
+    <string name="sensor_accuracy_high">Précision : haute</string>
+    <string name="sensor_accuracy_nocontact">Précision : pas de contact</string>
     <string name="diagnostics_activity_general_heading">Général</string>
     <string name="diagnostics_activity_phone">Appareil</string>
     <string name="diagnostics_activity_android_version">Version d\'Android</string>
@@ -443,12 +491,12 @@
     <string name="diagnostics_activity_gps">GPS</string>
     <string name="diagnostics_activity_location">Localisation (lat, long)</string>
     <string name="diagnostics_activity_pointing_ra_dec">Position de pointage</string>
-    <string name="magnetic_declination">Déclination magn.</string>
+    <string name="magnetic_declination">Déclination magné </string>
     <string name="diagnostics_activity_local_datetime">Temps local</string>
     <string name="diagnostics_activity_universal_time">Temps universel</string>
     <string name="diagnostics_activity_network_heading">Réseau</string>
     <string name="diagnostics_activity_connection">Connexion</string>
-    <string name="diagnostics_activity_rotation_matrix">Matrice rot</string>
+    <string name="diagnostics_activity_rotation_matrix">Matrice rotation</string>
     <string name="enabled">Activé</string>
     <string name="disabled">Désactivé</string>
     <string name="permission_disabled">Permission désactivée</string>
@@ -462,18 +510,18 @@
     <string name="sensor_reverse_preference_title">Inverser Z magnétique</string>
     <string name="sensor_reverse_preference_summary">Correction pour appareil avec capteur incorrectement implémenté - Redémarrage nécessaire</string>
     <string name="disable_gyro_preference_title">Désactiver le gyroscope</string>
-    <string name="disable_gyro_preference_summary">Tout les appareils n\'ont pas de gyroscope: Si oui, l\'activer améliorera les résultats. si non, Sky Map ne fonctionnera pas si vous décochez la case.</string>
+    <string name="disable_gyro_preference_summary">Tous les appareils n\'ont pas de gyroscope: Si le votre en a un, l\'activer améliorera les résultats. Sinon, Sky Map ne fonctionnera pas si vous décochez la case.</string>
     <string name="rotate_horizon_preference_title">Rotation de l\'horizon</string>
     <string name="rotate_horizon_preference_summary">Rotation à 90 degrés de l\'horizon (pour écran avec format paysage forcé, comme les smartglasses)</string>
     <string name="host_manage">Gestion des serveurs</string>
     <string name="entry_alt">Alt</string>
     <string name="entry_az">Az</string>
     <string name="menu_about">À propos de l\'app</string>
-    <string name="app_description"><b>Telescope.Touch</b> a été créé dans le but de fusionner l\'app Sky Map et le projet IPARCOS, un client INDI pour Android.
-        \nElle offre un contrôle total de téléscope et une fonction carte du ciel mobile, avec une interface utilistateur et un code de base renouvelés.
+    <string name="app_description"><b>Telescope.Touch</b> a été créé dans le but de fusionner l\'application Sky Map et le projet IPARCOS, un client INDI pour Android.
+        \nElle offre un contrôle total du téléscope et une fonction carte du ciel mobile, avec une interface utilisateur et un code de base renouvelés.
         \n\nLe code source est disponible sur github.com/marcocipriani01/Telescope.Touch
         \n\nDéveloppé par <b>Marco Cipriani</b> (marcocipriani01)
-        \n\n<b>Credits:</b>\n
+        \n\n<b>Crédits:</b>\n
         ★ Le projet IPARCOS, Licence GPL v3\n
         ★ Le projet SKY MAP, Licence Apache 2.0\n
         ★ Les projets VizieR et Aladin\n
@@ -483,104 +531,105 @@
         ★ Touch icon, Licence Flaticon\n
         ★ Boussole par iutinvg, Licence MIT
     </string>
-    <string name="error_no_devices">Aucun appareil trouvé!</string>
-    <string name="remove_server">Supprimer le serveur sélectionné?</string>
+    <string name="error_no_devices">Aucun appareil trouvé !</string>
+    <string name="remove_server">Supprimer le serveur sélectionné ?</string>
     <string name="servers_list_snack_msg">Clic long pour supprimer, glisser pour réarranger</string>
     <string name="focus_in">MAP vers l\'intérieur</string>
     <string name="focus_out">MAP vers l\'extérieur</string>
     <string name="menu_focuser">Focalisateur</string>
-    <string name="stop_motion">Quitter</string>
-    <string name="absolute_position">Position absolue:</string>
+    <string name="stop_motion">Stop</string>
+    <string name="absolute_position">Position absolue :</string>
     <string name="no_indi_elements">Propriété vide</string>
     <string name="slide_to_reorganize">Glisser pour réorganiser</string>
     <string name="add_server">Ajouter un serveur</string>
     <string name="ip_address">Adresse IP</string>
     <string name="empty_host">Adresse vide</string>
-    <string name="not_valid_ip">Le texte entré ne semble pas être une adresse IP valide.</string>
+    <string name="not_valid_ip">Le texte entré ne semble pas être une adresse IP valide !</string>
     <string name="position">Position</string>
     <string name="mount_control">Contrôle de la monture</string>
     <string name="focuser_control">Contrôle du focalisateur</string>
-    <string name="catalog_error">Une erreur est apparue lors du chargement du cataloge!</string>
+    <string name="catalog_error">Une erreur est apparue lors du chargement du cataloge !</string>
     <string name="catalog_manager">Gestion des catalogues</string>
-    <string name="slew_rate">Vitesse du déplacement:</string>
-    <string name="speed">Vitesse:</string>
-    <string name="steps_per_click">Nb de pas par clic:</string>
+    <string name="slew_rate">Vitesse de déplacement :</string>
+    <string name="speed">Vitesse :</string>
+    <string name="steps_per_click">Nb de pas par clic :</string>
     <string name="mount_parked">Monture en position garage</string>
     <string name="mount_not_parked">Monture non garée</string>
     <string name="telescope_parking">Télescope vers la position garage</string>
-    <string name="telescope_parking_confirm">Êtes-vous sûr de vouloir changer la position garage?</string>
+    <string name="telescope_parking_confirm">Êtes-vous sûr de vouloir changer la position garage ?</string>
     <string name="dark_nebula">Nébuleuse obscure</string>
     <string name="search">Chercher</string>
     <string name="sky_map">Sky Map</string>
     <string name="telescope_control">Contrôle du téléscope</string>
     <string name="compass">Boussole</string>
-    <string name="shortcuts_not_supported">Impossible d\'ajouter un raccourci!</string>
-    <string name="add_sky_map_shortcut">Ajouter un raccourci vers Sky map</string>
+    <string name="shortcuts_not_supported">Impossible d\'ajouter un raccourci !</string>
+    <string name="add_sky_map_shortcut">Ajouter un raccourci vers Sky Map</string>
     <string name="deep_sky">Ciel profond</string>
     <string name="location_no_auto">Sky Map ne peut pas accéder à votre localisation, nécessaire aux calculs de positions des étoiles. Vous pouvez autoriser la localisation dans les paramètres de l\'appareil.</string>
     <string name="warning">Alarme</string>
     <string name="take_me_there">Vers les réglages</string>
     <string name="point_telescope">Pointer le télescope</string>
-    <string name="connect_telescope_first">S\'il vous plait connecter d\'abord le téléscope.</string>
+    <string name="connect_telescope_first">S\'il vous plait connecter d\'abord le téléscope !</string>
     <string name="gallery_copyright">Images de la NASA (domaine publique), ESO (CC BY 4.0) et Adam Evans (CC BY 2.0)</string>
-    <string name="go_to_database">Base de données Go-To</string>
+    <string name="go_to_database">Base de données GoTo</string>
     <string name="indi_control_panel">Panneau de contrôle INDI</string>
     <string name="device_remove">Appareil supprimé</string>
-    <string name="new_device">Nouvel appareil:</string>
-    <string name="connection_busy">Non connecté ou occupé!</string>
-    <string name="connection_busy_2">Déjà connecté ou occupé!</string>
-    <string name="press_back_exit">Appuyer encore sur Retour pour sortir!</string>
-    <string name="invalid_abs_position">Position absolue invalide!</string>
-    <string name="nsd_not_available">Découverte du réseau désactivée!</string>
-    <string name="catalog_load_error">Erreur de chargement du cataloge!</string>
+    <string name="new_device">Nouvel appareil :</string>
+    <string name="connection_busy">Non connecté ou occupé !</string>
+    <string name="connection_busy_2">Déjà connecté ou occupé !</string>
+    <string name="press_back_exit">Appuyer encore sur Retour pour sortir !</string>
+    <string name="invalid_abs_position">Position absolue invalide !</string>
+    <string name="nsd_not_available">Découverte du réseau désactivée !</string>
+    <string name="catalog_load_error">Erreur de chargement du cataloge !</string>
     <string name="ccd_images">Images CCD</string>
     <string name="receive_images">Réception de l\'image</string>
     <string name="unknown">inconnu</string>
-    <string name="file_size">Taille du fichier:</string>
-    <string name="dimensions">Dimensions:</string>
-    <string name="format">Format:</string>
-    <string name="bit_depth">Nb de bits de codage couleur:</string>
+    <string name="file_size">Taille du fichier :</string>
+    <string name="dimensions">Dimensions :</string>
+    <string name="format">Format :</string>
+    <string name="bit_depth">Bits de codage couleur :</string>
     <string name="no_incoming_data">Pas de données reçues</string>
     <string name="fits_image_stretching">Étirement image FITS</string>
     <string name="image_info">Info image</string>
-    <string name="saved_snackbar">Sauvegardé!</string>
-    <string name="saving_error">Erreur de sauvegarde!</string>
-    <string name="nothing_to_save">Rien à sauvegarder!</string>
+    <string name="saved_snackbar">Sauvegardée !</string>
+    <string name="saving_error">Erreur de sauvegarde !</string>
+    <string name="nothing_to_save">Rien à sauvegarder </string>
     <string name="unsupported_format">Format non-supporté.</string>
     <string name="empty_property">Propriété vide.</string>
     <string name="error_multi_image_prop">Propriété multi-image non-supportée.</string>
     <string name="open_host_in_browser">Ouvrir le serveur dans le navigateur</string>
-    <string name="out_of_memory">Pas assez de ressource mémoire!</string>
-    <string name="truncated_file">Fichier tronqué!</string>
+    <string name="out_of_memory">Pas assez de ressource mémoire !</string>
+    <string name="truncated_file">Fichier tronqué !</string>
     <string name="unsupported_color_fits">Couleur FITS pas encore supportée.</string>
     <string name="unsupported_bit_depth">Profondeur des couleurs</string>
-    <string name="invalid_fits_image">Imange FITS invalide!</string>
-    <string name="unknown_exception">Exception inconnue!</string>
+    <string name="invalid_fits_image">Image FITS invalide !</string>
+    <string name="unknown_exception">Exception inconnue !</string>
     <string name="view_image">Vue</string>
     <string name="open_photo">Ouvrir l\'image</string>
     <string name="blob_open_viewer">Ouvrir l\'afficheur d\'image pour voir les propriétés.</string>
     <string name="select_host_first">Choisir d\'abord un serveur s\'il vous plait.</string>
     <string name="database_filter">Filtre base de données</string>
-    <string name="compass_not_available">Boussole indisponible!</string>
+    <string name="compass_not_available">Boussole indisponible !</string>
     <string name="red_screen_light">Lumière écran rouge</string>
-    <string name="flashlight_unavailable">Lampe-torche indisponible!</string>
-    <string name="inaccurate_compass_warning">Boussole imprécise - calibrer la s\'il vous plait!</string>
+    <string name="flashlight_unavailable">Lampe-torche indisponible !</string>
+    <string name="inaccurate_compass_warning">Boussole imprécise - calibrer la s\'il vous plait !</string>
     <string name="flashlight">Lampe-torche</string>
     <string name="polaris_hour_angle">Angle horaire de l\'étoile polaire</string>
-    <string name="hour_angle">Angle horaire: %s</string>
-    <string name="in_finder">%s dans viseur polaire: %s</string>
-    <string name="hemisphere">Hémisphere</string>
-    <string name="hemisphere_description">Choisir l\'hémisphère et l\'étoile polaire.</string>
+    <string name="hour_angle">Angle horaire : %s</string>
+    <string name="in_finder">%s dans viseur polaire : %s</string>
+    <string name="hemisphere">Hémisphère</string>
+    <string name="hemisphere_description">Choisir l\'hémisphère et l\'étoile polaire</string>
     <string name="hemisphere_auto">Détection automatique</string>
     <string name="hemisphere_northern">Nord (Étoile polaire)</string>
     <string name="hemisphere_southern">Sud (Sigma Octant)</string>
-    <string name="nsd_pref_description">Décourir automatiquement les service de réseau ZeronConf- Redémarrage nécessaire.</string>
-    <string name="nsd_pref">Service de découverte du réseau</string>
+    <string name="nsd_pref_description">Décourir automatiquement les services de réseau ZeroConf - Redémarrage nécessaire</string>
+    <string name="nsd_pref">Service de découverte réseau</string>
     <string name="reticle_skywatcher">Nouveau réticule Sky-Watcher</string>
     <string name="reticle_big_dipper">Grande ourse/Cassiopée</string>
     <string name="pick_location_description">Choisir un lieu dans Google Map</string>
     <string name="pick_location_pref">Pointer sur la carte</string>
     <string name="sigma_octantis">Sigma Octant</string>
+    <string name="reticle_pref">Réticule du viseur polaire</string>
     <string name="polaris_star_finder">Étoile polaire</string>
     <string name="loading">Chargement…</string>
     <string name="msg_manual_location_on">Basculement vers localisation man…</string>
@@ -588,29 +637,30 @@
     <string name="precession_pref_description">Les coordonnées du catalogue correspondent à l\'année astronomique J2000. Cocher cette case pour compenser la précession. Si l\'application déplace le télescope vers une mauvaise direction, essayer de désactiver ce paramètre.</string>
     <string name="telescope">Télescope</string>
     <string name="search_in_goto_database">Rechercher dans la bas de données GoTo</string>
-    <string name="out_of_bounds_loc_error">Latitude ou longitude hors limite!</string>
+    <string name="out_of_bounds_loc_error">Latitude ou longitude hors limite !</string>
     <string name="planet">Planète</string>
     <string name="catalog_limit_mag">Limite de magnitude du catalogue</string>
-    <string name="catalog_limit_mag_description">Définir la magnitude maximale des étoiles du catalogue.</string>
+    <string name="catalog_limit_mag_description">Définir la magnitude maximale des étoiles du catalogue</string>
     <string name="only_visible">Seulement les objects visibles</string>
-    <string name="not_a_number">Pas un nombre!</string>
-    <string name="no_matching_objects">Pas d\'objets correspondant!</string>
+    <string name="not_a_number">Pas un nombre !</string>
+    <string name="no_matching_objects">Pas d\'objets correspondant !</string>
     <string name="no_telescope">Pas de télescope</string>
-    <string name="no_telescope_found">Aucun télescope trouvé!</string>
-    <string name="point_telescope_message">Êtes-vous sûr de pointer \"%s vers %s, %s?</string>
+    <string name="no_telescope_found">Aucun télescope trouvé !</string>
+    <string name="point_telescope_message">Êtes-vous sûr de pointer \"%s vers %s, %s ?</string>
     <string name="toggle_tracking">Activer le suivi</string>
-    <string name="tracking_toggled">Suivi activé!</string>
-    <string name="tracking_error">Erreur de suivi!</string>
-    <string name="unknown_error">Erreur inconnue!</string>
-    <string name="invalid_port">Port invalide!</string>
+    <string name="tracking_toggled">Suivi activé !</string>
+    <string name="tracking_error">Erreur de suivi !</string>
+    <string name="unknown_error">Erreur inconnue !</string>
+    <string name="invalid_port">Port invalide !</string>
     <string name="aladin_sky_atlas">Atlas Aladin Sky</string>
-    <string name="dark_mode_not_supported">Impossible de basculer vers le mode nuit!</string>
-    <string name="no_internet_connection">Pas de connexion internet!</string>
+    <string name="dark_mode_not_supported">Impossible de basculer vers le mode nuit !</string>
+    <string name="no_internet_connection">Pas de connexion internet !</string>
     <string name="aladin_api_error">L\'atlas Aladin Sky nécessite Android 6.0 ou plus.Vous pouvez quand même essayer de le lancer dans votre navigateur.</string>
     <string name="open">Ouvrir</string>
     <string name="cds_copyright">© Centre de Données astronomiques de Strasbourg, Unistra/CNRS.</string>
-    <string name="aladin_welcome">Aladin est un atlas intéractif développé par le Centre de Données astronomiques de Strasbourg. Il utilise la technologie HipS (Hierarchical Progressive Surveys).\nTelescope.Touch intégre un client Aladin, ainsi vous pouvez voir les cibles en haute définition avant de pointer le télescope! Vous pouvez aussi déplacer le télescope à partir de la carte ou de la base de données objects, grâce au résolveur d\'objet SESAME.</string>
+    <string name="aladin_welcome">Aladin est un atlas intéractif développé par le Centre de Données astronomiques de Strasbourg. Il utilise la technologie HipS (Hierarchical Progressive Surveys).\nTelescope.Touch intégre un client Aladin, ainsi vous pouvez voir les cibles en haute définition avant de pointer le télescope ! Vous pouvez aussi déplacer le télescope à partir de la carte ou de la base de données objects, grâce au résolveur d\'objet SESAME.</string>
     <string name="vizier_catalogue_service">Service catalogue VizieR</string>
+    <string name="vizier_welcome">VizieR est un service de catalogues astronomiques géré par le Centre de données astronomiques de Strasbourg.\nTelescope.Touch intègre les catalogues Common Stars et NGC 2000 pour le pointage du télescope.</string>
     <string name="aladin_compatibility">Mode de compatibilité Aladin</string>
     <string name="aladin_compatibility_description">Permettre de lancer Aladin sur des appareils anciens. Note: pas stable, peut provoquer du jitter ou ne pas se charger proprement- Redémarrage nécessaire</string>
     <string name="open_source_licenses">Licences Open Source</string>
@@ -618,12 +668,12 @@
     <string name="about_vizier_menu">Â propos de VizieR</string>
     <string name="save_image">Sauvegarder l\'image</string>
     <string name="about_aladin_menu">Â propos de Aladin</string>
-    <string name="aladin_search_fail">L\'objet ne peut pas être trouvé!</string>
-    <string name="below_horizon_warning">\n\nAttention! Objet sous l\'horizon.</string>
+    <string name="aladin_search_fail">L\'objet ne peut pas être trouvé !</string>
+    <string name="below_horizon_warning">\n\nAttention ! Objet sous l\'horizon !</string>
     <string name="refresh">Rafraichir</string>
     <string name="aladin_j2000_note">\n\nNote: Aladin utilise les coordonnées J2000. Elles seront corrigées, ainsi le télescope pointera vers un direction légèrement différente à celle souhaitée. La cible devrait être centrée.</string>
     <string name="aladin">Aladin</string>
-    <string name="altitude">Altitude</string>
+    <string name="altitude">Hauteur</string>
     <string name="no_location">Pas de localisation</string>
     <string name="toggling_manual_mode">Basculer vers le mode </string>
     <string name="polaris_finder_reticle">Réticule du viseur polaire</string>
@@ -632,9 +682,13 @@
     <string name="exit">Sortir</string>
     <string name="exit_action">Action à la sortie de l\'application</string>
     <string name="general">Général</string>
-    <string name="photo">Photo</string>
+    <string name="photo">Image</string>
     <string name="floating_image">Image flottante</string>
-    <string name="pip_permission_required">Permission requise pour le mode image dans l\'image!</string>
-    <string name="connection_indi_lost">Connexion serveur INDI perdue.</string>
+    <string name="pip_permission_required">Permission requise pour le mode "image dans l\'image" !</string>
+    <string name="connection_indi_lost">Connexion serveur INDI perdue</string>
+    <string name="tap_to_exit">Toucher l\'écran pour sortir</string>
+    <string name="do_nothing">Ne rien faire</string>
     <string name="app_running_background">Telescope.Touch fonctionne en arrière plan</string>
+    <string name="app_running_background_if_connected">Telescope.Touch fonctionne en arrière plan si connecté</string>
+    <string name="Disconnect_exit">Déconnecter et sortir</string>
 </resources>
