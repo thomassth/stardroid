@@ -43,7 +43,6 @@ import io.github.marcocipriani01.telescopetouch.astronomy.TimeUtils;
 public class SensorAccuracyMonitor implements SensorEventListener {
 
     private static final String TAG = TelescopeTouchApp.getTag(SensorAccuracyMonitor.class);
-    private static final String LAST_CALIBRATION_WARNING_PREF_KEY = "Last calibration warning time";
     private static final long MIN_INTERVAL_BETWEEN_WARNINGS = 180 * TimeUtils.MILLISECONDS_PER_SECOND;
     private final SensorManager sensorManager;
     private final Sensor compassSensor;
@@ -104,11 +103,11 @@ public class SensorAccuracyMonitor implements SensorEventListener {
             return;  // OK
         }
         Log.d(TAG, "Compass accuracy insufficient");
-        if ((System.currentTimeMillis() - sharedPreferences.getLong(LAST_CALIBRATION_WARNING_PREF_KEY, 0)) < MIN_INTERVAL_BETWEEN_WARNINGS) {
+        if ((System.currentTimeMillis() - sharedPreferences.getLong(ApplicationConstants.LAST_CALIBRATION_WARNING_PREF, 0)) < MIN_INTERVAL_BETWEEN_WARNINGS) {
             Log.d(TAG, "...but too soon to warn again");
             return;
         }
-        sharedPreferences.edit().putLong(LAST_CALIBRATION_WARNING_PREF_KEY, System.currentTimeMillis()).apply();
+        sharedPreferences.edit().putLong(ApplicationConstants.LAST_CALIBRATION_WARNING_PREF, System.currentTimeMillis()).apply();
         if (sharedPreferences.getBoolean(ApplicationConstants.NO_SHOW_CALIBRATION_DIALOG_PREF, false)) {
             Snackbar.make(activity.getWindow().getDecorView().getRootView(),
                     R.string.inaccurate_compass_warning, Snackbar.LENGTH_SHORT).show();

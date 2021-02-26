@@ -61,6 +61,7 @@ public class CompassFragment extends ActionFragment implements
         final TextView heading = rootView.findViewById(R.id.compass_heading);
         final TextView gps = rootView.findViewById(R.id.compass_gps);
         final TextView declination = rootView.findViewById(R.id.compass_declination);
+        final ImageView level = rootView.findViewById(R.id.compass_level);
         compass = new CompassHelper(getActivity()) {
             private float lastAzimuth = 0;
 
@@ -95,6 +96,12 @@ public class CompassFragment extends ActionFragment implements
                 int visibility = show ? View.VISIBLE : View.GONE;
                 gps.setVisibility(visibility);
                 declination.setVisibility(visibility);
+            }
+
+            @Override
+            protected void onLevelChange(float x, float y) {
+                level.setTranslationX(25 * x);
+                level.setTranslationY(-25 * y);
             }
         };
         return rootView;
