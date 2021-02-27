@@ -217,7 +217,7 @@ public class AsyncBLOBLoader implements INDIPropertyListener {
                     throw new FileNotFoundException();
                 String blobSizeString = String.format("%.2f MB", blobSize / 1000000.0);
                 byte[] blobData = blobValue.getBlobData();
-                if (format.equals(".fits")) {
+                if (format.equals(".fits") || format.equals(".fit") || format.equals(".fts")) {
                     try (InputStream stream = new ByteArrayInputStream(blobData)) {
                         int width = 0, height = 0;
                         byte bitPerPix = 0;
@@ -228,16 +228,10 @@ public class AsyncBLOBLoader implements INDIPropertyListener {
                             String card = new String(headerBuffer);
                             if (card.contains("BITPIX")) {
                                 bitPerPix = (byte) findFITSLineValue(card);
-                                if ((bitPerPix != 8) && (bitPerPix != 16))
-                                    throw new UnsupportedOperationException("32 bit FITS are not yet supported.");
                             } else if (card.contains("NAXIS1")) {
                                 width = findFITSLineValue(card);
-                                if (width <= 0)
-                                    throw new IllegalStateException("Invalid FITS image");
                             } else if (card.contains("NAXIS2")) {
                                 height = findFITSLineValue(card);
-                                if (height <= 0)
-                                    throw new IllegalStateException("Invalid FITS image");
                             } else if (card.contains("NAXIS")) {
                                 if (findFITSLineValue(card) != 2)
                                     throw new IndexOutOfBoundsException("Color FITS are not yet supported.");
@@ -249,6 +243,10 @@ public class AsyncBLOBLoader implements INDIPropertyListener {
                                 }
                             }
                         }
+                        if ((bitPerPix == 0) || (width <= 0) || (height <= 0))
+                            throw new IllegalStateException("Invalid FITS image");
+                        if (bitPerPix == 32)
+                            throw new UnsupportedOperationException("32 bit FITS are not yet supported.");
                         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
                         if (stretch) {
                             int[][] img = new int[width][height];
