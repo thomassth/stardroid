@@ -67,4 +67,5 @@ public class ApplicationConstants {
     public static final String PICK_LOCATION_PREF = "pick_location_map";
     public static final String GOTO_DETAILS_LAST_TAB = "goto_details_tab";
     public static final String DARKER_MODE_KEY = "DARKER_MODE";
+    public static final String LAST_CALIBRATION_WARNING_PREF = "last_calibration_warning_time";
 }
