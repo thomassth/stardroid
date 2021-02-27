@@ -25,14 +25,8 @@
 
     <PreferenceCategory
         android:title="@string/location_prefs"
+        android:summary="@string/location_indi_clarification"
         app:iconSpaceReserved="false">
-
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="force_gps"
-            android:summary="@string/force_gps_pref_hint"
-            android:title="@string/force_gps_pref"
-            app:iconSpaceReserved="false" />
 
         <CheckBoxPreference
             android:defaultValue="false"
@@ -69,6 +63,13 @@
             android:layout="?android:attr/preferenceLayoutChild"
             android:summary="@string/degrees"
             android:title="@string/location_long_pref"
+            app:iconSpaceReserved="false" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="force_gps"
+            android:summary="@string/force_gps_pref_hint"
+            android:title="@string/force_gps_pref"
             app:iconSpaceReserved="false" />
 
         <CheckBoxPreference

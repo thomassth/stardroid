@@ -5,7 +5,6 @@
     <string name="go">이동!</string>
     <string name="location_prefs">위치 설정</string>
     <string name="force_gps_pref">항상 GPS 사용</string>
-    <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">네트워크 위치 사용여부에 상관 없이</string>
     <string name="no_use_gps_pref">위치 직접 설정</string>
     <string name="location_lat_pref">위도</string>
     <string name="location_long_pref">경도</string>

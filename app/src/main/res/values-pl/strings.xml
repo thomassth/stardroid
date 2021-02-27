@@ -5,7 +5,6 @@
     <string name="go">Przejdź</string>
     <string name="location_prefs">Ustawienia lokalizacji</string>
     <string name="force_gps_pref">Zawsze używaj odbiornika GPS</string>
-    <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">jeśli jest włączony, nawet gdy dostępna jest lokalizacja sieciowa</string>
     <string name="no_use_gps_pref">Ustaw lokalizację ręcznie</string>
     <string name="location_lat_pref">Szerokość geograficzna</string>
     <string name="location_long_pref">Długość geograficzna</string>

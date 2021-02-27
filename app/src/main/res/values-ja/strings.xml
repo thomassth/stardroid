@@ -5,7 +5,6 @@
     <string name="go">Go!</string>
     <string name="location_prefs">位置の設定</string>
     <string name="force_gps_pref">常にGPSを使用</string>
-    <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">ネットワーク位置情報の設定よりも優先</string>
     <string name="no_use_gps_pref">手動で位置を設定</string>
     <string name="location_lat_pref">緯度</string>
     <string name="location_long_pref">経度</string>

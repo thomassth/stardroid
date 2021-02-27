@@ -5,7 +5,6 @@
     <string name="go">Hledat!</string>
     <string name="location_prefs">Nastavení polohy</string>
     <string name="force_gps_pref">Vždy používat GPS</string>
-    <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">pokud je aktivované, i když je dostupná síťová poloha</string>
     <string name="no_use_gps_pref">Nastavit polohu manuálně</string>
     <string name="location_lat_pref">Zeměpisná šířka</string>
     <string name="location_long_pref">Zeměpisná délka</string>

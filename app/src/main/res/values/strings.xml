@@ -6,7 +6,6 @@
     <string name="go">Go!</string>
     <string name="location_prefs">Location Settings</string>
     <string name="force_gps_pref">Always use GPS</string>
-    <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">If enabled, even if network location is available</string>
     <string name="no_use_gps_pref">Set location manually</string>
     <string name="no_use_gps_pref_hint">Pick a place on the map or enter the coordinates.</string>
     <string name="location_lat_pref">Latitude</string>
@@ -649,4 +648,6 @@
     <string name="background_always">Continue in background</string>
     <string name="background_if_connected">Continue in background if connected</string>
     <string name="disconnect_and_exit">Disconnect and exit</string>
+    <string name="location_indi_clarification"><b>Note:</b> these settings do not apply to INDI.</string>
+    <string name="force_gps_pref_hint">The app normally uses cell phone antennas to calculate your position. You can force the use of GPS, but it will be slower.</string>
 </resources>

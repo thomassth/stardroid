@@ -8,7 +8,6 @@
     <string name="go">انطلق!</string>
     <string name="location_prefs">إعدادات الموقع</string>
     <string name="force_gps_pref">استخدم الموقع دائما</string>
-    <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">if enabled, even if network location is available</string>
     <string name="no_use_gps_pref">تحديد يدوي للموقع</string>
     <string name="location_lat_pref">خط العرض</string>
     <string name="location_long_pref">خط الطول</string>

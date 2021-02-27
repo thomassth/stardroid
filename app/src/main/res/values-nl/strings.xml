@@ -5,7 +5,6 @@
     <string name="go">Ga!</string>
     <string name="location_prefs">Locatie-instellingen</string>
     <string name="force_gps_pref">Altijd GPS gebruiken</string>
-    <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">indien ingeschakeld, zelfs als een netwerklocatie beschikbaar is</string>
     <string name="no_use_gps_pref">Locatie handmatig instellen</string>
     <string name="location_lat_pref">Breedtegraad</string>
     <string name="location_long_pref">Geografische lengte</string>

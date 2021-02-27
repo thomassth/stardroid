@@ -5,7 +5,6 @@
     <string name="go">Vai!</string>
     <string name="location_prefs">Impostazioni località</string>
     <string name="force_gps_pref">Usa sempre GPS</string>
-    <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">Se abilitato, anche se è disponibile la posizione di rete</string>
     <string name="no_use_gps_pref">Imposta località manual.</string>
     <string name="location_lat_pref">Latitudine</string>
     <string name="location_long_pref">Longitudine</string>
@@ -576,4 +575,6 @@
     <string name="background_always">Continua in background</string>
     <string name="background_if_connected">Continua in background se connesso</string>
     <string name="disconnect_and_exit">Disconnetti ed esci</string>
+    <string name="location_indi_clarification"><b>Nota:</b> queste impostazioni non riguardano INDI.</string>
+    <string name="force_gps_pref_hint">L\'app normalmente usa le antenne telefoniche per stabile la tua posizione. Puoi forzare l\'uso del GPS, ma sarà più lento.</string>
 </resources>

@@ -6,7 +6,6 @@
     <string name="go">Gå til!</string>
     <string name="location_prefs">Stedsinnstillinger</string>
     <string name="force_gps_pref">Bruk alltid GPS</string>
-    <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">hvis aktivert, selv om nettverksposisjonering er tilgjengelig</string>
     <string name="no_use_gps_pref">Still inn sted manuelt</string>
     <string name="location_lat_pref">Breddegrad</string>
     <string name="location_long_pref">Lengdegrad</string>

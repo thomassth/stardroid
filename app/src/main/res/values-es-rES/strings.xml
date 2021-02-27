@@ -5,7 +5,6 @@
     <string name="go">Ir</string>
     <string name="location_prefs">Configuración de ubicación</string>
     <string name="force_gps_pref">Usar siempre GPS</string>
-    <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">si está habilitado, aunque la ubicación de red esté disponible</string>
     <string name="no_use_gps_pref">Ubicación manual</string>
     <string name="location_lat_pref">Latitud</string>
     <string name="location_long_pref">Longitud</string>

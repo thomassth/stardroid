@@ -5,7 +5,6 @@
     <string name="go">Los</string>
     <string name="location_prefs">Standorteinstellungen</string>
     <string name="force_gps_pref">Immer GPS verwenden</string>
-    <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">Auch wenn Netzwerkstandort verfügbar</string>
     <string name="no_use_gps_pref">Ort manuell festlegen</string>
     <string name="location_lat_pref">Geogr. Breite</string>
     <string name="location_long_pref">Geogr. Länge</string>

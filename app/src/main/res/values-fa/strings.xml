@@ -6,7 +6,6 @@
     <string name="go">برو!</string>
     <string name="location_prefs">تنظیمات مکان</string>
     <string name="force_gps_pref">همیشه از سنسور مکان استفاده کن</string>
-    <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">حتی اگر شبکه در دسترس باشد</string>
     <string name="no_use_gps_pref">تنظیم دستی مکان</string>
     <string name="location_lat_pref">عرض جغرافیایی</string>
     <string name="location_long_pref">طول جغرافیایی</string>
