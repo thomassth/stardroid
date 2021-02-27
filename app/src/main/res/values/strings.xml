@@ -4,7 +4,7 @@
     <string name="menu_settings">Settings</string>
     <string name="menu_search">Search</string>
     <string name="go">Go!</string>
-    <string name="location_prefs">Location Settings</string>
+    <string name="location_prefs">Location settings</string>
     <string name="force_gps_pref">Always use GPS</string>
     <string name="no_use_gps_pref">Set location manually</string>
     <string name="no_use_gps_pref_hint">Pick a place on the map or enter the coordinates.</string>
