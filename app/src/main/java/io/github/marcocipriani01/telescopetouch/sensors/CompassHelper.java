@@ -27,6 +27,7 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Build;
 import android.view.Display;
+import android.view.Surface;
 
 import androidx.preference.PreferenceManager;
 
@@ -46,7 +47,6 @@ public abstract class CompassHelper extends LocationHelper implements SensorEven
     private boolean enableDeclination = true;
     private float magneticDeclination = 0.0f;
 
-    @SuppressWarnings("deprecation")
     public CompassHelper(Activity activity) {
         super(activity);
         sensorManager = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
@@ -103,14 +103,37 @@ public abstract class CompassHelper extends LocationHelper implements SensorEven
                 geomagnetic[2] = alpha * geomagnetic[2] + (1.0f - alpha) * event.values[2];
             }
             float[] rotation = new float[9];
+            int displayRotation = 0;
+            float displayAngle = 0f;
+            if (display != null) {
+                displayRotation = display.getRotation();
+                displayAngle = (displayRotation * 90f);
+            }
             if (SensorManager.getRotationMatrix(rotation, null, gravity, geomagnetic)) {
                 float[] orientation = new float[3];
                 SensorManager.getOrientation(rotation, orientation);
                 float azimuth = (float) Math.toDegrees(orientation[0]);
                 if (enableDeclination)
                     azimuth += magneticDeclination;
-                float displayRotation = (display == null) ? 0f : (display.getRotation() * 90f);
-                onAzimuth((360f - azimuth - displayRotation) % 360f, -((azimuth + displayRotation) % 360f));
+                onAzimuth((360f - azimuth - displayAngle) % 360f, -((azimuth + displayAngle) % 360f));
+            }
+            switch (displayRotation) {
+                case Surface.ROTATION_0: {
+                    onLevelChange(gravity[0], gravity[1]);
+                    break;
+                }
+                case Surface.ROTATION_90: {
+                    onLevelChange(-gravity[1], gravity[0]);
+                    break;
+                }
+                case Surface.ROTATION_180: {
+                    onLevelChange(-gravity[0], -gravity[1]);
+                    break;
+                }
+                case Surface.ROTATION_270: {
+                    onLevelChange(gravity[1], -gravity[0]);
+                    break;
+                }
             }
         }
     }
@@ -120,6 +143,8 @@ public abstract class CompassHelper extends LocationHelper implements SensorEven
     protected abstract void onAzimuth(float azimuth, float arrowRotation);
 
     protected abstract void onDeclinationEnabledChange(boolean show);
+
+    protected abstract void onLevelChange(float x, float y);
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
