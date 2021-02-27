@@ -85,7 +85,7 @@ public class AppForegroundService extends Service implements ConnectionManager.M
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL);
         NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
         bigTextStyle.setBigContentTitle(getString(R.string.app_name));
-        bigTextStyle.bigText(getString(R.string.app_running_background));
+        bigTextStyle.bigText(getString(R.string.app_background));
         builder.setStyle(bigTextStyle);
         builder.setWhen(System.currentTimeMillis());
         builder.setSmallIcon(R.drawable.stars_on);

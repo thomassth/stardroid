@@ -570,6 +570,10 @@
     <string name="floating_image">Immagine volante</string>
     <string name="pip_permission_required">Permesso Picture-in-picture richiesto!</string>
     <string name="connection_indi_lost">Connessione con INDI persa.</string>
-    <string name="app_running_background">Telescope.Touch è in esecuzione in background</string>
     <string name="tap_to_exit">Tocca lo schermo per uscire</string>
+    <string name="app_background">Telescope.Touch è in esecuzione in background</string>
+    <string name="do_nothing">Non fare niente</string>
+    <string name="background_always">Continua in background</string>
+    <string name="background_if_connected">Continua in background se connesso</string>
+    <string name="disconnect_and_exit">Disconnetti ed esci</string>
 </resources>

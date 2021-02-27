@@ -137,53 +137,6 @@
     <string name="big_dipper" translation_description="Name of the Big Dipper constellation">Grande Ourse</string>
     <string name="great_bear" translation_description="Name of the Great Bear constellation">Grande Ourse</string>
     <string name="plough" translation_description="Name of the Plough constellation">Grande Ourse</string>
-    <string name="antlia" translation_description="Name of the Antlia constellation" tools:keep="@string/antlia">Machine Pneumatique</string>
-    <string name="apus" translation_description="Name of the Apus constellation" tools:keep="@string/apus">Oiseau de Paradis</string>
-    <string name="ara" translation_description="Name of the Ara constellation" tools:keep="@string/ara">Autel</string>
-    <string name="caelum" translation_description="Name of the Caelum constellation" tools:keep="@string/caelum">Burin</string>
-    <string name="camelopardalis" translation_description="Name of the Camelopardalis constellation" tools:keep="@string/camelopardalis">Girafe</string>
-    <string name="canes_venatici" translation_description="Name of the Canes Venatici constellation" tools:keep="@string/canes_venatici">Chiens de Chasse</string>
-    <string name="canis_minor" translation_description="Name of the Canis Minor constellation" tools:keep="@string/canis_minor">Petit Chien</string>
-    <string name="cepheus" translation_description="Name of the Cepheus constellation" tools:keep="@string/cepheus">Céphée</string>
-    <string name="chamaeleon" translation_description="Name of the Chamaeleon constellation" tools:keep="@string/chamaeleon">Caméléon</string>
-    <string name="circinus" translation_description="Name of the Circinus constellation" tools:keep="@string/circinus">Compas</string>
-    <string name="columba" translation_description="Name of the Columba constellation" tools:keep="@string/columba">Colombe</string>
-    <string name="coma_berenices" translation_description="Name of the Coma Berenices constellation" tools:keep="@string/coma_berenices">Chevelure de Bérénice</string>
-    <string name="corona_australis" translation_description="Name of the Corona Australis constellation" tools:keep="@string/corona_australis">Couronne Australe</string>
-    <string name="corona_borealis" translation_description="Name of the Corona Borealis constellation" tools:keep="@string/corona_borealis">Couronne Boréale</string>
-    <string name="corvus" translation_description="Name of the Corvus constellation" tools:keep="@string/corvus">Corbeau</string>
-    <string name="crater" translation_description="Name of the Crater constellation" tools:keep="@string/crater">Coupe</string>
-    <string name="delphinus" translation_description="Name of the Delphinus constellation" tools:keep="@string/delphinus">Dauphin</string>
-    <string name="dorado" translation_description="Name of the Dorado constellation" tools:keep="@string/dorado">Dorade</string>
-    <string name="equuleus" translation_description="Name of the Equuleus constellation" tools:keep="@string/equuleus">Petit Cheval</string>
-    <string name="fornax" translation_description="Name of the Fornax constellation" tools:keep="@string/fornax">Fourneau</string>
-    <string name="horologium" translation_description="Name of the Horologium constellation" tools:keep="@string/horologium">Horloge</string>
-    <string name="hydra" translation_description="Name of the Hydra constellation" tools:keep="@string/hydra">Hydre femelle</string>
-    <string name="indus" translation_description="Name of the Indus constellation" tools:keep="@string/indus">Indien</string>
-    <string name="lacerta" translation_description="Name of the Lacerta constellation" tools:keep="@string/lacerta">Lézard</string>
-    <string name="leo_minor" translation_description="Name of the Leo Minor constellation" tools:keep="@string/leo_minor">Petit Lion</string>
-    <string name="lepus" translation_description="Name of the Lepus constellation" tools:keep="@string/lepus">Lièvre</string>
-    <string name="lynx" translation_description="Name of the Lynx constellation" tools:keep="@string/lynx">Lynx</string>
-    <string name="mensa" translation_description="Name of the Mensa constellation" tools:keep="@string/mensa">Table</string>
-    <string name="microscopium" translation_description="Name of the Microscopium constellation" tools:keep="@string/microscopium">Microscope</string>
-    <string name="monoceros" translation_description="Name of the Monoceros constellation" tools:keep="@string/monoceros">Licorne</string>
-    <string name="musca" translation_description="Name of the Musca constellation" tools:keep="@string/musca">Mouche</string>
-    <string name="norma" translation_description="Name of the Norma constellation" tools:keep="@string/norma">Règle</string>
-    <string name="octans" translation_description="Name of the Octans constellation" tools:keep="@string/octans">Octant</string>
-    <string name="pictor" translation_description="Name of the Pictor constellation" tools:keep="@string/pictor">Peintre</string>
-    <string name="pyxis" translation_description="Name of the Pyxis constellation" tools:keep="@string/pyxis">Boussole</string>
-    <string name="reticulum" translation_description="Name of the Reticulum constellation" tools:keep="@string/reticulum">Réticule</string>
-    <string name="sagitta" translation_description="Name of the Sagitta constellation" tools:keep="@string/sagitta">Flèche</string>
-    <string name="sculptor" translation_description="Name of the Sculptor constellation" tools:keep="@string/sculptor">Sculpteur</string>
-    <string name="scutum" translation_description="Name of the Scutum constellation" tools:keep="@string/scutum">Ecu de Sobieski</string>
-    <string name="serpens_caput" translation_description="Name of the Serpens Caput constellation" tools:keep="@string/serpens_caput">Tête du Serpent</string>
-    <string name="serpens_cauda" translation_description="Name of the Serpens Cauda constellation" tools:keep="@string/serpens_cauda">Queue du Serpent</string>
-    <string name="sextans" translation_description="Name of the Sextans constellation" tools:keep="@string/sextans">Sextant</string>
-    <string name="telescopium" translation_description="Name of the Telescopium constellation" tools:keep="@string/telescopium">Télescope</string>
-    <string name="triangulum" translation_description="Name of the Triangulum constellation" tools:keep="@string/triangulum">Triangle</string>
-    <string name="triangulum_australe" translation_description="Name of the Triangulum Australe constellation" tools:keep="@string/triangulum_australe">Triangle Australe</string>
-    <string name="volans" translation_description="Name of the Volans constellation" tools:keep="@string/volans">Poisson Volant</string>
-    <string name="vulpecula" translation_description="Name of the Vulpecula constellation" tools:keep="@string/vulpecula">Petit Renard</string>
     <string name="sirius" translation_description="Name of the Star Sirius">Sirius</string>
     <string name="canopus" translation_description="Name of the Star Canopus">Canopus</string>
     <string name="arcturus" translation_description="Name of the Star Arcturus">Arcturus</string>
@@ -370,7 +323,7 @@
     <string name="beehive_cluster" translation_description="Name of the Messier object Beehive Cluster">Amas de la Ruche</string>
     <string name="praesepe" translation_description="Name of the Messier object Praesepe">Praesepe</string>
     <string name="seven_sisters" translation_description="Name of the Messier object Seven Sisters">Sept Sœurs</string>
-    <string name="indi_host">Sélectionner un serveur INDI</string>
+    <string name="indi_host">Sélectionner un serveur INDI :</string>
     <string name="connect">Connecter</string>
     <string name="disconnect">Déconnecter</string>
     <string name="log">Log :</string>
@@ -521,7 +474,7 @@
         \nElle offre un contrôle total du téléscope et une fonction carte du ciel mobile, avec une interface utilisateur et un code de base renouvelés.
         \n\nLe code source est disponible sur github.com/marcocipriani01/Telescope.Touch
         \n\nDéveloppé par <b>Marco Cipriani</b> (marcocipriani01)
-        \n\n<b>Crédits:</b>\n
+        \n\n<b>Crédits :</b>\n
         ★ Le projet IPARCOS, Licence GPL v3\n
         ★ Le projet SKY MAP, Licence Apache 2.0\n
         ★ Les projets VizieR et Aladin\n
@@ -622,14 +575,14 @@
     <string name="hemisphere_auto">Détection automatique</string>
     <string name="hemisphere_northern">Nord (Étoile polaire)</string>
     <string name="hemisphere_southern">Sud (Sigma Octant)</string>
-    <string name="nsd_pref_description">Décourir automatiquement les services de réseau ZeroConf - Redémarrage nécessaire</string>
+    <string name="nsd_pref_description">Décourir automatiquement les services de réseau Zeroconf - Redémarrage nécessaire</string>
     <string name="nsd_pref">Service de découverte réseau</string>
     <string name="reticle_skywatcher">Nouveau réticule Sky-Watcher</string>
     <string name="reticle_big_dipper">Grande ourse/Cassiopée</string>
     <string name="pick_location_description">Choisir un lieu dans Google Map</string>
     <string name="pick_location_pref">Pointer sur la carte</string>
     <string name="sigma_octantis">Sigma Octant</string>
-    <string name="reticle_pref">Réticule du viseur polaire</string>
+    <string name="polaris_finder_reticle">Réticule du viseur polaire</string>
     <string name="polaris_star_finder">Étoile polaire</string>
     <string name="loading">Chargement…</string>
     <string name="msg_manual_location_on">Basculement vers localisation man…</string>
@@ -676,7 +629,6 @@
     <string name="altitude">Hauteur</string>
     <string name="no_location">Pas de localisation</string>
     <string name="toggling_manual_mode">Basculer vers le mode </string>
-    <string name="polaris_finder_reticle">Réticule du viseur polaire</string>
     <string name="background_service">Service en arrière plan</string>
     <string name="mount">Monture</string>
     <string name="exit">Sortir</string>
@@ -687,8 +639,9 @@
     <string name="pip_permission_required">Permission requise pour le mode "image dans l\'image" !</string>
     <string name="connection_indi_lost">Connexion serveur INDI perdue</string>
     <string name="tap_to_exit">Toucher l\'écran pour sortir</string>
+    <string name="app_background">Telescope.Touch fonctionne en arrière plan</string>
     <string name="do_nothing">Ne rien faire</string>
-    <string name="app_running_background">Telescope.Touch fonctionne en arrière plan</string>
-    <string name="app_running_background_if_connected">Telescope.Touch fonctionne en arrière plan si connecté</string>
-    <string name="Disconnect_exit">Déconnecter et sortir</string>
+    <string name="background_always">Continue en arrière plan</string>
+    <string name="background_if_connected">Continue en arrière plan si connecté</string>
+    <string name="disconnect_and_exit">Déconnecter et sortir</string>
 </resources>
