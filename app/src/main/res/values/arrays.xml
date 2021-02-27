@@ -33,9 +33,9 @@
     </string-array>
     <string-array name="exit_action_pref">
         <item>@string/do_nothing</item>
-        <item>@string/app_running_background</item>
-        <item>@string/app_running_background_if_connected</item>
-        <item>@string/Disconnect_exit</item>
+        <item>@string/background_always</item>
+        <item>@string/background_if_connected</item>
+        <item>@string/disconnect_and_exit</item>
     </string-array>
     <string-array name="exit_action_pref_values">
         <item>0</item>
