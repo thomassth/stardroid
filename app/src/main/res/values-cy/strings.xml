@@ -6,7 +6,6 @@
     <string name="go">Mynd!</string>
     <string name="location_prefs">Gosodiadau Lleoliad</string>
     <string name="force_gps_pref">Defnyddio GPS o hyd</string>
-    <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">os alluogir, hyd yn oed pan mae lleoliad rhwydwaith ar gael</string>
     <string name="no_use_gps_pref">Gosod lleoliad dy hun</string>
     <string name="location_lat_pref">Lledred</string>
     <string name="location_long_pref">Hydred</string>

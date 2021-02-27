@@ -6,7 +6,6 @@
     <string name="go">前往！</string>
     <string name="location_prefs">位置設定</string>
     <string name="force_gps_pref">永遠使用 GPS</string>
-    <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">啟用時一律使用 GPS (即使系統可提供網路位置資訊)</string>
     <string name="no_use_gps_pref">手動設定位置</string>
     <string name="location_lat_pref">緯度</string>
     <string name="location_long_pref">經度</string>

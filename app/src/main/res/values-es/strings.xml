@@ -6,7 +6,6 @@
     <string name="go">Ir</string>
     <string name="location_prefs">Ajustes de ubicación</string>
     <string name="force_gps_pref">Usar GPS siempre</string>
-    <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">si está activado, incluso si la ubicación de red está disponible</string>
     <string name="no_use_gps_pref">Definir ubicación manual</string>
     <string name="no_use_gps_pref_hint">Ingresa el lugar o la lat/long abajo</string>
     <string name="location_lat_pref">Latitud</string>

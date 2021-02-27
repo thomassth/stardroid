@@ -5,7 +5,6 @@
     <string name="go">Πάμε!</string>
     <string name="location_prefs">Ρυθμίσεις τοποθεσίας</string>
     <string name="force_gps_pref">Πάντα χρήση GPS</string>
-    <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">Ακόμη και αν η τοποθεσία δικτύου είναι διαθέσιμη</string>
     <string name="no_use_gps_pref">Ορισμός τοποθεσίας</string>
     <string name="location_lat_pref">Γεωγραφικό πλάτος</string>
     <string name="location_long_pref">Γεωγραφικό μήκος</string>

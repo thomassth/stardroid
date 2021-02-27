@@ -5,7 +5,6 @@
     <string name="go">Вперед!</string>
     <string name="location_prefs">Параметры местоположения</string>
     <string name="force_gps_pref">Всегда исп. GPS</string>
-    <string name="force_gps_pref_hint" translation_description="this string continues from \'Always use GPS\'">если вкл., даже при сетевом опр. м/п</string>
     <string name="no_use_gps_pref">Задать м/п вручную</string>
     <string name="location_lat_pref">Широта</string>
     <string name="location_long_pref">Долгота</string>
