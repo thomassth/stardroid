@@ -118,7 +118,7 @@
             android:entryValues="@array/reticle_pref_values"
             android:key="polaris_reticle"
             android:summary="%s"
-            android:title="Polar finder reticle"
+            android:title="@string/polaris_finder_reticle"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
