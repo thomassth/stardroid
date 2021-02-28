@@ -102,6 +102,11 @@ public class PolarisFragment extends ActionFragment implements LocationPermissio
                 if (activity instanceof MainActivity)
                     ((MainActivity) activity).requestLocationPermission();
             }
+
+            @Override
+            protected void makeSnack(String string) {
+                requestActionSnack(string);
+            }
         };
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
         setReticle();

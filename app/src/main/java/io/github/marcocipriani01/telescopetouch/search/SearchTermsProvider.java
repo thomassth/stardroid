@@ -73,9 +73,8 @@ public class SearchTermsProvider extends ContentProvider {
     }
 
     private boolean maybeInjectMe() {
-        // Ugh.  Android's separation of content providers from their owning apps makes this
-        // almost impossible.  TODO(jontayler): revisit and see if we can make this less
-        // nasty.
+        // Ugh. Android's separation of content providers from their owning apps makes this almost impossible.
+        // TODO(jontayler): revisit and see if we can make this less nasty.
         if (alreadyInjected) {
             return true;
         }
@@ -124,7 +123,7 @@ public class SearchTermsProvider extends ContentProvider {
             return cursor;
         }
         Set<SearchTerm> results = layerManager.getObjectNamesMatchingPrefix(query);
-        Log.d("SearchTermsProvider", "Got results n=" + results.size());
+        Log.d(TAG, "Got results n=" + results.size());
         for (SearchTerm result : results) {
             cursor.addRow(columnValuesOfSuggestion(result));
         }

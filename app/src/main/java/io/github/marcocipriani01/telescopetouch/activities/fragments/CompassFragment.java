@@ -103,6 +103,11 @@ public class CompassFragment extends ActionFragment implements
                 level.setTranslationX(25 * x);
                 level.setTranslationY(-25 * y);
             }
+
+            @Override
+            protected void makeSnack(String string) {
+                requestActionSnack(string);
+            }
         };
         return rootView;
     }

@@ -35,12 +35,9 @@ import androidx.annotation.Nullable;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.ScreenLightActivity;
 
 public class FlashlightFragment extends ActionFragment {
-
-    private static final String TAG = TelescopeTouchApp.getTag(FlashlightFragment.class);
 
     @Nullable
     @Override

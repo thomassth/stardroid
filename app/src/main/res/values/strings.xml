@@ -12,10 +12,10 @@
     <string name="location_long_pref">Longitude</string>
     <string name="degrees" translation_description="angular degrees">Degrees</string>
     <string name="preferences">preferences</string>
-    <string name="location_offer_to_enable">Auto-location is disabled.  Would you like to enable it?</string>
-    <string name="location_offer_to_enable_gps_title">Auto-location disabled</string>
+    <string name="location_offer_to_enable">Automatic location is disabled. Would you like to enable it?</string>
+    <string name="location_offer_to_enable_gps_title">GPS disabled</string>
     <string name="location_set_auto">Location set from %1$s to %2$s</string>
-    <string name="location_long_lat">Longitude:%1$f, Latitude:%2$f</string>
+    <string name="location_long_lat">Longitude: %1$f, latitude: %2$f</string>
     <string name="use_magnetic_correction">Use magnetic correction</string>
     <string name="stars">Stars</string>
     <string name="constellations">Constellations</string>
@@ -149,7 +149,6 @@
     <string name="big_dipper" translation_description="Name of the Big Dipper constellation" tools:keep="@string/big_dipper">Big Dipper</string>
     <string name="great_bear" translation_description="Name of the Great Bear constellation" tools:keep="@string/great_bear">Great Bear</string>
     <string name="plough" translation_description="Name of the Plough constellation" tools:keep="@string/plough">Plough</string>
-
     <string name="sirius" translation_description="Name of the Star Sirius" tools:keep="@string/sirius">Sirius</string>
     <string name="canopus" translation_description="Name of the Star Canopus" tools:keep="@string/canopus">Canopus</string>
     <string name="arcturus" translation_description="Name of the Star Arcturus" tools:keep="@string/arcturus">Arcturus</string>
@@ -349,29 +348,22 @@
     <string name="orionids" translation_description="Meteor Shower">Orionids</string>
     <string name="puppidvelids" translation_description="Meteor Shower">Puppid-Velids</string>
     <string name="ursids" translation_description="Meteor Shower">Ursids</string>
-
     <string name="no_sensor_warning">Your device lacks orientation sensors!</string>
     <string name="warning_dialog_title">Bad news!</string>
     <string name="missing_sensor_dialog_text">\n
-        Unfortunately your device might not have one of the sensors that Sky Map needs.\n\n
+        Unfortunately, your device might not have one of the sensors that Sky Map needs.\n\n
         To show you the sky in the direction your phone is pointing Sky Map
-        needs both a built-in compass and an accelerometer.  Your device reports that it is missing
-        one of them.  The good news is that some devices (for example some Moto E phones) falsely claim
-        not to have a compass but actually do.\n\n
-
-        If your device really is missing a sensor then auto-mode will not work.  However, you
-        can still use Sky Map on this device in manual mode where you drag, rotate and stretch the
-        map with your fingers.
+        needs both a built-in compass and an accelerometer. Your device reports that it is missing one of them.\n\n
+        If your device really is missing a sensor then auto-mode will not work. However, you
+        can still use Sky Map on this device in manual mode where you drag, rotate and stretch the map with your fingers.
     </string>
-    <string name="do_not_show_again">Do not show this message again</string>
-    <string name="title_activity_diagnostic">Diagnostics</string>
+    <string name="do_not_show_again">Do not show again</string>
     <string name="sensor_absent">Absent</string>
-    <string name="sensor_accuracy_unknown">Accuracy: Unknown</string>
-    <string name="sensor_accuracy_unreliable">Accuracy: Unreliable</string>
-    <string name="sensor_accuracy_low">Accuracy: Low</string>
-    <string name="sensor_accuracy_medium">Accuracy: Medium</string>
-    <string name="sensor_accuracy_high">Accuracy: High</string>
-    <string name="sensor_accuracy_nocontact">Accuracy: No contact</string>
+    <string name="sensor_accuracy_unknown">Accuracy: unknown</string>
+    <string name="sensor_accuracy_unreliable">Accuracy: unreliable</string>
+    <string name="sensor_accuracy_low">Accuracy: low</string>
+    <string name="sensor_accuracy_medium">Accuracy: medium</string>
+    <string name="sensor_accuracy_high">Accuracy: high</string>
     <string name="diagnostics_activity_general_heading">General</string>
     <string name="diagnostics_activity_phone">Device</string>
     <string name="diagnostics_activity_android_version">Android version</string>
@@ -381,8 +373,7 @@
     <string name="diagnostics_activity_accelerometer">Accelerometer</string>
     <string name="diagnostics_activity_rotation_vector">Rotation</string>
     <string name="diagnostics_activity_gyroscope">Gyroscope</string>
-    <string name="diagnostics_activity_light_level">Light level</string>
-    <string name="diagnostics_activity_location_and_time_heading">Location and Time</string>
+    <string name="diagnostics_activity_location_and_time_heading">Location and time</string>
     <string name="diagnostics_activity_gps">GPS</string>
     <string name="diagnostics_activity_location">Location (lat, long)</string>
     <string name="diagnostics_activity_pointing_ra_dec">Pointing snapshot</string>
@@ -401,7 +392,6 @@
     <string name="wifi">" (Wi-Fi)"</string>
     <string name="cell_network">" (cell)"</string>
     <string name="menu_calibrate">Calibrate</string>
-    <string name="compass_calibration_activity_do_not_show_this_again">Do not show this again</string>
     <string name="compass_calibration_activity_warning">Your compass needs to be calibrated</string>
     <string name="sensor_reverse_preference_title">Reverse Magnetic Z</string>
     <string name="sensor_reverse_preference_summary">Fix for phones with incorrectly implemented sensors - requires restart</string>
@@ -409,7 +399,6 @@
     <string name="disable_gyro_preference_summary">Not evert device has a gyro: if yours does then you\'ll get better results with it enabled. If it doesn\'t, Sky Map will probably not work if you uncheck this box.</string>
     <string name="rotate_horizon_preference_title">Rotate horizon</string>
     <string name="rotate_horizon_preference_summary">Rotate by 90 degree horizon (for screens with forced landscape, such as smartglasses)</string>
-
     <string name="indi_host">Select the INDI Host:</string>
     <string name="connect">Connect</string>
     <string name="disconnect">Disconnect</string>
@@ -522,9 +511,6 @@
     <string name="shortcuts_not_supported">Your launcher does not support shortcuts.</string>
     <string name="add_sky_map_shortcut">Add Sky Map shortcut</string>
     <string name="deep_sky">Deep sky</string>
-    <string name="location_no_auto">Sky Map can\'t access your location, which is needed to calculate the position of the stars. You can enable the location permission in the phone\'s settings.</string>
-    <string name="warning">Warning</string>
-    <string name="take_me_there">Take me there</string>
     <string name="point_telescope">Point telescope</string>
     <string name="connect_telescope_first">Please connect the telescope first.</string>
     <string name="gallery_copyright">Images by NASA (public domain), ESO (CC BY 4.0) and Adam Evans (CC BY 2.0)</string>
@@ -650,4 +636,5 @@
     <string name="disconnect_and_exit">Disconnect and exit</string>
     <string name="location_indi_clarification"><b>Note:</b> these settings do not apply to INDI.</string>
     <string name="force_gps_pref_hint">The app normally uses cell phone antennas to calculate your position. You can force the use of GPS, but it will be slower.</string>
+    <string name="select_position">Select position</string>
 </resources>

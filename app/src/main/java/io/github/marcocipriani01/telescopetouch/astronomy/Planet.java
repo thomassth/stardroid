@@ -428,7 +428,7 @@ public enum Planet {
                 mag = -1.0;
                 break;
             default:
-                Log.e(TelescopeTouchApp.getTag(this), "Invalid planet: " + this);
+                Log.e(TAG, "Invalid planet: " + this);
                 // At least make it faint!
                 mag = 100;
                 break;

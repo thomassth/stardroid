@@ -32,7 +32,11 @@ public abstract class ActionFragment extends Fragment implements Runnable {
     }
 
     public void requestActionSnack(int msgRes) {
-        if (listener != null) listener.actionSnackRequested(msgRes);
+        if (listener != null) listener.actionSnackRequested(context.getString(msgRes));
+    }
+
+    public void requestActionSnack(String msg) {
+        if (listener != null) listener.actionSnackRequested(msg);
     }
 
     @SuppressWarnings("SameParameterValue")
@@ -47,7 +51,7 @@ public abstract class ActionFragment extends Fragment implements Runnable {
 
         void setActionEnabled(boolean actionEnabled);
 
-        void actionSnackRequested(int msgRes);
+        void actionSnackRequested(String msg);
 
         void actionSnackRequested(int msgRes, int actionName, View.OnClickListener action);
     }

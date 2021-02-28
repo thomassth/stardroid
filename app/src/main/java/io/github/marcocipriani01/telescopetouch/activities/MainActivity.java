@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements
         handler.postDelayed(() -> {
             int messageRes = intent.getIntExtra(MESSAGE, 0);
             if (messageRes != 0)
-                actionSnackRequested(messageRes);
+                actionSnackRequested(getString(messageRes));
         }, 100);
     }
 
@@ -234,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements
                 super.onBackPressed();
             } else {
                 this.doubleBackPressed = true;
-                actionSnackRequested(R.string.press_back_exit);
+                actionSnackRequested(getString(R.string.press_back_exit));
                 handler.postDelayed(() -> doubleBackPressed = false, 2000);
             }
         } else {
@@ -261,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements
                     startActivity(home);
                 }
             } else {
-                actionSnackRequested(R.string.shortcuts_not_supported);
+                actionSnackRequested(getString(R.string.shortcuts_not_supported));
             }
         } else if (itemId == R.id.menu_enable_rcv_blob) {
             boolean checked = !item.isChecked();
@@ -270,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements
             preferences.edit().putBoolean(RECEIVE_BLOB_PREF, checked).apply();
         } else if (itemId == R.id.menu_darker_mode) {
             if ((currentPage == Pages.ALADIN) && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
-                actionSnackRequested(R.string.dark_mode_not_supported);
+                actionSnackRequested(getString(R.string.dark_mode_not_supported));
             } else {
                 darkerModeManager.toggle();
             }
@@ -359,10 +359,10 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void actionSnackRequested(int msgRes) {
+    public void actionSnackRequested(String msg) {
         bottomBar.performShow();
         fab.hide();
-        Snackbar.make(mainCoordinator, msgRes, Snackbar.LENGTH_SHORT).setAnchorView(bottomBar)
+        Snackbar.make(mainCoordinator, msg, Snackbar.LENGTH_SHORT).setAnchorView(bottomBar)
                 .addCallback(new SnackBarCallBack()).show();
     }
 
@@ -378,7 +378,7 @@ public class MainActivity extends AppCompatActivity implements
     public void onConnectionLost() {
         runOnUiThread(() -> {
             if (currentPage != Pages.CONNECTION) {
-                actionSnackRequested(R.string.connection_lost);
+                actionSnackRequested(getString(R.string.connection_lost));
                 if (visible && (fragmentManager != null)) showFragment(Pages.CONNECTION, true);
             }
         });

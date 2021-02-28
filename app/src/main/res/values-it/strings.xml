@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="menu_settings">Impostazioni</string>
     <string name="menu_search">Cerca</string>
     <string name="go">Vai!</string>
@@ -11,9 +11,9 @@
     <string name="degrees">Gradi</string>
     <string name="preferences">preferenze</string>
     <string name="location_offer_to_enable">Localizzazione automatica disabilitata. Abilitarla?</string>
-    <string name="location_offer_to_enable_gps_title">Localizzazione autom. disattivata</string>
+    <string name="location_offer_to_enable_gps_title">GPS disattivato</string>
     <string name="location_set_auto">Località impostata da %1$s a %2$s</string>
-    <string name="location_long_lat">Longitudine:%1$f, latitudine:%2$f</string>
+    <string name="location_long_lat">Longitudine: %1$f, latitudine: %2$f</string>
     <string name="use_magnetic_correction">Usa correzione magnetica</string>
     <string name="stars">Stelle</string>
     <string name="constellations">Costellazioni</string>
@@ -433,9 +433,6 @@
     <string name="add_sky_map_shortcut">Aggiungi scorciatoia alla mappa stellare</string>
     <string name="deep_sky">Cielo profondo</string>
     <string name="solar_system">Sistema solare</string>
-    <string name="location_no_auto">Sky Map non riesce a rilevare la tua posizione, che è necessaria per calcolare la posizione delle stelle. Puoi abilitare il permesso alla geolocalizzazione nelle impostazioni del dispositivo.</string>
-    <string name="warning">Attenzione</string>
-    <string name="take_me_there">Portami lì</string>
     <string name="point_telescope">Punta telescopio</string>
     <string name="connect_telescope_first">Connettere il telescopio prima.</string>
     <string name="gallery_copyright">Immagini di NASA (dominio pubblico), ESO (CC BY 4.0) e Adam Evans (CC BY 2.0)</string>
@@ -577,4 +574,67 @@
     <string name="disconnect_and_exit">Disconnetti ed esci</string>
     <string name="location_indi_clarification"><b>Nota:</b> queste impostazioni non riguardano INDI.</string>
     <string name="force_gps_pref_hint">L\'app normalmente usa le antenne telefoniche per stabile la tua posizione. Puoi forzare l\'uso del GPS, ma sarà più lento.</string>
+    <string name="select_position">Seleziona posizione</string>
+    <string name="show_meteors_pref">Sciami di meteore</string>
+    <string name="missing_label" translation_description="Used to indicate to the developer that they've added a resource with no translation.">MISSING_LBL</string>
+    <string name="menu_diagnostics">Diagnostica</string>
+    <string name="rigil_kentaurus_a" translation_description="Name of the Star Rigil Kentaurus A" tools:keep="@string/rigil_kentaurus_a">Rigil Kentaurus A</string>
+    <string name="alpha_centauri" translation_description="Name of the star Alpha Centauri" tools:keep="@string/alpha_centauri">Alpha Centauri</string>
+    <string name="rigil_kent" translation_description="Name of the star Rigil Kent" tools:keep="@string/rigil_kent">Rigil Kent</string>
+    <string name="e_lyrae" translation_description="Name of the star ε Lyrae" tools:keep="@string/e_lyrae">ε Lyrae</string>
+    <string name="leonids" translation_description="Meteor Shower">Leonidi</string>
+    <string name="geminids" translation_description="Meteor Shower">Geminidi</string>
+    <string name="quadrantids" translation_description="Meteor Shower">Quadrantidi</string>
+    <string name="lyrids" translation_description="Meteor Shower">Liridi</string>
+    <string name="aquariids" translation_description="Meteor Shower">Eta Aquaridi</string>
+    <string name="deltaaquariids" translation_description="Meteor Shower">Delta Aquaridi</string>
+    <string name="perseids" translation_description="Meteor Shower">Perseidi</string>
+    <string name="orionids" translation_description="Meteor Shower">Orionidi</string>
+    <string name="puppidvelids" translation_description="Meteor Shower">Puppidi-velidi</string>
+    <string name="ursids" translation_description="Meteor Shower">Ursidi</string>
+    <string name="warning_dialog_title">Brutte notizie!</string>
+    <string name="missing_sensor_dialog_text">\n
+        Sfortunatamente, il dispositivo non sembra avere i sensori di cui Sky Map ha bisogno.\n\n
+        Per mostrare la posizione del cielo che si sta puntando Sky Map
+        necessita di una bussola e un accelerometro. Il tuo dispositivo non ha uno dei due.\n\n
+        Se il tuo dispositivo veramente non dispone di questi sensori, non potrai usare la modalità automatica.
+        Tuttavia, puoi comunque usare Sky Map in modalità manuale, muovendo la mappa, ruotando e ingrandendo con le dita.
+    </string>
+    <string name="do_not_show_again">Non mostrare più</string>
+    <string name="sensor_absent">Assente</string>
+    <string name="sensor_accuracy_unknown">Accuratezza: sconosciuta</string>
+    <string name="sensor_accuracy_unreliable">Accuratezza: inaffidabile</string>
+    <string name="sensor_accuracy_low">Accuratezza: bassa</string>
+    <string name="sensor_accuracy_medium">Accuratezza: media</string>
+    <string name="sensor_accuracy_high">Accuratezza: alta</string>
+    <string name="diagnostics_activity_general_heading">Generale</string>
+    <string name="diagnostics_activity_phone">Dispositivo</string>
+    <string name="diagnostics_activity_android_version">Versione Android</string>
+    <string name="diagnostics_activity_sky_map_version">Versione app</string>
+    <string name="diagnostics_activity_sensors_heading">Sensori</string>
+    <string name="diagnostics_activity_compass">Bussola</string>
+    <string name="diagnostics_activity_accelerometer">Accelerometro</string>
+    <string name="diagnostics_activity_rotation_vector">Rotazione</string>
+    <string name="diagnostics_activity_gyroscope">Giroscopio</string>
+    <string name="diagnostics_activity_location_and_time_heading">Posizione e tempo</string>
+    <string name="diagnostics_activity_gps">GPS</string>
+    <string name="diagnostics_activity_location">Posizione (lat, long)</string>
+    <string name="diagnostics_activity_pointing_ra_dec">Puntamento</string>
+    <string name="diagnostics_activity_local_datetime">Tempo locale</string>
+    <string name="diagnostics_activity_universal_time">Tempo universale</string>
+    <string name="diagnostics_activity_network_heading">Rete</string>
+    <string name="diagnostics_activity_connection">Connessione</string>
+    <string name="diagnostics_activity_rotation_matrix">Matrice rotazione</string>
+    <string name="enabled">Abilitato</string>
+    <string name="disabled">Disabilitato</string>
+    <string name="permission_disabled">Permesso disabilitato</string>
+    <string name="no_gps">No GPS</string>
+    <string name="cell_network">" (cell)"</string>
+    <string name="compass_calibration_activity_warning">La tua bussola deve essere calibrata</string>
+    <string name="sensor_reverse_preference_title">Inverti Z magnetica</string>
+    <string name="sensor_reverse_preference_summary">Fix per dispositivi con implementazione errata dei sensori - richiede il riavvio</string>
+    <string name="disable_gyro_preference_summary">Non tutti i dispositivi hanno un giroscopio: se il tuo ce l\'ha, otterrai migliori risulatati lasciandolo attivo. In caso contrario, Sky Map potrebbe non funzionare se cambi questa impostazione.</string>
+    <string name="rotate_horizon_preference_summary">Ruota orizzonte di 90 gradi (per schermi con modalità orizzontale forzata)</string>
+    <string name="entry_alt">Alt</string>
+    <string name="entry_az">Az</string>
 </resources>

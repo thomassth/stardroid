@@ -340,21 +340,16 @@
     <string name="leonids" translation_description="Meteor Shower">Leonidy</string>
     <string name="sensor_accuracy_medium">Přesnost: Střední</string>
     <string name="missing_sensor_dialog_text">\n
-            Bohužel vaše zařízení nemusí mít některý z senzorů které Sky Map potřebuje \n\n
-
-            K zobrazení nebezkých oběktů v orientaci vašeho telefonu Sky Map potřebuje vestavěný kompas a akcelerometr.
-            Vaše zařízení však reportuje že nekterý chybý. Dobrou správou však je že některé zařízení to reportují špatně (některe Moto E modely)
-            a v skutečnosti tyto senzory mají.
-
-            Pokud vaše zařízení opravdu nemá tyto senzory automatický mód nebude fungovat.
-            Avšak Sky Map lze stále používat v manuálním módu tím že budete mapu posouvat otačet a zoomovat prsty.
-        </string>
-    <string name="compass_calibration_activity_do_not_show_this_again">Toto již nezobrazovat</string>
+        Bohužel vaše zařízení nemusí mít některý z senzorů které Sky Map potřebuje \n\n
+        K zobrazení nebezkých oběktů v orientaci vašeho telefonu Sky Map potřebuje vestavěný kompas a akcelerometr.
+        Vaše zařízení však reportuje že nekterý chybý.\n\n
+        Pokud vaše zařízení opravdu nemá tyto senzory automatický mód nebude fungovat.
+        Avšak Sky Map lze stále používat v manuálním módu tím že budete mapu posouvat otačet a zoomovat prsty.
+    </string>
     <string name="diagnostics_activity_location">Lokace (šíkař, délka)</string>
     <string name="diagnostics_activity_sensors_heading">Senzory</string>
     <string name="orionids" translation_description="Meteor Shower">Orionidy</string>
     <string name="diagnostics_activity_sky_map_version">Verze Sky Map</string>
-    <string name="diagnostics_activity_light_level">Úroveň světla</string>
     <string name="disabled">Zakázat</string>
     <string name="enabled">Povolit</string>
     <string name="puppidvelids" translation_description="Meteor Shower">Pí Puppidy</string>
@@ -362,9 +357,7 @@
     <string name="cell_network">"mobilní sít"</string>
     <string name="diagnostics_activity_general_heading">Obecné</string>
     <string name="diagnostics_activity_android_version">Verze Androidu</string>
-    <string name="title_activity_diagnostic">Diagnostika</string>
     <string name="sensor_reverse_preference_summary">Oprava pro telefony s převráceným senzorem - vyžaduje restart</string>
-    <string name="sensor_accuracy_nocontact">Přesnost: Bez kontaktu</string>
     <string name="disable_gyro_preference_title">Zakázat gyroskop</string>
     <string name="diagnostics_activity_connection">Připojení</string>
     <string name="diagnostics_activity_compass">Kompas</string>

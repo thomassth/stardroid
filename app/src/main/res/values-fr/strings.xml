@@ -412,23 +412,18 @@
     <string name="missing_sensor_dialog_text">\n
         Malheureusement votre appareil ne possède pas un des capteurs nécessaire à Sky Map.\n\n
         Pour afficher le ciel dans la direction pointée par l\'appareil, Sky Map a besoin de la
-        boussole intégrée et de l\'accéléromètre.  Votre appareil informe qu\'il manque l\'un des deux.
-        Heureusement certain appareil (par exemple certain téléphones Moto E) signale ne pas
-        avoir de boussole même s\'il en possède une.\n\n
-
+        boussole intégrée et de l\'accéléromètre.  Votre appareil informe qu\'il manque l\'un des deux.\n\n
         Si votre appareil n\'a pas de capteur, le mode auto ne fonctionnera pas. Cependant, vous
         pouvez toujours utiliser Sky Map sur l\'appareil en mode manuel, en glissant, en faisant tourner
         ou en étirant la carte avec vos doigts.
     </string>
     <string name="do_not_show_again">Ne plus montrer ce message</string>
-    <string name="title_activity_diagnostic">Diagnostics</string>
     <string name="sensor_absent">Absent</string>
     <string name="sensor_accuracy_unknown">Précision : inconnue</string>
     <string name="sensor_accuracy_unreliable">Précision : non fiable</string>
     <string name="sensor_accuracy_low">Précision : faible</string>
     <string name="sensor_accuracy_medium">Précision : moyenne</string>
     <string name="sensor_accuracy_high">Précision : haute</string>
-    <string name="sensor_accuracy_nocontact">Précision : pas de contact</string>
     <string name="diagnostics_activity_general_heading">Général</string>
     <string name="diagnostics_activity_phone">Appareil</string>
     <string name="diagnostics_activity_android_version">Version d\'Android</string>
@@ -438,7 +433,6 @@
     <string name="diagnostics_activity_accelerometer">Accéléromètre</string>
     <string name="diagnostics_activity_rotation_vector">Rotation</string>
     <string name="diagnostics_activity_gyroscope">Gyroscope</string>
-    <string name="diagnostics_activity_light_level">Luminosité</string>
     <string name="diagnostics_activity_location_and_time_heading">Localisation et temps</string>
     <string name="diagnostics_activity_gps">GPS</string>
     <string name="diagnostics_activity_location">Localisation (lat, long)</string>
@@ -457,7 +451,6 @@
     <string name="wifi">" (Wi-Fi)"</string>
     <string name="cell_network">" (cell.)"</string>
     <string name="menu_calibrate">Calibrer</string>
-    <string name="compass_calibration_activity_do_not_show_this_again">Ne plus montrer ce message</string>
     <string name="compass_calibration_activity_warning">Votre boussole doit être calibrée !</string>
     <string name="sensor_reverse_preference_title">Inverser Z magnétique</string>
     <string name="sensor_reverse_preference_summary">Correction pour appareil avec capteur incorrectement implémenté - Redémarrage nécessaire</string>
@@ -517,9 +510,6 @@
     <string name="shortcuts_not_supported">Impossible d\'ajouter un raccourci !</string>
     <string name="add_sky_map_shortcut">Ajouter un raccourci vers Sky Map</string>
     <string name="deep_sky">Ciel profond</string>
-    <string name="location_no_auto">Sky Map ne peut pas accéder à votre localisation, nécessaire aux calculs de positions des étoiles. Vous pouvez autoriser la localisation dans les paramètres de l\'appareil.</string>
-    <string name="warning">Alarme</string>
-    <string name="take_me_there">Vers les réglages</string>
     <string name="point_telescope">Pointer le télescope</string>
     <string name="connect_telescope_first">S\'il vous plait connecter d\'abord le téléscope !</string>
     <string name="gallery_copyright">Images de la NASA (domaine publique), ESO (CC BY 4.0) et Adam Evans (CC BY 2.0)</string>

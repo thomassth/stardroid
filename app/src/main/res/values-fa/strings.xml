@@ -348,23 +348,19 @@
     <string name="orionids" translation_description="Meteor Shower">بارش شهابی جباری</string>
     <string name="puppidvelids" translation_description="Meteor Shower">بارش شهابی پی‌کشتیدمی</string>
     <string name="ursids" translation_description="Meteor Shower">بارش شهابی دبی</string>
-
     <string name="warning_dialog_title">یه خبر بد!</string>
     <string name="missing_sensor_dialog_text">\n
         متأسفانه دستگاه شما فاقد یکی از حسگرهای لازم برای برنامه است.\n\n
 		برای نمایش آسمان در افقی که گوشی شما به آن سمت گرفته شده؛ برنامه نیاز به قطب‌نما و شتاب‌سنج دارد که ظاهر گوشی شما فاقد یکی از آنهاست.
-		(هرچند برخی گوشی‌ها مثل سری E موتورولا ممکن است اشتباها فاقد حسگرها فوق تشخیص داده شود).\n\n
-		در گوشی‌های فاقد، حالت «خودکار» کار نمی‌کند و شما لازم است از حالت دستی استفاده کنید و با انگشتان‌تان، صفحه را به سمتی که می‌خواهید، حرکت دهید یا بچرخانید یا بزرگنمایی کنید.
+		در گوشی‌های فاقد، حالت «خودکار» کار نمی‌کند و شما لازم است از حالت دستی استفاده کنید و با انگشتان‌تان، صفحه را به سمتی که می‌خواهید، حرکت دهید یا بچرخانید یا بزرگنمایی کنید.\n\n
     </string>
     <string name="do_not_show_again">دیگر این پیام را نمایش نده</string>
-    <string name="title_activity_diagnostic">عیب یابی</string>
     <string name="sensor_absent">غایب</string>
     <string name="sensor_accuracy_unknown">دقت: نامعلوم</string>
     <string name="sensor_accuracy_unreliable">دقت: غیرقابل اعتماد</string>
     <string name="sensor_accuracy_low">دقت: پایین</string>
     <string name="sensor_accuracy_medium">دقت: متوسط</string>
     <string name="sensor_accuracy_high">دقت: بالا</string>
-    <string name="sensor_accuracy_nocontact">دقت: بدون اتصال</string>
     <string name="diagnostics_activity_general_heading">عمومی</string>
     <string name="diagnostics_activity_phone">وسیله</string>
     <string name="diagnostics_activity_android_version">نسخه اندروید</string>
@@ -374,7 +370,6 @@
     <string name="diagnostics_activity_accelerometer">شتاب‌سنج</string>
     <string name="diagnostics_activity_rotation_vector">چرخش</string>
     <string name="diagnostics_activity_gyroscope">ژیروسکوپ</string>
-    <string name="diagnostics_activity_light_level">سطح نور</string>
     <string name="diagnostics_activity_location_and_time_heading">مکان و زمان</string>
     <string name="diagnostics_activity_gps">جی پی اس</string>
     <string name="diagnostics_activity_location">طول و عرض جغرافیایی</string>
@@ -393,7 +388,6 @@
     <string name="disconnected">قطع</string>
     <string name="cell_network">" (دیتا)"</string>
     <string name="menu_calibrate">کالیبره</string>
-    <string name="compass_calibration_activity_do_not_show_this_again">دوباره این را نمایش نده</string>
     <string name="compass_calibration_activity_warning">گوشی شما نیاز به کالیبره‌شدن دارد</string>
     <string name="sensor_reverse_preference_title">معکوس کردن حسگر مغناطیسی</string>
     <string name="sensor_reverse_preference_summary">رفع اشکال تلفن‌هایی که حسگرهایشان درست عمل نمی‌کند (نیازمند راه‌اندازی مجدد)</string>

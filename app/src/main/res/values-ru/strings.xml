@@ -322,15 +322,12 @@
     <string name="beehive_cluster" translation_description="Name of the Messier object Beehive Cluster">Скопление Улей</string>
     <string name="praesepe" translation_description="Name of the Messier object Praesepe">Ясли</string>
     <string name="seven_sisters" translation_description="Name of the Messier object Seven Sisters">Семь сестер</string>
-
-    <!--new translation added by Makhanov Madiyar-->
     <string name="show_meteors_pref">Метеоритные дожди</string>
     <string name="menu_diagnostics">Диагностика</string>
     <string name="alpha_centauri" translation_description="Name of the star Alpha Centauri">Альфа Центавра</string>
     <string name="rigil_kent" translation_description="Name of the star Rigil Kent">Ригель Кентаурус</string>
     <string name="e_lyrae" translation_description="Name of the star ε Lyrae">ε Лиры</string>
     <string name="rigil_kentaurus_a" translation_description="Name of the Star Rigil Kentaurus A">Ригель Центавра А</string>
-
     <string name="leonids" translation_description="Meteor Shower">Леониды</string>
     <string name="geminids" translation_description="Meteor Shower">Геминиды</string>
     <string name="quadrantids" translation_description="Meteor Shower">Квадрантиды</string>
@@ -341,29 +338,21 @@
     <string name="orionids" translation_description="Meteor Shower">Ориониды</string>
     <string name="puppidvelids" translation_description="Meteor Shower">Пуппиды-Велиды</string>
     <string name="ursids" translation_description="Meteor Shower">Урсиды</string>
-
     <string name="warning_dialog_title">Плохие новости!</string>
     <string name="missing_sensor_dialog_text">\n
-        К сожалению, на вашем устройстве может отсутствовать
-     датчики, которые нужны Sky Map.\n\n
+        К сожалению, на вашем устройстве может отсутствовать датчики, которые нужны Sky Map.\n\n
         Чтобы показать вам небо в направлении, указанном вашим телефоном, Sky Map
-     нужен как встроенный компас, так и акселерометр.  Ваше устройство сообщает, что один из них
-        отсутствует.  Хорошей новостью является то, что некоторые устройства (например, некоторые телефоны Moto E) ложно утверждают
-         что не имеют компас, но на самом деле работают.\n\n
-
+        нужен как встроенный компас, так и акселерометр. Ваше устройство сообщает, что один из них отсутствует.\n\n
         Если на вашем устройстве действительно отсутствует датчик, то автоматический режим не будет работать.  Тем не менее, вы
-         можно по-прежнему использовать Sky Map на этом устройстве в ручном режиме, где можете вращать и растягивать
-         карту пальцами.
+        можно по-прежнему использовать Sky Map на этом устройстве в ручном режиме, где можете вращать и растягивать карту пальцами.
     </string>
     <string name="do_not_show_again">Не показывать это сообщение снова</string>
-    <string name="title_activity_diagnostic">Диагностика</string>
     <string name="sensor_absent">Отсутствует</string>
     <string name="sensor_accuracy_unknown">Точность: неизвестна</string>
     <string name="sensor_accuracy_unreliable">Точность: Ненадежна</string>
     <string name="sensor_accuracy_low">Точность: низкая</string>
     <string name="sensor_accuracy_medium">Точность: средняя</string>
     <string name="sensor_accuracy_high">Точность: высокая</string>
-    <string name="sensor_accuracy_nocontact">Точность: нет данных</string>
     <string name="diagnostics_activity_general_heading">Общие</string>
     <string name="diagnostics_activity_phone">Устройство</string>
     <string name="diagnostics_activity_android_version">Версия Android</string>
@@ -373,7 +362,6 @@
     <string name="diagnostics_activity_accelerometer">Акселерометр</string>
     <string name="diagnostics_activity_rotation_vector">Вращение</string>
     <string name="diagnostics_activity_gyroscope">Гироскоп</string>
-    <string name="diagnostics_activity_light_level">Уровень освещенности</string>
     <string name="diagnostics_activity_location_and_time_heading">Местоположение и время</string>
     <string name="diagnostics_activity_gps">GPS</string>
     <string name="diagnostics_activity_location">Местоположение (ш, д)</string>
@@ -392,7 +380,6 @@
     <string name="disconnected">Не соединено</string>
     <string name="cell_network">" (мобильный)"</string>
     <string name="menu_calibrate">Калибровка</string>
-    <string name="compass_calibration_activity_do_not_show_this_again">Не показывать это снова</string>
     <string name="compass_calibration_activity_warning">Ваш компас должен быть откалиброван</string>
     <string name="sensor_reverse_preference_title">Обратный магнитный Z</string>
     <string name="sensor_reverse_preference_summary">Исправлено для телефонов с неправильно установленными датчиками - требуется перезагрузка</string>
@@ -401,4 +388,3 @@
     <string name="rotate_horizon_preference_summary">Поворот на 90 градусов по горизонтали (для экранов с альбомной ориентацией, таких как умные очки)</string>
     <string name="hdf">Область глубокого обзора Хаббла</string>
 </resources>
-

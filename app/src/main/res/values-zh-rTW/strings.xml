@@ -16,7 +16,6 @@
     <string name="location_set_auto">已將地點設定由%1$s改為%2$s</string>
     <string name="location_long_lat">經度：%1$f，緯度：%2$f</string>
     <string name="use_magnetic_correction">使用地磁校正</string>
-    <!-- This string is too long and currently unused -->
     <string name="stars">星體</string>
     <string name="constellations">星座</string>
     <string name="messier_objects" translation_description="The celestial objects catalogued by Charles Messier">梅西耶天體</string>
@@ -24,7 +23,6 @@
     <string name="horizon">地平線</string>
     <string name="show_sky_gradient" translation_description="This is a shading of the color of the sky used for effect">星空漸層色</string>
     <string name="show_meteors_pref">流星雨</string>
-    <!-- Just in case we decide to have such a layer for the 4/24 launch -->
     <string name="ecliptic">黃道</string>
     <string name="malformed_loc_error">經緯度設定值並非數字。</string>
     <string name="menu_toggle_dim">切換至夜間模式</string>
@@ -41,14 +39,11 @@
     <string name="many_search_results_title">您是不是要查：</string>
     <string name="menu_time">時光旅行</string>
     <string name="time_travel_close_message">回到現在…</string>
-    <!--  -->
     <string name="popular_dates_prompt" translation_description="Label for a list of dates the user can choose from">熱門日期</string>
     <string name="custom_date_prompt" translation_description="Label telling the user to manually specify a date">或是自行選取日期</string>
     <string name="change_date_prompt">變更日期</string>
     <string name="change_time_prompt">變更時間</string>
-    <string name="now_visiting"
-            translation_description="used in time travel dialog to tell the user what time they are visiting, time formatted as yyyy.mm.dd at hh.mm.ss + timezone">
-        時間切換到：%s</string>
+    <string name="now_visiting" translation_description="used in time travel dialog to tell the user what time they are visiting, time formatted as yyyy.mm.dd at hh.mm.ss + timezone">時間切換到：%s</string>
     <string name="time_travel_label_past" translation_description="Label showing that we are in the past">時光旅行：過去</string>
     <string name="time_travel_label_future" translation_description="Label showing that we are in the future">時光旅行：未來</string>
     <string name="time_travel_stopped" translation_description="Label showing rate of travel through time">時光旅行停滯</string>
@@ -146,7 +141,6 @@
     <string name="big_dipper" translation_description="Name of the Big Dipper constellation">北斗七星</string>
     <string name="great_bear" translation_description="Name of the Great Bear constellation">大熊座</string>
     <string name="plough" translation_description="Name of the Plough constellation">北斗七星</string>
-
     <string name="sirius" translation_description="Name of the Star Sirius">天狼星</string>
     <string name="canopus" translation_description="Name of the Star Canopus">老人星</string>
     <string name="arcturus" translation_description="Name of the Star Arcturus">大角星</string>
@@ -218,7 +212,6 @@
     <string name="alpha_centauri" translation_description="Name of the star Alpha Centauri">南門二</string>
     <string name="rigil_kent" translation_description="Name of the star Rigil Kent">南門二</string>
     <string name="e_lyrae" translation_description="Name of the star ε Lyrae">織女二</string>
-
     <string name="m1" translation_description="Name of the Messier object M1">M1 蟹狀星雲</string>
     <string name="m2" translation_description="Name of the Messier object M2">M2</string>
     <string name="m3" translation_description="Name of the Messier object M3">M3</string>
@@ -347,25 +340,19 @@
     <string name="orionids" translation_description="Meteor Shower">獵戶座流星雨</string>
     <string name="puppidvelids" translation_description="Meteor Shower">船尾/船帆座流星雨</string>
     <string name="ursids" translation_description="Meteor Shower">小熊座流星雨</string>
-
     <string name="warning_dialog_title">壞消息！</string>
     <string name="missing_sensor_dialog_text">\n
         您的裝置可能不具備 Sky Map 所需的感應器之一。\n\n
-        Sky Map 需要內建羅盤與加速計才能自動顯示裝置所指向的星空。您的裝置回報其中一個感應器不存在。
-        好消息是有些裝置的回報不完全正確，例如某些 Moto E 型號手機，其實具備羅盤功能卻回報沒有。\n\n
-
+        Sky Map 需要內建羅盤與加速計才能自動顯示裝置所指向的星空。您的裝置回報其中一個感應器不存在。\n\n
         缺少需要的感應器，自動模式將無法運作。但您仍然可以使用手指在手動模式下拖曳、旋轉、縮放星空圖。
     </string>
     <string name="do_not_show_again">不要再顯示這個訊息</string>
-    <string name="title_activity_diagnostic">診斷</string>
-
     <string name="sensor_absent">不存在</string>
     <string name="sensor_accuracy_unknown">精確度：未知</string>
     <string name="sensor_accuracy_unreliable">精確度：不可靠</string>
     <string name="sensor_accuracy_low">精確度：低</string>
     <string name="sensor_accuracy_medium">精確度：中</string>
     <string name="sensor_accuracy_high">精確度：高</string>
-    <string name="sensor_accuracy_nocontact">精確度：未接觸</string>
     <string name="diagnostics_activity_general_heading">一般</string>
     <string name="diagnostics_activity_phone">裝置</string>
     <string name="diagnostics_activity_android_version">Android 版本</string>
@@ -375,7 +362,6 @@
     <string name="diagnostics_activity_accelerometer">加速計</string>
     <string name="diagnostics_activity_rotation_vector">旋轉</string>
     <string name="diagnostics_activity_gyroscope">陀螺儀</string>
-    <string name="diagnostics_activity_light_level">光度</string>
     <string name="diagnostics_activity_location_and_time_heading">位置與時間</string>
     <string name="diagnostics_activity_gps">GPS</string>
     <string name="diagnostics_activity_location">位置 (緯度, 經度)</string>
@@ -394,7 +380,6 @@
     <string name="disconnected">已斷線</string>
     <string name="cell_network">" (電信網路)"</string>
     <string name="menu_calibrate">校正</string>
-    <string name="compass_calibration_activity_do_not_show_this_again">不要再顯示這個訊息</string>
     <string name="compass_calibration_activity_warning">您的羅盤需要校正</string>
     <string name="sensor_reverse_preference_title">磁場反向</string>
     <string name="sensor_reverse_preference_summary">修正手機感應器錯誤 - 需重新開機</string>

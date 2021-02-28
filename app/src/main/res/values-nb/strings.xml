@@ -16,7 +16,6 @@
     <string name="location_set_auto">Sted bestemt fra %1$s til %2$s</string>
     <string name="location_long_lat">Lengdegrad:%1$f, breddegrad:%2$f</string>
     <string name="use_magnetic_correction">Bruk magnetisk korrigering</string>
-    <!-- This string is too long and currently unused -->
     <string name="stars">Stjerner</string>
     <string name="constellations">Stjernebilder</string>
     <string name="messier_objects" translation_description="The celestial objects catalogued by Charles Messier">Messier-objekter</string>
@@ -24,7 +23,6 @@
     <string name="horizon">Horisont</string>
     <string name="show_sky_gradient" translation_description="This is a shading of the color of the sky used for effect">Himmelgradient</string>
     <string name="show_meteors_pref">Meteorsvermer</string>
-    <!-- Just in case we decide to have such a layer for the 4/24 launch -->
     <string name="ecliptic">Ekliptikken</string>
     <string name="malformed_loc_error">Bredde- eller lengdegradinnstilling er ikke et tall.</string>
     <string name="menu_toggle_dim">Nattmodus av/på</string>
@@ -146,7 +144,6 @@
     <string name="big_dipper" translation_description="Name of the Big Dipper constellation">Karlsvogna</string>
     <string name="great_bear" translation_description="Name of the Great Bear constellation">Store bjørn</string>
     <string name="plough" translation_description="Name of the Plough constellation">Karlsvogna</string>
-
     <string name="sirius" translation_description="Name of the Star Sirius">Sirius</string>
     <string name="canopus" translation_description="Name of the Star Canopus">Canopus</string>
     <string name="arcturus" translation_description="Name of the Star Arcturus">Arcturus</string>
@@ -218,7 +215,6 @@
     <string name="alpha_centauri" translation_description="Name of the star Alpha Centauri">Alpha Centauri</string>
     <string name="rigil_kent" translation_description="Name of the star Rigil Kent">Rigil Kent</string>
     <string name="e_lyrae" translation_description="Name of the star ε Lyrae">ε Lyrae</string>
-
     <string name="m1" translation_description="Name of the Messier object M1">M1</string>
     <string name="m2" translation_description="Name of the Messier object M2">M2</string>
     <string name="m3" translation_description="Name of the Messier object M3">M3</string>
@@ -347,29 +343,23 @@
     <string name="orionids" translation_description="Meteor Shower">Orionidene</string>
     <string name="puppidvelids" translation_description="Meteor Shower">Puppid-velidene</string>
     <string name="ursids" translation_description="Meteor Shower">Ursidene</string>
-
     <string name="warning_dialog_title">Bad news!</string>
     <string name="missing_sensor_dialog_text">\n
-        Unfortunately your device might not have one of the
-    sensors that Sky Map needs.\n\n
+        Unfortunately your device might not have one of the sensors that Sky Map needs.\n\n
         To show you the sky in the direction your phone is pointing Sky Map
-    needs both a built-in compass and an accelerometer.  Your device reports that it is missing
-        one of them.  The good news is that some devices (for example some Moto E phones) falsely claim
-        not to have a compass but actually do.\n\n
-
+        needs both a built-in compass and an accelerometer.  Your device reports that it is missing
+        one of them.\n\n
         If your device really is missing a sensor then auto-mode will not work.  However, you
         can still use Sky Map on this device in manual mode where you drag, rotate and stretch the
         map with your fingers.
     </string>
     <string name="do_not_show_again">Ikke vis denne meldingen igjen</string>
-    <string name="title_activity_diagnostic">Diagnostikk</string>
     <string name="sensor_absent">Fraværende</string>
     <string name="sensor_accuracy_unknown">Nøyaktighet: Ukjent</string>
     <string name="sensor_accuracy_unreliable">Nøyaktighet: Upålitelig</string>
     <string name="sensor_accuracy_low">Nøyaktighet: Lav</string>
     <string name="sensor_accuracy_medium">Nøyaktighet: Middels</string>
     <string name="sensor_accuracy_high">Nøyaktighet: Høy</string>
-    <string name="sensor_accuracy_nocontact">Nøyaktighet: Ingen kontakt</string>
     <string name="diagnostics_activity_general_heading">Generelt</string>
     <string name="diagnostics_activity_phone">Enhet</string>
     <string name="diagnostics_activity_android_version">Android-versjon</string>
@@ -379,7 +369,6 @@
     <string name="diagnostics_activity_accelerometer">Akselerometer</string>
     <string name="diagnostics_activity_rotation_vector">Rotasjon</string>
     <string name="diagnostics_activity_gyroscope">Gyroskop</string>
-    <string name="diagnostics_activity_light_level">Lysnivå</string>
     <string name="diagnostics_activity_location_and_time_heading">Sted og tid</string>
     <string name="diagnostics_activity_gps">GPS</string>
     <string name="diagnostics_activity_location">Posisjon (br., le.)</string>
@@ -398,7 +387,6 @@
     <string name="disconnected">Frakoblet</string>
     <string name="cell_network">" (mobilnett)"</string>
     <string name="menu_calibrate">Kalibrer</string>
-    <string name="compass_calibration_activity_do_not_show_this_again">Ikke vis dette igjen</string>
     <string name="compass_calibration_activity_warning">Kompasset ditt må kalibreres</string>
     <string name="sensor_reverse_preference_title">Reverser Magnetisk Z</string>
     <string name="sensor_reverse_preference_summary">Løsning for telefoner med uriktig implementerte sensorer - krever omstart</string>

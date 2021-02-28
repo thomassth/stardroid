@@ -44,6 +44,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -166,6 +167,11 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
                 FragmentActivity activity = getActivity();
                 if (activity instanceof MainActivity)
                     ((MainActivity) activity).requestLocationPermission();
+            }
+
+            @Override
+            protected void makeSnack(String string) {
+                requestActionSnack(string);
             }
         };
         if (!preferences.getBoolean(VIZIER_WELCOME, false))
@@ -371,7 +377,7 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
             // PRO
         } else {
             builder.setMessage(description);
-            Button proButton = new Button(context);
+            Button proButton = new AppCompatButton(context);
             proButton.setTextAppearance(context, R.style.TextAppearance_AppCompat_Medium);
             proButton.setText(R.string.goto_dialog_pro);
             proButton.setOnClickListener(v -> ProUtils.playStore(context));
@@ -418,7 +424,6 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
                 .setIcon(entry.getIconResource()).show();
     }
 
-    @SuppressWarnings("deprecation")
     private boolean internetAvailable() {
         ConnectivityManager connectivityManager = ContextCompat.getSystemService(context, ConnectivityManager.class);
         if (connectivityManager == null) return false;

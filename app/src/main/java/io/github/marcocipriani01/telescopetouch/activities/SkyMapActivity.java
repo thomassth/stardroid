@@ -16,6 +16,7 @@
 
 package io.github.marcocipriani01.telescopetouch.activities;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
@@ -23,6 +24,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
@@ -44,10 +47,11 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -62,6 +66,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
+import io.github.marcocipriani01.telescopetouch.BuildConfig;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.MultipleSearchResultsDialogFragment;
@@ -112,6 +117,9 @@ public class SkyMapActivity extends InjectableActivity implements OnSharedPrefer
     // End Activity for result Ids
     @Inject
     ControllerGroup controller;
+    private final ActivityResultLauncher<String> locationPermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            result -> controller.onLocationPermissionAcquired());
     @Inject
     AstronomerModel model;
     @Inject
@@ -136,6 +144,8 @@ public class SkyMapActivity extends InjectableActivity implements OnSharedPrefer
     MagneticDeclinationSwitcher magneticSwitcher;
     @Inject
     Animation flashAnimation;
+    @Inject
+    SensorManager sensorManager;
     private FullscreenControlsManager fullscreenControlsManager;
     private ImageButton cancelSearchButton;
     private GestureDetector gestureDetector;
@@ -160,7 +170,6 @@ public class SkyMapActivity extends InjectableActivity implements OnSharedPrefer
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         daggerComponent = DaggerSkyMapComponent.builder()
@@ -236,26 +245,63 @@ public class SkyMapActivity extends InjectableActivity implements OnSharedPrefer
             doSearchWithIntent(intent);
     }
 
+    public void requestLocationPermission() {
+        locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+    }
+
     private void checkForSensorsAndMaybeWarn() {
-        SensorManager sensorManager = ContextCompat.getSystemService(this, SensorManager.class);
-        if (sensorManager != null && sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null
-                && sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null) {
+        if (hasSensors(Sensor.TYPE_ACCELEROMETER, Sensor.TYPE_MAGNETIC_FIELD)) {
             Log.i(TAG, "Minimum sensors present");
             setAutoMode(preferences.getBoolean(ApplicationConstants.AUTO_MODE_PREF, true));
-            return;
-        }
-        // Missing at least one sensor.  Warn the user.
-        handler.post(() -> {
-            if (preferences.getBoolean(ApplicationConstants.NO_WARN_MISSING_SENSORS_PREF, false)) {
-                Snackbar.make(rootView, R.string.no_sensor_warning, Snackbar.LENGTH_SHORT).show();
-                // Don't force manual mode second time through - leave it up to the user.
-            } else {
-                noSensorsDialogFragment.show(fragmentManager, "No sensors dialog");
-                // First time, force manual mode.
-                preferences.edit().putBoolean(ApplicationConstants.AUTO_MODE_PREF, false).apply();
-                setAutoMode(false);
+            // Enable Gyro if available and user hasn't already disabled it.
+            if (!preferences.contains(ApplicationConstants.DISABLE_GYRO_PREF))
+                preferences.edit().putBoolean(ApplicationConstants.DISABLE_GYRO_PREF,
+                        !hasSensors(Sensor.TYPE_ROTATION_VECTOR, Sensor.TYPE_GYROSCOPE)).apply();
+            if (BuildConfig.DEBUG) {
+                // Lastly a dump of all the sensors.
+                Log.d(TAG, "List of device sensors:");
+                List<Sensor> allSensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
+                for (Sensor sensor : allSensors) {
+                    Log.d(TAG, sensor.getName() + ", sensor type: " + sensor.getStringType() + " (" + sensor.getType() + ")");
+                }
             }
-        });
+        } else {
+            // Missing at least one sensor.  Warn the user.
+            handler.post(() -> {
+                if (preferences.getBoolean(ApplicationConstants.NO_WARN_MISSING_SENSORS_PREF, false)) {
+                    Snackbar.make(rootView, R.string.no_sensor_warning, Snackbar.LENGTH_SHORT).show();
+                    // Don't force manual mode second time through - leave it up to the user.
+                } else {
+                    noSensorsDialogFragment.show(fragmentManager, "No sensors dialog");
+                    // First time, force manual mode.
+                    preferences.edit().putBoolean(ApplicationConstants.AUTO_MODE_PREF, false).apply();
+                    setAutoMode(false);
+                }
+            });
+        }
+    }
+
+    private boolean hasSensors(int... sensorTypes) {
+        if (sensorManager == null) return false;
+        for (int sensorType : sensorTypes) {
+            Sensor sensor = sensorManager.getDefaultSensor(sensorType);
+            if (sensor == null) return false;
+            SensorEventListener dummy = new SensorEventListener() {
+                @Override
+                public void onSensorChanged(SensorEvent event) {
+                    // Nothing
+                }
+
+                @Override
+                public void onAccuracyChanged(Sensor sensor, int accuracy) {
+                    // Nothing
+                }
+            };
+            boolean b = sensorManager.registerListener(dummy, sensor, SensorManager.SENSOR_DELAY_UI);
+            sensorManager.unregisterListener(dummy);
+            if (!b) return false;
+        }
+        return true;
     }
 
     @Override

@@ -68,4 +68,5 @@ public class ApplicationConstants {
     public static final String GOTO_DETAILS_LAST_TAB = "goto_details_tab";
     public static final String DARKER_MODE_KEY = "DARKER_MODE";
     public static final String LAST_CALIBRATION_WARNING_PREF = "last_calibration_warning_time";
+    public static final String GPS_OFF_NO_DIALOG_PREF = "gps_off_no_dialog";
 }

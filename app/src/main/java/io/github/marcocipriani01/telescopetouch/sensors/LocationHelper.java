@@ -19,21 +19,24 @@ package io.github.marcocipriani01.telescopetouch.sensors;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
@@ -47,6 +50,8 @@ import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
+import static io.github.marcocipriani01.telescopetouch.ApplicationConstants.GPS_OFF_NO_DIALOG_PREF;
+
 public abstract class LocationHelper implements LocationListener {
 
     private static final String TAG = TelescopeTouchApp.getTag(LocationHelper.class);
@@ -56,6 +61,7 @@ public abstract class LocationHelper implements LocationListener {
     private final View rootView;
     private final LocationManager locationManager;
     private final SharedPreferences preferences;
+    private boolean permissionRequested = false;
 
     public LocationHelper(Activity activity, LocationManager locationManager) {
         this.activity = activity;
@@ -69,15 +75,15 @@ public abstract class LocationHelper implements LocationListener {
     }
 
     public boolean start() {
-        Log.d(TAG, "Start");
+        Log.d(TAG, "Location helper start");
         if (preferences.getBoolean(ApplicationConstants.NO_AUTO_LOCATE_PREF, false)) {
-            Log.d(TAG, "User has elected to set location manually.");
+            Log.d(TAG, "User has set manual location.");
             setLocationFromPrefs();
             return true;
         }
         try {
             if (locationManager == null) {
-                Log.e(TAG, "Location manager was null - using preferences");
+                Log.e(TAG, "Location manager is null - using preferences");
                 setLocationFromPrefs();
                 return true;
             }
@@ -87,25 +93,42 @@ public abstract class LocationHelper implements LocationListener {
                 Log.w(TAG, "No location provider is enabled");
                 if (locationManager.getBestProvider(locationCriteria, false) == null) {
                     Log.i(TAG, "No location provider is even available");
-                    requestLocationPermission();
-                    setLocationFromPrefs();
-                } else {
+                    if (!permissionRequested) {
+                        requestLocationPermission();
+                        permissionRequested = true;
+                    }
+                } else if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
+                        !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) &&
+                        !preferences.getBoolean(GPS_OFF_NO_DIALOG_PREF, false)) {
+                    LinearLayout layout = new LinearLayout(activity);
+                    layout.setOrientation(LinearLayout.VERTICAL);
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    Resources resources = activity.getResources();
+                    int padding = resources.getDimensionPixelSize(R.dimen.dialog_margin);
+                    layoutParams.setMargins(padding, resources.getDimensionPixelSize(R.dimen.padding_medium), padding, 0);
+                    CheckBox checkBox = new AppCompatCheckBox(activity);
+                    checkBox.setText(R.string.do_not_show_again);
+                    layout.addView(checkBox, layoutParams);
                     new AlertDialog.Builder(activity)
                             .setTitle(R.string.location_offer_to_enable_gps_title).setCancelable(false)
                             .setMessage(R.string.location_offer_to_enable)
+                            .setView(layout)
                             .setPositiveButton(android.R.string.ok, (dialog12, which) -> {
-                                Log.d(TAG, "Sending to editor location prefs page");
+                                preferences.edit().putBoolean(GPS_OFF_NO_DIALOG_PREF, checkBox.isChecked()).apply();
                                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 activity.startActivity(intent);
                             })
                             .setNegativeButton(android.R.string.cancel, (dialog1, which) -> {
-                                Snackbar.make(rootView, R.string.msg_manual_location_on, Snackbar.LENGTH_SHORT).show();
-                                preferences.edit().putBoolean(ApplicationConstants.NO_AUTO_LOCATE_PREF, true).apply();
+                                preferences.edit().putBoolean(GPS_OFF_NO_DIALOG_PREF, checkBox.isChecked())
+                                        .putBoolean(ApplicationConstants.NO_AUTO_LOCATE_PREF, true).apply();
+                                makeSnack(activity.getString(R.string.msg_manual_location_on));
                                 setLocationFromPrefs();
                             }).show();
                 }
+                setLocationFromPrefs();
                 return true;
             }
 
@@ -136,7 +159,8 @@ public abstract class LocationHelper implements LocationListener {
 
     private Criteria getLocationCriteria() {
         Criteria locationCriteria = new Criteria();
-        locationCriteria.setAccuracy(preferences.getBoolean(ApplicationConstants.FORCE_GPS_PREF, false) ? Criteria.ACCURACY_FINE : Criteria.ACCURACY_COARSE);
+        locationCriteria.setAccuracy(preferences.getBoolean(ApplicationConstants.FORCE_GPS_PREF, false) ?
+                Criteria.ACCURACY_FINE : Criteria.ACCURACY_COARSE);
         locationCriteria.setAltitudeRequired(true);
         locationCriteria.setBearingRequired(false);
         locationCriteria.setCostAllowed(true);
@@ -145,23 +169,7 @@ public abstract class LocationHelper implements LocationListener {
         return locationCriteria;
     }
 
-    protected void requestLocationPermission() {
-        new AlertDialog.Builder(activity)
-                .setTitle(R.string.warning).setCancelable(false)
-                .setMessage(R.string.location_no_auto)
-                .setNegativeButton(android.R.string.cancel, (dialog12, which) -> {
-                    Snackbar.make(rootView, R.string.msg_manual_location_on, Snackbar.LENGTH_SHORT).show();
-                    preferences.edit().putBoolean(ApplicationConstants.NO_AUTO_LOCATE_PREF, true).apply();
-                    setLocationFromPrefs();
-                })
-                .setPositiveButton(R.string.take_me_there, (dialog, which) -> {
-                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.setData(Uri.fromParts("package", activity.getPackageName(), null));
-                    activity.startActivity(intent);
-                }).show();
-    }
+    protected abstract void requestLocationPermission();
 
     private void setLocationFromPrefs() {
         Log.d(TAG, "Setting location from preferences");
@@ -171,7 +179,7 @@ public abstract class LocationHelper implements LocationListener {
             longitude = Double.parseDouble(preferences.getString(ApplicationConstants.LONGITUDE_PREF, "0"));
         } catch (NumberFormatException e) {
             Log.e(TAG, "Error parsing latitude or longitude preference");
-            Snackbar.make(rootView, R.string.malformed_loc_error, Snackbar.LENGTH_SHORT).show();
+            makeSnack(activity.getString(R.string.malformed_loc_error));
         }
         Location location = new Location(activity.getString(R.string.preferences));
         location.setLatitude(latitude);
@@ -183,8 +191,13 @@ public abstract class LocationHelper implements LocationListener {
     }
 
     public void stop() {
+        Log.d(TAG, "Location helper stop");
         if (locationManager != null)
             locationManager.removeUpdates(this);
+    }
+
+    protected void makeSnack(String string) {
+        Snackbar.make(rootView, string, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -201,7 +214,6 @@ public abstract class LocationHelper implements LocationListener {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void onStatusChanged(String provider, int status, Bundle extras) {
 
     }
@@ -234,26 +246,17 @@ public abstract class LocationHelper implements LocationListener {
             place = getPlaceSummary(location, addresses.get(0));
         }
         Log.d(TAG, "Location set to " + place);
-        Snackbar.make(rootView, String.format(activity.getString(R.string.location_set_auto), provider, place),
-                Snackbar.LENGTH_SHORT).show();
+        makeSnack(String.format(activity.getString(R.string.location_set_auto), provider, place));
     }
 
     private String getPlaceSummary(Location location, Address address) {
         String longLat = String.format(activity.getString(R.string.location_long_lat),
                 location.getLongitude(), location.getLatitude());
-        if (address == null) {
-            return longLat;
-        }
+        if (address == null) return longLat;
         String place = address.getLocality();
-        if (place == null) {
-            place = address.getSubAdminArea();
-        }
-        if (place == null) {
-            place = address.getAdminArea();
-        }
-        if (place == null) {
-            place = longLat;
-        }
+        if (place == null) place = address.getSubAdminArea();
+        if (place == null) place = address.getAdminArea();
+        if (place == null) place = longLat;
         return place;
     }
 }
