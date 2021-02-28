@@ -35,14 +35,12 @@ import io.github.marcocipriani01.telescopetouch.search.SearchTermsProvider;
 
 /**
  * Dagger component.
- * Created by johntaylor on 3/26/16.
+ *
+ * @author johntaylor
  */
 @Singleton
 @Component(modules = ApplicationModule.class)
 public interface ApplicationComponent {
-
-    // What we expose to dependent components
-    TelescopeTouchApp provideStardroidApplication();
 
     SharedPreferences provideSharedPreferences();
 
@@ -62,7 +60,6 @@ public interface ApplicationComponent {
     @Named("real")
     MagneticDeclinationCalculator provideMagDec2();
 
-    // Who can we inject
     void inject(TelescopeTouchApp app);
 
     void inject(SettingsActivity activity);

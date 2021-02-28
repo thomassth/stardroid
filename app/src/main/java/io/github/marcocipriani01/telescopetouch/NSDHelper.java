@@ -16,7 +16,6 @@
 
 package io.github.marcocipriani01.telescopetouch;
 
-import android.app.Application;
 import android.content.Context;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -42,11 +41,11 @@ public class NSDHelper implements ServiceListener {
     private boolean available = false;
     private NSDListener listener;
 
-    public NSDHelper(final Application app) {
+    public NSDHelper(Context context) {
         new Thread(() -> {
             try {
                 Log.i(TAG, "Starting Mutlicast Lock...");
-                WifiManager wifi = (WifiManager) app.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                WifiManager wifi = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
                 multiCastLock = wifi.createMulticastLock(getClass().getName());
                 multiCastLock.setReferenceCounted(true);
                 multiCastLock.acquire();

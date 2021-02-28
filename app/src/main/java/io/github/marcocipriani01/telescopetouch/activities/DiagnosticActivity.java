@@ -41,6 +41,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
 import java.util.Date;
@@ -61,13 +62,11 @@ import io.github.marcocipriani01.telescopetouch.control.MagneticDeclinationSwitc
 import io.github.marcocipriani01.telescopetouch.maths.Formatters;
 import io.github.marcocipriani01.telescopetouch.sensors.LocationHelper;
 
-public class DiagnosticActivity extends InjectableActivity implements SensorEventListener {
+public class DiagnosticActivity extends AppCompatActivity implements SensorEventListener {
 
     private static final String TAG = TelescopeTouchApp.getTag(DiagnosticActivity.class);
     private static final int UPDATE_PERIOD_MILLIS = 500;
     private final Set<Sensor> knownSensorAccuracies = new HashSet<>();
-    @Inject
-    TelescopeTouchApp app;
     @Inject
     SensorManager sensorManager;
     @Inject
@@ -97,8 +96,8 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DaggerDiagnosticActivityComponent.builder().applicationComponent(
-                getApplicationComponent()).diagnosticActivityModule(new DiagnosticActivityModule(this))
-                .build().inject(this);
+                ((TelescopeTouchApp) getApplication()).getApplicationComponent())
+                .diagnosticActivityModule(new DiagnosticActivityModule(this)).build().inject(this);
         darkerModeManager = new DarkerModeManager(this, null, PreferenceManager.getDefaultSharedPreferences(this));
         setTheme(darkerModeManager.getPref() ? R.style.DarkerAppTheme : R.style.AppTheme);
         setContentView(R.layout.activity_diagnostic);

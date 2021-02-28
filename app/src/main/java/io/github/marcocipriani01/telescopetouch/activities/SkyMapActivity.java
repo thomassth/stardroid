@@ -51,6 +51,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.FragmentManager;
 
@@ -102,7 +103,7 @@ import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connect
 /**
  * The main map-rendering Activity.
  */
-public class SkyMapActivity extends InjectableActivity implements OnSharedPreferenceChangeListener, HasComponent<SkyMapComponent> {
+public class SkyMapActivity extends AppCompatActivity implements OnSharedPreferenceChangeListener, HasComponent<SkyMapComponent> {
 
     public static final String SKY_MAP_INTENT_ACTION = "io.github.marcocipriani01.telescopetouch.activities.SkyMapActivity";
     private static final String BUNDLE_X_TARGET = "bundle_x_target";
@@ -173,7 +174,7 @@ public class SkyMapActivity extends InjectableActivity implements OnSharedPrefer
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         daggerComponent = DaggerSkyMapComponent.builder()
-                .applicationComponent(getApplicationComponent())
+                .applicationComponent(((TelescopeTouchApp) getApplication()).getApplicationComponent())
                 .skyMapModule(new SkyMapModule(this)).build();
         daggerComponent.inject(this);
         preferences.registerOnSharedPreferenceChangeListener(this);
