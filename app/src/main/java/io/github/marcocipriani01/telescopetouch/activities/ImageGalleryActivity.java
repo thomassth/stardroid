@@ -28,12 +28,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
 import io.github.marcocipriani01.telescopetouch.gallery.GalleryImages;
 
@@ -43,7 +45,7 @@ import io.github.marcocipriani01.telescopetouch.gallery.GalleryImages;
  *
  * @author John Taylor
  */
-public class ImageGalleryActivity extends InjectableActivity {
+public class ImageGalleryActivity extends AppCompatActivity {
 
     /**
      * The index of the image id Intent extra.
@@ -54,7 +56,7 @@ public class ImageGalleryActivity extends InjectableActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getApplicationComponent().inject(this);
+        ((TelescopeTouchApp) getApplication()).getApplicationComponent().inject(this);
         darkerModeManager = new DarkerModeManager(this, null, PreferenceManager.getDefaultSharedPreferences(this));
         setTheme(darkerModeManager.getPref() ? R.style.DarkerAppTheme : R.style.AppTheme);
         setContentView(R.layout.activity_gallery);

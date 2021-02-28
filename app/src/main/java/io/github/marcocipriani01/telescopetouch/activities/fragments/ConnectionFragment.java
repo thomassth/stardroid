@@ -207,8 +207,7 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (nsdHelper != null)
-            nsdHelper.setListener(null);
+        if (nsdHelper != null) nsdHelper.setListener(null);
         connectionManager.removeManagerListener(this);
     }
 

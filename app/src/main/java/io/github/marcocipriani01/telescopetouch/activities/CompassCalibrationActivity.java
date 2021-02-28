@@ -31,15 +31,17 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
 import io.github.marcocipriani01.telescopetouch.activities.util.SensorAccuracyDecoder;
 
-public class CompassCalibrationActivity extends InjectableActivity implements SensorEventListener {
+public class CompassCalibrationActivity extends AppCompatActivity implements SensorEventListener {
 
     public static final String HIDE_CHECKBOX = "hide checkbox";
     public static final String AUTO_DISMISSABLE = "auto dismissable";
@@ -58,7 +60,7 @@ public class CompassCalibrationActivity extends InjectableActivity implements Se
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DaggerCompassCalibrationComponent.builder()
-                .applicationComponent(getApplicationComponent())
+                .applicationComponent(((TelescopeTouchApp) getApplication()).getApplicationComponent())
                 .compassCalibrationModule(new CompassCalibrationModule(this)).build().inject(this);
         darkerModeManager = new DarkerModeManager(this, null, preferences);
         setTheme(darkerModeManager.getPref() ? R.style.DarkerAppTheme : R.style.AppTheme);

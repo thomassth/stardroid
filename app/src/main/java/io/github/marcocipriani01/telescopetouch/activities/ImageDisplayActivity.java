@@ -28,6 +28,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
 import io.github.marcocipriani01.livephotoview.PhotoView;
@@ -45,7 +46,7 @@ import io.github.marcocipriani01.telescopetouch.layers.StarsLayer;
  *
  * @author John Taylor
  */
-public class ImageDisplayActivity extends InjectableActivity {
+public class ImageDisplayActivity extends AppCompatActivity {
 
     private static final String TAG = TelescopeTouchApp.getTag(ImageDisplayActivity.class);
     private static final int ERROR_MAGIC_NUMBER = -1;
@@ -55,7 +56,7 @@ public class ImageDisplayActivity extends InjectableActivity {
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        getApplicationComponent().inject(this);
+        ((TelescopeTouchApp) getApplication()).getApplicationComponent().inject(this);
         darkerModeManager = new DarkerModeManager(this, null, PreferenceManager.getDefaultSharedPreferences(this));
         setTheme(darkerModeManager.getPref() ? R.style.DarkerAppTheme : R.style.AppTheme);
         setContentView(R.layout.activity_gallery_image);
