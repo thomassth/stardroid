@@ -40,8 +40,8 @@ import io.github.marcocipriani01.telescopetouch.R;
 public abstract class PropPref<Element extends INDIElement> extends Preference implements INDIPropertyListener {
 
     protected final INDIProperty<Element> prop;
+    protected final Resources resources;
     protected View title = null;
-    protected Resources resources;
 
     protected PropPref(Context context, INDIProperty<Element> prop) {
         super(context);

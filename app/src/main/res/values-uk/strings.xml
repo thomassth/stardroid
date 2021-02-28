@@ -334,29 +334,22 @@
     <string name="orionids" translation_description="Meteor Shower">Оріоніди</string>
     <string name="puppidvelids" translation_description="Meteor Shower">Пуппіди-Веліди</string>
     <string name="ursids" translation_description="Meteor Shower">Урсіди</string>
-
     <string name="warning_dialog_title">Погані новини!</string>
     <string name="missing_sensor_dialog_text">\n
-        На жаль, у вашого пристрою може не бути одного з тих
-     датчиків, які потребує Sky Map.\n\n
+        На жаль, у вашого пристрою може не бути одного з тих датчиків, які потребує Sky Map.\n\n
         Щоб показати вам частину неба, на яку вказує телефон, Sky Map
-     потрібен як вбудований компас, так і акселерометр. Ваш пристрій повідомляє, що один з них відсутній.
-         Хороша новина полягає в тому, що деякі пристрої (наприклад, деякі телефони Moto E) помилково стверджують
-         що не мають компаса, але насправді працюють.\n\n
-
+        потрібен як вбудований компас, так і акселерометр. Ваш пристрій повідомляє, що один з них відсутній.\n\n
         Якщо на вашому пристрої відсутній сенсор, то автоматичний режим не працюватиме. Тим не менш
-         все ж можна використовувати Sky Map на цьому пристрої в ручному режимі, де ви перетягуєте, повертаєте та розтягуєте
-         карту пальцями.
+        все ж можна використовувати Sky Map на цьому пристрої в ручному режимі, де ви перетягуєте, повертаєте та розтягуєте
+        карту пальцями.
     </string>
     <string name="do_not_show_again">Більше не показувати це повідомлення</string>
-    <string name="title_activity_diagnostic">Діагностика</string>
     <string name="sensor_absent">Відсутня</string>
     <string name="sensor_accuracy_unknown">Точність: невідомо</string>
     <string name="sensor_accuracy_unreliable">Точність: ненадійна</string>
     <string name="sensor_accuracy_low">Точність: Низька</string>
     <string name="sensor_accuracy_medium">Точність: Середня</string>
     <string name="sensor_accuracy_high">Точність: Висока</string>
-    <string name="sensor_accuracy_nocontact">Точність: Немає зв\'язку</string>
     <string name="diagnostics_activity_general_heading">Загальний</string>
     <string name="diagnostics_activity_phone">Пристрій</string>
     <string name="diagnostics_activity_android_version">Версія Android</string>
@@ -366,7 +359,6 @@
     <string name="diagnostics_activity_accelerometer">Акселерометр</string>
     <string name="diagnostics_activity_rotation_vector">Обертання</string>
     <string name="diagnostics_activity_gyroscope">Гіроскоп</string>
-    <string name="diagnostics_activity_light_level">Рівень освітленості</string>
     <string name="diagnostics_activity_location_and_time_heading">Місце та час</string>
     <string name="diagnostics_activity_gps">GPS</string>
     <string name="diagnostics_activity_location">Розташування (ш., д.)</string>
@@ -385,7 +377,6 @@
     <string name="disconnected">Роз\'єднано</string>
     <string name="cell_network">" (виклик)"</string>
     <string name="menu_calibrate">Калібрувати</string>
-    <string name="compass_calibration_activity_do_not_show_this_again">Більше не показувати</string>
     <string name="compass_calibration_activity_warning">Ваш компас потрібно відкалібрувати</string>
     <string name="sensor_reverse_preference_title">Зворотне магнітне Z</string>
     <string name="sensor_reverse_preference_summary">Налагодження для телефонів з неправильно впровадженими датчиками - вимагає перезавантаження</string>
@@ -393,5 +384,4 @@
     <string name="rotate_horizon_preference_title">Обертати по горизонту</string>
     <string name="rotate_horizon_preference_summary">Поворот на горизонті 90 градусів (для екранів з примусовим ландшафтом, такими як smartglasses)</string>
     <string name="hdf">Область глибокого огляду Хаббла</string>
-
 </resources>

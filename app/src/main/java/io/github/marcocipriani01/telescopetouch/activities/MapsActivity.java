@@ -2,6 +2,7 @@ package io.github.marcocipriani01.telescopetouch.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -29,22 +31,26 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Objects;
 
-import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static io.github.marcocipriani01.telescopetouch.ApplicationConstants.LATITUDE_PREF;
+import static io.github.marcocipriani01.telescopetouch.ApplicationConstants.LONGITUDE_PREF;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    private static final String TAG = TelescopeTouchApp.getTag(MapsActivity.class);
     private static final int DEFAULT_ZOOM = 15;
     private static final int REQUEST_ACCESS_LOCATION = 1;
     private static final String BUNDLE_CAMERA = "camera_position";
     private static final String BUNDLE_MARKER = "marker";
     private GoogleMap map;
     private FusedLocationProviderClient fusedLocationProviderClient;
-    private boolean locationPermissionGranted;
+    private boolean permissionRequested = false;
+    private boolean permissionGranted = false;
     private CameraPosition cameraPosition;
-    private LatLng marker;
+    private LatLng mapMarkerPos;
     private FloatingActionButton fab;
 
     @Override
@@ -52,7 +58,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             cameraPosition = savedInstanceState.getParcelable(BUNDLE_CAMERA);
-            marker = savedInstanceState.getParcelable(BUNDLE_MARKER);
+            mapMarkerPos = savedInstanceState.getParcelable(BUNDLE_MARKER);
         }
         setContentView(R.layout.activity_maps);
         fab = this.findViewById(R.id.maps_done_fab);
@@ -63,7 +69,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
         }
-        Places.initialize(getApplicationContext(), getString(R.string.google_maps_key));
+        Places.initialize(this, getString(R.string.google_maps_key));
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         ((SupportMapFragment) Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.map))).getMapAsync(this);
     }
@@ -71,11 +77,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void finish() {
         Intent intent = new Intent();
-        if (marker == null) {
+        if (mapMarkerPos == null) {
             setResult(Activity.RESULT_CANCELED, intent);
         } else {
-            intent.putExtra(ApplicationConstants.LATITUDE_PREF, Double.toString(marker.latitude));
-            intent.putExtra(ApplicationConstants.LONGITUDE_PREF, Double.toString(marker.longitude));
+            intent.putExtra(LATITUDE_PREF, Double.toString(mapMarkerPos.latitude));
+            intent.putExtra(LONGITUDE_PREF, Double.toString(mapMarkerPos.longitude));
             setResult(Activity.RESULT_OK, intent);
         }
         super.finish();
@@ -94,7 +100,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         if (map != null) {
             outState.putParcelable(BUNDLE_CAMERA, map.getCameraPosition());
-            outState.putParcelable(BUNDLE_MARKER, marker);
+            outState.putParcelable(BUNDLE_MARKER, mapMarkerPos);
         }
         super.onSaveInstanceState(outState);
     }
@@ -103,20 +109,46 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap map) {
         this.map = map;
         map.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style));
-        getLocationPermission();
-        updateLocationUI();
-        if (this.cameraPosition != null)
+        maybeRequestPermission();
+        if (this.cameraPosition != null) {
             map.moveCamera(CameraUpdateFactory.newCameraPosition(this.cameraPosition));
-        if (marker != null) {
-            map.addMarker(getMarker());
-            fab.show();
+        } else if (mapMarkerPos == null) {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            String lat = preferences.getString(LATITUDE_PREF, "0"),
+                    lng = preferences.getString(LONGITUDE_PREF, "0");
+            if ((!lat.equals("0")) || (!lng.equals("0"))) {
+                try {
+                    mapMarkerPos = new LatLng(Float.parseFloat(lat), Float.parseFloat(lng));
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(mapMarkerPos, DEFAULT_ZOOM));
+                } catch (NumberFormatException ignored) {
+                }
+            }
         } else {
-            getDeviceLocation();
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(mapMarkerPos, DEFAULT_ZOOM));
+        }
+        if (mapMarkerPos != null) {
+            map.addMarker(getMapMarker());
+            fab.show();
+        } else if (permissionGranted) {
+            try {
+                fusedLocationProviderClient.getLastLocation().addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        Location result = task.getResult();
+                        if (result != null)
+                            this.map.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                    new LatLng(result.getLatitude(), result.getLongitude()), DEFAULT_ZOOM));
+                    } else {
+                        this.map.getUiSettings().setMyLocationButtonEnabled(false);
+                    }
+                });
+            } catch (SecurityException e) {
+                Log.e(TAG, e.getMessage(), e);
+            }
         }
         map.setOnMapClickListener(newLatLon -> {
             map.clear();
-            marker = newLatLon;
-            map.addMarker(getMarker());
+            mapMarkerPos = newLatLon;
+            map.addMarker(getMapMarker());
             fab.show();
         });
         map.setOnMarkerClickListener(marker -> {
@@ -125,34 +157,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-    private MarkerOptions getMarker() {
-        return new MarkerOptions().position(marker).title("Select position");
+    private MarkerOptions getMapMarker() {
+        return new MarkerOptions().position(mapMarkerPos).title(getString(R.string.select_position));
     }
 
-    private void getDeviceLocation() {
-        if (locationPermissionGranted) {
-            try {
-                fusedLocationProviderClient.getLastLocation().addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        Location result = task.getResult();
-                        if (result != null)
-                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                                    new LatLng(result.getLatitude(), result.getLongitude()), DEFAULT_ZOOM));
-                    } else {
-                        map.getUiSettings().setMyLocationButtonEnabled(false);
-                    }
-                });
-            } catch (SecurityException e) {
-                Log.e("Exception: %s", e.getMessage(), e);
-            }
-        }
-    }
-
-    private void getLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this.getApplicationContext(), ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationPermissionGranted = true;
+    private void maybeRequestPermission() {
+        if (ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            permissionGranted = true;
+            map.setMyLocationEnabled(true);
+            map.getUiSettings().setMyLocationButtonEnabled(true);
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{ACCESS_FINE_LOCATION}, REQUEST_ACCESS_LOCATION);
+            permissionGranted = false;
+            if (!permissionRequested) {
+                ActivityCompat.requestPermissions(this, new String[]{ACCESS_FINE_LOCATION}, REQUEST_ACCESS_LOCATION);
+                permissionRequested = true;
+            }
         }
     }
 
@@ -162,24 +181,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        locationPermissionGranted = (requestCode == REQUEST_ACCESS_LOCATION) &&
-                (grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED);
-        updateLocationUI();
-    }
-
-    private void updateLocationUI() {
-        if (map == null) return;
-        try {
-            if (locationPermissionGranted) {
-                map.setMyLocationEnabled(true);
-                map.getUiSettings().setMyLocationButtonEnabled(true);
-            } else {
-                map.setMyLocationEnabled(false);
-                map.getUiSettings().setMyLocationButtonEnabled(false);
-                getLocationPermission();
+        if (requestCode == REQUEST_ACCESS_LOCATION) {
+            permissionGranted = (grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED);
+            if (map != null) {
+                try {
+                    if (permissionGranted) {
+                        map.setMyLocationEnabled(true);
+                        map.getUiSettings().setMyLocationButtonEnabled(true);
+                    } else {
+                        map.setMyLocationEnabled(false);
+                        map.getUiSettings().setMyLocationButtonEnabled(false);
+                        maybeRequestPermission();
+                    }
+                } catch (SecurityException e) {
+                    Log.e(TAG, e.getMessage(), e);
+                }
             }
-        } catch (SecurityException e) {
-            Log.e("Exception: %s", e.getMessage());
         }
     }
 }

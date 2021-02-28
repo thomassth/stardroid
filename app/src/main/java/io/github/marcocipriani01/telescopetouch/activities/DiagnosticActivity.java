@@ -16,7 +16,9 @@
 
 package io.github.marcocipriani01.telescopetouch.activities;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.pm.PackageInfo;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -35,6 +37,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.preference.PreferenceManager;
@@ -82,9 +86,11 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
     private Sensor magnetometer;
     private Sensor gyroscope;
     private Sensor rotationVectorSensor;
-    private Sensor lightSensor;
     private boolean continueUpdates;
     private LocationHelper locationHelper;
+    private final ActivityResultLauncher<String> locationPermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            result -> locationHelper.restartLocation());
     private DarkerModeManager darkerModeManager;
 
     @Override
@@ -102,6 +108,11 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
                 setText(R.id.diagnose_location_txt, Formatters.latitudeToString(location.getLatitude(), DiagnosticActivity.this)
                         + ", " + Formatters.longitudeToString(location.getLongitude(), DiagnosticActivity.this));
             }
+
+            @Override
+            protected void requestLocationPermission() {
+                locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+            }
         };
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -116,7 +127,12 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
         super.onStart();
         setText(R.id.diagnose_phone_txt, Build.MODEL + " (" + Build.HARDWARE + ") " + Locale.getDefault().getLanguage());
         setText(R.id.diagnose_android_version_txt, String.format(Build.VERSION.RELEASE + " (%d)", Build.VERSION.SDK_INT));
-        setText(R.id.diagnose_skymap_version_txt, String.format(app.getVersionName() + " (%d)", app.getVersion()));
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
+            setText(R.id.diagnose_skymap_version_txt, String.format(info.versionName + " (%d)", info.versionCode));
+        } catch (Exception e) {
+            setText(R.id.diagnose_skymap_version_txt, getString(R.string.unknown));
+        }
     }
 
     @Override
@@ -163,12 +179,6 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
             setColor(R.id.diagnose_rotation_values_txt, absentSensorColor);
         } else {
             sensorManager.registerListener(this, rotationVectorSensor, SensorManager.SENSOR_DELAY_NORMAL);
-        }
-        lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-        if (lightSensor == null) {
-            setColor(R.id.diagnose_light_values_txt, absentSensorColor);
-        } else {
-            sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_UI);
         }
     }
 
@@ -235,8 +245,6 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
             sensorViewId = R.id.diagnose_gyro_values_txt;
         } else if (sensor == rotationVectorSensor) {
             sensorViewId = R.id.diagnose_rotation_values_txt;
-        } else if (sensor == lightSensor) {
-            sensorViewId = R.id.diagnose_light_values_txt;
         } else {
             Log.e(TAG, "Receiving accuracy change for unknown sensor " + sensor);
             return;
@@ -258,8 +266,6 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
             valuesViewId = R.id.diagnose_gyro_values_txt;
         } else if (sensor == rotationVectorSensor) {
             valuesViewId = R.id.diagnose_rotation_values_txt;
-        } else if (sensor == lightSensor) {
-            valuesViewId = R.id.diagnose_light_values_txt;
         } else {
             Log.e(TAG, "Receiving values for unknown sensor " + sensor);
             return;
@@ -301,7 +307,6 @@ public class DiagnosticActivity extends InjectableActivity implements SensorEven
         setText(valuesViewId, builder.toString());
     }
 
-    @SuppressWarnings("deprecation")
     private void updateNetwork() {
         String message;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

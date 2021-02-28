@@ -322,7 +322,6 @@
     <string name="beehive_cluster" translation_description="Name of the Messier object Beehive Cluster">Bienenstockhaufen</string>
     <string name="praesepe" translation_description="Name of the Messier object Praesepe">Praesepe</string>
     <string name="seven_sisters" translation_description="Name of the Messier object Seven Sisters">Sieben Schwestern</string>
-    <string name="compass_calibration_activity_do_not_show_this_again">Diese Meldung nicht mehr anzeigen</string>
     <string name="compass_calibration_activity_warning">Ihr Kompass muss kalibriert werden</string>
     <string name="connected">Verbunden</string>
     <string name="diagnostics_activity_accelerometer">Beschleunigungssensor</string>
@@ -331,7 +330,6 @@
     <string name="diagnostics_activity_connection">Verbindung</string>
     <string name="diagnostics_activity_general_heading">Allgemein</string>
     <string name="diagnostics_activity_gyroscope">Gyroskop</string>
-    <string name="diagnostics_activity_light_level">Helligkeit</string>
     <string name="diagnostics_activity_local_datetime">Ortszeit</string>
     <string name="diagnostics_activity_location">Standort (Länge, Breite)</string>
     <string name="diagnostics_activity_location_and_time_heading">Standort und Zeit</string>
@@ -353,7 +351,6 @@
     <string name="sensor_accuracy_high">Genauigkeit: Hoch</string>
     <string name="sensor_accuracy_low">Genauigkeit: Niedrig</string>
     <string name="sensor_accuracy_medium">Genauigkeit: Mittel</string>
-    <string name="sensor_accuracy_nocontact">Genauigkeit: Kein Kontakt</string>
     <string name="sensor_accuracy_unknown">Genauigkeit: Unbekannt</string>
     <string name="sensor_accuracy_unreliable">Genauigkeit: Nicht abrufbar</string>
     <string name="no_gps">Kein GPS</string>

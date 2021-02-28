@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Please add  translation_description="" attributes to Strings to assist the translators. -->
+<?xml version="1.0" encoding="utf-8"?><!-- Please add  translation_description="" attributes to Strings to assist the translators. -->
 <resources>
     <string name="menu_settings">Gosodiadau</string>
     <string name="menu_search">Chwilio</string>
@@ -16,7 +15,6 @@
     <string name="location_set_auto">Lleoliad wedi\'i osod o %1$s i %2$s</string>
     <string name="location_long_lat">Hydred:%1$f, Ledred:%2$f</string>
     <string name="use_magnetic_correction">Defnyddio cywiriad magnetig</string>
-    <!-- This string is too long and currently unused -->
     <string name="stars">Sêr</string>
     <string name="constellations">Cytser</string>
     <string name="messier_objects" translation_description="The celestial objects catalogued by Charles Messier">Gwrthrychau Messier</string>
@@ -25,7 +23,6 @@
     <string name="show_sky_gradient" translation_description="This is a shading of the color of the sky used for effect">Graddfa Awyr</string>
     <string name="show_meteors_pref">Sêr gwib</string>
     <string name="ecliptic">Ecliptig</string>
-    <!-- Just in case we decide to have such a layer for the 4/24 launch -->
     <string name="malformed_loc_error">Nid yw gosodiad lledred na hydred yn rif.</string>
     <string name="menu_toggle_dim">Toglo modd nos</string>
     <string name="zenith">ANTERTH</string>
@@ -41,13 +38,11 @@
     <string name="many_search_results_title">A oeddet yn meddwl?</string>
     <string name="menu_time">Teithio mewn Amser</string>
     <string name="time_travel_close_message">Nôl i\'r presennol …</string>
-    <!--  -->
     <string name="popular_dates_prompt" translation_description="Label for a list of dates the user can choose from">Dyddiadau poblogaidd</string>
     <string name="custom_date_prompt" translation_description="Label telling the user to manually specify a date">Neu ddewis dy ddyddiad dy hun:</string>
     <string name="change_date_prompt">Newid y dyddiad</string>
     <string name="change_time_prompt">Newid yr amser</string>
-    <string name="now_visiting"
-            translation_description="used in time travel dialog to tell the user what time they are visiting, time formatted as yyyy.mm.dd at hh.mm.ss + timezone">
+    <string name="now_visiting" translation_description="used in time travel dialog to tell the user what time they are visiting, time formatted as yyyy.mm.dd at hh.mm.ss + timezone">
         Nawr yn ymweld â: %s</string>
     <string name="time_travel_label_past" translation_description="Label showing that we are in the past">Teithio Amser: Gorffennol</string>
     <string name="time_travel_label_future" translation_description="Label showing that we are in the future">Teithio Amser: Dyfodol</string>
@@ -64,12 +59,10 @@
     <string name="time_travel_hour_speed_back" translation_description="Label showing rate of travel through time">Yn teithio &lt; 1 awr/eil</string>
     <string name="time_travel_day_speed_back" translation_description="Label showing rate of travel through time">Yn teithio &lt; 1 diwrnod/eil</string>
     <string name="time_travel_week_speed_back" translation_description="Label showing rate of travel through time">Yn teithio &lt; 1 wythnos/eil</string>
-
     <string name="gallery_image_search_btn">Canfod yn yr awyr</string>
     <string name="search_overlay_title" translation_description="title for search overlay">Pwyntia dy ddyfais tua\'r saeth</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">Yn chwilio am:</string>
     <string name="sun_wont_set_message">Dyw\'r haul ddim yn machlud o fewn y 24 awr nesaf yn dy leoliad cyfredol.</string>
-
     <string name="sun">Haul</string>
     <string name="moon">Lleuad</string>
     <string name="mercury">Mercher</string>
@@ -147,7 +140,6 @@
     <string name="big_dipper" translation_description="Name of the Big Dipper constellation">Big Dipper</string>
     <string name="great_bear" translation_description="Name of the Great Bear constellation">Arth Fawr</string>
     <string name="plough" translation_description="Name of the Plough constellation">Aradr</string>
-
     <string name="sirius" translation_description="Name of the Star Sirius">Sirius</string>
     <string name="canopus" translation_description="Name of the Star Canopus">Canopus</string>
     <string name="arcturus" translation_description="Name of the Star Arcturus">Arcturus</string>
@@ -219,7 +211,6 @@
     <string name="alpha_centauri" translation_description="Name of the star Alpha Centauri">Alpha Centauri</string>
     <string name="rigil_kent" translation_description="Name of the star Rigil Kent">Rigil Kent</string>
     <string name="e_lyrae" translation_description="Name of the star ε Lyrae">ε Lyrae</string>
-
     <string name="m1" translation_description="Name of the Messier object M1">M1</string>
     <string name="m2" translation_description="Name of the Messier object M2">M2</string>
     <string name="m3" translation_description="Name of the Messier object M3">M3</string>
@@ -348,23 +339,21 @@
     <string name="orionids" translation_description="Meteor Shower">Orionids</string>
     <string name="puppidvelids" translation_description="Meteor Shower">Puppid-Velids</string>
     <string name="ursids" translation_description="Meteor Shower">Ursids</string>
-
     <string name="warning_dialog_title">Newyddion drwg!</string>
     <string name="missing_sensor_dialog_text">\n
         Yn anffodus, mae\'n bosib nad oes gan dy ddyfais un o\'r synwyryddion sydd ei angen ar Sky Map.\n\n
-        Er mwyn dangos yr awyr yn y cyfeiriad mae dy ddyfais yn pwyntio mae ar Sky Map angen cwmpawd a mesurydd cyflymiad. Mae dy ddyfais yn adrodd bod un ohonynt ar goll. Mae rhai dyfeisiau (e.e. Moto E) yn honni yn anghywir nad oes ynddynt gwmpawd.\n\n
-
-        Os oes wir synhwyrydd ar goll o dy ddyfais, ni fydd modd awto-synhwyro yn gweithio. Fodd bynnag, gellir dal i ddefnyddio Sky Map ar y ddyfais hon ym modd llaw, a llusgo, troi a chwyddo\'r map gyda dy fysedd.
+        Er mwyn dangos yr awyr yn y cyfeiriad mae dy ddyfais yn pwyntio mae ar Sky Map angen
+        cwmpawd a mesurydd cyflymiad. Mae dy ddyfais yn adrodd bod un ohonynt ar goll.\n\n
+        Os oes wir synhwyrydd ar goll o dy ddyfais, ni fydd modd awto-synhwyro yn gweithio.
+        Fodd bynnag, gellir dal i ddefnyddio Sky Map ar y ddyfais hon ym modd llaw, a llusgo, troi a chwyddo\'r map gyda dy fysedd.
     </string>
     <string name="do_not_show_again">Peidio â dangos y neges hon eto</string>
-    <string name="title_activity_diagnostic">Diagnosteg</string>
     <string name="sensor_absent">Absennol</string>
     <string name="sensor_accuracy_unknown">Cywirdeb: Anhysbys</string>
     <string name="sensor_accuracy_unreliable">Cywirdeb: Annibynadwy</string>
     <string name="sensor_accuracy_low">Cywirdeb: Isel</string>
     <string name="sensor_accuracy_medium">Cywirdeb: Canolig</string>
     <string name="sensor_accuracy_high">Cywirdeb: Uchel</string>
-    <string name="sensor_accuracy_nocontact">Cywirdeb: Dim cyswllt</string>
     <string name="diagnostics_activity_general_heading">Cyffredinol</string>
     <string name="diagnostics_activity_phone">Dyfais</string>
     <string name="diagnostics_activity_android_version">Fersiwn Android</string>
@@ -374,7 +363,6 @@
     <string name="diagnostics_activity_accelerometer">Mesurydd Cyflymiad</string>
     <string name="diagnostics_activity_rotation_vector">Cylchdro</string>
     <string name="diagnostics_activity_gyroscope">Geirosgop</string>
-    <string name="diagnostics_activity_light_level">Lefel golau</string>
     <string name="diagnostics_activity_location_and_time_heading">Lleoliad ac amser</string>
     <string name="diagnostics_activity_gps">GPS</string>
     <string name="diagnostics_activity_location">Lleoliad (lled., hyd.)</string>
@@ -393,7 +381,6 @@
     <string name="disconnected">Heb gysylltu</string>
     <string name="cell_network">" (symudol)"</string>
     <string name="menu_calibrate">Calibro</string>
-    <string name="compass_calibration_activity_do_not_show_this_again">Peidio â dangos hyn eto</string>
     <string name="compass_calibration_activity_warning">Mae angen calibro dy gwmpawd</string>
     <string name="sensor_reverse_preference_title">Gwrthdroi Z Magnetig</string>
     <string name="sensor_reverse_preference_summary">Dull cywiro ar gyfer dyfeisiau â synwyryddion wedi\'u rhoi ar waith yn anghywir; angen ailgychwyn</string>

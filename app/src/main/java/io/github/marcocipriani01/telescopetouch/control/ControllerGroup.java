@@ -30,6 +30,7 @@ import io.github.marcocipriani01.telescopetouch.activities.SkyMapActivity;
 import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.maths.Formatters;
 import io.github.marcocipriani01.telescopetouch.sensors.LocationHelper;
+import io.github.marcocipriani01.telescopetouch.sensors.LocationPermissionRequester;
 
 /**
  * Manages all the different controllers that affect the model of the observer.
@@ -37,10 +38,10 @@ import io.github.marcocipriani01.telescopetouch.sensors.LocationHelper;
  *
  * @author John Taylor
  */
-public class ControllerGroup implements Controller {
+public class ControllerGroup implements Controller, LocationPermissionRequester {
 
     private final static String TAG = TelescopeTouchApp.getTag(ControllerGroup.class);
-    private static final float MIN_DIST_TO_SHOW_MSG_DEGREES = 0.01f;
+    private static final float MIN_DISTANCE_MESSAGE_DEG = 0.01f;
     private final ArrayList<Controller> controllers = new ArrayList<>();
     private final ZoomController zoomController;
     private final ManualOrientationController manualDirectionController;
@@ -61,6 +62,11 @@ public class ControllerGroup implements Controller {
                 ControllerGroup.this.location = location;
                 if (model != null) setLocationInModel();
             }
+
+            @Override
+            protected void requestLocationPermission() {
+                activity.requestLocationPermission();
+            }
         };
         this.sensorOrientationController = sensorOrientationController;
         controllers.add(sensorOrientationController);
@@ -73,8 +79,13 @@ public class ControllerGroup implements Controller {
         setAutoMode(true);
     }
 
+    @Override
+    public void onLocationPermissionAcquired() {
+        locationHelper.restartLocation();
+    }
+
     private void setLocationInModel() {
-        if (Formatters.locationDistance(location, model.getLocation()) > MIN_DIST_TO_SHOW_MSG_DEGREES) {
+        if (Formatters.locationDistance(location, model.getLocation()) > MIN_DISTANCE_MESSAGE_DEG) {
             Log.d(TAG, "Informing user of change of location");
             locationHelper.showLocationToUser(location, location.getProvider());
         } else {
@@ -183,7 +194,7 @@ public class ControllerGroup implements Controller {
         for (Controller controller : controllers) {
             controller.stop();
         }
-        locationHelper.start();
+        locationHelper.stop();
     }
 
     /**

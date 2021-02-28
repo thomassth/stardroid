@@ -122,7 +122,8 @@ public class AladinFragment extends ActionFragment implements Toolbar.OnMenuItem
             aladinView = rootView.findViewById(R.id.aladin_web_view);
             aladinView.setAladinListener(this);
             aladinView.start();
-            locationHelper = new LocationHelper(getActivity()) {
+            FragmentActivity activity = getActivity();
+            locationHelper = new LocationHelper(activity) {
                 @Override
                 protected void onLocationOk(Location location) {
                     AladinFragment.this.location = location;
@@ -130,9 +131,13 @@ public class AladinFragment extends ActionFragment implements Toolbar.OnMenuItem
 
                 @Override
                 protected void requestLocationPermission() {
-                    FragmentActivity activity = getActivity();
                     if (activity instanceof MainActivity)
                         ((MainActivity) activity).requestLocationPermission();
+                }
+
+                @Override
+                protected void makeSnack(String string) {
+                    requestActionSnack(string);
                 }
             };
             if (!preferences.getBoolean(ALADIN_WELCOME, false))
@@ -273,7 +278,7 @@ public class AladinFragment extends ActionFragment implements Toolbar.OnMenuItem
     }
 
     @Override
-    @SuppressWarnings({"deprecation", "ResultOfMethodCallIgnored"})
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @SuppressLint("SimpleDateFormat")
     public void onAladinBitmap(Bitmap bitmap) {
         try {

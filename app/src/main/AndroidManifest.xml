@@ -124,7 +124,7 @@
         </activity>
         <activity
             android:name=".activities.DiagnosticActivity"
-            android:label="@string/title_activity_diagnostic"
+            android:label="@string/menu_diagnostics"
             android:screenOrientation="userPortrait" />
         <activity
             android:name=".activities.CompassCalibrationActivity"

@@ -17,7 +17,6 @@
     <string name="location_set_auto">Ubicación definida de %1$s a %2$s</string>
     <string name="location_long_lat">Longitude:%1$f, Latitude:%2$f</string>
     <string name="use_magnetic_correction">Usar corrección magnética</string>
-    <!-- This string is too long and currently unused -->
     <string name="stars">Estrellas</string>
     <string name="constellations">Constelaciones</string>
     <string name="messier_objects" translation_description="The celestial objects catalogued by Charles Messier">Objetos Messier</string>
@@ -25,7 +24,6 @@
     <string name="horizon">Horizonte</string>
     <string name="show_sky_gradient" translation_description="This is a shading of the color of the sky used for effect">Gradiente del cielo</string>
     <string name="show_meteors_pref">Lluvias de meteoros</string>
-    <!-- Just in case we decide to have such a layer for the 4/24 launch -->
     <string name="ecliptic">Eclíptica</string>
     <string name="malformed_loc_error">El ajuste de lat/long no es un número.</string>
     <string name="menu_toggle_dim">Alternar visión nocturna</string>
@@ -65,14 +63,11 @@
     <string name="time_travel_hour_speed_back" translation_description="Label showing rate of travel through time">Viajando a &lt; @ 1 hora/seg</string>
     <string name="time_travel_day_speed_back" translation_description="Label showing rate of travel through time">Viajando a &lt; @ 1 día/seg</string>
     <string name="time_travel_week_speed_back" translation_description="Label showing rate of travel through time">Viajando a &lt; @ 1 semana/seg</string>
-
     <string name="gallery_image_search_btn">Buscar en el cielo</string>
     <string name="search_overlay_title" translation_description="title for search overlay">Apunta tu teléfono hacia la flecha</string>
     <string name="search_target_looking_message" translation_description="displayed when a search target is being searched for">Buscando:</string>
     <string name="sun_wont_set_message">El sol no se pondrá durante las próximas 24 horas en tu ubicación actual.</string>
-
     <string name="missing_label" translation_description="Used to indicate to the developer that they've added a resource with no translation.">MISSING_LBL</string>
-
     <string name="sun">Sol</string>
     <string name="moon">Luna</string>
     <string name="mercury">Mercurio</string>
@@ -150,7 +145,6 @@
     <string name="big_dipper" translation_description="Name of the Big Dipper constellation">Osa Mayor</string>
     <string name="great_bear" translation_description="Name of the Great Bear constellation">Osa Mayor</string>
     <string name="plough" translation_description="Name of the Plough constellation">El Carro</string>
-
     <string name="sirius" translation_description="Name of the Star Sirius">Sirio</string>
     <string name="canopus" translation_description="Name of the Star Canopus">Canopo</string>
     <string name="arcturus" translation_description="Name of the Star Arcturus">Arturo</string>
@@ -222,7 +216,6 @@
     <string name="alpha_centauri" translation_description="Name of the star Alpha Centauri">Alfa Centauri</string>
     <string name="rigil_kent" translation_description="Name of the star Rigil Kent">Rigil Kent</string>
     <string name="e_lyrae" translation_description="Name of the star ε Lyrae">ε Lyrae</string>
-
     <string name="m1" translation_description="Name of the Messier object M1">M1</string>
     <string name="m2" translation_description="Name of the Messier object M2">M2</string>
     <string name="m3" translation_description="Name of the Messier object M3">M3</string>
@@ -351,29 +344,22 @@
     <string name="orionids" translation_description="Meteor Shower">Oriónidas</string>
     <string name="puppidvelids" translation_description="Meteor Shower">Púpidas-Vélidas</string>
     <string name="ursids" translation_description="Meteor Shower">Úrsidas</string>
-
     <string name="warning_dialog_title">¡Malas noticias!</string>
     <string name="missing_sensor_dialog_text">\n
-        Lamentablemente, es posible que tu dispositivo no tenga uno de los
-    sensores que Sky Map necesita.\n\n
-        Para mostrarte el cielo en la dirección en la que apunta tu teléfono Sky Map
-    necesita tanto la brújula incorporada como un acelerómetro. Tu dispositivo informa que falta
-        uno de ellos. La buena noticia es que algunos dispositivos (como algunos teléfonos Moto E) afirman falsamente
-        no tener una brújula, pero sí la tienen.\n\n
-
+        Lamentablemente, es posible que tu dispositivo no tenga uno de los sensores que Sky Map necesita.\n\n
+        Para mostrarte el cielo en la dirección en la que apunta tu teléfono Sky Map necesita tanto
+        la brújula incorporada como un acelerómetro. Tu dispositivo informa que falta uno de ellos.\n\n
         Si a tu dispositivo realmente le falta un sensor, el modo automático no funcionará. Sin embargo, aun
         puedes usar Sky Map en este dispositivo en modo manual donde puedes arrastrar, girar y estirar el
         mapa con tus dedos.
     </string>
     <string name="do_not_show_again">No mostrar este mensaje otra vez</string>
-    <string name="title_activity_diagnostic">Diagnósticos</string>
     <string name="sensor_absent">Ausente</string>
     <string name="sensor_accuracy_unknown">Exactitud: Desconocida</string>
     <string name="sensor_accuracy_unreliable">Exactitud: No confiable</string>
     <string name="sensor_accuracy_low">Exactitud: Baja</string>
     <string name="sensor_accuracy_medium">Exactitud: Media</string>
     <string name="sensor_accuracy_high">Exactitud: Alta</string>
-    <string name="sensor_accuracy_nocontact">Exactitud: Sin contacto</string>
     <string name="diagnostics_activity_general_heading">General</string>
     <string name="diagnostics_activity_phone">Dispositivo</string>
     <string name="diagnostics_activity_android_version">Versión de Android</string>
@@ -383,7 +369,6 @@
     <string name="diagnostics_activity_accelerometer">Acelerómetro</string>
     <string name="diagnostics_activity_rotation_vector">Rotación</string>
     <string name="diagnostics_activity_gyroscope">Giroscopio</string>
-    <string name="diagnostics_activity_light_level">Nivel de luz</string>
     <string name="diagnostics_activity_location_and_time_heading">Ubicación y hora</string>
     <string name="diagnostics_activity_gps">GPS</string>
     <string name="diagnostics_activity_location">Ubicación (lat, long)</string>
@@ -402,7 +387,6 @@
     <string name="disconnected">Desconectado</string>
     <string name="cell_network">" (móvil)"</string>
     <string name="menu_calibrate">Calibrar</string>
-    <string name="compass_calibration_activity_do_not_show_this_again">No mostrar esto otra vez</string>
     <string name="compass_calibration_activity_warning">Tu brújula debe ser calibrada</string>
     <string name="sensor_reverse_preference_title">Z magnético inverso</string>
     <string name="sensor_reverse_preference_summary">Solución para teléfonos con sensores implementados incorrectamente: requiere reiniciar</string>
