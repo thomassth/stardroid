@@ -68,10 +68,10 @@ public class EclipticLayer extends AbstractLayer {
      * Implementation of {@link AstronomicalSource} for the ecliptic source.
      */
     private static class EclipticSource extends AstronomicalSource {
+
         // Earth's Angular Tilt
         private static final float EPSILON = 23.439281f;
-        private static final int LINE_COLOR = Color.argb(20, 248, 239, 188);
-
+        private static final int LINE_COLOR = Color.argb(20, 255, 109, 0);
         private final List<LineSource> lineSources = Collections.synchronizedList(new ArrayList<>());
         private final List<TextSource> textSources = Collections.synchronizedList(new ArrayList<>());
 

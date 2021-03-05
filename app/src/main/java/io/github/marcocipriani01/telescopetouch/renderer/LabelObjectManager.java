@@ -40,6 +40,8 @@ import io.github.marcocipriani01.telescopetouch.renderer.util.TextureManager;
 import io.github.marcocipriani01.telescopetouch.renderer.util.TextureReference;
 import io.github.marcocipriani01.telescopetouch.source.TextSource;
 
+import static io.github.marcocipriani01.telescopetouch.maths.MathsUtils.DEGREES_TO_RADIANS;
+
 /**
  * Manages rendering of text labels.
  *
@@ -47,32 +49,29 @@ import io.github.marcocipriani01.telescopetouch.source.TextSource;
  */
 public class LabelObjectManager extends RendererObjectManager {
 
-    // Should we compute the regions for the labels?
-    // If false, we just put them in the catchall region.
+    // Should we compute the regions for the labels? If false, we just put them in the catchall region.
     private static final boolean COMPUTE_REGIONS = true;
-    private final SkyRegionMap<ArrayList<Label>> mSkyRegions = new SkyRegionMap<>();
-    private final IntBuffer mQuadBuffer;
-    private final Paint mLabelPaint;
-    private LabelMaker mLabelMaker = null;
-    private Label[] mLabels = new Label[0];
-    // These are intermediate variables set in beginDrawing() and used in
-    // draw() to make the transformations more efficient
-    private Vector3 mLabelOffset = new Vector3(0, 0, 0);
-    private float mDotProductThreshold;
-
-    private TextureReference mTexture = null;
+    private final SkyRegionMap<ArrayList<Label>> skyRegions = new SkyRegionMap<>();
+    private final IntBuffer quadBuffer;
+    private final Paint labelPaint;
+    private LabelMaker labelMaker = null;
+    private Label[] labels = new Label[0];
+    // These are intermediate variables set in beginDrawing() and used in draw() to make the transformations more efficient
+    private Vector3 labelOffset = new Vector3(0, 0, 0);
+    private float dotProductThreshold;
+    private TextureReference texture = null;
 
     public LabelObjectManager(int layer, TextureManager textureManager) {
         super(layer, textureManager);
 
-        mLabelPaint = new Paint();
-        mLabelPaint.setAntiAlias(true);
-        mLabelPaint.setTypeface(Typeface.create("Verdana", Typeface.NORMAL));
+        labelPaint = new Paint();
+        labelPaint.setAntiAlias(true);
+        labelPaint.setTypeface(Typeface.DEFAULT);
 
         ByteBuffer quadBuffer = ByteBuffer.allocateDirect(4 * 2 * 4);
         quadBuffer.order(ByteOrder.nativeOrder());
-        mQuadBuffer = quadBuffer.asIntBuffer();
-        mQuadBuffer.position(0);
+        this.quadBuffer = quadBuffer.asIntBuffer();
+        this.quadBuffer.position(0);
         // A quad with size 1 on each size, so we just need to multiply
         // by the label's width and height to get it to the right size for each
         // label.
@@ -82,12 +81,12 @@ public class LabelObjectManager extends RendererObjectManager {
                 0.5f, -0.5f,   // lower right
                 0.5f, 0.5f};  // upper right
         for (float f : vertices) {
-            mQuadBuffer.put(MathsUtils.floatToFixedPoint(f));
+            this.quadBuffer.put(MathsUtils.floatToFixedPoint(f));
         }
-        mQuadBuffer.position(0);
+        this.quadBuffer.position(0);
 
         // We want to initialize the labels of a sky region to an empty list.
-        mSkyRegions.setRegionDataFactory(ArrayList::new);
+        skyRegions.setRegionDataFactory(ArrayList::new);
     }
 
     @Override
@@ -105,81 +104,73 @@ public class LabelObjectManager extends RendererObjectManager {
         // since they were originally created, and I feel like it might not make
         // sense for it to own the texture anymore.  I should see if I can just
         // let it create but not own it.
-        if (!fullReload && mLabelMaker != null) {
-            mLabelMaker.shutdown(gl);
+        if (!fullReload && labelMaker != null) {
+            labelMaker.shutdown(gl);
         }
 
-        mLabelMaker = new LabelMaker(true);
-        mTexture = mLabelMaker.initialize(gl, mLabelPaint, mLabels,
-                getRenderState().getResources(),
-                textureManager());
+        labelMaker = new LabelMaker(true);
+        texture = labelMaker.initialize(gl, labelPaint, labels,
+                getRenderState().getResources(), textureManager());
     }
 
-    public void updateObjects(List<TextSource> labels, EnumSet<UpdateType> updateType) {
+    @SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
+    public synchronized void updateObjects(List<TextSource> labels, EnumSet<UpdateType> updateType) {
         if (updateType.contains(UpdateType.Reset)) {
-            mLabels = new Label[labels.size()];
-            for (int i = 0; i < labels.size(); i++) {
-                mLabels[i] = new Label(labels.get(i));
+            this.labels = new Label[labels.size()];
+            synchronized (labels) {
+                for (int i = 0; i < labels.size(); i++) {
+                    this.labels[i] = new Label(labels.get(i));
+                }
             }
             queueForReload();
         } else if (updateType.contains(UpdateType.UpdatePositions)) {
-            if (labels.size() != mLabels.length) {
-                logUpdateMismatch("LabelObjectManager", mLabels.length, labels.size(), updateType);
+            if (labels.size() != this.labels.length) {
+                logUpdateMismatch("LabelObjectManager", this.labels.length, labels.size(), updateType);
                 return;
             }
             // Since we don't store the positions in any GPU memory, and do the
             // transformations manually, we can just update the positions stored
             // on the label objects.
-            for (int i = 0; i < mLabels.length; i++) {
+            for (int i = 0; i < this.labels.length; i++) {
                 GeocentricCoordinates pos = labels.get(i).getLocation();
-                mLabels[i].x = (float) pos.x;
-                mLabels[i].y = (float) pos.y;
-                mLabels[i].z = (float) pos.z;
+                this.labels[i].x = (float) pos.x;
+                this.labels[i].y = (float) pos.y;
+                this.labels[i].z = (float) pos.z;
             }
         }
 
         // Put all of the labels in their sky regions.
-        // TODO(jpowell): Get this from the label source itself once it supports
-        // this.
-        mSkyRegions.clear();
-        for (Label l : mLabels) {
+        // TODO(jpowell): Get this from the label source itself once it supports this.
+        skyRegions.clear();
+        for (Label l : this.labels) {
             int region;
             if (COMPUTE_REGIONS) {
                 region = SkyRegionMap.getObjectRegion(new GeocentricCoordinates(l.x, l.y, l.z));
             } else {
                 region = SkyRegionMap.CATCHALL_REGION_ID;
             }
-            mSkyRegions.getRegionData(region).add(l);
+            skyRegions.getRegionData(region).add(l);
         }
     }
 
     @Override
     protected void drawInternal(GL10 gl) {
-        gl.glTexEnvx(GL10.GL_TEXTURE_ENV, GL10.GL_TEXTURE_ENV_MODE,
-                GL10.GL_MODULATE);
-
+        gl.glTexEnvx(GL10.GL_TEXTURE_ENV, GL10.GL_TEXTURE_ENV_MODE, GL10.GL_MODULATE);
         gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
         gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
         gl.glActiveTexture(GL10.GL_TEXTURE0);
-        mTexture.bind(gl);
-        gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S,
-                GL10.GL_REPEAT);
-        gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T,
-                GL10.GL_REPEAT);
+        texture.bind(gl);
+        gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_REPEAT);
+        gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_REPEAT);
 
         beginDrawing(gl);
-
         // Draw the labels for the active sky regions.
-        SkyRegionMap.ActiveRegionData activeRegions = getRenderState().getActiveSkyRegions();
-        ArrayList<ArrayList<Label>> allActiveLabels =
-                mSkyRegions.getDataForActiveRegions(activeRegions);
-
+        ArrayList<ArrayList<Label>> allActiveLabels = skyRegions.getDataForActiveRegions(getRenderState().getActiveSkyRegions());
         for (ArrayList<Label> labelsInRegion : allActiveLabels) {
             for (Label l : labelsInRegion) {
                 drawLabel(gl, l);
             }
         }
-
         endDrawing(gl);
     }
 
@@ -187,7 +178,7 @@ public class LabelObjectManager extends RendererObjectManager {
      * Begin drawing labels. Sets the OpenGL state for rapid drawing.
      */
     public void beginDrawing(GL10 gl) {
-        mTexture.bind(gl);
+        texture.bind(gl);
         gl.glShadeModel(GL10.GL_FLAT);
         gl.glEnable(GL10.GL_ALPHA_TEST);
         gl.glAlphaFunc(GL10.GL_GREATER, 0.5f);
@@ -201,9 +192,7 @@ public class LabelObjectManager extends RendererObjectManager {
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glPushMatrix();
         gl.glLoadIdentity();
-        gl.glOrthof(0, getRenderState().getScreenWidth(),
-                0, getRenderState().getScreenHeight(),
-                -1, 1);
+        gl.glOrthof(0, getRenderState().getScreenWidth(), 0, getRenderState().getScreenHeight(), -1, 1);
 
         GLBuffer.unbind((GL11) gl);
         gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
@@ -216,14 +205,12 @@ public class LabelObjectManager extends RendererObjectManager {
         float viewHeight = rs.getScreenHeight();
 
         Matrix4x4 rotation = Matrix4x4.createRotation(rs.getUpAngle(), rs.getLookDir());
-        mLabelOffset = Matrix4x4.multiplyMV(rotation, rs.getUpDir());
+        labelOffset = Matrix4x4.multiplyMV(rotation, rs.getUpDir());
 
         // If a label isn't within the field of view angle from the target vector, it can't
         // be on the screen.  Compute the cosine of this angle so we can quickly identify these.
         // TODO(jpowell): I know I can make this tighter - do so.
-        final float DEGREES_TO_RADIANS = (float) Math.PI / 180.0f;
-        mDotProductThreshold = (float) Math.cos(rs.getRadiusOfView() * DEGREES_TO_RADIANS *
-                (1 + viewWidth / viewHeight) * 0.5f);
+        dotProductThreshold = (float) Math.cos(rs.getRadiusOfView() * DEGREES_TO_RADIANS * (1 + viewWidth / viewHeight) * 0.5f);
     }
 
     /**
@@ -236,26 +223,22 @@ public class LabelObjectManager extends RendererObjectManager {
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glPopMatrix();
         gl.glDisable(GL10.GL_TEXTURE_2D);
-
         gl.glColor4x(MathsUtils.ONE, MathsUtils.ONE, MathsUtils.ONE, MathsUtils.ONE);
     }
 
     private void drawLabel(GL10 gl, Label label) {
         Vector3 lookDir = getRenderState().getLookDir();
-        if (lookDir.x * label.x + lookDir.y * label.y + lookDir.z * label.z < mDotProductThreshold) {
+        if (lookDir.x * label.x + lookDir.y * label.y + lookDir.z * label.z < dotProductThreshold)
             return;
-        }
 
         // Offset the label to be underneath the given position (so a label will
         // always appear underneath a star no matter how the phone is rotated)
         Vector3 v = new Vector3(
-                label.x - mLabelOffset.x * label.offset,
-                label.y - mLabelOffset.y * label.offset,
-                label.z - mLabelOffset.z * label.offset);
+                label.x - labelOffset.x * label.offset,
+                label.y - labelOffset.y * label.offset,
+                label.z - labelOffset.z * label.offset);
 
-        Vector3 screenPos = Matrix4x4.transformVector(
-                getRenderState().getTransformToScreenMatrix(),
-                v);
+        Vector3 screenPos = Matrix4x4.transformVector(getRenderState().getTransformToScreenMatrix(), v);
 
         // We want this to align consistently with the pixels on the screen, so we
         // snap to the nearest x/y coordinate, and add a magic offset of less than
@@ -272,7 +255,7 @@ public class LabelObjectManager extends RendererObjectManager {
         gl.glRotatef(180 / (float) Math.PI * getRenderState().getUpAngle(), 0, 0, -1);
         gl.glScalef(label.getWidthInPixels(), label.getHeightInPixels(), 1);
 
-        gl.glVertexPointer(2, GL10.GL_FIXED, 0, mQuadBuffer);
+        gl.glVertexPointer(2, GL10.GL_FIXED, 0, quadBuffer);
         gl.glTexCoordPointer(2, GL10.GL_FIXED, 0, label.getTexCoords());
         if (getRenderState().getNightVisionMode()) {
             gl.glColor4x(MathsUtils.ONE, 0, 0, label.fixedA);
@@ -280,7 +263,6 @@ public class LabelObjectManager extends RendererObjectManager {
             gl.glColor4x(label.fixedR, label.fixedG, label.fixedB, label.fixedA);
         }
         gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, 4);
-
         gl.glPopMatrix();
     }
 
@@ -290,6 +272,7 @@ public class LabelObjectManager extends RendererObjectManager {
      * the label than to have two textures, one with red labels and one without.
      */
     private static class Label extends LabelMaker.LabelData {
+
         public float x;
         public float y;
         public float z;

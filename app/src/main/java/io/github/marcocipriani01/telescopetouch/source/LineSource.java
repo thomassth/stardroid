@@ -16,8 +16,6 @@
 
 package io.github.marcocipriani01.telescopetouch.source;
 
-import android.graphics.Color;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,10 +31,6 @@ public class LineSource extends AbstractSource implements Colorable {
     public final List<GeocentricCoordinates> vertices;
     public final List<EquatorialCoordinates> raDecs;
     public final float lineWidth;
-
-    public LineSource() {
-        this(Color.WHITE, new ArrayList<>(), 1.5f);
-    }
 
     public LineSource(int color) {
         this(color, new ArrayList<>(), 1.5f);

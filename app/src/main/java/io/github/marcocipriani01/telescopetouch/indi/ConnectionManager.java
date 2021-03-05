@@ -62,9 +62,9 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
     public final EquatorialCoordinates telescopeCoordinates = new EquatorialCoordinates();
     private final Handler handler = new Handler(Looper.getMainLooper());
     public final AsyncBLOBLoader blobLoader = new AsyncBLOBLoader(handler);
-    private final Set<ManagerListener> managerListeners = new HashSet<>();
-    private final HashSet<INDIServerConnectionListener> indiListeners = new HashSet<>();
-    private final ArrayList<LogItem> logs = new ArrayList<>();
+    private final Set<ManagerListener> managerListeners = Collections.synchronizedSet(new HashSet<>());
+    private final Set<INDIServerConnectionListener> indiListeners = Collections.synchronizedSet(new HashSet<>());
+    private final List<LogItem> logs = new ArrayList<>();
     private final List<INDIBLOBProperty> blobProperties = Collections.synchronizedList(new ArrayList<>());
     // Telescope
     public volatile String telescopeName = null;
@@ -91,7 +91,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
         return blobProperties;
     }
 
-    public ArrayList<LogItem> getLogs() {
+    public List<LogItem> getLogs() {
         return logs;
     }
 
@@ -342,12 +342,11 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
                 listener.onBLOBListChange();
             }
         } else {
-            String name = property.getName();
-            switch (name) {
+            switch (property.getName()) {
                 case "EQUATORIAL_EOD_COORD":
-                    if (((telescopeCoordDec = (INDINumberElement) property.getElement(INDIStandardElement.DEC)) != null) &&
-                            ((telescopeCoordRA = (INDINumberElement) property.getElement(INDIStandardElement.RA)) != null) &&
-                            (property instanceof INDINumberProperty)) {
+                    if ((property instanceof INDINumberProperty) &&
+                            ((telescopeCoordDec = (INDINumberElement) property.getElement(INDIStandardElement.DEC)) != null) &&
+                            ((telescopeCoordRA = (INDINumberElement) property.getElement(INDIStandardElement.RA)) != null)) {
                         property.addINDIPropertyListener(this);
                         telescopeCoordP = (INDINumberProperty) property;
                         telescopeName = device.getName();
@@ -357,7 +356,8 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
                     }
                     break;
                 case "ON_COORD_SET":
-                    if (((telescopeOnCoordSetTrack = (INDISwitchElement) property.getElement(INDIStandardElement.TRACK)) != null) &&
+                    if ((property instanceof INDISwitchProperty) &&
+                            ((telescopeOnCoordSetTrack = (INDISwitchElement) property.getElement(INDIStandardElement.TRACK)) != null) &&
                             ((telescopeOnCoordSetSlew = (INDISwitchElement) property.getElement(INDIStandardElement.SLEW)) != null) &&
                             ((telescopeOnCoordSetSync = (INDISwitchElement) property.getElement(INDIStandardElement.SYNC)) != null)) {
                         property.addINDIPropertyListener(this);
@@ -378,8 +378,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
                 listener.onBLOBListChange();
             }
         } else {
-            String name = property.getName();
-            switch (name) {
+            switch (property.getName()) {
                 case "EQUATORIAL_EOD_COORD":
                     telescopeCoordDec = null;
                     telescopeCoordRA = null;

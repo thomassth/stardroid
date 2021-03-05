@@ -46,7 +46,7 @@ public class PlanetsLayer extends AbstractLayer {
 
     public static final int DEPTH_ORDER = 60;
     public static final String PREFERENCE_ID = "source_provider.3";
-    private static final int LABEL_COLOR = 0xf67e81;
+    private static final int LABEL_COLOR = 0xFF3D00;
     private final AstronomerModel model;
 
     public PlanetsLayer(AstronomerModel model, Resources resources) {

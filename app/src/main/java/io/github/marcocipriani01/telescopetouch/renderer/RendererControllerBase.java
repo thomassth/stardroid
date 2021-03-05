@@ -189,7 +189,6 @@ public abstract class RendererControllerBase {
     public static abstract class RenderManager<E> {
 
         final protected RendererObjectManager manager;
-
         private RenderManager(RendererObjectManager mgr) {
             manager = mgr;
         }
@@ -199,8 +198,7 @@ public abstract class RendererControllerBase {
             controller.queueRunnable(msg, CommandType.Data, () -> manager.enable(enable));
         }
 
-        public abstract void queueObjects(
-                final List<E> objects,
+        public abstract void queueObjects(final List<E> objects,
                 final EnumSet<RendererObjectManager.UpdateType> updateType,
                 RendererControllerBase controller);
     }
@@ -245,6 +243,7 @@ public abstract class RendererControllerBase {
      * Class for managing a set of text label objects.
      */
     public static class LabelManager extends RenderManager<TextSource> {
+
         private LabelManager(LabelObjectManager manager) {
             super(manager);
         }
@@ -262,6 +261,7 @@ public abstract class RendererControllerBase {
      * Class for managing a set of image objects.
      */
     public static class ImageManager extends RenderManager<ImageSource> {
+
         private ImageManager(ImageObjectManager manager) {
             super(manager);
         }
