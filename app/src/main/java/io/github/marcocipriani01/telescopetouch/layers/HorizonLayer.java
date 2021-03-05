@@ -75,23 +75,21 @@ public class HorizonLayer extends AbstractLayer {
      * Implementation of {@link AstronomicalSource} for the horizon source.
      */
     static class HorizonSource extends AstronomicalSource {
+
         // Due to a bug in the G1 rendering code text and lines render in different
         // colors.
-        private static final int LINE_COLOR = Color.argb(120, 86, 176, 245);
-        private static final int LABEL_COLOR = Color.argb(120, 245, 176, 86);
+        private static final int LINE_COLOR = Color.argb(120, 64, 196, 255);
+        private static final int LABEL_COLOR = Color.argb(120, 255, 171, 64);
         private static final long UPDATE_FREQ_MS = TimeUtils.MILLISECONDS_PER_SECOND;
-
         private final GeocentricCoordinates zenith = new GeocentricCoordinates();
         private final GeocentricCoordinates nadir = new GeocentricCoordinates();
         private final GeocentricCoordinates north = new GeocentricCoordinates();
         private final GeocentricCoordinates south = new GeocentricCoordinates();
         private final GeocentricCoordinates east = new GeocentricCoordinates();
         private final GeocentricCoordinates west = new GeocentricCoordinates();
-
         private final List<LineSource> lineSources = Collections.synchronizedList(new ArrayList<>());
         private final List<TextSource> textSources = Collections.synchronizedList(new ArrayList<>());
         private final AstronomerModel model;
-
         private long lastUpdateTimeMs = 0L;
 
         public HorizonSource(AstronomerModel model, Resources res) {

@@ -55,7 +55,6 @@ import io.github.marcocipriani01.telescopetouch.source.TextSource;
 public abstract class AbstractLayer implements Layer {
 
     private static final String TAG = TelescopeTouchApp.getTag(AbstractLayer.class);
-
     private final ReentrantLock renderMapLock = new ReentrantLock();
     private final HashMap<Class<?>, RenderManager<?>> renderMap = new HashMap<>();
     private final Resources resources;
@@ -81,10 +80,18 @@ public abstract class AbstractLayer implements Layer {
         initializeAstroSources(astroSources);
         for (AstronomicalSource astroSource : astroSources) {
             AstronomicalSource sources = astroSource.initialize();
-            textSources.addAll(sources.getLabels());
-            imageSources.addAll(sources.getImages());
-            pointSources.addAll(sources.getPoints());
-            lineSources.addAll(sources.getLines());
+            synchronized (textSources) {
+                textSources.addAll(sources.getLabels());
+            }
+            synchronized (imageSources) {
+                imageSources.addAll(sources.getImages());
+            }
+            synchronized (pointSources) {
+                pointSources.addAll(sources.getPoints());
+            }
+            synchronized (lineSources) {
+                lineSources.addAll(sources.getLines());
+            }
             List<String> names = astroSource.getNames();
             if (!names.isEmpty()) {
                 GeocentricCoordinates searchLoc = astroSource.getSearchLocation();

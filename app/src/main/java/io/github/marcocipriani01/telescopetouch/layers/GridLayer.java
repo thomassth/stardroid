@@ -82,6 +82,7 @@ public class GridLayer extends AbstractLayer {
      */
     @SuppressLint("DefaultLocale")
     static class GridSource extends AstronomicalSource {
+
         private static final int LINE_COLOR = Color.argb(20, 248, 239, 188);
         /**
          * These are great (semi)circles, so only need 3 points.
@@ -91,7 +92,6 @@ public class GridLayer extends AbstractLayer {
          * every 10 degrees
          */
         private static final int NUM_RA_VERTICES = 36;
-
         private final List<LineSource> lineSources = Collections.synchronizedList(new ArrayList<>());
         private final List<TextSource> textSources = Collections.synchronizedList(new ArrayList<>());
 
