@@ -155,7 +155,7 @@
             android:label="@string/pick_location_pref"
             android:screenOrientation="fullUser" />
         <activity
-            android:name=".activities.FlyingBLOBViewActivity"
+            android:name=".activities.PIPCameraViewerActivity"
             android:label="@string/mount_control"
             android:theme="@style/AppThemeNoActionBar"
             android:launchMode="singleTask"

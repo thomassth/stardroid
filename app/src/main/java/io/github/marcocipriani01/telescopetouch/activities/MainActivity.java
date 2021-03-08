@@ -63,7 +63,7 @@ import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.AboutFragment;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.ActionFragment;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.AladinFragment;
-import io.github.marcocipriani01.telescopetouch.activities.fragments.BLOBViewerFragment;
+import io.github.marcocipriani01.telescopetouch.activities.fragments.CameraFragment;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.CompassFragment;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.ConnectionFragment;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.ControlPanelFragment;
@@ -76,7 +76,6 @@ import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManage
 import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
 import io.github.marcocipriani01.telescopetouch.sensors.LocationPermissionRequester;
 
-import static io.github.marcocipriani01.telescopetouch.ApplicationConstants.RECEIVE_BLOB_PREF;
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 
 /**
@@ -84,9 +83,9 @@ import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connect
  *
  * @author marcocipriani01
  */
-public class MainActivity extends AppCompatActivity implements
-        NavigationView.OnNavigationItemSelectedListener, Toolbar.OnMenuItemClickListener, DarkerModeManager.NightModeListener,
-        ActionFragment.ActionListener, ConnectionManager.ManagerListener, SharedPreferences.OnSharedPreferenceChangeListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+        Toolbar.OnMenuItemClickListener, DarkerModeManager.NightModeListener,
+        ActionFragment.ActionListener, ConnectionManager.ManagerListener {
 
     public static final String ACTION = "MainActivityAction";
     public static final int ACTION_CONNECT = Pages.CONNECTION.ordinal();
@@ -113,11 +112,9 @@ public class MainActivity extends AppCompatActivity implements
     private CoordinatorLayout mainCoordinator;
     private boolean visible = false;
     private boolean doubleBackPressed = false;
-    private MenuItem rcvBlobMenuItem;
     private DarkerModeManager darkerModeManager;
     private boolean darkerMode = false;
     private BottomAppBar bottomBar;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,7 +166,6 @@ public class MainActivity extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
         connectionManager.addManagerListener(this);
-        preferences.registerOnSharedPreferenceChangeListener(this);
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (AppForegroundService.class.getName().equals(service.service.getClassName())) {
@@ -195,7 +191,6 @@ public class MainActivity extends AppCompatActivity implements
     protected void onStop() {
         super.onStop();
         connectionManager.removeManagerListener(this);
-        preferences.registerOnSharedPreferenceChangeListener(this);
         String exitAction = preferences.getString(ApplicationConstants.EXIT_ACTION_PREF, "0");
         if (exitAction.equals("1") || (exitAction.equals("2") && connectionManager.isConnected())) {
             Intent intent = new Intent(this, AppForegroundService.class);
@@ -221,8 +216,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
-        rcvBlobMenuItem = menu.findItem(R.id.menu_enable_rcv_blob);
-        rcvBlobMenuItem.setChecked(preferences.getBoolean(RECEIVE_BLOB_PREF, false));
         menu.findItem(R.id.menu_darker_mode).setIcon(darkerMode ? R.drawable.light_mode : R.drawable.darker_mode);
         return super.onCreateOptionsMenu(menu);
     }
@@ -263,11 +256,6 @@ public class MainActivity extends AppCompatActivity implements
             } else {
                 actionSnackRequested(getString(R.string.shortcuts_not_supported));
             }
-        } else if (itemId == R.id.menu_enable_rcv_blob) {
-            boolean checked = !item.isChecked();
-            item.setChecked(checked);
-            connectionManager.setBlobEnabled(checked);
-            preferences.edit().putBoolean(RECEIVE_BLOB_PREF, checked).apply();
         } else if (itemId == R.id.menu_darker_mode) {
             if ((currentPage == Pages.ALADIN) && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
                 actionSnackRequested(getString(R.string.dark_mode_not_supported));
@@ -284,12 +272,6 @@ public class MainActivity extends AppCompatActivity implements
             return false;
         }
         return true;
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(RECEIVE_BLOB_PREF) && (rcvBlobMenuItem != null))
-            rcvBlobMenuItem.setChecked(sharedPreferences.getBoolean(RECEIVE_BLOB_PREF, false));
     }
 
     @Override
@@ -441,7 +423,7 @@ public class MainActivity extends AppCompatActivity implements
                     lastInstance = new GoToFragment();
                     break;
                 case CCD_IMAGES:
-                    lastInstance = new BLOBViewerFragment();
+                    lastInstance = new CameraFragment();
                     break;
                 case FOCUSER:
                     lastInstance = new FocuserFragment();

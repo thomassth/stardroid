@@ -232,30 +232,24 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
     private void refreshUi(ConnectionManager.State state) {
         switch (state) {
             case CONNECTED: {
-                connectionButton.post(() -> {
-                    connectionButton.setText(context.getString(R.string.disconnect));
-                    connectionButton.setEnabled(true);
-                });
-                serversSpinner.post(() -> serversSpinner.setEnabled(false));
-                portEditText.post(() -> portEditText.setEnabled(false));
+                connectionButton.setText(context.getString(R.string.disconnect));
+                connectionButton.setEnabled(true);
+                serversSpinner.setEnabled(false);
+                portEditText.setEnabled(false);
                 break;
             }
             case DISCONNECTED: {
-                connectionButton.post(() -> {
-                    connectionButton.setText(context.getString(R.string.connect));
-                    connectionButton.setEnabled(true);
-                });
-                serversSpinner.post(() -> serversSpinner.setEnabled(true));
-                portEditText.post(() -> portEditText.setEnabled(true));
+                connectionButton.setText(context.getString(R.string.connect));
+                connectionButton.setEnabled(true);
+                serversSpinner.setEnabled(true);
+                portEditText.setEnabled(true);
                 break;
             }
             case BUSY: {
-                connectionButton.post(() -> {
-                    connectionButton.setText(context.getString(R.string.connecting));
-                    connectionButton.setEnabled(false);
-                });
-                serversSpinner.post(() -> serversSpinner.setEnabled(false));
-                portEditText.post(() -> portEditText.setEnabled(false));
+                connectionButton.setText(context.getString(R.string.connecting));
+                connectionButton.setEnabled(false);
+                serversSpinner.setEnabled(false);
+                portEditText.setEnabled(false);
                 break;
             }
         }
