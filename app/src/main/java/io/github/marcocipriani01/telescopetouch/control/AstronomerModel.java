@@ -21,7 +21,6 @@ import android.location.Location;
 
 import java.util.Calendar;
 
-import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoordinates;
 import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.maths.Matrix3x3;
@@ -78,11 +77,11 @@ public class AstronomerModel {
     /**
      * The sensor acceleration in the phone's coordinate system.
      */
-    private final Vector3 acceleration = ApplicationConstants.INITIAL_DOWN.copy();
+    private final Vector3 acceleration = new Vector3(0, -1, -9).copy();
     /**
      * The sensor magnetic field in the phone's coordinate system.
      */
-    private final Vector3 magneticField = ApplicationConstants.INITIAL_SOUTH.copy();
+    private final Vector3 magneticField = new Vector3(0, -1, 0).copy();
     private final float[] rotationVector = {1, 0, 0, 0};
     private Vector3 screenInPhoneCoords = SCREEN_UP_IN_PHONE_COORDS;
     private MagneticDeclinationCalculator magneticDeclinationCalculator;

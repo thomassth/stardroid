@@ -22,13 +22,6 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/menu_enable_rcv_blob"
-        android:checkable="true"
-        android:orderInCategory="80"
-        android:title="@string/receive_images"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/menu_skymap_shortcut"
         android:orderInCategory="90"
         android:title="@string/add_sky_map_shortcut"

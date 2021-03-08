@@ -523,7 +523,6 @@
     <string name="invalid_abs_position">Position absolue invalide !</string>
     <string name="nsd_not_available">Découverte du réseau désactivée !</string>
     <string name="catalog_load_error">Erreur de chargement du cataloge !</string>
-    <string name="ccd_images">Images CCD</string>
     <string name="receive_images">Réception de l\'image</string>
     <string name="unknown">inconnu</string>
     <string name="file_size">Taille du fichier :</string>

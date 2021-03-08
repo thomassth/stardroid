@@ -6,149 +6,432 @@
     android:layout_height="match_parent"
     android:layout_marginBottom="?android:attr/actionBarSize"
     android:orientation="vertical"
-    tools:context=".activities.fragments.BLOBViewerFragment">
+    tools:context=".activities.fragments.CameraFragment">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/compass_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.MaterialComponents.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.MaterialComponents"
+        app:title="@string/capture_view_ccd" />
 
     <ProgressBar
         android:id="@+id/blob_loading"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="0dp"
         android:layout_weight="0"
         android:indeterminate="true"
+        android:padding="0dp"
         android:visibility="invisible" />
 
-    <RelativeLayout
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/ccd_selection_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
+        android:layout_weight="0"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        tools:listitem="@layout/simple_spinner_item" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/ccd_viewer_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        app:tabGravity="fill"
+        app:tabMode="fixed">
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ccd_capture" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/view" />
+    </com.google.android.material.tabs.TabLayout>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingTop="4dp"
+        android:paddingTop="8dp"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingBottom="@dimen/activity_vertical_margin">
 
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/spinner_select_image_blob"
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/ccd_viewer_capture_tab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                        android:id="@+id/ccd_exposure_time_field"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_weight="1"
+                        android:hint="1"
+                        tools:ignore="HardcodedText" />
+
+                    <Button
+                        android:id="@+id/ccd_expose_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_marginLeft="16dp"
+                        android:drawableLeft="@drawable/shutter"
+                        android:minWidth="120dp"
+                        android:minHeight="55dp"
+                        android:text="@string/expose"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="android:attr/buttonBarStyle"
+                    android:layout_marginTop="4dp">
+
+                    <Button
+                        android:id="@+id/ccd_loop_btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_weight="1"
+                        android:drawableLeft="@drawable/loop"
+                        android:minHeight="55dp"
+                        android:textColor="@android:color/white"
+                        android:layout_marginRight="8dp"
+                        android:text="Loop"
+                        style="?android:attr/buttonBarButtonStyle"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/ccd_abort_btn"
+                        android:drawableLeft="@drawable/close"
+                        android:layout_marginLeft="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:layout_gravity="right"
+                        android:layout_weight="1"
+                        style="?android:attr/buttonBarButtonStyle"
+                        android:minHeight="55dp"
+                        android:text="@string/abort"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <TableRow
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="2dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:text="@string/save_preview"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/white" />
+
+                    <androidx.appcompat.widget.AppCompatSpinner
+                        android:id="@+id/ccd_image_receive_mode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_weight="1"
+                        tools:listitem="@layout/simple_spinner_item" />
+                </TableRow>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/save_mode_warning"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                <TableRow
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:text="@string/ccd_iso"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/white" />
+
+                    <androidx.appcompat.widget.AppCompatSpinner
+                        android:id="@+id/ccd_iso_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_weight="1"
+                        tools:listitem="@layout/simple_spinner_item" />
+                </TableRow>
+
+                <!--<TableRow
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:layout_weight="0"
+                        android:text="@string/ccd_gain"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                    <androidx.appcompat.widget.AppCompatSeekBar
+                        android:id="@+id/ccd_gain_slider"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_weight="1"
+                        tools:listitem="@layout/simple_spinner_item" />
+
+                    <TextView
+                        android:id="@+id/ccd_gain_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                </TableRow>-->
+
+                <TableRow
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:text="@string/ccd_binning"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/white" />
+
+                    <androidx.appcompat.widget.AppCompatSpinner
+                        android:id="@+id/ccd_binning_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_weight="1"
+                        tools:listitem="@layout/simple_spinner_item" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:text="@string/ccd_frame_type"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/white" />
+
+                    <androidx.appcompat.widget.AppCompatSpinner
+                        android:id="@+id/ccd_frame_type_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_weight="1"
+                        tools:listitem="@layout/simple_spinner_item" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:text="@string/ccd_file_prefix"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/white" />
+
+                    <EditText
+                        android:id="@+id/ccd_file_prefix_field"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_weight="1"
+                        android:hint="Orion_60s_"
+                        android:importantForAutofill="no"
+                        android:inputType="textNoSuggestions"
+                        tools:ignore="HardcodedText"
+                        tools:listitem="@layout/simple_spinner_item" />
+                </TableRow>
+
+                <!--<TextView
+                    android:layout_marginBottom="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:text="%d = date, %h = time, %e = exposure time"/>-->
+
+                <TableRow android:layout_marginTop="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:text="@string/ccd_remote_folder"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/white" />
+
+                    <EditText
+                        android:id="@+id/ccd_remote_folder_field"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_weight="1"
+                        android:hint="/home/me/"
+                        android:importantForAutofill="no"
+                        android:inputType="textNoSuggestions"
+                        tools:ignore="HardcodedText"
+                        tools:listitem="@layout/simple_spinner_item" />
+                </TableRow>
+            </TableLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <RelativeLayout
+            android:id="@+id/ccd_viewer_image_tab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginBottom="12dp" />
+            android:visibility="gone">
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switch_image_receive"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/spinner_select_image_blob"
-            android:layout_marginBottom="8dp"
-            android:text="@string/receive_images"
-            app:switchMinWidth="60dp" />
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/ccd_image_stretch_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="12dp"
+                android:text="@string/fits_image_stretching"
+                app:switchMinWidth="60dp" />
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switch_image_stretch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/switch_image_receive"
-            android:layout_marginBottom="8dp"
-            android:text="@string/fits_image_stretching"
-            app:switchMinWidth="60dp" />
+            <TextView
+                android:id="@+id/image_info_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ccd_image_stretch_switch"
+                android:text="@string/image_info"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-        <TextView
-            android:id="@+id/image_info_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/switch_image_stretch"
-            android:text="@string/image_info"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+            <TableLayout
+                android:id="@+id/blob_info_table"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/image_info_label"
+                android:layout_marginStart="16dp"
+                android:layout_toEndOf="@id/image_info_label"
+                android:stretchColumns="*">
 
-        <TableLayout
-            android:id="@+id/blob_info_table"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/image_info_label"
-            android:layout_marginStart="16dp"
-            android:layout_toEndOf="@id/image_info_label"
-            android:stretchColumns="*">
+                <TableRow>
 
-            <TableRow>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/file_size" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/file_size" />
+                    <TextView
+                        android:id="@+id/blob_size"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/unknown" />
+                </TableRow>
 
-                <TextView
-                    android:id="@+id/blob_size"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/unknown" />
-            </TableRow>
+                <TableRow>
 
-            <TableRow>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dimensions" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dimensions" />
+                    <TextView
+                        android:id="@+id/blob_dimensions"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/unknown" />
+                </TableRow>
 
-                <TextView
-                    android:id="@+id/blob_dimensions"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/unknown" />
-            </TableRow>
+                <TableRow>
 
-            <TableRow>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/format" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/format" />
+                    <TextView
+                        android:id="@+id/blob_format"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/unknown" />
+                </TableRow>
 
-                <TextView
-                    android:id="@+id/blob_format"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/unknown" />
-            </TableRow>
+                <TableRow>
 
-            <TableRow>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bit_depth" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/bit_depth" />
+                    <TextView
+                        android:id="@+id/blob_bpp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/unknown" />
+                </TableRow>
+            </TableLayout>
 
-                <TextView
-                    android:id="@+id/blob_bpp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/unknown" />
-            </TableRow>
-        </TableLayout>
+            <io.github.marcocipriani01.livephotoview.PhotoView
+                android:id="@+id/blob_viewer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/blob_info_table"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="8dp"
+                android:adjustViewBounds="true"
+                android:visibility="gone" />
 
-        <io.github.marcocipriani01.livephotoview.PhotoView
-            android:id="@+id/blob_viewer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/blob_info_table"
-            android:layout_alignParentBottom="true"
-            android:layout_marginTop="8dp"
-            android:adjustViewBounds="true"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/blob_error_label"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/blob_info_table"
-            android:layout_alignParentBottom="true"
-            android:layout_marginTop="8dp"
-            android:gravity="center"
-            android:text="@string/no_incoming_data"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/blob_error_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/blob_info_table"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="@string/no_incoming_data"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        </RelativeLayout>
+    </FrameLayout>
 </LinearLayout>
