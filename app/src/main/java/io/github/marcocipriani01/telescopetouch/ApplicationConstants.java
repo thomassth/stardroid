@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Marco Cipriani (@marcocipriani01) and the Sky Map Team
+ * Copyright 2020 Marco Cipriani (@marcocipriani01)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,26 +16,15 @@
 
 package io.github.marcocipriani01.telescopetouch;
 
-import io.github.marcocipriani01.telescopetouch.maths.Vector3;
-
 /**
- * A home for the application's few global constants.
+ * A home for the application's global constants and preference keys.
  */
 public class ApplicationConstants {
 
     public static final String APP_NAME = "Telescope.Touch";
-    /**
-     * Default value for 'south' in phone coords when the app starts
-     */
-    public static final Vector3 INITIAL_SOUTH = new Vector3(0, -1, 0);
-    /**
-     * Default value for 'down' in phone coords when the app starts
-     */
-    public static final Vector3 INITIAL_DOWN = new Vector3(0, -1, -9);
-
     // Preference keys
     public static final String AUTO_MODE_PREF = "auto_mode";
-    public static final String NO_WARN_MISSING_SENSORS_PREF = "no warn about missing sensors";
+    public static final String NO_WARN_MISSING_SENSORS_PREF = "no_warn_missing_sensors";
     public static final String BUNDLE_TARGET_NAME = "target_name";
     public static final String DISABLE_GYRO_PREF = "disable_gyro";
     public static final String REVERSE_MAGNETIC_Z_PREF = "reverse_magnetic_z";
@@ -52,7 +41,6 @@ public class ApplicationConstants {
     public static final String FORCE_GPS_PREF = "force_gps";
     public static final String COMPENSATE_PRECESSION_PREF = "compensate_precession";
     public static final String CATALOG_LIMIT_MAGNITUDE = "catalog_limit_mag";
-    public static final String RECEIVE_BLOB_PREF = "receive_blob";
     public static final String STRETCH_FITS_PREF = "stretch_fits_blob";
     public static final String SHOW_STARS_PREF = "show_stars_catalog";
     public static final String SHOW_DSO_PREF = "show_dso_catalog";
@@ -66,7 +54,8 @@ public class ApplicationConstants {
     public static final String EXIT_ACTION_PREF = "exit_action";
     public static final String PICK_LOCATION_PREF = "pick_location_map";
     public static final String GOTO_DETAILS_LAST_TAB = "goto_details_tab";
-    public static final String DARKER_MODE_KEY = "DARKER_MODE";
+    public static final String DARKER_MODE_KEY = "darker_mode";
     public static final String LAST_CALIBRATION_WARNING_PREF = "last_calibration_warning_time";
     public static final String GPS_OFF_NO_DIALOG_PREF = "gps_off_no_dialog";
+    public static final String CCD_LOOP_DELAY_PREF = "ccd_loop_delay";
 }

@@ -524,7 +524,7 @@
     <string name="invalid_abs_position">Invalid absolute position!</string>
     <string name="nsd_not_available">Network discovery unavailable</string>
     <string name="catalog_load_error">Catalog loading error!</string>
-    <string name="ccd_images">CCD images</string>
+    <string name="capture_view_ccd">Capture &amp; view</string>
     <string name="receive_images">Receive images</string>
     <string name="unknown">unknown</string>
     <string name="file_size">File size:</string>
@@ -606,7 +606,7 @@
     <string name="vizier_welcome">VizieR is an astronomical catalog service provided by Strasbourg astronomical Data Center.\nTelescope.Touch integrates the Common Stars and NGC 2000 catalogues to allow you to point your telescope.</string>
     <string name="aladin_compatibility">Aladin compatibility mode</string>
     <string name="aladin_compatibility_description">Allow running Aladin on older devices. Disclaimer: not stable, view might jitter or not load properly. Requires restart.</string>
-    <string name="open_source_licenses">Open-source Licences</string>
+    <string name="open_source_licenses">Open-source licences</string>
     <string name="continue_button">Continue</string>
     <string name="about_vizier_menu">About VizieR</string>
     <string name="save_image">Save image</string>
@@ -637,4 +637,23 @@
     <string name="location_indi_clarification"><b>Note:</b> these settings do not apply to INDI.</string>
     <string name="force_gps_pref_hint">The app normally uses cell phone antennas to calculate your position. You can force the use of GPS, but it will be slower.</string>
     <string name="select_position">Select position</string>
+    <string name="view">View</string>
+    <string name="ccd_capture">Capture</string>
+    <string name="expose">Expose</string>
+    <string name="abort">Abort</string>
+    <string name="ccd_iso">ISO:</string>
+    <string name="ccd_gain">Gain:</string>
+    <string name="ccd_binning">Binning:</string>
+    <string name="ccd_frame_type">Frame:</string>
+    <string name="ccd_remote_folder">Remote folder:</string>
+    <string name="ccd_file_prefix">File prefix:</string>
+    <string name="ccd_image_show_only">Show in app</string>
+    <string name="ccd_image_save_show">Save JPG on phone and show</string>
+    <string name="ccd_image_remote_save">Save remotely only</string>
+    <string name="ccd_image_remote_and_display">Save remotely and show</string>
+    <string name="save_preview">Save/preview:</string>
+    <string name="save_mode_warning">Warning: this setting may interfere with other clients using the camera at the same time.</string>
+    <string name="loop">Loop</string>
+    <string name="no_camera_available">No camera available!</string>
+    <string name="ccd_loop_interval">Loop interval:</string>
 </resources>

@@ -62,7 +62,6 @@ import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.util.ImprovedSpinnerListener;
 import io.github.marcocipriani01.telescopetouch.activities.util.ImprovedToggleListener;
-import io.github.marcocipriani01.telescopetouch.indi.PropUpdater;
 
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 
@@ -124,7 +123,7 @@ public class MountControlFragment extends ActionFragment implements INDIServerCo
                             element.setDesiredValue(Constants.SwitchStatus.OFF);
                         }
                     }
-                    new PropUpdater(telescopeSlewRateP).start();
+                    connectionManager.updateProperties(telescopeSlewRateP);
                 }
             } catch (Exception e) {
                 Log.e(TAG, "Slew rate error!", e);
@@ -147,7 +146,7 @@ public class MountControlFragment extends ActionFragment implements INDIServerCo
                                     telescopeUnParkE.setDesiredValue(Constants.SwitchStatus.ON);
                                     telescopeParkE.setDesiredValue(Constants.SwitchStatus.OFF);
                                 }
-                                new PropUpdater(telescopeParkP).start();
+                                connectionManager.updateProperties(telescopeParkP);
                             } catch (Exception e) {
                                 Log.e(TAG, e.getLocalizedMessage(), e);
                             }
@@ -266,7 +265,7 @@ public class MountControlFragment extends ActionFragment implements INDIServerCo
                         telescopeTrackE.setDesiredValue(Constants.SwitchStatus.ON);
                         telescopeUnTrackE.setDesiredValue(Constants.SwitchStatus.OFF);
                     }
-                    new PropUpdater(telescopeTrackP).start();
+                    connectionManager.updateProperties(telescopeTrackP);
                     requestActionSnack(R.string.tracking_toggled);
                 } catch (Exception e) {
                     Log.e(TAG, e.getLocalizedMessage(), e);
@@ -373,10 +372,11 @@ public class MountControlFragment extends ActionFragment implements INDIServerCo
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        final Constants.SwitchStatus status, offStatus = Constants.SwitchStatus.OFF;
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+        final Constants.SwitchStatus status;
+        int action = event.getAction();
+        if (action == MotionEvent.ACTION_DOWN) {
             status = Constants.SwitchStatus.ON;
-        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+        } else if (action == MotionEvent.ACTION_UP) {
             status = Constants.SwitchStatus.OFF;
         } else {
             return true;
@@ -385,49 +385,45 @@ public class MountControlFragment extends ActionFragment implements INDIServerCo
         try {
             if (id == R.id.buttonE) {
                 telescopeMotionEE.setDesiredValue(status);
-                telescopeMotionWE.setDesiredValue(offStatus);
-                new PropUpdater(telescopeMotionWEP).start();
+                telescopeMotionWE.setDesiredValue(Constants.SwitchStatus.OFF);
+                connectionManager.updateProperties(telescopeMotionWEP);
                 return true;
             } else if (id == R.id.buttonW) {
                 telescopeMotionWE.setDesiredValue(status);
-                telescopeMotionEE.setDesiredValue(offStatus);
-                new PropUpdater(telescopeMotionWEP).start();
+                telescopeMotionEE.setDesiredValue(Constants.SwitchStatus.OFF);
+                connectionManager.updateProperties(telescopeMotionWEP);
             } else if (id == R.id.buttonN) {
                 telescopeMotionNE.setDesiredValue(status);
-                telescopeMotionSE.setDesiredValue(offStatus);
-                new PropUpdater(telescopeMotionNSP).start();
+                telescopeMotionSE.setDesiredValue(Constants.SwitchStatus.OFF);
+                connectionManager.updateProperties(telescopeMotionNSP);
             } else if (id == R.id.buttonS) {
                 telescopeMotionSE.setDesiredValue(status);
-                telescopeMotionNE.setDesiredValue(offStatus);
-                new PropUpdater(telescopeMotionNSP).start();
+                telescopeMotionNE.setDesiredValue(Constants.SwitchStatus.OFF);
+                connectionManager.updateProperties(telescopeMotionNSP);
             } else if (id == R.id.buttonNE) {
                 telescopeMotionEE.setDesiredValue(status);
-                telescopeMotionWE.setDesiredValue(offStatus);
-                new PropUpdater(telescopeMotionWEP).start();
+                telescopeMotionWE.setDesiredValue(Constants.SwitchStatus.OFF);
                 telescopeMotionNE.setDesiredValue(status);
-                telescopeMotionSE.setDesiredValue(offStatus);
-                new PropUpdater(telescopeMotionNSP).start();
+                telescopeMotionSE.setDesiredValue(Constants.SwitchStatus.OFF);
+                connectionManager.updateProperties(telescopeMotionWEP, telescopeMotionNSP);
             } else if (id == R.id.buttonNW) {
                 telescopeMotionWE.setDesiredValue(status);
-                telescopeMotionEE.setDesiredValue(offStatus);
-                new PropUpdater(telescopeMotionWEP).start();
+                telescopeMotionEE.setDesiredValue(Constants.SwitchStatus.OFF);
                 telescopeMotionNE.setDesiredValue(status);
-                telescopeMotionSE.setDesiredValue(offStatus);
-                new PropUpdater(telescopeMotionNSP).start();
+                telescopeMotionSE.setDesiredValue(Constants.SwitchStatus.OFF);
+                connectionManager.updateProperties(telescopeMotionWEP, telescopeMotionNSP);
             } else if (id == R.id.buttonSE) {
                 telescopeMotionEE.setDesiredValue(status);
-                telescopeMotionWE.setDesiredValue(offStatus);
-                new PropUpdater(telescopeMotionWEP).start();
+                telescopeMotionWE.setDesiredValue(Constants.SwitchStatus.OFF);
                 telescopeMotionSE.setDesiredValue(status);
-                telescopeMotionNE.setDesiredValue(offStatus);
-                new PropUpdater(telescopeMotionNSP).start();
+                telescopeMotionNE.setDesiredValue(Constants.SwitchStatus.OFF);
+                connectionManager.updateProperties(telescopeMotionWEP, telescopeMotionNSP);
             } else if (id == R.id.buttonSW) {
                 telescopeMotionWE.setDesiredValue(status);
-                telescopeMotionEE.setDesiredValue(offStatus);
-                new PropUpdater(telescopeMotionWEP).start();
+                telescopeMotionEE.setDesiredValue(Constants.SwitchStatus.OFF);
                 telescopeMotionSE.setDesiredValue(status);
-                telescopeMotionNE.setDesiredValue(offStatus);
-                new PropUpdater(telescopeMotionNSP).start();
+                telescopeMotionNE.setDesiredValue(Constants.SwitchStatus.OFF);
+                connectionManager.updateProperties(telescopeMotionWEP, telescopeMotionNSP);
             } else {
                 return false;
             }
@@ -449,16 +445,16 @@ public class MountControlFragment extends ActionFragment implements INDIServerCo
                 if (telescopeMotionWEP != null) {
                     telescopeMotionWE.setDesiredValue(Constants.SwitchStatus.OFF);
                     telescopeMotionEE.setDesiredValue(Constants.SwitchStatus.OFF);
-                    new PropUpdater(telescopeMotionWEP).start();
+                    connectionManager.updateProperties(telescopeMotionWEP);
                 }
                 if (telescopeMotionNSP != null) {
                     telescopeMotionSE.setDesiredValue(Constants.SwitchStatus.OFF);
                     telescopeMotionNE.setDesiredValue(Constants.SwitchStatus.OFF);
-                    new PropUpdater(telescopeMotionNSP).start();
+                    connectionManager.updateProperties(telescopeMotionNSP);
                 }
                 if (telescopeMotionAbort != null) {
                     telescopeMotionAbortE.setDesiredValue(Constants.SwitchStatus.ON);
-                    new PropUpdater(telescopeMotionAbort).start();
+                    connectionManager.updateProperties(telescopeMotionAbort);
                 }
             } catch (Exception e) {
                 Log.e(TAG, e.getLocalizedMessage(), e);

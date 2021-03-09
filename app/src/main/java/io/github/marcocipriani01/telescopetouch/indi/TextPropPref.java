@@ -35,6 +35,8 @@ import java.util.List;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
+import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
+
 public class TextPropPref extends PropPref<INDITextElement> {
 
     public TextPropPref(Context context, INDIProperty<INDITextElement> prop) {
@@ -106,7 +108,7 @@ public class TextPropPref extends PropPref<INDITextElement> {
                         Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                         TelescopeTouchApp.connectionManager.log(e);
                     }
-                    sendChanges();
+                    connectionManager.updateProperties(prop);
                 });
                 builder.setNegativeButton(android.R.string.cancel, null);
             } else {

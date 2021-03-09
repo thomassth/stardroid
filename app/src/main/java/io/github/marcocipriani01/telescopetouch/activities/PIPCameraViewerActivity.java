@@ -35,14 +35,12 @@ import androidx.preference.PreferenceManager;
 import io.github.marcocipriani01.livephotoview.PhotoView;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
-import io.github.marcocipriani01.telescopetouch.indi.AsyncBLOBLoader;
+import io.github.marcocipriani01.telescopetouch.indi.INDICamera;
 
-import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
-
-public class FlyingBLOBViewActivity extends AppCompatActivity implements AsyncBLOBLoader.BLOBListener {
+public class PIPCameraViewerActivity extends AppCompatActivity implements INDICamera.CameraListener {
 
     @SuppressLint("StaticFieldLeak")
-    private static FlyingBLOBViewActivity instance;
+    private static PIPCameraViewerActivity instance;
     private PhotoView photoView;
     private DarkerModeManager darkerModeManager;
 
@@ -69,7 +67,7 @@ public class FlyingBLOBViewActivity extends AppCompatActivity implements AsyncBL
         darkerModeManager = new DarkerModeManager(this, null, PreferenceManager.getDefaultSharedPreferences(this));
         photoView = findViewById(R.id.pip_blob_view);
         photoView.setMaximumScale(20f);
-        photoView.setImageBitmap(connectionManager.blobLoader.getLastBitmap());
+        //photoView.setImageBitmap(connectionManager.blobLoader.getLastBitmap());
     }
 
     @Override
@@ -82,7 +80,8 @@ public class FlyingBLOBViewActivity extends AppCompatActivity implements AsyncBL
     private void pip() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Rational ratio;
-            Bitmap bitmap = connectionManager.blobLoader.getLastBitmap();
+            //Bitmap bitmap = connectionManager.blobLoader.getLastBitmap();
+            Bitmap bitmap = null;
             if (bitmap == null) {
                 ratio = new Rational(1, 1);
             } else {
@@ -104,7 +103,7 @@ public class FlyingBLOBViewActivity extends AppCompatActivity implements AsyncBL
             finish();
             return;
         }
-        connectionManager.blobLoader.addListener(this);
+        //connectionManager.blobLoader.addListener(this);
         instance = this;
     }
 
@@ -123,11 +122,21 @@ public class FlyingBLOBViewActivity extends AppCompatActivity implements AsyncBL
     @Override
     protected void onStop() {
         super.onStop();
-        connectionManager.blobLoader.removeListener(this);
+        //connectionManager.blobLoader.removeListener(this);
         instance = null;
     }
 
     @Override
+    public void onImageLoaded(@Nullable Bitmap bitmap, String[] metadata) {
+
+    }
+
+    @Override
+    public void onBitmapDestroy() {
+
+    }
+
+    /*@Override
     public void onBLOBLoading() {
 
     }
@@ -145,5 +154,5 @@ public class FlyingBLOBViewActivity extends AppCompatActivity implements AsyncBL
     @Override
     public void onBLOBException(Throwable e) {
         if (photoView != null) photoView.setImageBitmap(null);
-    }
+    }*/
 }
