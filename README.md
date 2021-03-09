@@ -90,20 +90,3 @@ with a renewed user interface and high-definition planet thumbnails.
 - [Compass by iutinvg](https://github.com/iutinvg/compass), MIT License
 
 The licenses for each software library used in the project can be found in the app (About this app > menu > Open-source Licenses)
-
-### License notice
-
-This project is licensed under two licenses:
-
-- The GNU General Public License v3, for the following parts:
-  - The overall project and the telescope control part, which derive from the [IPARCOS project](https://github.com/INDIForJava/IPARCOS/) (a GPL-licensed project)
-- The Apache 2.0 license:
-  - The "Sky Map core" of the application , which means all the classes and code derived from the [Sky Map](https://github.com/sky-map-team/stardroid) project
-  - The app's assets: icons, images, strings, menu, xml resources and animations
-  - The `tools` and `datamodel` modules
-  - Every build scripts
-
-This double-license approach ensures that the contributions of the Telescope.Touch project could
-be used in other Android apps, and in particular to the Sky Map application.
-To avoid ambiguity, every Java class in the `app` module states which license it is
-subject to, and its copyright holder. Read mode in the `LICENSE.md` file.
