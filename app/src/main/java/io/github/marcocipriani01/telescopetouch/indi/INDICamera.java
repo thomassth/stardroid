@@ -58,13 +58,15 @@ import java.util.regex.Pattern;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
+import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
+
 public class INDICamera implements INDIPropertyListener {
 
     private static final String TAG = TelescopeTouchApp.getTag(INDICamera.class);
     private static boolean storagePermissionRequested = false;
     public final INDIDevice device;
     private final Context context;
-    private final Handler handler;
+    private final Handler uiHandler;
     private final Set<CameraListener> listeners = new HashSet<>();
     public volatile INDIBLOBProperty blobP;
     public volatile INDIBLOBElement blobE;
@@ -75,9 +77,14 @@ public class INDICamera implements INDIPropertyListener {
     public volatile INDISwitchElement[] availableExposurePresetsE;
     public volatile INDISwitchProperty abortP;
     public volatile INDISwitchElement abortE;
+    public volatile INDISwitchProperty forceBulbP;
+    public volatile INDISwitchElement forceBulbOnE;
+    public volatile INDISwitchElement forceBulbOffE;
     public volatile INDINumberProperty binningP;
     public volatile INDINumberElement binningXE;
     public volatile INDINumberElement binningYE;
+    public volatile INDINumberProperty gainP;
+    public volatile INDINumberElement gainE;
     public volatile INDISwitchProperty isoP;
     public volatile INDISwitchElement[] isoE;
     public volatile INDISwitchProperty uploadModeP;
@@ -93,14 +100,19 @@ public class INDICamera implements INDIPropertyListener {
     private volatile INDIBLOBValue queuedValue = null;
     private volatile boolean stretch = false;
     private volatile Bitmap lastBitmap = null;
-    private boolean bitmapSaved = false;
-    private volatile SaveMode saveMode;
-    private int jpgQuality = 100;
+    private volatile boolean bitmapSaved = false;
+    private volatile SaveMode saveMode = SaveMode.SHOW_ONLY;
+    private volatile int jpgQuality = 100;
+    private volatile boolean captureLoop = false;
+    private volatile INDISwitchElement captureLoopPreset = null;
+    private volatile double captureLoopExposure = -1;
+    private volatile String[] metadata = new String[]{null, null, null, null};
+    private volatile int loopDelay = 1000;
 
-    public INDICamera(INDIDevice device, Context context, Handler handler) {
+    public INDICamera(INDIDevice device, Context context, Handler uiHandler) {
         this.device = device;
         this.context = context;
-        this.handler = handler;
+        this.uiHandler = uiHandler;
     }
 
     public static boolean isCameraProp(INDIProperty<?> property) {
@@ -113,6 +125,116 @@ public class INDICamera implements INDIPropertyListener {
         if (matcher.find())
             return Integer.parseInt(matcher.group());
         return -1;
+    }
+
+    public int getLoopDelay() {
+        return loopDelay;
+    }
+
+    public void setLoopDelay(int loopDelay) {
+        this.loopDelay = loopDelay;
+    }
+
+    public String[] getLastMetadata() {
+        return metadata;
+    }
+
+    public boolean isCaptureLooping() {
+        return captureLoop;
+    }
+
+    public void startCaptureLoop(double captureLoopExposure) throws INDIValueException {
+        if ((!canCapture()) || (!hasBLOB()))
+            throw new UnsupportedOperationException("Unsupported capture loop!");
+        if (captureLoopExposure <= 0) throw new IllegalArgumentException("Negative exposure time!");
+        this.captureLoopExposure = captureLoopExposure;
+        this.captureLoopPreset = null;
+        if (hasForceBulb()) {
+            forceBulbOffE.setDesiredValue(Constants.SwitchStatus.OFF);
+            forceBulbOnE.setDesiredValue(Constants.SwitchStatus.ON);
+            connectionManager.updateProperties(forceBulbP);
+        }
+        captureLoop = true;
+        connectionManager.post(this::captureLoopExposureRunnable);
+    }
+
+    public void startCaptureLoop(INDISwitchElement captureLoopPreset) throws INDIValueException {
+        if ((!hasPresets()) || (!hasBLOB()))
+            throw new UnsupportedOperationException("Unsupported capture loop!");
+        this.captureLoopExposure = -1;
+        this.captureLoopPreset = captureLoopPreset;
+        if (hasForceBulb()) {
+            forceBulbOnE.setDesiredValue(Constants.SwitchStatus.OFF);
+            forceBulbOffE.setDesiredValue(Constants.SwitchStatus.ON);
+            connectionManager.updateProperties(forceBulbP);
+        }
+        captureLoop = true;
+        connectionManager.post(this::captureLoopPresetRunnable);
+    }
+
+    public void startCaptureLoop(String exposureOrPreset) throws INDIException {
+        exposureOrPreset = exposureOrPreset.trim();
+        boolean canCapture = canCapture(), hasPresets = hasPresets();
+        if (canCapture && (!hasPresets)) {
+            startCaptureLoop(Double.parseDouble(exposureOrPreset));
+        } else if (hasPresets && (!canCapture)) {
+            INDISwitchElement e = stringToCameraPreset(exposureOrPreset);
+            if (e == null) {
+                throw new INDIException("Camera preset not found!");
+            } else {
+                startCaptureLoop(e);
+            }
+        } else if (canCapture) {
+            INDISwitchElement e = stringToCameraPreset(exposureOrPreset);
+            if (e == null) {
+                startCaptureLoop(Double.parseDouble(exposureOrPreset));
+            } else {
+                startCaptureLoop(e);
+            }
+        } else {
+            throw new UnsupportedOperationException("Unsupported capture!");
+        }
+    }
+
+    private void captureLoopExposureRunnable() {
+        try {
+            if (captureLoop && canCapture() && hasBLOB()) {
+                exposureE.setDesiredValue(captureLoopExposure);
+                exposureP.sendChangesToDriver();
+            } else {
+                cameraLoopStop();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+            cameraLoopStop();
+        }
+    }
+
+    private void captureLoopPresetRunnable() {
+        try {
+            if (captureLoop && hasPresets() && hasBLOB()) {
+                for (INDISwitchElement e : exposurePresetsE) {
+                    e.setDesiredValue((e == captureLoopPreset) ? Constants.SwitchStatus.ON : Constants.SwitchStatus.OFF);
+                }
+                exposurePresetsP.sendChangesToDriver();
+            } else {
+                cameraLoopStop();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+            cameraLoopStop();
+        }
+    }
+
+    private void cameraLoopStop() {
+        captureLoop = false;
+        uiHandler.post(() -> {
+            synchronized (listeners) {
+                for (CameraListener listener : listeners) {
+                    listener.onCameraLoopStop();
+                }
+            }
+        });
     }
 
     public int getJpgQuality() {
@@ -131,66 +253,56 @@ public class INDICamera implements INDIPropertyListener {
         return saveMode;
     }
 
-    public void setSaveMode(SaveMode mode) {
+    public void setSaveMode(final SaveMode mode) {
         if (!hasBLOB()) throw new UnsupportedOperationException("Unsupported BLOBs!");
         this.saveMode = mode;
-        boolean hasUploadFunctions = hasUploadModes();
-        if (mode == SaveMode.REMOTE_SAVE) {
-            blobP.removeINDIPropertyListener(this);
-            if (hasUploadFunctions) {
-                try {
-                    uploadClientE.setDesiredValue(Constants.SwitchStatus.OFF);
-                    uploadLocalE.setDesiredValue(Constants.SwitchStatus.ON);
-                    uploadBothE.setDesiredValue(Constants.SwitchStatus.OFF);
-                } catch (Exception e) {
-                    Log.e(TAG, e.getLocalizedMessage(), e);
-                }
-            }
-        } else {
-            blobP.addINDIPropertyListener(this);
-        }
-        if (hasUploadFunctions) {
+        if (hasUploadModes()) {
             try {
                 switch (saveMode) {
                     case REMOTE_SAVE:
+                        blobP.removeINDIPropertyListener(this);
                         uploadClientE.setDesiredValue(Constants.SwitchStatus.OFF);
                         uploadBothE.setDesiredValue(Constants.SwitchStatus.OFF);
                         uploadLocalE.setDesiredValue(Constants.SwitchStatus.ON);
                         break;
                     case REMOTE_SAVE_AND_SHOW:
+                        blobP.addINDIPropertyListener(this);
                         uploadClientE.setDesiredValue(Constants.SwitchStatus.OFF);
                         uploadLocalE.setDesiredValue(Constants.SwitchStatus.OFF);
                         uploadBothE.setDesiredValue(Constants.SwitchStatus.ON);
                         break;
                     case SAVE_JPG_AND_SHOW:
                     case SHOW_ONLY:
+                        blobP.addINDIPropertyListener(this);
                         uploadBothE.setDesiredValue(Constants.SwitchStatus.OFF);
                         uploadLocalE.setDesiredValue(Constants.SwitchStatus.OFF);
                         uploadClientE.setDesiredValue(Constants.SwitchStatus.ON);
                         break;
                 }
-                new PropUpdater(uploadModeP).start();
+                connectionManager.updateProperties(uploadModeP);
             } catch (Exception e) {
                 Log.e(TAG, e.getLocalizedMessage(), e);
             }
         }
-        new Thread(() -> {
+        connectionManager.post(() -> {
             try {
                 device.blobsEnable((mode == SaveMode.REMOTE_SAVE) ? Constants.BLOBEnables.NEVER : Constants.BLOBEnables.ALSO, blobP);
             } catch (Exception e) {
                 Log.e(TAG, e.getLocalizedMessage(), e);
+                //TODO warn user
             }
-        }, "INDICamera BLOB enabler").start();
+        });
     }
 
     public void stopReceiving() {
-        new Thread(() -> {
+        connectionManager.post(() -> {
             try {
                 device.blobsEnable(Constants.BLOBEnables.NEVER);
             } catch (Exception e) {
                 Log.e(TAG, e.getLocalizedMessage(), e);
+                //TODO warn user
             }
-        }, "INDICamera BLOB enabler").start();
+        });
     }
 
     public Uri saveImage() throws IOException {
@@ -250,12 +362,38 @@ public class INDICamera implements INDIPropertyListener {
             if (listeners.isEmpty()) return;
             queuedValue = blobE.getValue();
             if ((loadingThread == null) || (!loadingThread.isAlive())) startProcessing();
-        } else if (indiProperty == exposureP) {
+        } else if ((indiProperty == exposureP) || (indiProperty == exposurePresetsP)) {
             final Constants.PropertyStates state = indiProperty.getState();
-            synchronized (listeners) {
-                for (CameraListener listener : listeners) {
-                    listener.onCameraStateChange(state);
+            if (captureLoop) {
+                switch (state) {
+                    case OK:
+                        if ((captureLoopExposure != -1) && (captureLoopPreset == null)) {
+                            connectionManager.postDelayed(this::captureLoopExposureRunnable, loopDelay);
+                            break;
+                        } else if ((captureLoopPreset != null) && (captureLoopExposure == -1)) {
+                            connectionManager.postDelayed(this::captureLoopPresetRunnable, loopDelay);
+                            break;
+                        }
+                    case ALERT:
+                    case IDLE:
+                        cameraLoopStop();
+                        break;
                 }
+                uiHandler.post(() -> {
+                    synchronized (listeners) {
+                        for (CameraListener listener : listeners) {
+                            listener.onCameraLoopStateChange(state);
+                        }
+                    }
+                });
+            } else {
+                uiHandler.post(() -> {
+                    synchronized (listeners) {
+                        for (CameraListener listener : listeners) {
+                            listener.onCameraStateChange(state);
+                        }
+                    }
+                });
             }
         }
     }
@@ -280,12 +418,44 @@ public class INDICamera implements INDIPropertyListener {
         return (isoP != null) && (isoE != null);
     }
 
+    public INDISwitchElement getSelectedISO() {
+        if (!hasISO()) throw new UnsupportedOperationException("Unsupported ISO!");
+        for (INDISwitchElement e : isoE) {
+            if (e.getValue() == Constants.SwitchStatus.ON) return e;
+        }
+        return null;
+    }
+
+    public INDISwitchElement getSelectedPreset() {
+        if (!hasPresets()) throw new UnsupportedOperationException("Unsupported camera presets!");
+        for (INDISwitchElement e : availableExposurePresetsE) {
+            if (e.getValue() == Constants.SwitchStatus.ON) return e;
+        }
+        return null;
+    }
+
+    public INDISwitchElement getSelectedFrameType() {
+        if (!hasFrameTypes()) throw new UnsupportedOperationException("Unsupported frame types!");
+        for (INDISwitchElement e : frameTypesE) {
+            if (e.getValue() == Constants.SwitchStatus.ON) return e;
+        }
+        return null;
+    }
+
     public boolean hasBLOB() {
         return (blobP != null) && (blobE != null);
     }
 
+    public boolean hasForceBulb() {
+        return (forceBulbP != null) && (forceBulbOnE != null) && (forceBulbOffE != null);
+    }
+
     public boolean hasFrameTypes() {
         return (frameTypeP != null) && (frameTypesE != null);
+    }
+
+    public boolean hasGain() {
+        return (gainP != null) && (gainE != null);
     }
 
     public boolean hasUploadModes() {
@@ -297,6 +467,7 @@ public class INDICamera implements INDIPropertyListener {
     }
 
     public void capture(String exposureOrPreset) throws INDIException {
+        exposureOrPreset = exposureOrPreset.trim();
         boolean canCapture = canCapture(), hasPresets = hasPresets();
         if (canCapture && (!hasPresets)) {
             capture(Double.parseDouble(exposureOrPreset));
@@ -307,7 +478,7 @@ public class INDICamera implements INDIPropertyListener {
             } else {
                 capture(e);
             }
-        } else if (canCapture && hasPresets) {
+        } else if (canCapture) {
             INDISwitchElement e = stringToCameraPreset(exposureOrPreset);
             if (e == null) {
                 capture(Double.parseDouble(exposureOrPreset));
@@ -323,13 +494,19 @@ public class INDICamera implements INDIPropertyListener {
         for (INDISwitchElement e : availableExposurePresetsE) {
             if (e.getLabel().equals(preset)) return e;
         }
-        throw null;
+        return null;
     }
 
     public void capture(double exposure) throws INDIValueException {
         if (!canCapture()) throw new UnsupportedOperationException("Unsupported capture!");
         exposureE.setDesiredValue(exposure);
-        new PropUpdater(exposureP).start();
+        if (hasForceBulb()) {
+            forceBulbOffE.setDesiredValue(Constants.SwitchStatus.OFF);
+            forceBulbOnE.setDesiredValue(Constants.SwitchStatus.ON);
+            connectionManager.updateProperties(forceBulbP, exposureP);
+        } else {
+            connectionManager.updateProperties(exposureP);
+        }
     }
 
     public void capture(INDISwitchElement preset) throws INDIValueException {
@@ -337,20 +514,34 @@ public class INDICamera implements INDIPropertyListener {
         for (INDISwitchElement e : exposurePresetsE) {
             e.setDesiredValue((e == preset) ? Constants.SwitchStatus.ON : Constants.SwitchStatus.OFF);
         }
-        new PropUpdater(exposurePresetsP).start();
+        if (hasForceBulb()) {
+            forceBulbOnE.setDesiredValue(Constants.SwitchStatus.OFF);
+            forceBulbOffE.setDesiredValue(Constants.SwitchStatus.ON);
+            connectionManager.updateProperties(forceBulbP, exposurePresetsP);
+        } else {
+            connectionManager.updateProperties(exposurePresetsP);
+        }
     }
 
     public void abort() throws INDIValueException {
-        if (!canAbort()) throw new UnsupportedOperationException("Unsupported abort!");
-        abortE.setDesiredValue(Constants.SwitchStatus.ON);
-        new PropUpdater(abortP).start();
+        if (captureLoop) cameraLoopStop();
+        if (canAbort()) {
+            abortE.setDesiredValue(Constants.SwitchStatus.ON);
+            connectionManager.updateProperties(abortP);
+        }
+    }
+
+    public void setGain(double gain) throws INDIValueException {
+        if (!hasGain()) throw new UnsupportedOperationException("Unsupported gain!");
+        gainE.setDesiredValue(gain);
+        connectionManager.updateProperties(gainP);
     }
 
     public void setBinning(int binning) throws INDIValueException {
         if (!hasBinning()) throw new UnsupportedOperationException("Unsupported binning!");
         binningXE.setDesiredValue((double) binning);
         binningYE.setDesiredValue((double) binning);
-        new PropUpdater(binningP).start();
+        connectionManager.updateProperties(binningP);
     }
 
     public void setISO(INDISwitchElement iso) throws INDIValueException {
@@ -358,7 +549,7 @@ public class INDICamera implements INDIPropertyListener {
         for (INDISwitchElement e : isoE) {
             e.setDesiredValue((e == iso) ? Constants.SwitchStatus.ON : Constants.SwitchStatus.OFF);
         }
-        new PropUpdater(isoP).start();
+        connectionManager.updateProperties(isoP);
     }
 
     public void setFrameType(INDISwitchElement frameType) throws INDIValueException {
@@ -366,15 +557,21 @@ public class INDICamera implements INDIPropertyListener {
         for (INDISwitchElement e : frameTypesE) {
             e.setDesiredValue((e == frameType) ? Constants.SwitchStatus.ON : Constants.SwitchStatus.OFF);
         }
-        new PropUpdater(frameTypeP).start();
+        connectionManager.updateProperties(frameTypeP);
     }
 
-    public void setUploadSettings(String uploadDir, String uploadPrefix) throws INDIValueException {
+    public void setUploadDir(String uploadDir) throws INDIValueException {
         if (!hasUploadSettings())
             throw new UnsupportedOperationException("Unsupported upload settings!");
         uploadDirE.setDesiredValue(uploadDir);
+        connectionManager.updateProperties(uploadSettingsP);
+    }
+
+    public void setUploadPrefix(String uploadPrefix) throws INDIValueException {
+        if (!hasUploadSettings())
+            throw new UnsupportedOperationException("Unsupported upload settings!");
         uploadPrefixE.setDesiredValue(uploadPrefix);
-        new PropUpdater(uploadSettingsP).start();
+        connectionManager.updateProperties(uploadSettingsP);
     }
 
     @SuppressWarnings("SuspiciousToArrayCall")
@@ -406,6 +603,7 @@ public class INDICamera implements INDIPropertyListener {
                     }
                     availableExposurePresetsE = presets.toArray(new INDISwitchElement[0]);
                     exposurePresetsP = (INDISwitchProperty) property;
+                    exposurePresetsP.addINDIPropertyListener(this);
                 }
                 break;
             case "CCD_ISO":
@@ -417,7 +615,19 @@ public class INDICamera implements INDIPropertyListener {
             case "CCD_ABORT_EXPOSURE":
                 if ((property instanceof INDISwitchProperty) && ((abortE = (INDISwitchElement) property.getElement(INDIStandardElement.ABORT)) != null)) {
                     abortP = (INDISwitchProperty) property;
-                    abortP.addINDIPropertyListener(this);//TODO light state for abort
+                }
+                break;
+            case "CCD_GAIN":
+                if ((property instanceof INDINumberProperty) &&
+                        ((gainE = (INDINumberElement) property.getElement("GAIN")) != null)) {
+                    gainP = (INDINumberProperty) property;
+                }
+                break;
+            case "CCD_FORCE_BLOB":
+                if ((property instanceof INDISwitchProperty) &&
+                        ((forceBulbOnE = (INDISwitchElement) property.getElement("On")) != null) &&
+                        ((forceBulbOffE = (INDISwitchElement) property.getElement("Off")) != null)) {
+                    forceBulbP = (INDISwitchProperty) property;
                 }
                 break;
             case "CCD_BINNING":
@@ -470,9 +680,17 @@ public class INDICamera implements INDIPropertyListener {
                 blobP = null;
                 break;
             case "CCD_EXPOSURE_PRESETS":
-                availableExposurePresetsE = null;
-                exposurePresetsE = null;
+                exposurePresetsP.removeINDIPropertyListener(this);
+                availableExposurePresetsE = exposurePresetsE = null;
                 exposurePresetsP = null;
+                break;
+            case "CCD_FORCE_BLOB":
+                forceBulbP = null;
+                forceBulbOnE = forceBulbOffE = null;
+                break;
+            case "CCD_GAIN":
+                gainP = null;
+                gainE = null;
                 break;
             case "CCD_ISO":
                 isoE = null;
@@ -521,6 +739,8 @@ public class INDICamera implements INDIPropertyListener {
         exposurePresetsE = availableExposurePresetsE = null;
         abortP = null;
         abortE = null;
+        forceBulbP = null;
+        forceBulbOnE = forceBulbOffE = null;
         binningP = null;
         binningXE = binningYE = null;
         isoP = null;
@@ -547,8 +767,8 @@ public class INDICamera implements INDIPropertyListener {
         return lastBitmap;
     }
 
-    public void recycle() {
-        handler.post(() -> {
+    public void freeMemory() {
+        uiHandler.post(() -> {
             synchronized (listeners) {
                 for (CameraListener listener : listeners) {
                     listener.onBitmapDestroy();
@@ -581,11 +801,11 @@ public class INDICamera implements INDIPropertyListener {
     }
 
     private void onException(final Throwable throwable) {
-        handler.post(() -> {
+        uiHandler.post(() -> {
             synchronized (listeners) {
                 for (CameraListener listener : listeners) {
                     listener.onBitmapDestroy();
-                    listener.onINDICameraError(throwable);
+                    listener.onCameraError(throwable);
                 }
             }
             if (lastBitmap != null) {
@@ -600,6 +820,7 @@ public class INDICamera implements INDIPropertyListener {
     }
 
     private synchronized void loadingFinished(Bitmap bitmap, String[] metadata) throws IOException {
+        this.metadata = metadata;
         if ((saveMode == SaveMode.SAVE_JPG_AND_SHOW) && (bitmap != null)) {
             saveImage(bitmap);
             bitmapSaved = true;
@@ -614,7 +835,7 @@ public class INDICamera implements INDIPropertyListener {
             if (bitmap != null) bitmap.recycle();
             return;
         }
-        handler.post(() -> {
+        uiHandler.post(() -> {
             synchronized (listeners) {
                 for (CameraListener listener : listeners) {
                     listener.onImageLoaded(bitmap, metadata);
@@ -630,11 +851,13 @@ public class INDICamera implements INDIPropertyListener {
         loadingThread = new LoadingThread(queuedValue);
         loadingThread.start();
         queuedValue = null;
-        synchronized (listeners) {
-            for (CameraListener listener : listeners) {
-                handler.post(listener::onImageLoading);
+        uiHandler.post(() -> {
+            synchronized (listeners) {
+                for (CameraListener listener : listeners) {
+                    listener.onImageLoading();
+                }
             }
-        }
+        });
     }
 
     public enum SaveMode {
@@ -670,10 +893,16 @@ public class INDICamera implements INDIPropertyListener {
 
         void onBitmapDestroy();
 
-        default void onINDICameraError(Throwable e) {
+        default void onCameraError(Throwable e) {
         }
 
         default void onCameraStateChange(Constants.PropertyStates state) {
+        }
+
+        default void onCameraLoopStateChange(Constants.PropertyStates state) {
+        }
+
+        default void onCameraLoopStop() {
         }
     }
 

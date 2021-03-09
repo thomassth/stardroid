@@ -66,7 +66,6 @@ import io.github.marcocipriani01.telescopetouch.activities.views.AladinView;
 import io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoordinates;
 import io.github.marcocipriani01.telescopetouch.astronomy.HorizontalCoordinates;
 import io.github.marcocipriani01.telescopetouch.astronomy.StarsPrecession;
-import io.github.marcocipriani01.telescopetouch.indi.PropUpdater;
 import io.github.marcocipriani01.telescopetouch.sensors.LocationHelper;
 
 import static io.github.marcocipriani01.telescopetouch.ApplicationConstants.ALADIN_J2000_NOTE;
@@ -206,9 +205,8 @@ public class AladinFragment extends ActionFragment implements Toolbar.OnMenuItem
                             connectionManager.telescopeOnCoordSetTrack.setDesiredValue(Constants.SwitchStatus.ON);
                             connectionManager.telescopeOnCoordSetSlew.setDesiredValue(Constants.SwitchStatus.OFF);
                             connectionManager.telescopeOnCoordSetSync.setDesiredValue(Constants.SwitchStatus.OFF);
-                            new PropUpdater(connectionManager.telescopeOnCoordSetP).start();
                             setCoordinatesMaybePrecess(pointing);
-                            new PropUpdater(connectionManager.telescopeCoordP).start();
+                            connectionManager.updateProperties(connectionManager.telescopeOnCoordSetP, connectionManager.telescopeCoordP);
                             requestActionSnack(R.string.slew_ok);
                         } catch (Exception e) {
                             Log.e(TAG, e.getLocalizedMessage(), e);
@@ -219,9 +217,8 @@ public class AladinFragment extends ActionFragment implements Toolbar.OnMenuItem
                     connectionManager.telescopeOnCoordSetSync.setDesiredValue(Constants.SwitchStatus.ON);
                     connectionManager.telescopeOnCoordSetTrack.setDesiredValue(Constants.SwitchStatus.OFF);
                     connectionManager.telescopeOnCoordSetSlew.setDesiredValue(Constants.SwitchStatus.OFF);
-                    new PropUpdater(connectionManager.telescopeOnCoordSetP).start();
                     setCoordinatesMaybePrecess(pointing);
-                    new PropUpdater(connectionManager.telescopeCoordP).start();
+                    connectionManager.updateProperties(connectionManager.telescopeOnCoordSetP, connectionManager.telescopeCoordP);
                     requestActionSnack(R.string.sync_ok);
                 } catch (Exception e) {
                     Log.e(TAG, e.getLocalizedMessage(), e);
