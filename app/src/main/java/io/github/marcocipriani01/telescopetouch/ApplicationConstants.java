@@ -57,4 +57,5 @@ public class ApplicationConstants {
     public static final String DARKER_MODE_KEY = "darker_mode";
     public static final String LAST_CALIBRATION_WARNING_PREF = "last_calibration_warning_time";
     public static final String GPS_OFF_NO_DIALOG_PREF = "gps_off_no_dialog";
+    public static final String CCD_LOOP_DELAY_PREF = "ccd_loop_delay";
 }

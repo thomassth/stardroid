@@ -85,7 +85,6 @@ import io.github.marcocipriani01.telescopetouch.control.AstronomerModel;
 import io.github.marcocipriani01.telescopetouch.control.ControllerGroup;
 import io.github.marcocipriani01.telescopetouch.control.MagneticDeclinationSwitcher;
 import io.github.marcocipriani01.telescopetouch.control.Pointing;
-import io.github.marcocipriani01.telescopetouch.indi.PropUpdater;
 import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
 import io.github.marcocipriani01.telescopetouch.layers.LayerManager;
 import io.github.marcocipriani01.telescopetouch.maths.Vector3;
@@ -705,10 +704,9 @@ public class SkyMapActivity extends AppCompatActivity implements OnSharedPrefere
                             connectionManager.telescopeOnCoordSetTrack.setDesiredValue(Constants.SwitchStatus.ON);
                             connectionManager.telescopeOnCoordSetSlew.setDesiredValue(Constants.SwitchStatus.OFF);
                             connectionManager.telescopeOnCoordSetSync.setDesiredValue(Constants.SwitchStatus.OFF);
-                            new PropUpdater(connectionManager.telescopeOnCoordSetP).start();
                             connectionManager.telescopeCoordRA.setDesiredValue(coordinates.getRATelescopeFormat());
                             connectionManager.telescopeCoordDec.setDesiredValue(coordinates.getDecTelescopeFormat());
-                            new PropUpdater(connectionManager.telescopeCoordP).start();
+                            connectionManager.updateProperties(connectionManager.telescopeOnCoordSetP, connectionManager.telescopeCoordP);
                             Snackbar.make(rootView, R.string.slew_ok, Snackbar.LENGTH_SHORT).show();
                         } catch (Exception e) {
                             Log.e(TAG, e.getLocalizedMessage(), e);
@@ -719,10 +717,9 @@ public class SkyMapActivity extends AppCompatActivity implements OnSharedPrefere
                     connectionManager.telescopeOnCoordSetSync.setDesiredValue(Constants.SwitchStatus.ON);
                     connectionManager.telescopeOnCoordSetTrack.setDesiredValue(Constants.SwitchStatus.OFF);
                     connectionManager.telescopeOnCoordSetSlew.setDesiredValue(Constants.SwitchStatus.OFF);
-                    new PropUpdater(connectionManager.telescopeOnCoordSetP).start();
                     connectionManager.telescopeCoordRA.setDesiredValue(coordinates.getRATelescopeFormat());
                     connectionManager.telescopeCoordDec.setDesiredValue(coordinates.getDecTelescopeFormat());
-                    new PropUpdater(connectionManager.telescopeCoordP).start();
+                    connectionManager.updateProperties(connectionManager.telescopeOnCoordSetP, connectionManager.telescopeCoordP);
                     Snackbar.make(rootView, R.string.sync_ok, Snackbar.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     Log.e(TAG, e.getLocalizedMessage(), e);

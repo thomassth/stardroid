@@ -37,8 +37,6 @@ import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
 import io.github.marcocipriani01.telescopetouch.indi.INDICamera;
 
-import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
-
 public class PIPCameraViewerActivity extends AppCompatActivity implements INDICamera.CameraListener {
 
     @SuppressLint("StaticFieldLeak")

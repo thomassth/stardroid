@@ -40,6 +40,8 @@ import java.util.List;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
+import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
+
 public class NumberPropPref extends PropPref<INDINumberElement>
         implements TextWatcher, SeekBar.OnSeekBarChangeListener {
 
@@ -133,7 +135,7 @@ public class NumberPropPref extends PropPref<INDINumberElement>
                         Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                         TelescopeTouchApp.connectionManager.log(e);
                     }
-                    sendChanges();
+                    connectionManager.updateProperties(prop);
                 });
                 builder.setNegativeButton(android.R.string.cancel, null);
             } else {

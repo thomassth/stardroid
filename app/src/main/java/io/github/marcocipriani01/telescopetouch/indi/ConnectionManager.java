@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -40,7 +41,6 @@ import org.indilib.i4j.client.INDISwitchProperty;
 import org.indilib.i4j.properties.INDIStandardElement;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -63,10 +63,11 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
     private static final String TAG = TelescopeTouchApp.getTag(ConnectionManager.class);
     public final EquatorialCoordinates telescopeCoordinates = new EquatorialCoordinates();
     public final Map<INDIDevice, INDICamera> indiCameras = new HashMap<>();
-    private final Handler handler = new Handler(Looper.getMainLooper());
+    private final Handler uiHandler = new Handler(Looper.getMainLooper());
     private final Set<ManagerListener> managerListeners = new HashSet<>();
     private final Set<INDIServerConnectionListener> indiListeners = new HashSet<>();
     private final List<LogItem> logs = new ArrayList<>();
+    private final HandlerThread indiThread = new HandlerThread("INDI manager thread");
     // Telescope
     public volatile String telescopeName = null;
     public volatile INDINumberProperty telescopeCoordP = null;
@@ -76,6 +77,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
     public volatile INDISwitchElement telescopeOnCoordSetSync = null;
     public volatile INDISwitchElement telescopeOnCoordSetSlew = null;
     public volatile INDISwitchElement telescopeOnCoordSetTrack = null;
+    private Handler indiHandler;
     // Formatting
     private java.text.DateFormat dateFormat = null;
     private java.text.DateFormat timeFormat = null;
@@ -88,6 +90,27 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
     private Context context;
     private Resources resources;
 
+    public boolean post(@NonNull Runnable r) {
+        return indiHandler.post(r);
+    }
+
+    public boolean postDelayed(@NonNull Runnable r, long delayMillis) {
+        return indiHandler.postDelayed(r, delayMillis);
+    }
+
+    public void updateProperties(INDIProperty<?>... properties) {
+        indiHandler.post(() -> {
+            try {
+                for (INDIProperty<?> prop : properties) {
+                    prop.sendChangesToDriver();
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Property update error!", e);
+                TelescopeTouchApp.connectionManager.log(e);
+            }
+        });
+    }
+
     public List<LogItem> getLogs() {
         return logs;
     }
@@ -99,6 +122,8 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
         timeFormat = DateFormat.getTimeFormat(context);
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
         preferences.edit().putBoolean(TelescopeLayer.PREFERENCE_ID, false).apply();
+        indiThread.start();
+        indiHandler = new Handler(indiThread.getLooper());
     }
 
     public State getState() {
@@ -114,7 +139,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
      * @param state the new state of the Connection button.
      */
     public void updateState(State state) {
-        handler.post(() -> {
+        uiHandler.post(() -> {
             synchronized (managerListeners) {
                 for (ManagerListener listener : managerListeners) {
                     listener.updateConnectionState(state);
@@ -141,7 +166,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
             updateState(State.BUSY);
             busy = true;
             log(resources.getString(R.string.try_to_connect) + host + ":" + port);
-            new Thread(() -> {
+            indiHandler.post(() -> {
                 try {
                     indiConnection = new INDIServerConnection(host, port);
                     indiConnection.addINDIServerConnectionListener(this);
@@ -161,7 +186,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
                     updateState(State.DISCONNECTED);
                     log(e.getLocalizedMessage());
                 }
-            }).start();
+            });
         } else {
             log(resources.getString(R.string.connection_busy_2));
         }
@@ -173,7 +198,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
      * @param message a new log.
      */
     public void log(String message) {
-        handler.post(() -> {
+        uiHandler.post(() -> {
             Date now = new Date();
             LogItem log = new LogItem(message, dateFormat.format(now) + " " + timeFormat.format(now));
             logs.add(log);
@@ -195,7 +220,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
      * @param message a new log.
      */
     public void log(String message, INDIDevice device) {
-        handler.post(() -> {
+        uiHandler.post(() -> {
             Date now = new Date();
             LogItem log = new LogItem(message, dateFormat.format(now) + " " + timeFormat.format(now), device);
             for (int i = 0, logsSize = logs.size(); i < logsSize; i++) {
@@ -236,7 +261,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
      */
     public void disconnect() {
         if (getState() == State.CONNECTED) {
-            new Thread(() -> {
+            indiHandler.post(() -> {
                 busy = true;
                 try {
                     indiConnection.disconnect();
@@ -246,7 +271,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
                 indiConnection = null;
                 busy = false;
                 updateState(State.DISCONNECTED);
-            }).start();
+            });
         } else {
             log(resources.getString(R.string.connection_busy));
         }
@@ -292,7 +317,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
         synchronized (indiCameras) {
             INDICamera indiCamera = indiCameras.get(device);
             if (indiCamera != null) indiCamera.terminate();
-            handler.post(() -> {
+            uiHandler.post(() -> {
                 synchronized (managerListeners) {
                     for (ManagerListener listener : managerListeners) {
                         listener.onCamerasListChange();
@@ -311,7 +336,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
             indiCameras.clear();
         }
         log(resources.getString(R.string.connection_lost));
-        handler.post(() -> {
+        uiHandler.post(() -> {
             synchronized (managerListeners) {
                 for (ManagerListener listener : managerListeners) {
                     listener.updateConnectionState(State.DISCONNECTED);
@@ -335,12 +360,12 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
         if (indiCamera != null) {
             indiCamera.processNewProp(property);
         } else if (INDICamera.isCameraProp(property)) {
-            INDICamera camera = new INDICamera(device, context, handler);
+            INDICamera camera = new INDICamera(device, context, uiHandler);
             camera.processNewProp(property);
             synchronized (indiCameras) {
                 indiCameras.put(device, camera);
             }
-            handler.post(() -> {
+            uiHandler.post(() -> {
                 synchronized (managerListeners) {
                     for (ManagerListener listener : managerListeners) {
                         listener.onCamerasListChange();
@@ -358,7 +383,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
                         telescopeName = device.getName();
                         telescopeCoordinates.ra = telescopeCoordRA.getValue() * 15.0;
                         telescopeCoordinates.dec = telescopeCoordDec.getValue();
-                        handler.post(() -> preferences.edit().putBoolean(TelescopeLayer.PREFERENCE_ID, true).apply());
+                        uiHandler.post(() -> preferences.edit().putBoolean(TelescopeLayer.PREFERENCE_ID, true).apply());
                     }
                     break;
                 case "ON_COORD_SET":
@@ -386,7 +411,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
                 synchronized (indiCameras) {
                     indiCameras.remove(device);
                 }
-                handler.post(() -> {
+                uiHandler.post(() -> {
                     synchronized (managerListeners) {
                         for (ManagerListener listener : managerListeners) {
                             listener.onCamerasListChange();
@@ -403,7 +428,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
                     telescopeName = null;
                     telescopeCoordinates.ra = 0;
                     telescopeCoordinates.dec = 0;
-                    handler.post(() -> preferences.edit().putBoolean(TelescopeLayer.PREFERENCE_ID, false).apply());
+                    uiHandler.post(() -> preferences.edit().putBoolean(TelescopeLayer.PREFERENCE_ID, false).apply());
                     break;
                 case "ON_COORD_SET":
                     telescopeCoordP = null;

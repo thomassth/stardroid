@@ -128,11 +128,4 @@ public abstract class PropPref<Element extends INDIElement> extends Preference i
             });
         }
     }
-
-    /**
-     * Send updates to the server.
-     */
-    protected void sendChanges() {
-        new PropUpdater(prop).start();
-    }
 }

@@ -19,13 +19,18 @@ package io.github.marcocipriani01.telescopetouch.activities.fragments;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BlendMode;
+import android.graphics.BlendModeColorFilter;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -36,6 +41,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -53,6 +59,7 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
 
+import com.google.android.material.slider.Slider;
 import com.google.android.material.tabs.TabLayout;
 
 import org.indilib.i4j.Constants;
@@ -78,6 +85,7 @@ import io.github.marcocipriani01.telescopetouch.activities.util.SimpleAdapter;
 import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
 import io.github.marcocipriani01.telescopetouch.indi.INDICamera;
 
+import static io.github.marcocipriani01.telescopetouch.ApplicationConstants.CCD_LOOP_DELAY_PREF;
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 
 public class CameraFragment extends ActionFragment implements INDICamera.CameraListener,
@@ -98,37 +106,44 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
     private ProgressBar progressBar;
     private Button exposeBtn;
     private Button abortBtn;
+    private Button loopBtn;
     private Spinner isoSpinner;
-    private SwitchPropertyAdapter presetsAdapter;
-    private SwitchPropertyAdapter isoAdapter;
-    private SwitchPropertyAdapter frameTypeAdapter;
     private Spinner binningSpinner;
-    private BinningValuesAdapter binningAdapter;
     private Spinner frameTypeSpinner;
     private Spinner saveModeSpinner;
     private AutoCompleteTextView exposureTimeField;
     private EditText prefixField;
     private EditText remoteFolderField;
+    private Slider gainSlider;
     private final ImprovedSpinnerListener cameraSelectListener = new ImprovedSpinnerListener() {
         @Override
         protected void onImprovedItemSelected(AdapterView<?> parent, View view, int pos, long id) {
             INDICamera camera = getCamera();
-            if (camera != null) camera.removeListener(CameraFragment.this);
+            if (camera != null) {
+                camera.removeListener(CameraFragment.this);
+                camera.stopReceiving();
+            }
             selectedCameraDev = cameras.get(pos).device;
             camera = getCamera();
-            if (camera != null) camera.addListener(CameraFragment.this);
+            if (camera != null) {
+                camera.addListener(CameraFragment.this);
+                onImageLoaded(camera.getLastBitmap(), camera.getLastMetadata());
+            }
             onCameraFunctionsChange();
         }
     };
+    private Slider delaySlider;
     private Spinner cameraSelectSpinner;
     private CamerasArrayAdapter cameraSelectAdapter;
     private boolean pipSupported = false;
     private MenuItem pipMenuItem = null;
     private LayoutInflater inflater;
+    private InputMethodManager inputMethodManager;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         this.inflater = inflater;
         View rootView = inflater.inflate(R.layout.fragment_blob_viewer, container, false);
         pipSupported = PIPCameraViewerActivity.isSupported(context);
@@ -146,6 +161,10 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
         exposeBtn.setOnClickListener(this::capture);
         abortBtn = rootView.findViewById(R.id.ccd_abort_btn);
         abortBtn.setOnClickListener(this::abortCapture);
+        loopBtn = rootView.findViewById(R.id.ccd_loop_btn);
+        loopBtn.setOnClickListener(this::loopCapture);
+        gainSlider = rootView.findViewById(R.id.ccd_gain_slider);
+        delaySlider = rootView.findViewById(R.id.ccd_loop_delay_slider);
         isoSpinner = rootView.findViewById(R.id.ccd_iso_spinner);
         binningSpinner = rootView.findViewById(R.id.ccd_binning_spinner);
         frameTypeSpinner = rootView.findViewById(R.id.ccd_frame_type_spinner);
@@ -215,6 +234,7 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
         fitsStretchSwitch.setChecked(stretch);
         fitsStretchSwitch.setSelected(stretch);
         fitsStretchSwitch.setOnCheckedChangeListener(this);
+        delaySlider.setValue(preferences.getInt(CCD_LOOP_DELAY_PREF, 1));
 
         connectionManager.addManagerListener(this);
         cameras.clear();
@@ -281,37 +301,96 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
     }
 
     public void capture(View v) {
-        //TODO hide keyboard
+        String str = exposureTimeField.getText().toString();
         INDICamera camera = getCamera();
         if (camera == null) {
-            //TODO error
+            inputMethodManager.hideSoftInputFromWindow(exposureTimeField.getWindowToken(), 0);
+            requestActionSnack(R.string.no_camera_available);
             onCameraFunctionsChange();
+        } else if (str.isEmpty()) {
+            exposureTimeField.requestFocus();
+            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         } else {
+            inputMethodManager.hideSoftInputFromWindow(exposureTimeField.getWindowToken(), 0);
             try {
                 camera.setSaveMode((INDICamera.SaveMode) saveModeSpinner.getSelectedItem());
                 if (camera.hasFrameTypes())
                     camera.setFrameType(((INDISwitchElement) frameTypeSpinner.getSelectedItem()));
                 if (camera.hasBinning())
                     camera.setBinning(((Integer) binningSpinner.getSelectedItem()));
-                camera.capture(exposureTimeField.getText().toString());
+                if (camera.hasISO())
+                    camera.setISO(((INDISwitchElement) isoSpinner.getSelectedItem()));
+                if (camera.hasGain())
+                    camera.setGain(gainSlider.getValue());
+                if (camera.hasUploadSettings()) {
+                    String prefix = prefixField.getText().toString();
+                    if (!prefix.equals("")) camera.setUploadPrefix(prefix);
+                    String dir = remoteFolderField.getText().toString();
+                    if (!dir.equals("")) camera.setUploadDir(dir);
+                }
+                camera.capture(str);
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage(), e);
-                //TODO error message
+                requestActionSnack(context.getString(R.string.error) + " " + e.getLocalizedMessage());
             }
         }
     }
 
     public void abortCapture(View v) {
+        inputMethodManager.hideSoftInputFromWindow(exposureTimeField.getWindowToken(), 0);
         INDICamera camera = getCamera();
         if (camera == null) {
-            //TODO error
+            requestActionSnack(R.string.no_camera_available);
             onCameraFunctionsChange();
         } else {
             try {
                 camera.abort();
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage(), e);
-                //TODO error message
+                requestActionSnack(context.getString(R.string.error) + " " + e.getLocalizedMessage());
+            }
+        }
+    }
+
+    public void loopCapture(View v) {
+        String str = exposureTimeField.getText().toString();
+        INDICamera camera = getCamera();
+        if (camera == null) {
+            inputMethodManager.hideSoftInputFromWindow(exposureTimeField.getWindowToken(), 0);
+            requestActionSnack(R.string.no_camera_available);
+            onCameraFunctionsChange();
+        } else if (str.isEmpty()) {
+            exposureTimeField.requestFocus();
+            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        } else {
+            inputMethodManager.hideSoftInputFromWindow(exposureTimeField.getWindowToken(), 0);
+            int loopDelay = (int) delaySlider.getValue();
+            preferences.edit().putInt(CCD_LOOP_DELAY_PREF, loopDelay).apply();
+            setButtonColor(exposeBtn, Color.WHITE);
+            exposeBtn.setEnabled(false);
+            loopBtn.setEnabled(false);
+            try {
+                camera.setSaveMode((INDICamera.SaveMode) saveModeSpinner.getSelectedItem());
+                if (camera.hasFrameTypes())
+                    camera.setFrameType(((INDISwitchElement) frameTypeSpinner.getSelectedItem()));
+                if (camera.hasBinning())
+                    camera.setBinning(((Integer) binningSpinner.getSelectedItem()));
+                if (camera.hasISO())
+                    camera.setISO(((INDISwitchElement) isoSpinner.getSelectedItem()));
+                if (camera.hasGain())
+                    camera.setGain(gainSlider.getValue());
+                if (camera.hasUploadSettings()) {
+                    String prefix = prefixField.getText().toString();
+                    if (!prefix.equals("")) camera.setUploadPrefix(prefix);
+                    String dir = remoteFolderField.getText().toString();
+                    if (!dir.equals("")) camera.setUploadDir(dir);
+                }
+                camera.setLoopDelay(loopDelay * 1000);
+                camera.startCaptureLoop(exposureTimeField.getText().toString());
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage(), e);
+                requestActionSnack(context.getString(R.string.error) + " " + e.getLocalizedMessage());
+                onCameraLoopStop();
             }
         }
     }
@@ -428,70 +507,191 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
 
     @Override
     public void onCameraStateChange(Constants.PropertyStates state) {
-        handler.post(() -> {
-            if (exposeBtn == null) return;
-            switch (state) {
-                case OK:
-                    exposeBtn.setEnabled(true);
-                    exposeBtn.setTextColor(context.getResources().getColor(R.color.light_green));
-                    break;
-                case ALERT:
-                    exposeBtn.setEnabled(true);
-                    exposeBtn.setTextColor(context.getResources().getColor(R.color.light_red));
-                    break;
-                case BUSY:
-                    exposeBtn.setEnabled(false);
-                    exposeBtn.setTextColor(context.getResources().getColor(R.color.light_yellow));
-                    break;
-                case IDLE:
-                    exposeBtn.setEnabled(true);
-                    exposeBtn.setTextColor(Color.WHITE);
-                    break;
+        if (exposeBtn == null) return;
+        int color = Color.WHITE;
+        switch (state) {
+            case OK:
+                exposeBtn.setEnabled(true);
+                color = context.getResources().getColor(R.color.light_green);
+                break;
+            case ALERT:
+                exposeBtn.setEnabled(true);
+                color = context.getResources().getColor(R.color.light_red);
+                break;
+            case BUSY:
+                exposeBtn.setEnabled(false);
+                color = context.getResources().getColor(R.color.light_yellow);
+                break;
+            case IDLE:
+                exposeBtn.setEnabled(true);
+                break;
+        }
+        setButtonColor(exposeBtn, color);
+    }
+
+    @Override
+    public void onCameraLoopStateChange(Constants.PropertyStates state) {
+        int color = Color.WHITE;
+        switch (state) {
+            case OK:
+                color = context.getResources().getColor(R.color.light_green);
+                break;
+            case ALERT:
+                color = context.getResources().getColor(R.color.light_red);
+                break;
+            case BUSY:
+                color = context.getResources().getColor(R.color.light_yellow);
+                break;
+        }
+        setButtonColor(loopBtn, color);
+    }
+
+    private void setButtonColor(Button btn, int color) {
+        if (btn != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                btn.getCompoundDrawables()[0].setColorFilter(new BlendModeColorFilter(color, BlendMode.SRC_ATOP));
+            } else {
+                btn.getCompoundDrawables()[0].setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
             }
-        });
+            btn.setTextColor(color);
+        }
     }
 
     @Override
     public void onCameraFunctionsChange() {
-        boolean canCapture, hasPresets, canAbort, hasISO, hasBinning, hasUploadSettings, hasFrameTypes;
         INDICamera camera = getCamera();
         if (camera == null) {
-            canCapture = hasPresets = canAbort = hasISO =
-                    hasBinning = hasUploadSettings = hasFrameTypes = false;
-        } else {
-            canCapture = camera.canCapture();
-            hasPresets = camera.hasPresets();
-            canAbort = camera.canAbort();
-            hasISO = camera.hasISO();
-            hasBinning = camera.hasBinning();
-            hasUploadSettings = camera.hasUploadSettings();
-            hasFrameTypes = camera.hasFrameTypes();
+            disableControls();
+            return;
         }
-        presetsAdapter = hasPresets ? new SwitchPropertyStringAdapter(camera.availableExposurePresetsE) : null;
+        if (saveModeSpinner != null) saveModeSpinner.setSelection(camera.getSaveMode().ordinal());
+        boolean canExpose = camera.canCapture(), hasPresets = camera.hasPresets(),
+                captureOrPreset = canExpose || hasPresets, isLooping = camera.isCaptureLooping();
+        if (exposeBtn != null) {
+            exposeBtn.setEnabled(captureOrPreset && (!isLooping));
+            int color = Color.WHITE;
+            switch (camera.exposureP.getState()) {
+                case OK:
+                    color = context.getResources().getColor(R.color.light_green);
+                    break;
+                case ALERT:
+                    color = context.getResources().getColor(R.color.light_red);
+                    break;
+                case BUSY:
+                    color = context.getResources().getColor(R.color.light_yellow);
+                    break;
+            }
+            setButtonColor(exposeBtn, color);
+        }
+        if (loopBtn != null)
+            loopBtn.setEnabled(captureOrPreset && (!isLooping) && camera.hasBLOB());
         if (exposureTimeField != null) {
-            exposureTimeField.setEnabled(canCapture || hasPresets);
-            exposureTimeField.setAdapter(presetsAdapter);
+            exposureTimeField.setEnabled(captureOrPreset);
+            exposureTimeField.setAdapter(hasPresets ? new SwitchPropertyStringAdapter(camera.availableExposurePresetsE) : null);
+            if (canExpose) {
+                String expString = camera.exposureE.getValueAsString().trim();
+                if (!expString.equals("0.00")) exposureTimeField.setText(expString);
+            } else if (hasPresets) {
+                INDISwitchElement selectedPreset = camera.getSelectedPreset();
+                if (selectedPreset != null) exposureTimeField.setText(selectedPreset.getLabel());
+            }
         }
-        if (exposeBtn != null) exposeBtn.setEnabled(canCapture);
-        if (abortBtn != null) abortBtn.setEnabled(canAbort);
-        isoAdapter = hasISO ? new SwitchPropertyAdapter(camera.isoE) : null;
+        if (abortBtn != null) abortBtn.setEnabled(true);
+        if (gainSlider != null) {
+            boolean hasGain = camera.hasGain();
+            gainSlider.setEnabled(hasGain);
+            if (hasGain) {
+                gainSlider.setValueFrom((float) camera.gainE.getMin());
+                gainSlider.setValueTo((float) camera.gainE.getMax());
+                gainSlider.setStepSize((float) camera.gainE.getStep());
+                gainSlider.setValue((float) (double) camera.gainE.getValue());
+            }
+        }
         if (isoSpinner != null) {
+            boolean hasISO = camera.hasISO();
             isoSpinner.setEnabled(hasISO);
-            isoSpinner.setAdapter(isoAdapter);
+            if (hasISO) {
+                SwitchPropertyAdapter adapter = new SwitchPropertyAdapter(camera.isoE);
+                isoSpinner.setAdapter(adapter);
+                INDISwitchElement selectedISO = camera.getSelectedISO();
+                if (selectedISO != null) isoSpinner.setSelection(adapter.list.indexOf(selectedISO));
+            } else {
+                isoSpinner.setAdapter(null);
+            }
         }
-        frameTypeAdapter = hasFrameTypes ? new SwitchPropertyAdapter(camera.frameTypesE) : null;
         if (frameTypeSpinner != null) {
+            boolean hasFrameTypes = camera.hasFrameTypes();
             frameTypeSpinner.setEnabled(hasFrameTypes);
-            frameTypeSpinner.setAdapter(frameTypeAdapter);
+            if (hasFrameTypes) {
+                SwitchPropertyAdapter adapter = new SwitchPropertyAdapter(camera.frameTypesE);
+                frameTypeSpinner.setAdapter(adapter);
+                INDISwitchElement frameType = camera.getSelectedFrameType();
+                if (frameType != null)
+                    frameTypeSpinner.setSelection(adapter.list.indexOf(frameType));
+            } else {
+                frameTypeSpinner.setAdapter(null);
+            }
         }
-        binningAdapter = hasBinning ? new BinningValuesAdapter() : null;
         if (binningSpinner != null) {
+            boolean hasBinning = camera.hasBinning();
             binningSpinner.setEnabled(hasBinning);
-            binningSpinner.setAdapter(binningAdapter);
+            binningSpinner.setAdapter(hasBinning ? new BinningValuesAdapter() : null);
         }
-        //TODO: camera gain
-        if (prefixField != null) prefixField.setEnabled(hasUploadSettings);
-        if (remoteFolderField != null) remoteFolderField.setEnabled(hasUploadSettings);
+        boolean hasUploadSettings = camera.hasUploadSettings();
+        if (prefixField != null) {
+            prefixField.setEnabled(hasUploadSettings);
+            prefixField.setText(hasUploadSettings ? camera.uploadPrefixE.getValue() : "");
+        }
+        if (remoteFolderField != null) {
+            remoteFolderField.setEnabled(hasUploadSettings);
+            remoteFolderField.setText(hasUploadSettings ? camera.uploadDirE.getValue() : "");
+        }
+    }
+
+    private void disableControls() {
+        if (exposeBtn != null) {
+            exposeBtn.setEnabled(false);
+            setButtonColor(exposeBtn, Color.WHITE);
+        }
+        if (loopBtn != null) {
+            loopBtn.setEnabled(false);
+            setButtonColor(loopBtn, Color.WHITE);
+        }
+        if (exposureTimeField != null) {
+            exposureTimeField.setEnabled(false);
+            exposureTimeField.setAdapter(null);
+        }
+        if (abortBtn != null) abortBtn.setEnabled(false);
+        if (gainSlider != null) gainSlider.setEnabled(false);
+        if (isoSpinner != null) {
+            isoSpinner.setEnabled(false);
+            isoSpinner.setAdapter(null);
+        }
+        if (frameTypeSpinner != null) {
+            frameTypeSpinner.setEnabled(false);
+            frameTypeSpinner.setAdapter(null);
+        }
+        if (binningSpinner != null) {
+            binningSpinner.setEnabled(false);
+            binningSpinner.setAdapter(null);
+        }
+        if (prefixField != null) prefixField.setEnabled(false);
+        if (remoteFolderField != null) remoteFolderField.setEnabled(false);
+    }
+
+    @Override
+    public void onCameraLoopStop() {
+        INDICamera camera = getCamera();
+        if (camera == null) {
+            disableControls();
+            return;
+        }
+        boolean captureOrPreset = camera.canCapture() || camera.hasPresets();
+        if (exposeBtn != null) exposeBtn.setEnabled(captureOrPreset);
+        if (loopBtn != null) {
+            loopBtn.setEnabled(captureOrPreset && camera.hasBLOB());
+            setButtonColor(loopBtn, Color.WHITE);
+        }
     }
 
     @Override
@@ -522,7 +722,7 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
     }
 
     @Override
-    public void onINDICameraError(Throwable e) {
+    public void onCameraError(Throwable e) {
         Log.e("BLOBViewer", e.getLocalizedMessage(), e);
         if (e instanceof Error) {
             onError(R.string.out_of_memory);
@@ -560,7 +760,7 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
             cameraSelectAdapter.notifyDataSetChanged();
         if (cameraSelectSpinner != null)
             cameraSelectSpinner.setEnabled(false);
-        onCameraFunctionsChange();
+        disableControls();
     }
 
     private static class SwitchPropFilter extends Filter {
@@ -627,8 +827,8 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
 
     private class SwitchPropertyAdapter extends SimpleAdapter implements Filterable {
 
-        private final INDISwitchElement[] array;
         protected final ArrayList<INDISwitchElement> list = new ArrayList<>();
+        private final INDISwitchElement[] array;
 
         SwitchPropertyAdapter(INDISwitchElement[] array) {
             super(inflater);

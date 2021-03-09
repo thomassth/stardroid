@@ -52,7 +52,6 @@ import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.util.CounterHandler;
 import io.github.marcocipriani01.telescopetouch.activities.util.LongPressHandler;
-import io.github.marcocipriani01.telescopetouch.indi.PropUpdater;
 
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 
@@ -131,9 +130,8 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
                     try {
                         outwardDirElem.setDesiredValue(Constants.SwitchStatus.ON);
                         inwardDirElem.setDesiredValue(Constants.SwitchStatus.OFF);
-                        new PropUpdater(directionProp).start();
                         relPosElem.setDesiredValue((double) stepsHandler.getValue());
-                        new PropUpdater(relPosProp).start();
+                        connectionManager.updateProperties(directionProp, relPosProp);
                     } catch (Exception e) {
                         Log.e(TAG, e.getLocalizedMessage(), e);
                     }
@@ -146,9 +144,8 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
                     try {
                         inwardDirElem.setDesiredValue(Constants.SwitchStatus.ON);
                         outwardDirElem.setDesiredValue(Constants.SwitchStatus.OFF);
-                        new PropUpdater(directionProp).start();
                         relPosElem.setDesiredValue((double) stepsHandler.getValue());
-                        new PropUpdater(relPosProp).start();
+                        connectionManager.updateProperties(directionProp, relPosProp);
                     } catch (Exception e) {
                         Log.e(TAG, e.getLocalizedMessage(), e);
                     }
@@ -297,13 +294,13 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
             if (id == R.id.focuser_abort) {
                 if (abortElem != null) {
                     abortElem.setDesiredValue(Constants.SwitchStatus.ON);
-                    new PropUpdater(abortProp).start();
+                    connectionManager.updateProperties(abortProp);
                 }
             } else if (id == R.id.fok_abs_pos_button) {
                 if (absPosElem != null && positionEditText != null) {
                     try {
                         absPosElem.setDesiredValue(Double.parseDouble(positionEditText.getText().toString()));
-                        new PropUpdater(absPosProp).start();
+                        connectionManager.updateProperties(absPosProp);
                     } catch (NumberFormatException e) {
                         requestActionSnack(R.string.invalid_abs_position);
                         updatePositionText();
@@ -313,7 +310,7 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
                 if (syncPosElem != null && positionEditText != null) {
                     try {
                         syncPosElem.setDesiredValue(Double.parseDouble(positionEditText.getText().toString()));
-                        new PropUpdater(syncPosProp).start();
+                        connectionManager.updateProperties(syncPosProp);
                     } catch (NumberFormatException e) {
                         requestActionSnack(R.string.invalid_abs_position);
                         updatePositionText();
@@ -331,7 +328,7 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
             try {
                 double step = speedElem.getStep(), min = speedElem.getMin();
                 speedElem.setDesiredValue(min + (progress * step));
-                new PropUpdater(speedProp).start();
+                connectionManager.updateProperties(speedProp);
             } catch (Exception e) {
                 Log.e(TAG, e.getLocalizedMessage(), e);
             }

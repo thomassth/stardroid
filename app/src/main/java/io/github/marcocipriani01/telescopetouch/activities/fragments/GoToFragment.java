@@ -84,7 +84,6 @@ import io.github.marcocipriani01.telescopetouch.catalog.CatalogEntry;
 import io.github.marcocipriani01.telescopetouch.catalog.DSOEntry;
 import io.github.marcocipriani01.telescopetouch.catalog.PlanetEntry;
 import io.github.marcocipriani01.telescopetouch.catalog.StarEntry;
-import io.github.marcocipriani01.telescopetouch.indi.PropUpdater;
 import io.github.marcocipriani01.telescopetouch.sensors.LocationHelper;
 
 import static io.github.marcocipriani01.telescopetouch.ApplicationConstants.VIZIER_WELCOME;
@@ -393,9 +392,8 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
                     connectionManager.telescopeOnCoordSetTrack.setDesiredValue(Constants.SwitchStatus.ON);
                     connectionManager.telescopeOnCoordSetSlew.setDesiredValue(Constants.SwitchStatus.OFF);
                     connectionManager.telescopeOnCoordSetSync.setDesiredValue(Constants.SwitchStatus.OFF);
-                    new PropUpdater(connectionManager.telescopeOnCoordSetP).start();
                     setCoordinatesMaybePrecess(entry, coordinates);
-                    new PropUpdater(connectionManager.telescopeCoordP).start();
+                    connectionManager.updateProperties(connectionManager.telescopeOnCoordSetP, connectionManager.telescopeCoordP);
                     requestActionSnack(R.string.slew_ok);
                 } catch (Exception e) {
                     Log.e(TAG, e.getLocalizedMessage(), e);
@@ -408,9 +406,8 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
                     connectionManager.telescopeOnCoordSetSync.setDesiredValue(Constants.SwitchStatus.ON);
                     connectionManager.telescopeOnCoordSetTrack.setDesiredValue(Constants.SwitchStatus.OFF);
                     connectionManager.telescopeOnCoordSetSlew.setDesiredValue(Constants.SwitchStatus.OFF);
-                    new PropUpdater(connectionManager.telescopeOnCoordSetP).start();
                     setCoordinatesMaybePrecess(entry, coordinates);
-                    new PropUpdater(connectionManager.telescopeCoordP).start();
+                    connectionManager.updateProperties(connectionManager.telescopeOnCoordSetP, connectionManager.telescopeCoordP);
                     requestActionSnack(R.string.sync_ok);
                 } catch (Exception e) {
                     Log.e(TAG, e.getLocalizedMessage(), e);
