@@ -19,7 +19,7 @@
             android:background="@color/colorPrimary"
             android:theme="@style/ThemeOverlay.MaterialComponents.ActionBar"
             app:popupTheme="@style/ThemeOverlay.MaterialComponents"
-            app:title="@string/app_name" />
+            app:title="@string/indi_control_panel" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/indi_control_tabs"

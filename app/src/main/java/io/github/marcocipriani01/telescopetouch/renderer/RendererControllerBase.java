@@ -189,6 +189,7 @@ public abstract class RendererControllerBase {
     public static abstract class RenderManager<E> {
 
         final protected RendererObjectManager manager;
+
         private RenderManager(RendererObjectManager mgr) {
             manager = mgr;
         }
@@ -199,8 +200,8 @@ public abstract class RendererControllerBase {
         }
 
         public abstract void queueObjects(final List<E> objects,
-                final EnumSet<RendererObjectManager.UpdateType> updateType,
-                RendererControllerBase controller);
+                                          final EnumSet<RendererObjectManager.UpdateType> updateType,
+                                          RendererControllerBase controller);
     }
 
     /**

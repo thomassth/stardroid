@@ -27,7 +27,7 @@ import android.widget.Spinner;
  */
 public abstract class ImprovedSpinnerListener implements AdapterView.OnItemSelectedListener, View.OnTouchListener {
 
-    boolean touched = false;
+    private boolean touched = false;
 
     public void attach(Spinner spinner) {
         spinner.setOnItemSelectedListener(this);

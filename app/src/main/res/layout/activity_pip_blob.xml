@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/no_image_background"
-    android:contentDescription="@string/ccd_images"
-    tools:context=".activities.FlyingBLOBViewActivity">
+    android:contentDescription="@string/capture_view_ccd"
+    tools:context=".activities.PIPCameraViewerActivity">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="@string/ccd_images"
+        android:contentDescription="@string/capture_view_ccd"
         android:scaleType="centerInside"
         android:src="@drawable/no_image" />
 
@@ -19,5 +19,5 @@
         android:padding="1dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="@string/ccd_images" />
+        android:contentDescription="@string/capture_view_ccd" />
 </FrameLayout>

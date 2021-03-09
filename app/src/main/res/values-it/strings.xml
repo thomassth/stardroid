@@ -453,7 +453,7 @@
     <string name="invalid_abs_position">Posizione assoluta non valida!</string>
     <string name="nsd_not_available">Ricerca in LAN non disponibile.</string>
     <string name="catalog_load_error">Errore di caricamento del catalogo</string>
-    <string name="ccd_images">Immagini CCD</string>
+    <string name="capture_view_ccd">Cattura e visualizza</string>
     <string name="receive_images">Ricevi immagini</string>
     <string name="unknown">sconosciuto</string>
     <string name="file_size">Peso file:</string>
