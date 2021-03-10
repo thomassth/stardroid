@@ -121,7 +121,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ProUtils.update(this);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         darkerModeManager = new DarkerModeManager(this, this, preferences);
         darkerMode = darkerModeManager.getPref();
@@ -177,7 +176,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return;
             }
         }
-        ProUtils.update(this);
     }
 
     @Override
@@ -204,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onResume() {
         super.onResume();
+        ProUtils.update(this);
         visible = true;
         darkerModeManager.start();
     }
