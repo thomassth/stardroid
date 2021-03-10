@@ -49,6 +49,10 @@
         android:name="android.hardware.screen.portrait"
         android:required="false" />
 
+    <queries>
+        <package android:name="io.github.marcocipriani01.telescopetouchpro" />
+    </queries>
+
     <application
         android:name=".TelescopeTouchApp"
         android:allowBackup="false"
@@ -157,10 +161,10 @@
         <activity
             android:name=".activities.PIPCameraViewerActivity"
             android:label="@string/mount_control"
-            android:theme="@style/AppThemeNoActionBar"
             android:launchMode="singleTask"
+            android:screenOrientation="fullUser"
             android:supportsPictureInPicture="true"
-            android:screenOrientation="fullUser" />
+            android:theme="@style/AppThemeNoActionBar" />
 
         <service
             android:name=".AppForegroundService"
