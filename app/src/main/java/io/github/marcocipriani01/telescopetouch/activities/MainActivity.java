@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ProUtils.update(this);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         darkerModeManager = new DarkerModeManager(this, this, preferences);
         darkerMode = darkerModeManager.getPref();
@@ -166,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStart() {
         super.onStart();
+        ProUtils.update(this);
         connectionManager.addManagerListener(this);
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
