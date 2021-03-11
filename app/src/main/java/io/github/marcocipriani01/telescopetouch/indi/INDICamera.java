@@ -14,6 +14,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.util.Log;
 
@@ -60,8 +62,25 @@ import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 
-public class INDICamera implements INDIPropertyListener {
+public class INDICamera implements INDIPropertyListener, Parcelable {
 
+    public static final Parcelable.Creator<INDICamera> CREATOR = new Parcelable.Creator<INDICamera>() {
+        @Override
+        public INDICamera createFromParcel(Parcel in) {
+            int deviceHash = in.readInt();
+            Set<INDIDevice> devices = connectionManager.indiCameras.keySet();
+            for (INDIDevice device : devices) {
+                if (device.hashCode() == deviceHash)
+                    return connectionManager.indiCameras.get(device);
+            }
+            return null;
+        }
+
+        @Override
+        public INDICamera[] newArray(int size) {
+            return new INDICamera[size];
+        }
+    };
     private static final String TAG = TelescopeTouchApp.getTag(INDICamera.class);
     private static boolean storagePermissionRequested = false;
     public final INDIDevice device;
@@ -96,6 +115,10 @@ public class INDICamera implements INDIPropertyListener {
     public volatile INDITextElement uploadPrefixE;
     public volatile INDISwitchProperty frameTypeP;
     public volatile INDISwitchElement[] frameTypesE;
+    public volatile INDISwitchProperty formatP;
+    public volatile INDISwitchElement[] formatsE;
+    public volatile INDISwitchProperty transferFormatP;
+    public volatile INDISwitchElement[] transferFormatsE;
     private volatile Thread loadingThread = null;
     private volatile INDIBLOBValue queuedValue = null;
     private volatile boolean stretch = false;
@@ -108,6 +131,8 @@ public class INDICamera implements INDIPropertyListener {
     private volatile double captureLoopExposure = -1;
     private volatile String[] metadata = new String[]{null, null, null, null};
     private volatile int loopDelay = 1000;
+    private volatile int loopTotalCaptures = 0;
+    private volatile int loopRemainingCaptures = 0;
 
     public INDICamera(INDIDevice device, Context context, Handler uiHandler) {
         this.device = device;
@@ -116,7 +141,8 @@ public class INDICamera implements INDIPropertyListener {
     }
 
     public static boolean isCameraProp(INDIProperty<?> property) {
-        return property.getName().startsWith("CCD_");
+        String name = property.getName();
+        return name.startsWith("CCD_") || name.startsWith("CAPTURE_");
     }
 
     private static int findFITSLineValue(String in) {
@@ -125,6 +151,14 @@ public class INDICamera implements INDIPropertyListener {
         if (matcher.find())
             return Integer.parseInt(matcher.group());
         return -1;
+    }
+
+    public boolean hasFormats() {
+        return (formatP != null) && (formatsE != null);
+    }
+
+    public boolean hasTransferFormats() {
+        return (transferFormatP != null) && (transferFormatsE != null);
     }
 
     public int getLoopDelay() {
@@ -143,12 +177,14 @@ public class INDICamera implements INDIPropertyListener {
         return captureLoop;
     }
 
-    public void startCaptureLoop(double captureLoopExposure) throws INDIValueException {
-        if ((!canCapture()) || (!hasBLOB()))
+    public void startCaptureLoop(double captureLoopExposure, int count) throws INDIValueException {
+        if (!canCapture())
             throw new UnsupportedOperationException("Unsupported capture loop!");
         if (captureLoopExposure <= 0) throw new IllegalArgumentException("Negative exposure time!");
+        if (count < 0) throw new IllegalArgumentException("Invalid loop count!");
         this.captureLoopExposure = captureLoopExposure;
         this.captureLoopPreset = null;
+        this.loopRemainingCaptures = this.loopTotalCaptures = count;
         if (hasForceBulb()) {
             forceBulbOffE.setDesiredValue(Constants.SwitchStatus.OFF);
             forceBulbOnE.setDesiredValue(Constants.SwitchStatus.ON);
@@ -158,11 +194,13 @@ public class INDICamera implements INDIPropertyListener {
         connectionManager.post(this::captureLoopExposureRunnable);
     }
 
-    public void startCaptureLoop(INDISwitchElement captureLoopPreset) throws INDIValueException {
-        if ((!hasPresets()) || (!hasBLOB()))
+    public void startCaptureLoop(INDISwitchElement captureLoopPreset, int count) throws INDIValueException {
+        if ((!canCapture()) || (!hasPresets()))
             throw new UnsupportedOperationException("Unsupported capture loop!");
+        if (count < 0) throw new IllegalArgumentException("Invalid loop count!");
         this.captureLoopExposure = -1;
         this.captureLoopPreset = captureLoopPreset;
+        this.loopRemainingCaptures = this.loopTotalCaptures = count;
         if (hasForceBulb()) {
             forceBulbOnE.setDesiredValue(Constants.SwitchStatus.OFF);
             forceBulbOffE.setDesiredValue(Constants.SwitchStatus.ON);
@@ -172,24 +210,24 @@ public class INDICamera implements INDIPropertyListener {
         connectionManager.post(this::captureLoopPresetRunnable);
     }
 
-    public void startCaptureLoop(String exposureOrPreset) throws INDIException {
+    public void startCaptureLoop(String exposureOrPreset, int count) throws INDIException {
         exposureOrPreset = exposureOrPreset.trim();
         boolean canCapture = canCapture(), hasPresets = hasPresets();
         if (canCapture && (!hasPresets)) {
-            startCaptureLoop(Double.parseDouble(exposureOrPreset));
+            startCaptureLoop(Double.parseDouble(exposureOrPreset), count);
         } else if (hasPresets && (!canCapture)) {
             INDISwitchElement e = stringToCameraPreset(exposureOrPreset);
             if (e == null) {
                 throw new INDIException("Camera preset not found!");
             } else {
-                startCaptureLoop(e);
+                startCaptureLoop(e, count);
             }
         } else if (canCapture) {
             INDISwitchElement e = stringToCameraPreset(exposureOrPreset);
             if (e == null) {
-                startCaptureLoop(Double.parseDouble(exposureOrPreset));
+                startCaptureLoop(Double.parseDouble(exposureOrPreset), count);
             } else {
-                startCaptureLoop(e);
+                startCaptureLoop(e, count);
             }
         } else {
             throw new UnsupportedOperationException("Unsupported capture!");
@@ -282,7 +320,12 @@ public class INDICamera implements INDIPropertyListener {
                 connectionManager.updateProperties(uploadModeP);
             } catch (Exception e) {
                 Log.e(TAG, e.getLocalizedMessage(), e);
+                //TODO warn user
             }
+        } else if (saveMode == SaveMode.REMOTE_SAVE) {
+            blobP.removeINDIPropertyListener(this);
+        } else {
+            blobP.addINDIPropertyListener(this);
         }
         connectionManager.post(() -> {
             try {
@@ -362,30 +405,65 @@ public class INDICamera implements INDIPropertyListener {
             if (listeners.isEmpty()) return;
             queuedValue = blobE.getValue();
             if ((loadingThread == null) || (!loadingThread.isAlive())) startProcessing();
-        } else if ((indiProperty == exposureP) || (indiProperty == exposurePresetsP)) {
+        } else if (indiProperty == exposureP) {
             final Constants.PropertyStates state = indiProperty.getState();
             if (captureLoop) {
-                switch (state) {
-                    case OK:
-                        if ((captureLoopExposure != -1) && (captureLoopPreset == null)) {
-                            connectionManager.postDelayed(this::captureLoopExposureRunnable, loopDelay);
+                if (loopTotalCaptures == 0) {
+                    switch (state) {
+                        case OK:
+                            if ((captureLoopExposure != -1) && (captureLoopPreset == null)) {
+                                connectionManager.postDelayed(this::captureLoopExposureRunnable, loopDelay);
+                                break;
+                            } else if ((captureLoopPreset != null) && (captureLoopExposure == -1)) {
+                                connectionManager.postDelayed(this::captureLoopPresetRunnable, loopDelay);
+                                break;
+                            }
+                        case ALERT:
+                        case IDLE:
+                            cameraLoopStop();
                             break;
-                        } else if ((captureLoopPreset != null) && (captureLoopExposure == -1)) {
-                            connectionManager.postDelayed(this::captureLoopPresetRunnable, loopDelay);
-                            break;
-                        }
-                    case ALERT:
-                    case IDLE:
-                        cameraLoopStop();
-                        break;
-                }
-                uiHandler.post(() -> {
-                    synchronized (listeners) {
-                        for (CameraListener listener : listeners) {
-                            listener.onCameraLoopStateChange(state);
-                        }
                     }
-                });
+                    uiHandler.post(() -> {
+                        synchronized (listeners) {
+                            for (CameraListener listener : listeners) {
+                                listener.onCameraLoopStateChange(state);
+                            }
+                        }
+                    });
+                } else if (loopRemainingCaptures <= 1) {
+                    cameraLoopStop();
+                } else {
+                    switch (state) {
+                        case OK:
+                            if ((captureLoopExposure != -1) && (captureLoopPreset == null)) {
+                                connectionManager.postDelayed(this::captureLoopExposureRunnable, loopDelay);
+                            } else if ((captureLoopPreset != null) && (captureLoopExposure == -1)) {
+                                connectionManager.postDelayed(this::captureLoopPresetRunnable, loopDelay);
+                            } else {
+                                break;
+                            }
+                            loopRemainingCaptures--;
+                            uiHandler.post(() -> {
+                                synchronized (listeners) {
+                                    for (CameraListener listener : listeners) {
+                                        listener.onLoopProgressChange(loopTotalCaptures - loopRemainingCaptures, loopTotalCaptures);
+                                    }
+                                }
+                            });
+                            break;
+                        case ALERT:
+                        case IDLE:
+                            cameraLoopStop();
+                            break;
+                    }
+                    uiHandler.post(() -> {
+                        synchronized (listeners) {
+                            for (CameraListener listener : listeners) {
+                                listener.onCameraLoopStateChange(state);
+                            }
+                        }
+                    });
+                }
             } else {
                 uiHandler.post(() -> {
                     synchronized (listeners) {
@@ -421,6 +499,23 @@ public class INDICamera implements INDIPropertyListener {
     public INDISwitchElement getSelectedISO() {
         if (!hasISO()) throw new UnsupportedOperationException("Unsupported ISO!");
         for (INDISwitchElement e : isoE) {
+            if (e.getValue() == Constants.SwitchStatus.ON) return e;
+        }
+        return null;
+    }
+
+    public INDISwitchElement getSelectedFormat() {
+        if (!hasFormats()) throw new UnsupportedOperationException("Unsupported formats!");
+        for (INDISwitchElement e : formatsE) {
+            if (e.getValue() == Constants.SwitchStatus.ON) return e;
+        }
+        return null;
+    }
+
+    public INDISwitchElement getSelectedTransferFormat() {
+        if (!hasTransferFormats())
+            throw new UnsupportedOperationException("Unsupported transfer formats!");
+        for (INDISwitchElement e : transferFormatsE) {
             if (e.getValue() == Constants.SwitchStatus.ON) return e;
         }
         return null;
@@ -552,6 +647,23 @@ public class INDICamera implements INDIPropertyListener {
         connectionManager.updateProperties(isoP);
     }
 
+    public void setFormat(INDISwitchElement format) throws INDIValueException {
+        if (!hasFormats()) throw new UnsupportedOperationException("Unsupported format!");
+        for (INDISwitchElement e : formatsE) {
+            e.setDesiredValue((e == format) ? Constants.SwitchStatus.ON : Constants.SwitchStatus.OFF);
+        }
+        connectionManager.updateProperties(formatP);
+    }
+
+    public void setTransferFormat(INDISwitchElement format) throws INDIValueException {
+        if (!hasTransferFormats())
+            throw new UnsupportedOperationException("Unsupported transfer format!");
+        for (INDISwitchElement e : transferFormatsE) {
+            e.setDesiredValue((e == format) ? Constants.SwitchStatus.ON : Constants.SwitchStatus.OFF);
+        }
+        connectionManager.updateProperties(transferFormatP);
+    }
+
     public void setFrameType(INDISwitchElement frameType) throws INDIValueException {
         if (!hasFrameTypes()) throw new UnsupportedOperationException("Unsupported frame types!");
         for (INDISwitchElement e : frameTypesE) {
@@ -603,7 +715,6 @@ public class INDICamera implements INDIPropertyListener {
                     }
                     availableExposurePresetsE = presets.toArray(new INDISwitchElement[0]);
                     exposurePresetsP = (INDISwitchProperty) property;
-                    exposurePresetsP.addINDIPropertyListener(this);
                 }
                 break;
             case "CCD_ISO":
@@ -656,6 +767,17 @@ public class INDICamera implements INDIPropertyListener {
                         ((uploadDirE = (INDITextElement) property.getElement("UPLOAD_DIR")) != null) &&
                         ((uploadPrefixE = (INDITextElement) property.getElement("UPLOAD_PREFIX")) != null)) {
                     uploadSettingsP = (INDITextProperty) property;
+                }
+                break;
+            case "CAPTURE_FORMAT":
+                if (property instanceof INDISwitchProperty) {
+                    formatsE = property.getElementsAsList().toArray(new INDISwitchElement[0]);
+                    formatP = (INDISwitchProperty) property;
+                }
+            case "CCD_TRANSFER_FORMAT":
+                if (property instanceof INDISwitchProperty) {
+                    transferFormatsE = property.getElementsAsList().toArray(new INDISwitchElement[0]);
+                    transferFormatP = (INDISwitchProperty) property;
                 }
                 break;
             default:
@@ -712,6 +834,13 @@ public class INDICamera implements INDIPropertyListener {
                 uploadDirE = uploadPrefixE = null;
                 uploadSettingsP = null;
                 break;
+            case "CAPTURE_FORMAT":
+                formatP = null;
+                formatsE = null;
+            case "CCD_TRANSFER_FORMAT":
+                transferFormatP = null;
+                transferFormatsE = null;
+                break;
             default:
                 return false;
         }
@@ -721,7 +850,7 @@ public class INDICamera implements INDIPropertyListener {
             }
         }
         return (blobP == null) && (exposureP == null) && (exposurePresetsP == null) &&
-                (abortP == null) && (binningP == null) && (isoP == null);
+                (abortP == null) && (binningP == null) && (isoP == null); //TODO expand list
     }
 
     public synchronized void terminate() {
@@ -751,6 +880,8 @@ public class INDICamera implements INDIPropertyListener {
         uploadDirE = uploadPrefixE = null;
         frameTypeP = null;
         frameTypesE = null;
+        formatP = transferFormatP = null;
+        formatsE = transferFormatsE = null;
     }
 
     @NonNull
@@ -800,12 +931,12 @@ public class INDICamera implements INDIPropertyListener {
         }
     }
 
-    private void onException(final Throwable throwable) {
+    private void onImageLoadingException(final Throwable throwable) {
         uiHandler.post(() -> {
             synchronized (listeners) {
                 for (CameraListener listener : listeners) {
                     listener.onBitmapDestroy();
-                    listener.onCameraError(throwable);
+                    listener.onImageLoadingError(throwable);
                 }
             }
             if (lastBitmap != null) {
@@ -860,6 +991,16 @@ public class INDICamera implements INDIPropertyListener {
         });
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(device.hashCode());
+    }
+
     public enum SaveMode {
         SHOW_ONLY(R.string.ccd_image_show_only),
         SAVE_JPG_AND_SHOW(R.string.ccd_image_save_show),
@@ -893,7 +1034,10 @@ public class INDICamera implements INDIPropertyListener {
 
         void onBitmapDestroy();
 
-        default void onCameraError(Throwable e) {
+        default void onImageLoadingError(Throwable e) {
+        }
+
+        default void onLoopProgressChange(int progress, int total) { //TODO
         }
 
         default void onCameraStateChange(Constants.PropertyStates state) {
@@ -1041,7 +1185,7 @@ public class INDICamera implements INDIPropertyListener {
                     }
                 }
             } catch (Throwable t) {
-                onException(t);
+                onImageLoadingException(t);
             }
         }
     }

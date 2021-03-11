@@ -115,6 +115,11 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
     private EditText prefixField;
     private EditText remoteFolderField;
     private Slider gainSlider;
+    private Slider countSlider;
+    private Spinner formatSpinner;
+    private Spinner transferFormatSpinner;
+    private TextView logText;
+    private Slider delaySlider;
     private final ImprovedSpinnerListener cameraSelectListener = new ImprovedSpinnerListener() {
         @Override
         protected void onImprovedItemSelected(AdapterView<?> parent, View view, int pos, long id) {
@@ -125,14 +130,17 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
             }
             selectedCameraDev = cameras.get(pos).device;
             camera = getCamera();
-            if (camera != null) {
+            if (camera == null) {
+                logText.setText("-");
+            } else {
                 camera.addListener(CameraFragment.this);
                 onImageLoaded(camera.getLastBitmap(), camera.getLastMetadata());
+                String lastMessage = camera.device.getLastMessage();
+                logText.setText(((lastMessage == null) || (lastMessage.equals(""))) ? "-" : lastMessage);
             }
             onCameraFunctionsChange();
         }
     };
-    private Slider delaySlider;
     private Spinner cameraSelectSpinner;
     private CamerasArrayAdapter cameraSelectAdapter;
     private boolean pipSupported = false;
@@ -145,7 +153,7 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         this.inflater = inflater;
-        View rootView = inflater.inflate(R.layout.fragment_blob_viewer, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_camera, container, false);
         pipSupported = PIPCameraViewerActivity.isSupported(context);
         if (pipSupported) setHasOptionsMenu(true);
         fitsStretchSwitch = rootView.findViewById(R.id.ccd_image_stretch_switch);
@@ -173,6 +181,10 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
         prefixField = rootView.findViewById(R.id.ccd_file_prefix_field);
         remoteFolderField = rootView.findViewById(R.id.ccd_remote_folder_field);
         exposureTimeField = rootView.findViewById(R.id.ccd_exposure_time_field);
+        countSlider = rootView.findViewById(R.id.ccd_loop_count_slider);
+        formatSpinner = rootView.findViewById(R.id.ccd_format_spinner);
+        transferFormatSpinner = rootView.findViewById(R.id.ccd_transfer_format_spinner);
+        logText = rootView.findViewById(R.id.ccd_log_label);
         View captureTab = rootView.findViewById(R.id.ccd_viewer_capture_tab),
                 viewTab = rootView.findViewById(R.id.ccd_viewer_image_tab);
         rootView.<TabLayout>findViewById(R.id.ccd_viewer_tabs)
@@ -322,9 +334,14 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
                     camera.setISO(((INDISwitchElement) isoSpinner.getSelectedItem()));
                 if (camera.hasGain())
                     camera.setGain(gainSlider.getValue());
+                if (camera.hasFormats())
+                    camera.setFormat(((INDISwitchElement) formatSpinner.getSelectedItem()));
+                if (camera.hasTransferFormats())
+                    camera.setTransferFormat(((INDISwitchElement) transferFormatSpinner.getSelectedItem()));
                 if (camera.hasUploadSettings()) {
                     String prefix = prefixField.getText().toString();
-                    if (!prefix.equals("")) camera.setUploadPrefix(prefix);
+                    if (!prefix.equals(""))
+                        camera.setUploadPrefix(prefix); // TODO: file formatting %e %t...
                     String dir = remoteFolderField.getText().toString();
                     if (!dir.equals("")) camera.setUploadDir(dir);
                 }
@@ -379,6 +396,10 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
                     camera.setISO(((INDISwitchElement) isoSpinner.getSelectedItem()));
                 if (camera.hasGain())
                     camera.setGain(gainSlider.getValue());
+                if (camera.hasFormats())
+                    camera.setFormat(((INDISwitchElement) formatSpinner.getSelectedItem()));
+                if (camera.hasTransferFormats())
+                    camera.setTransferFormat(((INDISwitchElement) transferFormatSpinner.getSelectedItem()));
                 if (camera.hasUploadSettings()) {
                     String prefix = prefixField.getText().toString();
                     if (!prefix.equals("")) camera.setUploadPrefix(prefix);
@@ -386,7 +407,7 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
                     if (!dir.equals("")) camera.setUploadDir(dir);
                 }
                 camera.setLoopDelay(loopDelay * 1000);
-                camera.startCaptureLoop(exposureTimeField.getText().toString());
+                camera.startCaptureLoop(exposureTimeField.getText().toString(), (int) countSlider.getValue());
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage(), e);
                 requestActionSnack(context.getString(R.string.error) + " " + e.getLocalizedMessage());
@@ -546,6 +567,13 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
         setButtonColor(loopBtn, color);
     }
 
+    @SuppressLint("SetTextI18n")
+    @Override
+    public void onLoopProgressChange(int progress, int total) {
+        if (loopBtn != null)
+            loopBtn.setText(context.getString(R.string.loop) + " (" + progress + "/" + total + ")");
+    }
+
     private void setButtonColor(Button btn, int color) {
         if (btn != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -565,10 +593,10 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
             return;
         }
         if (saveModeSpinner != null) saveModeSpinner.setSelection(camera.getSaveMode().ordinal());
-        boolean canExpose = camera.canCapture(), hasPresets = camera.hasPresets(),
-                captureOrPreset = canExpose || hasPresets, isLooping = camera.isCaptureLooping();
+        boolean hasPresets = camera.hasPresets(), captureOrPreset = camera.canCapture() || hasPresets,
+                canLoop = captureOrPreset && (!camera.isCaptureLooping());
         if (exposeBtn != null) {
-            exposeBtn.setEnabled(captureOrPreset && (!isLooping));
+            exposeBtn.setEnabled(canLoop);
             int color = Color.WHITE;
             switch (camera.exposureP.getState()) {
                 case OK:
@@ -583,12 +611,13 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
             }
             setButtonColor(exposeBtn, color);
         }
-        if (loopBtn != null)
-            loopBtn.setEnabled(captureOrPreset && (!isLooping) && camera.hasBLOB());
+        if (loopBtn != null) loopBtn.setEnabled(canLoop);
+        if (delaySlider != null) delaySlider.setEnabled(canLoop);
+        if (countSlider != null) countSlider.setEnabled(canLoop);
         if (exposureTimeField != null) {
             exposureTimeField.setEnabled(captureOrPreset);
             exposureTimeField.setAdapter(hasPresets ? new SwitchPropertyStringAdapter(camera.availableExposurePresetsE) : null);
-            if (canExpose) {
+            if (camera.canCapture()) {
                 String expString = camera.exposureE.getValueAsString().trim();
                 if (!expString.equals("0.00")) exposureTimeField.setText(expString);
             } else if (hasPresets) {
@@ -617,6 +646,32 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
                 if (selectedISO != null) isoSpinner.setSelection(adapter.list.indexOf(selectedISO));
             } else {
                 isoSpinner.setAdapter(null);
+            }
+        }
+        if (formatSpinner != null) {
+            boolean hasFormats = camera.hasFormats();
+            formatSpinner.setEnabled(hasFormats);
+            if (hasFormats) {
+                SwitchPropertyAdapter adapter = new SwitchPropertyAdapter(camera.formatsE);
+                formatSpinner.setAdapter(adapter);
+                INDISwitchElement selectedFormat = camera.getSelectedFormat();
+                if (selectedFormat != null)
+                    formatSpinner.setSelection(adapter.list.indexOf(selectedFormat));
+            } else {
+                formatSpinner.setAdapter(null);
+            }
+        }
+        if (transferFormatSpinner != null) {
+            boolean hasTransferFormats = camera.hasTransferFormats();
+            transferFormatSpinner.setEnabled(hasTransferFormats);
+            if (hasTransferFormats) {
+                SwitchPropertyAdapter adapter = new SwitchPropertyAdapter(camera.transferFormatsE);
+                transferFormatSpinner.setAdapter(adapter);
+                INDISwitchElement selectedFormat = camera.getSelectedTransferFormat();
+                if (selectedFormat != null)
+                    transferFormatSpinner.setSelection(adapter.list.indexOf(selectedFormat));
+            } else {
+                transferFormatSpinner.setAdapter(null);
             }
         }
         if (frameTypeSpinner != null) {
@@ -657,6 +712,8 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
             loopBtn.setEnabled(false);
             setButtonColor(loopBtn, Color.WHITE);
         }
+        if (delaySlider != null) delaySlider.setEnabled(false);
+        if (countSlider != null) countSlider.setEnabled(false);
         if (exposureTimeField != null) {
             exposureTimeField.setEnabled(false);
             exposureTimeField.setAdapter(null);
@@ -666,6 +723,14 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
         if (isoSpinner != null) {
             isoSpinner.setEnabled(false);
             isoSpinner.setAdapter(null);
+        }
+        if (formatSpinner != null) {
+            formatSpinner.setEnabled(false);
+            formatSpinner.setAdapter(null);
+        }
+        if (transferFormatSpinner != null) {
+            transferFormatSpinner.setEnabled(false);
+            transferFormatSpinner.setAdapter(null);
         }
         if (frameTypeSpinner != null) {
             frameTypeSpinner.setEnabled(false);
@@ -689,9 +754,12 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
         boolean captureOrPreset = camera.canCapture() || camera.hasPresets();
         if (exposeBtn != null) exposeBtn.setEnabled(captureOrPreset);
         if (loopBtn != null) {
-            loopBtn.setEnabled(captureOrPreset && camera.hasBLOB());
+            loopBtn.setText(R.string.loop);
+            loopBtn.setEnabled(captureOrPreset);
             setButtonColor(loopBtn, Color.WHITE);
         }
+        if (delaySlider != null) delaySlider.setEnabled(captureOrPreset);
+        if (countSlider != null) countSlider.setEnabled(captureOrPreset);
     }
 
     @Override
@@ -722,7 +790,7 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
     }
 
     @Override
-    public void onCameraError(Throwable e) {
+    public void onImageLoadingError(Throwable e) {
         Log.e("BLOBViewer", e.getLocalizedMessage(), e);
         if (e instanceof Error) {
             onError(R.string.out_of_memory);
@@ -761,6 +829,14 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
         if (cameraSelectSpinner != null)
             cameraSelectSpinner.setEnabled(false);
         disableControls();
+    }
+
+    @Override
+    public void deviceLog(ConnectionManager.LogItem log) {
+        if (logText == null) return;
+        INDICamera camera = getCamera();
+        if (camera == null) return;
+        if (log.getDevice() == camera.device) logText.setText(log.getLog());
     }
 
     private static class SwitchPropFilter extends Filter {
