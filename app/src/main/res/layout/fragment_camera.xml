@@ -8,7 +8,7 @@
     android:orientation="vertical"
     tools:context=".activities.fragments.CameraFragment">
 
-    <!--<androidx.appcompat.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/compass_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,7 +17,7 @@
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.MaterialComponents.ActionBar"
         app:popupTheme="@style/ThemeOverlay.MaterialComponents"
-        app:title="@string/capture_view_ccd" />-->
+        app:title="@string/capture_view_ccd" />
 
     <ProgressBar
         android:id="@+id/blob_loading"
@@ -28,15 +28,6 @@
         android:indeterminate="true"
         android:padding="0dp"
         android:visibility="invisible" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:text="Warning: &quot;Capture &amp; view&quot; is BETA feature. It may be unstable, interfere with other clients or crash. It will be available for free until it exits beta. Please, consider donating or buying Pro to support the development!"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
     <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/ccd_selection_spinner"
@@ -97,9 +88,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:layout_weight="1"
-                        android:hint="1"
-                        android:imeOptions="flagNoExtractUi"
-                        tools:ignore="HardcodedText" />
+                        android:hint="@string/exposure_time"
+                        android:imeOptions="flagNoExtractUi" />
 
                     <Button
                         android:id="@+id/ccd_expose_button"
@@ -176,6 +166,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
                     android:layout_marginBottom="8dp"
                     android:text="@string/save_mode_warning"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small" />
@@ -279,6 +270,48 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
+                        android:text="@string/file_format"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/white" />
+
+                    <androidx.appcompat.widget.AppCompatSpinner
+                        android:id="@+id/ccd_format_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_weight="1"
+                        tools:listitem="@layout/simple_spinner_item" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:text="@string/transfer_format"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/white" />
+
+                    <androidx.appcompat.widget.AppCompatSpinner
+                        android:id="@+id/ccd_transfer_format_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_weight="1"
+                        tools:listitem="@layout/simple_spinner_item" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
                         android:text="@string/ccd_remote_folder"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="@android:color/white" />
@@ -298,7 +331,7 @@
 
                 <TableRow
                     android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="2dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -314,12 +347,20 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
                         android:layout_weight="1"
-                        android:hint="Orion_60s_XXX"
+                        android:hint="Orion_%e_"
                         android:importantForAutofill="no"
                         android:inputType="textNoSuggestions"
                         tools:ignore="HardcodedText"
                         tools:listitem="@layout/simple_spinner_item" />
                 </TableRow>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/ccd_camera_formatting"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                 <TableRow
                     android:layout_marginTop="8dp"
@@ -352,6 +393,63 @@
                         app:trackColorActive="@color/colorAccent"
                         app:trackHeight="3dp" />
                 </TableRow>
+
+                <TableRow
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="2dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_weight="0"
+                        android:text="@string/loop_count"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/white" />
+
+                    <com.google.android.material.slider.Slider
+                        android:id="@+id/ccd_loop_count_slider"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_weight="1"
+                        android:stepSize="2"
+                        android:value="0"
+                        android:valueFrom="0"
+                        android:valueTo="50"
+                        app:haloColor="@color/colorAccent"
+                        app:thumbColor="@color/colorAccent"
+                        app:thumbStrokeColor="@color/colorAccent"
+                        app:tickColor="@color/colorAccent"
+                        app:tickVisible="false"
+                        app:trackColorActive="@color/colorAccent"
+                        app:trackHeight="3dp" />
+                </TableRow>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/set_zero_unlimited_photos"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/camera_log"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/white" />
+
+                <TextView
+                    android:id="@+id/ccd_log_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="2dp"
+                    android:text="-"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    tools:ignore="HardcodedText" />
             </TableLayout>
         </ScrollView>
 

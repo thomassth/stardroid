@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final String ACTION = "MainActivityAction";
     public static final int ACTION_CONNECT = Pages.CONNECTION.ordinal();
     public static final int ACTION_MOUNT_CONTROL = Pages.MOUNT_CONTROL.ordinal();
+    public static final int ACTION_CCD_CAPTURE = Pages.CCD_CAPTURE.ordinal();
     public static final int ACTION_SEARCH = Pages.GOTO.ordinal();
     public static final String MESSAGE = "MainActivityMessage";
     private static Pages currentPage = Pages.CONNECTION;
@@ -389,7 +390,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         CONNECTION(R.id.menu_connection),
         MOUNT_CONTROL(R.id.menu_move),
         GOTO(R.id.menu_goto_fragment),
-        CCD_IMAGES(R.id.menu_ccd_images),
+        CCD_CAPTURE(R.id.menu_ccd_images),
         FOCUSER(R.id.menu_focuser),
         CONTROL_PANEL(R.id.menu_generic),
         SKY_MAP(R.id.menu_skymap),
@@ -425,7 +426,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 case GOTO:
                     lastInstance = new GoToFragment();
                     break;
-                case CCD_IMAGES:
+                case CCD_CAPTURE:
                     lastInstance = new CameraFragment();
                     break;
                 case FOCUSER:

@@ -20,7 +20,7 @@
 
         <item
             android:id="@+id/menu_ccd_images"
-            android:icon="@drawable/received_images"
+            android:icon="@drawable/ccd_capture"
             android:title="@string/capture_view_ccd" />
 
         <item
