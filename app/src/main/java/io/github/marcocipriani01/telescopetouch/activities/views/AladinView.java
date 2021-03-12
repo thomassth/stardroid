@@ -146,8 +146,8 @@ public class AladinView extends WebView implements Runnable {
             new Thread(() -> {
                 if (listener != null) listener.onAladinProgressIndeterminate();
                 byte[] bytes = Base64.decode(value.replace("data:image/png;base64,", ""), Base64.DEFAULT);
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                if ((listener != null) && (bitmap != null)) listener.onAladinBitmap(bitmap);
+                if (listener != null)
+                    listener.onAladinBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
             }, "Aladin PNG decoder").start();
         });
     }

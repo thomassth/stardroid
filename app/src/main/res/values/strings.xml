@@ -657,10 +657,19 @@
     <string name="no_camera_available">No camera available!</string>
     <string name="ccd_loop_interval">Loop interval:</string>
     <string name="file_format">File format:</string>
-    <string name="ccd_camera_formatting">%e = exposure,%f = frame type, %d = date, %t = time</string>
+    <string name="ccd_camera_formatting">%e = exposure, %f = frame type, %d = date, %t = time</string>
     <string name="loop_count">Loop count:</string>
     <string name="set_zero_unlimited_photos">Set to zero for unlimited photos.</string>
     <string name="camera_log">Camera log:</string>
     <string name="transfer_format">Transfer format:</string>
     <string name="exposure_time">Exposure time</string>
+    <string name="no_camera_selected">No camera selected!</string>
+    <string name="free_ram">Free RAM</string>
+    <string name="stop_receiving">Stop receiving</string>
+    <string name="invalid_value">Invalid value!</string>
+    <string name="jpg_quality_pref_summary">JPG quality (10–100%) for all photos saved on the phone.</string>
+    <string name="jpg_quality_pref">Photos JPG quality</string>
+    <string name="indi_web_manager">INDI Web Manager</string>
+    <string name="img_decoding_error">Image decoding error!</string>
+    <string name="storage_permission_required">Storage permission required!</string>
 </resources>

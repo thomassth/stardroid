@@ -17,17 +17,18 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/LogSection"
+            android:id="@+id/logs_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/log"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/logs_listview"
+            android:id="@+id/logs_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="8dp"
+            tools:listitem="@layout/logs_item" />
     </LinearLayout>
 
     <RelativeLayout
@@ -36,30 +37,31 @@
         android:layout_weight="1">
 
         <TextView
-            android:id="@+id/HostSection"
-            style="@android:style/TextAppearance.DeviceDefault.Medium"
+            android:id="@+id/host_label"
+            style="@style/TextAppearance.AppCompat.Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:text="@string/indi_host" />
+            android:text="@string/indi_host"
+            android:textColor="@android:color/white" />
 
         <io.github.marcocipriani01.telescopetouch.activities.views.SameSelectionSpinner
-            android:id="@+id/spinnerHost"
+            android:id="@+id/host_spinner"
             android:layout_width="186dp"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/port_edittext"
+            android:layout_alignBottom="@+id/port_field"
             android:layout_alignParentStart="true"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="8dp"
-            android:layout_toStartOf="@+id/port_edittext"
+            android:layout_toStartOf="@+id/port_field"
             android:prompt="@string/host_prompt" />
 
         <EditText
-            android:id="@+id/port_edittext"
+            android:id="@+id/port_field"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/HostSection"
+            android:layout_below="@+id/host_label"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="24dp"
             android:ems="6"
@@ -69,10 +71,10 @@
             tools:ignore="Autofill,HardcodedText" />
 
         <Button
-            android:id="@+id/connectionButton"
+            android:id="@+id/connect_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/spinnerHost"
+            android:layout_below="@+id/host_spinner"
             android:layout_alignParentStart="true"
             android:layout_marginTop="24dp"
             android:text="@string/connect" />

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 Marco Cipriani (@marcocipriani01)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.github.marcocipriani01.telescopetouch.indi;
 
 import android.Manifest;
@@ -21,6 +37,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
 
 import org.indilib.i4j.Constants;
 import org.indilib.i4j.INDIBLOBValue;
@@ -53,10 +70,12 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.github.marcocipriani01.telescopetouch.BuildConfig;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
@@ -82,7 +101,6 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
         }
     };
     private static final String TAG = TelescopeTouchApp.getTag(INDICamera.class);
-    private static boolean storagePermissionRequested = false;
     public final INDIDevice device;
     private final Context context;
     private final Handler uiHandler;
@@ -130,9 +148,10 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
     private volatile INDISwitchElement captureLoopPreset = null;
     private volatile double captureLoopExposure = -1;
     private volatile String[] metadata = new String[]{null, null, null, null};
-    private volatile int loopDelay = 1000;
+    private volatile int loopDelay = 0;
     private volatile int loopTotalCaptures = 0;
     private volatile int loopRemainingCaptures = 0;
+    private volatile String filePrefix = null;
 
     public INDICamera(INDIDevice device, Context context, Handler uiHandler) {
         this.device = device;
@@ -151,6 +170,17 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
         if (matcher.find())
             return Integer.parseInt(matcher.group());
         return -1;
+    }
+
+    public int getLoopTotalCaptures() {
+        return loopTotalCaptures;
+    }
+
+    public String getFilePrefix() {
+        if (!hasUploadSettings())
+            throw new UnsupportedOperationException("Unsupported upload settings!");
+        if (filePrefix == null) filePrefix = uploadPrefixE.getValue().replace("_XXX", "");
+        return filePrefix;
     }
 
     public boolean hasFormats() {
@@ -199,7 +229,7 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
             throw new UnsupportedOperationException("Unsupported capture loop!");
         if (count < 0) throw new IllegalArgumentException("Invalid loop count!");
         this.captureLoopExposure = -1;
-        this.captureLoopPreset = captureLoopPreset;
+        this.captureLoopPreset = Objects.requireNonNull(captureLoopPreset);
         this.loopRemainingCaptures = this.loopTotalCaptures = count;
         if (hasForceBulb()) {
             forceBulbOnE.setDesiredValue(Constants.SwitchStatus.OFF);
@@ -234,9 +264,17 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
         }
     }
 
+    @SuppressLint("DefaultLocale")
     private void captureLoopExposureRunnable() {
         try {
-            if (captureLoop && canCapture() && hasBLOB()) {
+            if (captureLoop && canCapture()) {
+                if (hasUploadSettings()) {
+                    if (hasFrameTypes()) {
+                        setUploadPrefixSpecial(getFilePrefix(), String.format("%.2f", captureLoopExposure));
+                    } else {
+                        setUploadPrefixSpecial(getFilePrefix(), String.format("%.2f", captureLoopExposure), getSelectedFrameType());
+                    }
+                }
                 exposureE.setDesiredValue(captureLoopExposure);
                 exposureP.sendChangesToDriver();
             } else {
@@ -250,7 +288,14 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
 
     private void captureLoopPresetRunnable() {
         try {
-            if (captureLoop && hasPresets() && hasBLOB()) {
+            if (captureLoop && canCapture() && hasPresets()) {
+                if (hasUploadSettings()) {
+                    if (hasFrameTypes()) {
+                        setUploadPrefixSpecial(getFilePrefix(), captureLoopPreset.getLabel().replace("/", "over"));
+                    } else {
+                        setUploadPrefixSpecial(getFilePrefix(), captureLoopPreset.getLabel().replace("/", "over"), getSelectedFrameType());
+                    }
+                }
                 for (INDISwitchElement e : exposurePresetsE) {
                     e.setDesiredValue((e == captureLoopPreset) ? Constants.SwitchStatus.ON : Constants.SwitchStatus.OFF);
                 }
@@ -275,14 +320,11 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
         });
     }
 
-    public int getJpgQuality() {
-        return jpgQuality;
-    }
-
     public void setJpgQuality(int jpgQuality) {
         this.jpgQuality = jpgQuality;
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isBitmapSaved() {
         return bitmapSaved;
     }
@@ -320,7 +362,7 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
                 connectionManager.updateProperties(uploadModeP);
             } catch (Exception e) {
                 Log.e(TAG, e.getLocalizedMessage(), e);
-                //TODO warn user
+                cameraError(e);
             }
         } else if (saveMode == SaveMode.REMOTE_SAVE) {
             blobP.removeINDIPropertyListener(this);
@@ -332,7 +374,17 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
                 device.blobsEnable((mode == SaveMode.REMOTE_SAVE) ? Constants.BLOBEnables.NEVER : Constants.BLOBEnables.ALSO, blobP);
             } catch (Exception e) {
                 Log.e(TAG, e.getLocalizedMessage(), e);
-                //TODO warn user
+                cameraError(e);
+            }
+        });
+    }
+
+    private void cameraError(Throwable throwable) {
+        uiHandler.post(() -> {
+            synchronized (listeners) {
+                for (CameraListener listener : listeners) {
+                    listener.onCameraError(throwable);
+                }
             }
         });
     }
@@ -343,7 +395,7 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
                 device.blobsEnable(Constants.BLOBEnables.NEVER);
             } catch (Exception e) {
                 Log.e(TAG, e.getLocalizedMessage(), e);
-                //TODO warn user
+                cameraError(e);
             }
         });
     }
@@ -351,8 +403,12 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
     public Uri saveImage() throws IOException {
         if (lastBitmap == null) throw new IllegalStateException("No Bitmap in memory!");
         Uri uri = saveImage(lastBitmap);
-        bitmapSaved = true;
-        return uri;
+        if (uri == null) {
+            return null;
+        } else {
+            bitmapSaved = true;
+            return uri;
+        }
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -370,28 +426,28 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
             contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DCIM + File.separator + folderName);
             uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
             stream = resolver.openOutputStream(uri);
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
-                    if (!storagePermissionRequested) {
-                        synchronized (listeners) {
-                            for (CameraListener listener : listeners) {
-                                if (listener.onRequestStoragePermission())
-                                    storagePermissionRequested = true;
-                            }
-                        }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                synchronized (listeners) {
+                    for (CameraListener listener : listeners) {
+                        listener.onRequestStoragePermission();
                     }
-                    return null;
                 }
+                return null;
             }
-            String directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() +
-                    File.separator + folderName;
-            File dirFile = new File(directory);
-            if (!dirFile.exists()) dirFile.mkdir();
-            File file = new File(directory, fileName + ".jpg");
+            File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getPath() + File.separator + folderName);
+            if (!dir.exists()) dir.mkdir();
+            File file = new File(dir, fileName + ".jpg");
+            uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file);
+            stream = new FileOutputStream(file);
+            MediaScannerConnection.scanFile(context, new String[]{dir.getPath()}, null, null);
+        } else {
+            File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getPath() + File.separator + folderName);
+            if (!dir.exists()) dir.mkdir();
+            File file = new File(dir, fileName + ".jpg");
             uri = Uri.fromFile(file);
             stream = new FileOutputStream(file);
-            MediaScannerConnection.scanFile(context, new String[]{dirFile.toString()}, null, null);
+            MediaScannerConnection.scanFile(context, new String[]{dir.getPath()}, null, null);
         }
         bitmap.compress(Bitmap.CompressFormat.JPEG, jpgQuality, stream);
         stream.flush();
@@ -605,6 +661,7 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
     }
 
     public void capture(INDISwitchElement preset) throws INDIValueException {
+        Objects.requireNonNull(preset);
         if (!hasPresets()) throw new UnsupportedOperationException("Unsupported presets!");
         for (INDISwitchElement e : exposurePresetsE) {
             e.setDesiredValue((e == preset) ? Constants.SwitchStatus.ON : Constants.SwitchStatus.OFF);
@@ -684,6 +741,22 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
             throw new UnsupportedOperationException("Unsupported upload settings!");
         uploadPrefixE.setDesiredValue(uploadPrefix);
         connectionManager.updateProperties(uploadSettingsP);
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    public void setUploadPrefixSpecial(String base, String expTime) throws INDIValueException {
+        this.filePrefix = base;
+        Date date = new Date();
+        setUploadPrefix(base.replace("%e", expTime).replace("%d", new SimpleDateFormat("yyyy-MM-dd").format(date))
+                .replace("%t", new SimpleDateFormat("HH-mm").format(date)) + "_XXX");
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    public void setUploadPrefixSpecial(String base, String expTime, INDISwitchElement frameType) throws INDIValueException {
+        this.filePrefix = base;
+        Date date = new Date();
+        setUploadPrefix(base.replace("%e", expTime).replace("%d", new SimpleDateFormat("yyyy-MM-dd").format(date))
+                .replace("%t", new SimpleDateFormat("HH-mm").format(date)).replace("%f", frameType.getLabel().toLowerCase()) + "_XXX");
     }
 
     @SuppressWarnings("SuspiciousToArrayCall")
@@ -850,7 +923,8 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
             }
         }
         return (blobP == null) && (exposureP == null) && (exposurePresetsP == null) &&
-                (abortP == null) && (binningP == null) && (isoP == null); //TODO expand list
+                (abortP == null) && (binningP == null) && (isoP == null) &&
+                (forceBulbP == null) && (gainP == null);
     }
 
     public synchronized void terminate() {
@@ -932,10 +1006,10 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
     }
 
     private void onImageLoadingException(final Throwable throwable) {
+        Log.e(TAG, throwable.getLocalizedMessage(), throwable);
         uiHandler.post(() -> {
             synchronized (listeners) {
                 for (CameraListener listener : listeners) {
-                    listener.onBitmapDestroy();
                     listener.onImageLoadingError(throwable);
                 }
             }
@@ -967,13 +1041,14 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
             return;
         }
         uiHandler.post(() -> {
+            Bitmap oldBitmap = lastBitmap;
+            lastBitmap = bitmap;
             synchronized (listeners) {
                 for (CameraListener listener : listeners) {
                     listener.onImageLoaded(bitmap, metadata);
                 }
             }
-            if (lastBitmap != null) lastBitmap.recycle();
-            lastBitmap = bitmap;
+            if (oldBitmap != null) oldBitmap.recycle();
         });
         if (queuedValue != null) startProcessing();
     }
@@ -1023,8 +1098,7 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
         default void onCameraFunctionsChange() {
         }
 
-        default boolean onRequestStoragePermission() {
-            return false;
+        default void onRequestStoragePermission() {
         }
 
         default void onImageLoading() {
@@ -1037,7 +1111,10 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
         default void onImageLoadingError(Throwable e) {
         }
 
-        default void onLoopProgressChange(int progress, int total) { //TODO
+        default void onCameraError(Throwable e) {
+        }
+
+        default void onLoopProgressChange(int progress, int total) {
         }
 
         default void onCameraStateChange(Constants.PropertyStates state) {
@@ -1059,6 +1136,7 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
             this.blobValue = blobValue;
         }
 
+        @SuppressWarnings("SpellCheckingInspection")
         @SuppressLint("DefaultLocale")
         @Override
         public void run() {

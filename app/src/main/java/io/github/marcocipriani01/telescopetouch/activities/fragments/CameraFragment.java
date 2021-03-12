@@ -16,6 +16,7 @@
 
 package io.github.marcocipriani01.telescopetouch.activities.fragments;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
@@ -32,8 +33,6 @@ import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -57,6 +56,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.NestedScrollView;
 import androidx.preference.PreferenceManager;
 
 import com.google.android.material.slider.Slider;
@@ -70,6 +70,7 @@ import java.io.EOFException;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -93,7 +94,6 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
 
     private static final String TAG = TelescopeTouchApp.getTag(CameraFragment.class);
     private static INDIDevice selectedCameraDev = null;
-    private final Handler handler = new Handler(Looper.getMainLooper());
     private final List<INDICamera> cameras = new ArrayList<>();
     private SharedPreferences preferences;
     private SwitchCompat fitsStretchSwitch;
@@ -141,6 +141,7 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
             onCameraFunctionsChange();
         }
     };
+    private boolean storagePermissionRequested = false;
     private Spinner cameraSelectSpinner;
     private CamerasArrayAdapter cameraSelectAdapter;
     private boolean pipSupported = false;
@@ -185,8 +186,8 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
         formatSpinner = rootView.findViewById(R.id.ccd_format_spinner);
         transferFormatSpinner = rootView.findViewById(R.id.ccd_transfer_format_spinner);
         logText = rootView.findViewById(R.id.ccd_log_label);
-        View captureTab = rootView.findViewById(R.id.ccd_viewer_capture_tab),
-                viewTab = rootView.findViewById(R.id.ccd_viewer_image_tab);
+        NestedScrollView captureTab = rootView.findViewById(R.id.ccd_viewer_capture_tab);
+        View viewTab = rootView.findViewById(R.id.ccd_viewer_image_tab);
         rootView.<TabLayout>findViewById(R.id.ccd_viewer_tabs)
                 .addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                     @Override
@@ -205,6 +206,7 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
                                 }
                             });
                         } else {
+                            captureTab.stopNestedScroll();
                             captureTab.animate().alpha(0f).setListener(new AnimatorListenerAdapter() {
                                 @Override
                                 public void onAnimationEnd(Animator animation) {
@@ -215,6 +217,7 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
                                 @Override
                                 public void onAnimationStart(Animator animation) {
                                     viewTab.setVisibility(View.VISIBLE);
+                                    showActionbar();
                                 }
                             });
                         }
@@ -258,7 +261,7 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
                 cameraSelectSpinner.setEnabled(false);
             } else {
                 INDICamera selectedCamera = cameras.get(0);
-                if (selectedCameraDev == null) selectedCameraDev = selectedCamera.device;
+                selectedCameraDev = selectedCamera.device;
                 selectedCamera.addListener(this);
                 selectedCamera.setStretch(stretch);
                 cameraSelectSpinner.setSelection(cameras.indexOf(selectedCamera));
@@ -299,6 +302,7 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.camera, menu);
         if (pipSupported) {
             pipMenuItem = menu.add(R.string.floating_image);
             pipMenuItem.setIcon(R.drawable.picture_in_picture);
@@ -313,6 +317,16 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
     }
 
     public void capture(View v) {
+        // PRO
+        if (!ProUtils.isPro) {
+            int count = preferences.getInt(ApplicationConstants.CAPTURE_PRO_COUNTER, 0);
+            if (count >= 6) {
+                requestActionSnack(R.string.buy_pro_continue_capture);
+                return;
+            }
+            preferences.edit().putInt(ApplicationConstants.CAPTURE_PRO_COUNTER, count + 1).apply();
+        }
+        // END PRO
         String str = exposureTimeField.getText().toString();
         INDICamera camera = getCamera();
         if (camera == null) {
@@ -326,8 +340,15 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
             inputMethodManager.hideSoftInputFromWindow(exposureTimeField.getWindowToken(), 0);
             try {
                 camera.setSaveMode((INDICamera.SaveMode) saveModeSpinner.getSelectedItem());
+                INDISwitchElement frameType = null;
+                try {
+                    camera.setJpgQuality(Integer.parseInt(preferences.getString(ApplicationConstants.JPG_QUALITY_PREF, "100")));
+                } catch (NumberFormatException e) {
+                    Log.e(TAG, e.getMessage(), e);
+                    camera.setJpgQuality(100);
+                }
                 if (camera.hasFrameTypes())
-                    camera.setFrameType(((INDISwitchElement) frameTypeSpinner.getSelectedItem()));
+                    camera.setFrameType(frameType = (INDISwitchElement) frameTypeSpinner.getSelectedItem());
                 if (camera.hasBinning())
                     camera.setBinning(((Integer) binningSpinner.getSelectedItem()));
                 if (camera.hasISO())
@@ -340,8 +361,13 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
                     camera.setTransferFormat(((INDISwitchElement) transferFormatSpinner.getSelectedItem()));
                 if (camera.hasUploadSettings()) {
                     String prefix = prefixField.getText().toString();
-                    if (!prefix.equals(""))
-                        camera.setUploadPrefix(prefix); // TODO: file formatting %e %t...
+                    if (!prefix.equals("")) {
+                        if (frameType == null) {
+                            camera.setUploadPrefixSpecial(prefix, str.replace("/", "over"));
+                        } else {
+                            camera.setUploadPrefixSpecial(prefix, str.replace("/", "over"), frameType);
+                        }
+                    }
                     String dir = remoteFolderField.getText().toString();
                     if (!dir.equals("")) camera.setUploadDir(dir);
                 }
@@ -370,6 +396,16 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
     }
 
     public void loopCapture(View v) {
+        // PRO
+        if (!ProUtils.isPro) {
+            int count = preferences.getInt(ApplicationConstants.CAPTURE_PRO_COUNTER, 0);
+            if (count >= 6) {
+                requestActionSnack(R.string.buy_pro_continue_capture);
+                return;
+            }
+            preferences.edit().putInt(ApplicationConstants.CAPTURE_PRO_COUNTER, count + 1).apply();
+        }
+        // END PRO
         String str = exposureTimeField.getText().toString();
         INDICamera camera = getCamera();
         if (camera == null) {
@@ -388,8 +424,15 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
             loopBtn.setEnabled(false);
             try {
                 camera.setSaveMode((INDICamera.SaveMode) saveModeSpinner.getSelectedItem());
+                INDISwitchElement frameType = null;
+                try {
+                    camera.setJpgQuality(Integer.parseInt(preferences.getString(ApplicationConstants.JPG_QUALITY_PREF, "100")));
+                } catch (NumberFormatException e) {
+                    Log.e(TAG, e.getMessage(), e);
+                    camera.setJpgQuality(100);
+                }
                 if (camera.hasFrameTypes())
-                    camera.setFrameType(((INDISwitchElement) frameTypeSpinner.getSelectedItem()));
+                    camera.setFrameType(frameType = (INDISwitchElement) frameTypeSpinner.getSelectedItem());
                 if (camera.hasBinning())
                     camera.setBinning(((Integer) binningSpinner.getSelectedItem()));
                 if (camera.hasISO())
@@ -402,6 +445,13 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
                     camera.setTransferFormat(((INDISwitchElement) transferFormatSpinner.getSelectedItem()));
                 if (camera.hasUploadSettings()) {
                     String prefix = prefixField.getText().toString();
+                    if (!prefix.equals("")) {
+                        if (frameType == null) {
+                            camera.setUploadPrefixSpecial(prefix, str.replace("/", "-"));
+                        } else {
+                            camera.setUploadPrefixSpecial(prefix, str.replace("/", "-"), frameType);
+                        }
+                    }
                     if (!prefix.equals("")) camera.setUploadPrefix(prefix);
                     String dir = remoteFolderField.getText().toString();
                     if (!dir.equals("")) camera.setUploadDir(dir);
@@ -427,10 +477,31 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
                                 context.getPackageName()) != AppOpsManager.MODE_ALLOWED) {
                     requestActionSnack(R.string.pip_permission_required);
                 } else {
-                    startActivity(new Intent(context, PIPCameraViewerActivity.class));
+                    INDICamera camera = getCamera();
+                    if (camera == null) {
+                        requestActionSnack(R.string.no_camera_selected);
+                    } else {
+                        Intent intent = new Intent(context, PIPCameraViewerActivity.class);
+                        intent.putExtra(PIPCameraViewerActivity.INDI_CAMERA_EXTRA, camera);
+                        startActivity(intent);
+                    }
                 }
             } else {
                 requestActionSnack(R.string.pro_feature);
+            }
+            return true;
+        }
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_free_ram) {
+            Collection<INDICamera> cameras = connectionManager.indiCameras.values();
+            for (INDICamera camera : cameras) {
+                camera.freeMemory();
+            }
+            return true;
+        } else if (itemId == R.id.menu_stop_receiving_camera) {
+            Collection<INDICamera> cameras = connectionManager.indiCameras.values();
+            for (INDICamera camera : cameras) {
+                camera.stopReceiving();
             }
             return true;
         }
@@ -472,27 +543,28 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
     @Override
     @SuppressLint("SimpleDateFormat")
     public void run() {
-        new Thread(() -> {
-            if (isActionEnabled()) {
-                try {
-                    Uri uri = Objects.requireNonNull(getCamera()).saveImage();
-                    handler.post(() -> {
-                        notifyActionChange();
-                        requestActionSnack(R.string.saved_snackbar, R.string.view_image, v -> {
-                            Intent intent = new Intent();
-                            intent.setDataAndType(uri, "image/*");
-                            intent.setAction(Intent.ACTION_VIEW);
-                            startActivity(Intent.createChooser(intent, context.getString(R.string.open_photo)));
-                        });
+        INDICamera camera = getCamera();
+        if (camera == null) return;
+        if (camera.hasBitmap() && (!camera.isBitmapSaved())) {
+            try {
+                Uri uri = Objects.requireNonNull(getCamera()).saveImage();
+                if (uri != null) {
+                    notifyActionChange();
+                    requestActionSnack(R.string.saved_snackbar, R.string.view_image, v -> {
+                        Intent intent = new Intent();
+                        intent.setDataAndType(uri, "image/*");
+                        intent.setAction(Intent.ACTION_VIEW);
+                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        startActivity(Intent.createChooser(intent, context.getString(R.string.open_photo)));
                     });
-                } catch (Exception e) {
-                    Log.e(TAG, "Saving error", e);
-                    handler.post(() -> requestActionSnack(R.string.saving_error));
                 }
-            } else {
-                handler.post(() -> requestActionSnack(R.string.nothing_to_save));
+            } catch (Exception e) {
+                Log.e(TAG, "Saving error", e);
+                requestActionSnack(R.string.saving_error);
             }
-        }).start();
+        } else {
+            requestActionSnack(R.string.nothing_to_save);
+        }
     }
 
     private void setBlobInfo(String[] info) {
@@ -521,9 +593,13 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
     }
 
     @Override
-    public boolean onRequestStoragePermission() {
-        //TODO request permission
-        return true;
+    public void onRequestStoragePermission() {
+        if (storagePermissionRequested) {
+            requestActionSnack(R.string.storage_permission_required);
+        } else {
+            requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            storagePermissionRequested = true;
+        }
     }
 
     @Override
@@ -612,14 +688,24 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
             setButtonColor(exposeBtn, color);
         }
         if (loopBtn != null) loopBtn.setEnabled(canLoop);
-        if (delaySlider != null) delaySlider.setEnabled(canLoop);
-        if (countSlider != null) countSlider.setEnabled(canLoop);
+        if (delaySlider != null) {
+            delaySlider.setEnabled(canLoop);
+            delaySlider.setValue(camera.getLoopDelay() / 1000f);
+        }
+        if (countSlider != null) {
+            countSlider.setEnabled(canLoop);
+            countSlider.setValue(camera.getLoopTotalCaptures());
+        }
         if (exposureTimeField != null) {
             exposureTimeField.setEnabled(captureOrPreset);
             exposureTimeField.setAdapter(hasPresets ? new SwitchPropertyStringAdapter(camera.availableExposurePresetsE) : null);
             if (camera.canCapture()) {
-                String expString = camera.exposureE.getValueAsString().trim();
-                if (!expString.equals("0.00")) exposureTimeField.setText(expString);
+                try {
+                    String expString = camera.exposureE.getValueAsString().trim();
+                    if (!expString.equals("0.00")) exposureTimeField.setText(expString);
+                } catch (Exception e) {
+                    Log.e(TAG, e.getMessage(), e);
+                }
             } else if (hasPresets) {
                 INDISwitchElement selectedPreset = camera.getSelectedPreset();
                 if (selectedPreset != null) exposureTimeField.setText(selectedPreset.getLabel());
@@ -695,7 +781,7 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
         boolean hasUploadSettings = camera.hasUploadSettings();
         if (prefixField != null) {
             prefixField.setEnabled(hasUploadSettings);
-            prefixField.setText(hasUploadSettings ? camera.uploadPrefixE.getValue() : "");
+            prefixField.setText(hasUploadSettings ? camera.getFilePrefix() : "");
         }
         if (remoteFolderField != null) {
             remoteFolderField.setEnabled(hasUploadSettings);
@@ -787,11 +873,13 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
     public void onBitmapDestroy() {
         photoViewer.setImageBitmap(null);
         notifyActionChange();
+        onError(R.string.no_incoming_data);
     }
 
     @Override
     public void onImageLoadingError(Throwable e) {
-        Log.e("BLOBViewer", e.getLocalizedMessage(), e);
+        photoViewer.setImageBitmap(null);
+        notifyActionChange();
         if (e instanceof Error) {
             onError(R.string.out_of_memory);
         } else if (e instanceof FileNotFoundException) {
@@ -807,6 +895,11 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
         } else {
             onError(R.string.unknown_exception);
         }
+    }
+
+    @Override
+    public void onCameraError(Throwable e) {
+        requestActionSnack(context.getString(R.string.error) + " " + e.getLocalizedMessage());
     }
 
     @Override

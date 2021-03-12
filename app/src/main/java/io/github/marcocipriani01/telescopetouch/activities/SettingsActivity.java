@@ -51,6 +51,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
 
     @Inject
     SharedPreferences preferences;
+    private Preference jpgQualityPref;
     private Preference latitudePref;
     private Preference longitudePref;
     private final ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(
@@ -98,6 +99,8 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
         gyroPref.setOnPreferenceChangeListener(this);
         latitudePref = Objects.requireNonNull(preferenceFragment.findPreference(ApplicationConstants.LATITUDE_PREF));
         latitudePref.setOnPreferenceChangeListener(this);
+        jpgQualityPref = Objects.requireNonNull(preferenceFragment.findPreference(ApplicationConstants.JPG_QUALITY_PREF));
+        jpgQualityPref.setOnPreferenceChangeListener(this);
         longitudePref = Objects.requireNonNull(preferenceFragment.findPreference(ApplicationConstants.LONGITUDE_PREF));
         longitudePref.setOnPreferenceChangeListener(this);
         limitMagPref = Objects.requireNonNull(preferenceFragment.findPreference(ApplicationConstants.CATALOG_LIMIT_MAGNITUDE));
@@ -188,6 +191,18 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
         } else if (preference == gyroPref) {
             enableGyroPrefs(((Boolean) newValue));
             return true;
+        } else if (preference == jpgQualityPref) {
+            try {
+                int quality = Integer.parseInt((String) newValue);
+                if ((quality < 10) || quality > 100) {
+                    Snackbar.make(rootView, R.string.invalid_value, Snackbar.LENGTH_SHORT).show();
+                    return false;
+                }
+                return true;
+            } catch (NumberFormatException e) {
+                Snackbar.make(rootView, R.string.not_a_number, Snackbar.LENGTH_SHORT).show();
+                return false;
+            }
         }
         return false;
     }
