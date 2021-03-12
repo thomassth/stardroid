@@ -16,6 +16,7 @@
 
 package io.github.marcocipriani01.telescopetouch.activities.fragments;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.location.Location;
@@ -32,18 +33,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentActivity;
 import androidx.preference.PreferenceManager;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.activities.MainActivity;
 import io.github.marcocipriani01.telescopetouch.astronomy.Polaris;
 import io.github.marcocipriani01.telescopetouch.maths.Formatters;
 import io.github.marcocipriani01.telescopetouch.sensors.LocationHelper;
-import io.github.marcocipriani01.telescopetouch.sensors.LocationPermissionRequester;
 
-public class PolarisFragment extends ActionFragment implements LocationPermissionRequester {
+public class PolarisFragment extends ActionFragment {
 
     private final Polaris polaris = new Polaris();
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -98,9 +96,7 @@ public class PolarisFragment extends ActionFragment implements LocationPermissio
 
             @Override
             protected void requestLocationPermission() {
-                FragmentActivity activity = getActivity();
-                if (activity instanceof MainActivity)
-                    ((MainActivity) activity).requestLocationPermission();
+                requestPermission(Manifest.permission.ACCESS_FINE_LOCATION);
             }
 
             @Override
@@ -114,7 +110,7 @@ public class PolarisFragment extends ActionFragment implements LocationPermissio
     }
 
     @Override
-    public void onLocationPermissionAcquired() {
+    public void onPermissionAcquired(String permission) {
         locationHelper.restartLocation();
     }
 

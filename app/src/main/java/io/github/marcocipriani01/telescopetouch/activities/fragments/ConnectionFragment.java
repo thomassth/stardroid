@@ -52,6 +52,7 @@ import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.NSDHelper;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.MainActivity;
+import io.github.marcocipriani01.telescopetouch.activities.WebManagerActivity;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.NewServerDialog;
 import io.github.marcocipriani01.telescopetouch.activities.util.ImprovedSpinnerListener;
 import io.github.marcocipriani01.telescopetouch.activities.views.SameSelectionSpinner;
@@ -91,14 +92,14 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
         View rootView = inflater.inflate(R.layout.fragment_connection, container, false);
         setHasOptionsMenu(true);
         logAdapter = new LogAdapter(context);
-        RecyclerView logsList = rootView.findViewById(R.id.logs_listview);
+        RecyclerView logsList = rootView.findViewById(R.id.logs_recycler);
         logsList.setAdapter(logAdapter);
         logsList.setLayoutManager(new LinearLayoutManager(context));
 
-        connectionButton = rootView.findViewById(R.id.connectionButton);
-        serversSpinner = rootView.findViewById(R.id.spinnerHost);
+        connectionButton = rootView.findViewById(R.id.connect_button);
+        serversSpinner = rootView.findViewById(R.id.host_spinner);
         loadServers(getServers(preferences));
-        portEditText = rootView.findViewById(R.id.port_edittext);
+        portEditText = rootView.findViewById(R.id.port_field);
         portEditText.setText(String.valueOf(preferences.getInt(ApplicationConstants.INDI_PORT_PREF, 7624)));
         final FragmentActivity activity = getActivity();
         connectionButton.setOnClickListener(v -> {
@@ -184,7 +185,8 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        if (item.getItemId() == R.id.menu_open_browser) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_open_browser) {
             String host = String.valueOf(serversSpinner.getSelectedItem());
             if (host.contains("@")) {
                 String[] split = host.split("@");
@@ -196,6 +198,21 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://" + host)));
                 return true;
             }
+        } else if (itemId == R.id.menu_indi_web) {
+            String host = String.valueOf(serversSpinner.getSelectedItem());
+            if (host.contains("@")) {
+                String[] split = host.split("@");
+                if (split.length == 2) host = split[1];
+            }
+            if (host.equals(context.getString(R.string.host_add)) || host.equals(context.getString(R.string.host_manage))) {
+                requestActionSnack(R.string.select_host_first);
+            } else {
+                Intent intent = new Intent(context, WebManagerActivity.class);
+                intent.putExtra(WebManagerActivity.INTENT_HOST, host);
+                startActivity(intent);
+                return true;
+            }
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

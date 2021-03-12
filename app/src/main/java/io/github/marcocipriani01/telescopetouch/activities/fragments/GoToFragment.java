@@ -16,6 +16,7 @@
 
 package io.github.marcocipriani01.telescopetouch.activities.fragments;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -50,7 +51,6 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -73,7 +73,6 @@ import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.ProUtils;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
-import io.github.marcocipriani01.telescopetouch.activities.MainActivity;
 import io.github.marcocipriani01.telescopetouch.activities.views.AladinView;
 import io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoordinates;
 import io.github.marcocipriani01.telescopetouch.astronomy.HeliocentricCoordinates;
@@ -165,9 +164,7 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
 
             @Override
             protected void requestLocationPermission() {
-                FragmentActivity activity = getActivity();
-                if (activity instanceof MainActivity)
-                    ((MainActivity) activity).requestLocationPermission();
+                requestPermission(Manifest.permission.ACCESS_FINE_LOCATION);
             }
 
             @Override
@@ -178,6 +175,11 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
         if (!preferences.getBoolean(VIZIER_WELCOME, false))
             vizierDialog();
         return rootView;
+    }
+
+    @Override
+    public void onPermissionAcquired(String permission) {
+        locationHelper.restartLocation();
     }
 
     private void vizierDialog() {

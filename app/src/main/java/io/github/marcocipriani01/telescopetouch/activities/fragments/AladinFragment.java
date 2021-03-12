@@ -16,11 +16,13 @@
 
 package io.github.marcocipriani01.telescopetouch.activities.fragments;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.media.MediaScannerConnection;
@@ -46,6 +48,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.PreferenceManager;
@@ -61,6 +64,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
+import io.github.marcocipriani01.telescopetouch.BuildConfig;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.MainActivity;
@@ -90,6 +94,8 @@ public class AladinFragment extends ActionFragment implements Toolbar.OnMenuItem
     private MenuItem aboutMenu;
     private LocationHelper locationHelper;
     private Location location = null;
+    private boolean storagePermissionRequested = false;
+    private Bitmap bitmapToSave;
 
     @Nullable
     @Override
@@ -132,8 +138,7 @@ public class AladinFragment extends ActionFragment implements Toolbar.OnMenuItem
 
                 @Override
                 protected void requestLocationPermission() {
-                    if (activity instanceof MainActivity)
-                        ((MainActivity) activity).requestLocationPermission();
+                    requestPermission(Manifest.permission.ACCESS_FINE_LOCATION);
                 }
 
                 @Override
@@ -183,6 +188,20 @@ public class AladinFragment extends ActionFragment implements Toolbar.OnMenuItem
     @Override
     public int getActionDrawable() {
         return R.drawable.navigation;
+    }
+
+    @Override
+    public void onPermissionAcquired(String permission) {
+        if (Manifest.permission.ACCESS_FINE_LOCATION.equals(permission)) {
+            locationHelper.restartLocation();
+        } else if (Manifest.permission.WRITE_EXTERNAL_STORAGE.equals(permission)) {
+            onAladinBitmap(bitmapToSave);
+        }
+    }
+
+    @Override
+    public void onPermissionNotAcquired(String permission) {
+        if (bitmapToSave != null) bitmapToSave.recycle();
     }
 
     @Override
@@ -280,6 +299,15 @@ public class AladinFragment extends ActionFragment implements Toolbar.OnMenuItem
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @SuppressLint("SimpleDateFormat")
     public void onAladinBitmap(Bitmap bitmap) {
+        if (bitmap == null) {
+            requestActionSnack(R.string.img_decoding_error);
+            handler.post(() -> {
+                saveMenu.setEnabled(true);
+                progressBar.hide();
+            });
+            Log.w(TAG, "Null Aladin bitmap!");
+            return;
+        }
         try {
             OutputStream stream;
             Uri uri;
@@ -293,18 +321,46 @@ public class AladinFragment extends ActionFragment implements Toolbar.OnMenuItem
                 contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DCIM + File.separator + folderName);
                 uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
                 stream = resolver.openOutputStream(uri);
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                    handler.post(() -> {
+                        saveMenu.setEnabled(true);
+                        progressBar.hide();
+                    });
+                    if (!storagePermissionRequested) {
+                        storagePermissionRequested = true;
+                        bitmapToSave = bitmap;
+                        requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                    } else {
+                        bitmap.recycle();
+                        requestActionSnack(R.string.storage_permission_required);
+                    }
+                    return;
+                }
+                File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getPath() + File.separator + folderName);
+                if (!dir.exists()) dir.mkdir();
+                File file = new File(dir, fileName + ".jpg");
+                uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file);
+                stream = new FileOutputStream(file);
+                MediaScannerConnection.scanFile(context, new String[]{dir.getPath()}, null, null);
             } else {
-                String directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + File.separator + folderName;
-                File dirFile = new File(directory);
-                if (!dirFile.exists()) dirFile.mkdir();
-                File file = new File(directory, fileName + ".png");
+                String directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getPath() + File.separator + folderName;
+                File dir = new File(directory);
+                if (!dir.exists()) dir.mkdir();
+                File file = new File(dir, fileName + ".jpg");
                 uri = Uri.fromFile(file);
                 stream = new FileOutputStream(file);
-                MediaScannerConnection.scanFile(context, new String[]{dirFile.toString()}, null, null);
+                MediaScannerConnection.scanFile(context, new String[]{dir.getPath()}, null, null);
             }
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            try {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, Integer.parseInt(preferences.getString(ApplicationConstants.JPG_QUALITY_PREF, "100")), stream);
+            } catch (NumberFormatException e) {
+                Log.e(TAG, e.getMessage(), e);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            }
             stream.flush();
             stream.close();
+            bitmap.recycle();
             handler.post(() -> {
                 saveMenu.setEnabled(true);
                 progressBar.hide();
@@ -312,6 +368,7 @@ public class AladinFragment extends ActionFragment implements Toolbar.OnMenuItem
                     Intent intent = new Intent();
                     intent.setDataAndType(uri, "image/*");
                     intent.setAction(Intent.ACTION_VIEW);
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     startActivity(Intent.createChooser(intent, context.getString(R.string.open_photo)));
                 });
             });

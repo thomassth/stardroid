@@ -38,16 +38,18 @@ import org.indilib.i4j.client.INDISwitchProperty;
 import org.indilib.i4j.client.INDITextProperty;
 
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
 public abstract class PropPref<Element extends INDIElement> extends Preference implements INDIPropertyListener {
 
+    private static final String TAG = TelescopeTouchApp.getTag(PropPref.class);
     protected final INDIProperty<Element> prop;
     protected final Resources resources;
     protected View title = null;
 
     protected PropPref(Context context, INDIProperty<Element> prop) {
         super(context);
-        resources = context.getResources();
+        this.resources = context.getResources();
         this.prop = prop;
         prop.addINDIPropertyListener(this);
         setTitle(createTitle());
@@ -55,16 +57,22 @@ public abstract class PropPref<Element extends INDIElement> extends Preference i
     }
 
     public static PropPref<?> create(Context context, INDIProperty<?> prop) {
-        if (prop instanceof INDISwitchProperty) {
-            return new SwitchPropPref(context, (INDISwitchProperty) prop);
-        } else if (prop instanceof INDILightProperty) {
-            return new LightPropPref(context, (INDILightProperty) prop);
-        } else if (prop instanceof INDITextProperty) {
-            return new TextPropPref(context, (INDITextProperty) prop);
-        } else if (prop instanceof INDINumberProperty) {
-            return new NumberPropPref(context, (INDINumberProperty) prop);
-        } else if (prop instanceof INDIBLOBProperty) {
-            return new BLOBPropPref(context, (INDIBLOBProperty) prop);
+        try {
+            if (prop instanceof INDISwitchProperty) {
+                return new SwitchPropPref(context, (INDISwitchProperty) prop);
+            } else if (prop instanceof INDILightProperty) {
+                return new LightPropPref(context, (INDILightProperty) prop);
+            } else if (prop instanceof INDITextProperty) {
+                return new TextPropPref(context, (INDITextProperty) prop);
+            } else if (prop instanceof INDINumberProperty) {
+                return new NumberPropPref(context, (INDINumberProperty) prop);
+            } else if (prop instanceof INDIBLOBProperty) {
+                return new BLOBPropPref(context, (INDIBLOBProperty) prop);
+            } else {
+                Log.w(TAG, "INDI property \"" + prop.toString() + "\" couldn't be added, unknown type.");
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
         }
         return null;
     }
@@ -120,14 +128,16 @@ public abstract class PropPref<Element extends INDIElement> extends Preference i
     @Override
     public void propertyChanged(INDIProperty<?> property) {
         if (property != prop) {
-            Log.w("PropPref", "wrong property");
+            Log.w(TAG, "Wrong property updated");
             return;
         }
-        if (title != null) {
-            title.post(() -> {
+        if (title != null) title.post(() -> {
+            try {
                 PropPref.this.setSummary(createSummary());
                 PropPref.this.setTitle(createTitle());
-            });
-        }
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage(), e);
+            }
+        });
     }
 }

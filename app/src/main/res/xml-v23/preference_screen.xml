@@ -21,6 +21,15 @@
             android:summary="@string/nsd_pref_description"
             android:title="@string/nsd_pref"
             app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            android:defaultValue="100"
+            android:dialogLayout="@layout/preference_dialog_numeric"
+            android:inputType="number"
+            android:key="jpg_quality"
+            android:summary="@string/jpg_quality_pref_summary"
+            android:title="@string/jpg_quality_pref"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
     <PreferenceCategory

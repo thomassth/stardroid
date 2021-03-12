@@ -30,7 +30,6 @@ import io.github.marcocipriani01.telescopetouch.activities.SkyMapActivity;
 import io.github.marcocipriani01.telescopetouch.astronomy.GeocentricCoordinates;
 import io.github.marcocipriani01.telescopetouch.maths.Formatters;
 import io.github.marcocipriani01.telescopetouch.sensors.LocationHelper;
-import io.github.marcocipriani01.telescopetouch.sensors.LocationPermissionRequester;
 
 /**
  * Manages all the different controllers that affect the model of the observer.
@@ -38,7 +37,7 @@ import io.github.marcocipriani01.telescopetouch.sensors.LocationPermissionReques
  *
  * @author John Taylor
  */
-public class ControllerGroup implements Controller, LocationPermissionRequester {
+public class ControllerGroup implements Controller {
 
     private final static String TAG = TelescopeTouchApp.getTag(ControllerGroup.class);
     private static final float MIN_DISTANCE_MESSAGE_DEG = 0.01f;
@@ -79,7 +78,6 @@ public class ControllerGroup implements Controller, LocationPermissionRequester 
         setAutoMode(true);
     }
 
-    @Override
     public void onLocationPermissionAcquired() {
         locationHelper.restartLocation();
     }

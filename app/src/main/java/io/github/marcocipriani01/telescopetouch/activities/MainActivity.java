@@ -16,7 +16,6 @@
 
 package io.github.marcocipriani01.telescopetouch.activities;
 
-import android.Manifest;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
@@ -76,7 +75,6 @@ import io.github.marcocipriani01.telescopetouch.activities.fragments.MountContro
 import io.github.marcocipriani01.telescopetouch.activities.fragments.PolarisFragment;
 import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
 import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
-import io.github.marcocipriani01.telescopetouch.sensors.LocationPermissionRequester;
 
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 
@@ -97,11 +95,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final String MESSAGE = "MainActivityMessage";
     private static Pages currentPage = Pages.CONNECTION;
     private final Handler handler = new Handler(Looper.getMainLooper());
-    private final ActivityResultLauncher<String> locationPermissionLauncher = registerForActivityResult(
+    private String lastRequestedPermission = null;
+    private final ActivityResultLauncher<String> permissionLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(),
             result -> {
-                if (result && (currentPage.lastInstance instanceof LocationPermissionRequester))
-                    ((LocationPermissionRequester) currentPage.lastInstance).onLocationPermissionAcquired();
+                if (currentPage.lastInstance instanceof ActionFragment) {
+                    if (result) {
+                        ((ActionFragment) currentPage.lastInstance).onPermissionAcquired(lastRequestedPermission);
+                    } else {
+                        ((ActionFragment) currentPage.lastInstance).onPermissionNotAcquired(lastRequestedPermission);
+                    }
+                    lastRequestedPermission = null;
+                }
             });
     private SharedPreferences preferences;
     private final ActivityResultLauncher<Intent> serversActivityLauncher = registerForActivityResult(
@@ -161,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         handler.postDelayed(() -> {
             int messageRes = intent.getIntExtra(MESSAGE, 0);
             if (messageRes != 0)
-                actionSnackRequested(getString(messageRes));
+                onActionSnackRequested(getString(messageRes));
         }, 100);
     }
 
@@ -231,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 super.onBackPressed();
             } else {
                 this.doubleBackPressed = true;
-                actionSnackRequested(getString(R.string.press_back_exit));
+                onActionSnackRequested(getString(R.string.press_back_exit));
                 handler.postDelayed(() -> doubleBackPressed = false, 2000);
             }
         } else {
@@ -258,11 +263,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     startActivity(home);
                 }
             } else {
-                actionSnackRequested(getString(R.string.shortcuts_not_supported));
+                onActionSnackRequested(getString(R.string.shortcuts_not_supported));
             }
         } else if (itemId == R.id.menu_darker_mode) {
             if ((currentPage == Pages.ALADIN) && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
-                actionSnackRequested(getString(R.string.dark_mode_not_supported));
+                onActionSnackRequested(getString(R.string.dark_mode_not_supported));
             } else {
                 darkerModeManager.toggle();
             }
@@ -345,7 +350,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void actionSnackRequested(String msg) {
+    public void onActionSnackRequested(String msg) {
         bottomBar.performShow();
         fab.hide();
         Snackbar.make(mainCoordinator, msg, Snackbar.LENGTH_SHORT).setAnchorView(bottomBar)
@@ -353,7 +358,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void actionSnackRequested(int msgRes, int actionName, View.OnClickListener action) {
+    public void onActionSnackRequested(int msgRes, int actionName, View.OnClickListener action) {
         bottomBar.performShow();
         fab.hide();
         Snackbar.make(mainCoordinator, msgRes, Snackbar.LENGTH_SHORT).setAnchorView(bottomBar)
@@ -361,10 +366,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    public void showActionbar() {
+        handler.postDelayed(() -> bottomBar.performShow(), 250);
+    }
+
+    @Override
+    public void onPermissionRequested(String permission) {
+        this.lastRequestedPermission = permission;
+        permissionLauncher.launch(permission);
+    }
+
+    @Override
     public void onConnectionLost() {
         runOnUiThread(() -> {
             if (currentPage != Pages.CONNECTION) {
-                actionSnackRequested(getString(R.string.connection_lost));
+                onActionSnackRequested(getString(R.string.connection_lost));
                 if (visible && (fragmentManager != null)) showFragment(Pages.CONNECTION, true);
             }
         });
@@ -377,10 +393,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void launchServersActivity() {
         serversActivityLauncher.launch(new Intent(this, ServersActivity.class));
-    }
-
-    public void requestLocationPermission() {
-        locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
     }
 
     /**

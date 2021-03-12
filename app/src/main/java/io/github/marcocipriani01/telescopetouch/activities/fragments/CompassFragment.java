@@ -16,6 +16,7 @@
 
 package io.github.marcocipriani01.telescopetouch.activities.fragments;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.location.Location;
@@ -34,20 +35,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentActivity;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.CompassCalibrationActivity;
-import io.github.marcocipriani01.telescopetouch.activities.MainActivity;
 import io.github.marcocipriani01.telescopetouch.sensors.CompassHelper;
-import io.github.marcocipriani01.telescopetouch.sensors.LocationPermissionRequester;
 
 import static io.github.marcocipriani01.telescopetouch.maths.Formatters.latitudeToString;
 import static io.github.marcocipriani01.telescopetouch.maths.Formatters.longitudeToString;
 import static io.github.marcocipriani01.telescopetouch.maths.Formatters.magDeclinationToString;
 
-public class CompassFragment extends ActionFragment implements
-        Toolbar.OnMenuItemClickListener, LocationPermissionRequester {
+public class CompassFragment extends ActionFragment implements Toolbar.OnMenuItemClickListener {
 
     private CompassHelper compass;
 
@@ -86,9 +83,7 @@ public class CompassFragment extends ActionFragment implements
 
             @Override
             protected void requestLocationPermission() {
-                FragmentActivity activity = getActivity();
-                if (activity instanceof MainActivity)
-                    ((MainActivity) activity).requestLocationPermission();
+                requestPermission(Manifest.permission.ACCESS_FINE_LOCATION);
             }
 
             @Override
@@ -113,7 +108,7 @@ public class CompassFragment extends ActionFragment implements
     }
 
     @Override
-    public void onLocationPermissionAcquired() {
+    public void onPermissionAcquired(String permission) {
         compass.restartLocation();
     }
 

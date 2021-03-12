@@ -32,15 +32,24 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
+import java.util.Collection;
+import java.util.Objects;
+
 import io.github.marcocipriani01.livephotoview.PhotoView;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
+import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
 import io.github.marcocipriani01.telescopetouch.indi.INDICamera;
 
-public class PIPCameraViewerActivity extends AppCompatActivity implements INDICamera.CameraListener {
+import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 
+public class PIPCameraViewerActivity extends AppCompatActivity
+        implements INDICamera.CameraListener, ConnectionManager.ManagerListener {
+
+    public static final String INDI_CAMERA_EXTRA = "indi_camera";
     @SuppressLint("StaticFieldLeak")
     private static PIPCameraViewerActivity instance;
+    private INDICamera camera;
     private PhotoView photoView;
     private DarkerModeManager darkerModeManager;
 
@@ -62,12 +71,13 @@ public class PIPCameraViewerActivity extends AppCompatActivity implements INDICa
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        camera = Objects.requireNonNull(getIntent().getParcelableExtra(INDI_CAMERA_EXTRA));
         pip();
         setContentView(R.layout.activity_pip_blob);
         darkerModeManager = new DarkerModeManager(this, null, PreferenceManager.getDefaultSharedPreferences(this));
         photoView = findViewById(R.id.pip_blob_view);
         photoView.setMaximumScale(20f);
-        //photoView.setImageBitmap(connectionManager.blobLoader.getLastBitmap());
+        photoView.setImageBitmap(camera.getLastBitmap());
     }
 
     @Override
@@ -80,8 +90,7 @@ public class PIPCameraViewerActivity extends AppCompatActivity implements INDICa
     private void pip() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Rational ratio;
-            //Bitmap bitmap = connectionManager.blobLoader.getLastBitmap();
-            Bitmap bitmap = null;
+            Bitmap bitmap = camera.getLastBitmap();
             if (bitmap == null) {
                 ratio = new Rational(1, 1);
             } else {
@@ -103,7 +112,8 @@ public class PIPCameraViewerActivity extends AppCompatActivity implements INDICa
             finish();
             return;
         }
-        //connectionManager.blobLoader.addListener(this);
+        camera.addListener(this);
+        connectionManager.addManagerListener(this);
         instance = this;
     }
 
@@ -122,37 +132,37 @@ public class PIPCameraViewerActivity extends AppCompatActivity implements INDICa
     @Override
     protected void onStop() {
         super.onStop();
-        //connectionManager.blobLoader.removeListener(this);
+        camera.removeListener(this);
+        connectionManager.removeManagerListener(this);
         instance = null;
     }
 
     @Override
     public void onImageLoaded(@Nullable Bitmap bitmap, String[] metadata) {
-
-    }
-
-    @Override
-    public void onBitmapDestroy() {
-
-    }
-
-    /*@Override
-    public void onBLOBLoading() {
-
-    }
-
-    @Override
-    public void onBitmapLoaded(Bitmap bitmap, String[] metadata) {
         if (photoView != null) photoView.setImageBitmap(bitmap);
     }
 
     @Override
+    public void onImageLoadingError(Throwable e) {
+        if (photoView != null) photoView.setImageBitmap(null);
+    }
+
+    @Override
     public void onBitmapDestroy() {
         if (photoView != null) photoView.setImageBitmap(null);
     }
 
     @Override
-    public void onBLOBException(Throwable e) {
-        if (photoView != null) photoView.setImageBitmap(null);
-    }*/
+    public void onConnectionLost() {
+        finishInstance();
+    }
+
+    @Override
+    public void onCamerasListChange() {
+        Collection<INDICamera> cameras = connectionManager.indiCameras.values();
+        for (INDICamera camera : cameras) {
+            if (camera == this.camera) return;
+        }
+        finishInstance();
+    }
 }

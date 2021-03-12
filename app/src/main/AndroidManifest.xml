@@ -144,6 +144,14 @@
                 android:value=".activities.MainActivity" />
         </activity>
         <activity
+            android:name=".activities.WebManagerActivity"
+            android:label="@string/indi_web_manager"
+            android:screenOrientation="fullUser">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
+        </activity>
+        <activity
             android:name=".activities.ScreenLightActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/tap_to_exit"
@@ -180,5 +188,15 @@
             android:authorities="io.github.marcocipriani01.telescopetouch.searchterms"
             android:exported="false"
             android:syncable="false" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="io.github.marcocipriani01.telescopetouch.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 </manifest>

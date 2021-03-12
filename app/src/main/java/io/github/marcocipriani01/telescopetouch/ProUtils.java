@@ -48,7 +48,7 @@ public class ProUtils {
         if (preferences.getBoolean(PRO_MESSAGE_PREF, true)) {
             new AlertDialog.Builder(context).setTitle(R.string.app_name)
                     .setMessage(R.string.pro_new_msg)
-                    .setIcon(R.drawable.new_icon).setCancelable(false)
+                    .setIcon(R.drawable.star_circle).setCancelable(false)
                     .setPositiveButton(R.string.get_it, (a, b) -> ProUtils.playStore(context))
                     .setNegativeButton(android.R.string.cancel, null).show();
             preferences.edit().putBoolean(PRO_MESSAGE_PREF, false).apply();

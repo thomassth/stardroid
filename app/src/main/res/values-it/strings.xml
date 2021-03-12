@@ -430,7 +430,7 @@
     <string name="sky_map_gallery">Galleria di Sky Map</string>
     <string name="hdf">Campo profondo Hubble (HDF)</string>
     <string name="shortcuts_not_supported">Il tuo dispositivo non supporta le scorciatoie.</string>
-    <string name="add_sky_map_shortcut">Aggiungi scorciatoia alla mappa stellare</string>
+    <string name="add_sky_map_shortcut">Aggiungi icona mappa stellare</string>
     <string name="deep_sky">Cielo profondo</string>
     <string name="solar_system">Sistema solare</string>
     <string name="point_telescope">Punta telescopio</string>
@@ -462,7 +462,7 @@
     <string name="bit_depth">Profondità bit:</string>
     <string name="no_incoming_data">Nessun dato in ingresso</string>
     <string name="fits_image_stretching">Stretch immagini FITS</string>
-    <string name="image_info">Informazioni foto</string>
+    <string name="image_info">Info foto</string>
     <string name="saved_snackbar">Salvato!</string>
     <string name="saving_error">Errore di salvataggio!</string>
     <string name="nothing_to_save">Nulla da salvare</string>
@@ -637,4 +637,39 @@
     <string name="rotate_horizon_preference_summary">Ruota orizzonte di 90 gradi (per schermi con modalità orizzontale forzata)</string>
     <string name="entry_alt">Alt</string>
     <string name="entry_az">Az</string>
+    <string name="view">Visualizza</string>
+    <string name="ccd_capture">Cattura</string>
+    <string name="expose">Esponi</string>
+    <string name="abort">Annulla</string>
+    <string name="ccd_iso">ISO:</string>
+    <string name="ccd_gain">Guad.:</string>
+    <string name="ccd_binning">Binning:</string>
+    <string name="ccd_frame_type">Tipo:</string>
+    <string name="ccd_remote_folder">Cartella remota:</string>
+    <string name="ccd_file_prefix">Prefisso file:</string>
+    <string name="ccd_image_show_only">Mostra in app</string>
+    <string name="ccd_image_save_show">Salva JPG sul telefono e mostra</string>
+    <string name="ccd_image_remote_save">Salva solo in remoto</string>
+    <string name="ccd_image_remote_and_display">Salva in remoto e mostra</string>
+    <string name="save_preview">Salva/anteprima:</string>
+    <string name="save_mode_warning">Attenzione: questa impostazione potrebbe interferire con altri client che utilizzano la fotocamera nello stesso momento.</string>
+    <string name="loop">Ciclo</string>
+    <string name="no_camera_available">Nessuna fotocamera disponibile!</string>
+    <string name="ccd_loop_interval">Intervallo ciclo:</string>
+    <string name="file_format">Formato file:</string>
+    <string name="ccd_camera_formatting">%e = tempo exp., %f = tipo, %d = data, %t = ora</string>
+    <string name="loop_count">Conteggio ciclo:</string>
+    <string name="set_zero_unlimited_photos">Imposta a zero per foto illimitate.</string>
+    <string name="camera_log">Messaggi dalla camera:</string>
+    <string name="transfer_format">Formato trasf.:</string>
+    <string name="exposure_time">Tempo di exp.</string>
+    <string name="no_camera_selected">Nessuna camera selezionata!</string>
+    <string name="free_ram">Libera RAM</string>
+    <string name="stop_receiving">Ferma ricezione</string>
+    <string name="invalid_value">Numero non valido!</string>
+    <string name="jpg_quality_pref_summary">Qualità JPG (10–100%) per tutte le foto salvate sul cellulare.</string>
+    <string name="jpg_quality_pref">Qualità JPG foto</string>
+    <string name="indi_web_manager">INDI Web Manager</string>
+    <string name="img_decoding_error">Errore di decodifica foto!</string>
+    <string name="storage_permission_required">Permesso di scrittura richiesto!</string>
 </resources>
