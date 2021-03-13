@@ -30,43 +30,50 @@ import android.os.Looper;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.TaskStackBuilder;
-import androidx.preference.PreferenceManager;
 
-import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
+import java.util.Collection;
+
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.MainActivity;
 
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 
-public class CameraForegroundService extends Service implements ConnectionManager.ManagerListener {
+public class CameraForegroundService extends Service
+        implements INDICamera.CameraListener, ConnectionManager.ManagerListener {
 
+    public static final String INDI_CAMERA_EXTRA = "indi_camera";
     public static final String ACTION_START_SERVICE = "ACTION_START_SERVICE";
     public static final String ACTION_STOP_SERVICE = "ACTION_STOP_SERVICE";
-    public static final String ACTION_EXIT = "ACTION_EXIT";
-    public static final String ACTION_DISCONNECT = "ACTION_DISCONNECT";
-    private static final String NOTIFICATION_CHANNEL = "TELESCOPE_TOUCH_SERVICE";
+    public static final String ACTION_STOP_CAPTURE = "ACTION_STOP_CAPTURE";
+    private static final String NOTIFICATION_CHANNEL = "CCD_CAPTURE_SERVICE";
     private final Handler handler = new Handler(Looper.getMainLooper());
+    private INDICamera camera;
+    private NotificationManagerCompat notificationManager;
+    private NotificationCompat.Builder builder;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
             switch (intent.getAction()) {
                 case ACTION_START_SERVICE:
-                    start();
+                    camera = intent.getParcelableExtra(INDI_CAMERA_EXTRA);
+                    if (camera == null) {
+                        Toast.makeText(this, R.string.no_camera_available, Toast.LENGTH_SHORT).show();
+                        stopForeground(true);
+                        stopSelf();
+                    } else {
+                        camera.addListener(this);
+                        start();
+                    }
                     break;
-                case ACTION_EXIT:
+                case ACTION_STOP_CAPTURE:
+                    //TODO: stop capture
                     stopForeground(true);
                     stopSelf();
-                    System.exit(0);
                     break;
                 case ACTION_STOP_SERVICE:
-                    stopForeground(true);
-                    stopSelf();
-                    break;
-                case ACTION_DISCONNECT:
-                    if (connectionManager.isConnected()) connectionManager.disconnect();
-                    Toast.makeText(this, R.string.disconnected, Toast.LENGTH_SHORT).show();
                     stopForeground(true);
                     stopSelf();
                     break;
@@ -83,9 +90,10 @@ public class CameraForegroundService extends Service implements ConnectionManage
             channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
             ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
         }
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL);
+        notificationManager = NotificationManagerCompat.from(this);
+        builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL);
         NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
-        bigTextStyle.setBigContentTitle(getString(R.string.app_name));
+        bigTextStyle.setBigContentTitle(camera.toString());
         bigTextStyle.bigText("CCD capture in progress");
         builder.setStyle(bigTextStyle);
         builder.setWhen(System.currentTimeMillis());
@@ -93,27 +101,22 @@ public class CameraForegroundService extends Service implements ConnectionManage
         builder.setPriority(Notification.PRIORITY_DEFAULT);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        Intent connectionIntent = new Intent(this, MainActivity.class);
-        connectionIntent.putExtra(MainActivity.ACTION, MainActivity.ACTION_CONNECT);
-        stackBuilder.addNextIntentWithParentStack(connectionIntent);
+        Intent appIntent = new Intent(this, MainActivity.class);
+        appIntent.putExtra(MainActivity.ACTION, MainActivity.ACTION_CCD_CAPTURE);
+        stackBuilder.addNextIntentWithParentStack(appIntent);
         builder.setContentIntent(stackBuilder.getPendingIntent(1, PendingIntent.FLAG_UPDATE_CURRENT));
 
-        if (connectionManager.isConnected()) {
-            Intent mountIntent = new Intent(this, MainActivity.class);
-            mountIntent.putExtra(MainActivity.ACTION, MainActivity.ACTION_CCD_CAPTURE);
-            stackBuilder.addNextIntentWithParentStack(mountIntent);
-            builder.addAction(new NotificationCompat.Action(null, getString(R.string.mount),
-                    stackBuilder.getPendingIntent(2, PendingIntent.FLAG_UPDATE_CURRENT)));
+        Intent stopLoopIntent = new Intent(this, CameraForegroundService.class);
+        stopLoopIntent.setAction(ACTION_STOP_CAPTURE);
+        stopLoopIntent.putExtra(CameraForegroundService.INDI_CAMERA_EXTRA, camera);
+        builder.addAction(new NotificationCompat.Action(null, "Stop capture",
+                PendingIntent.getService(this, 2, stopLoopIntent, PendingIntent.FLAG_UPDATE_CURRENT)));
 
-            Intent disconnectIntent = new Intent(this, CameraForegroundService.class);
-            disconnectIntent.setAction(ACTION_DISCONNECT);
-            builder.addAction(new NotificationCompat.Action(null, getString(R.string.disconnect),
-                    PendingIntent.getService(this, 3, disconnectIntent, PendingIntent.FLAG_UPDATE_CURRENT)));
+        int totalCaptures = camera.getLoopTotalCaptures();
+        if (totalCaptures == 0) {
+            builder.setProgress(0, 0, true);
         } else {
-            Intent closeIntent = new Intent(this, CameraForegroundService.class);
-            closeIntent.setAction(ACTION_EXIT);
-            builder.addAction(new NotificationCompat.Action(null, getString(R.string.exit),
-                    PendingIntent.getService(this, 4, closeIntent, PendingIntent.FLAG_UPDATE_CURRENT)));
+            builder.setProgress(totalCaptures, totalCaptures - camera.getRemainingCaptures(), false);
         }
         startForeground(1, builder.build());
     }
@@ -128,6 +131,7 @@ public class CameraForegroundService extends Service implements ConnectionManage
     public void onDestroy() {
         super.onDestroy();
         connectionManager.removeManagerListener(this);
+        if (camera != null) camera.removeListener(this);
     }
 
     @Override
@@ -140,12 +144,29 @@ public class CameraForegroundService extends Service implements ConnectionManage
         handler.post(() -> {
             Toast.makeText(this, R.string.connection_indi_lost, Toast.LENGTH_SHORT).show();
             stopForeground(true);
-            if (PreferenceManager.getDefaultSharedPreferences(this)
-                    .getString(ApplicationConstants.EXIT_ACTION_PREF, "0").equals("1")) {
-                start();
-            } else {
-                stopSelf();
-            }
+            stopSelf();
         });
+    }
+
+    @Override
+    public void onCamerasListChange() {
+        Collection<INDICamera> cameras = connectionManager.indiCameras.values();
+        for (INDICamera camera : cameras) {
+            if (camera == this.camera) return;
+        }
+        stopForeground(true);
+        stopSelf();
+    }
+
+    @Override
+    public void onLoopProgressChange(int progress, int total) {
+        builder.setProgress(total, progress, false);
+        notificationManager.notify(1, builder.build());
+    }
+
+    @Override
+    public void onCameraLoopStop() {
+        stopForeground(true);
+        stopSelf();
     }
 }
