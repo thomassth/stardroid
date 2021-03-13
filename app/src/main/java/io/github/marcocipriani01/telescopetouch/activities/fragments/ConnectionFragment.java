@@ -105,12 +105,11 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
         connectionButton.setOnClickListener(v -> {
             ((InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE))
                     .hideSoftInputFromWindow(portEditText.getWindowToken(), 0);
-            Object selectedItem = serversSpinner.getSelectedItem();
-            if (selectedItem == null) {
+            String host = (String) serversSpinner.getSelectedItem();
+            if (host == null) {
                 requestActionSnack(R.string.unknown_error);
                 return;
             }
-            String host = String.valueOf(selectedItem);
             if (host.equals(context.getString(R.string.host_add))) {
                 serversSpinner.post(() -> serversSpinner.setSelection(0));
                 NewServerDialog.show(context, preferences, ConnectionFragment.this);
@@ -137,7 +136,7 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
                             requestActionSnack(R.string.invalid_port);
                             return;
                         }
-                        if ((port < 0) || (port > 0xFFFF)) {
+                        if ((port <= 0) || (port >= 0xFFFF)) {
                             requestActionSnack(R.string.invalid_port);
                             return;
                         }
@@ -187,7 +186,11 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
     public boolean onMenuItemClick(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_open_browser) {
-            String host = String.valueOf(serversSpinner.getSelectedItem());
+            String host = (String) serversSpinner.getSelectedItem();
+            if (host == null) {
+                requestActionSnack(R.string.unknown_error);
+                return super.onOptionsItemSelected(item);
+            }
             if (host.contains("@")) {
                 String[] split = host.split("@");
                 if (split.length == 2) host = split[1];
@@ -196,10 +199,14 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
                 requestActionSnack(R.string.select_host_first);
             } else {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://" + host)));
-                return true;
             }
+            return true;
         } else if (itemId == R.id.menu_indi_web) {
-            String host = String.valueOf(serversSpinner.getSelectedItem());
+            String host = (String) serversSpinner.getSelectedItem();
+            if (host == null) {
+                requestActionSnack(R.string.unknown_error);
+                return super.onOptionsItemSelected(item);
+            }
             if (host.contains("@")) {
                 String[] split = host.split("@");
                 if (split.length == 2) host = split[1];
@@ -210,7 +217,6 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
                 Intent intent = new Intent(context, WebManagerActivity.class);
                 intent.putExtra(WebManagerActivity.INTENT_HOST, host);
                 startActivity(intent);
-                return true;
             }
             return true;
         }

@@ -98,10 +98,7 @@ public class AladinView extends WebView implements Runnable {
         settings.setSupportZoom(false);
         settings.setLoadWithOverviewMode(true);
         settings.setUseWideViewPort(true);
-        settings.setDomStorageEnabled(true);
         settings.setLoadsImagesAutomatically(true);
-        settings.setAllowContentAccess(true);
-        settings.setDatabaseEnabled(true);
         settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
     }
 

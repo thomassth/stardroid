@@ -52,6 +52,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
     @Inject
     SharedPreferences preferences;
     private Preference jpgQualityPref;
+    private Preference indiWebPortPref;
     private Preference latitudePref;
     private Preference longitudePref;
     private final ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(
@@ -101,6 +102,8 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
         latitudePref.setOnPreferenceChangeListener(this);
         jpgQualityPref = Objects.requireNonNull(preferenceFragment.findPreference(ApplicationConstants.JPG_QUALITY_PREF));
         jpgQualityPref.setOnPreferenceChangeListener(this);
+        indiWebPortPref = Objects.requireNonNull(preferenceFragment.findPreference(ApplicationConstants.WEB_MANAGER_PORT_PREF));
+        indiWebPortPref.setOnPreferenceChangeListener(this);
         longitudePref = Objects.requireNonNull(preferenceFragment.findPreference(ApplicationConstants.LONGITUDE_PREF));
         longitudePref.setOnPreferenceChangeListener(this);
         limitMagPref = Objects.requireNonNull(preferenceFragment.findPreference(ApplicationConstants.CATALOG_LIMIT_MAGNITUDE));
@@ -159,33 +162,33 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
             try {
                 double latitude = Double.parseDouble(string);
                 if ((latitude > 90.0) || (latitude < -90.0)) {
-                    Snackbar.make(rootView, R.string.out_of_bounds_loc_error, Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(rootView, R.string.out_of_bounds_loc_error, Snackbar.LENGTH_SHORT).setTextColor(getResources().getColor(R.color.colorAccent)).show();
                 } else {
                     latitudePref.setSummary(string);
                     return true;
                 }
             } catch (NumberFormatException e) {
-                Snackbar.make(rootView, R.string.malformed_loc_error, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(rootView, R.string.malformed_loc_error, Snackbar.LENGTH_SHORT).setTextColor(getResources().getColor(R.color.colorAccent)).show();
             }
         } else if (preference == longitudePref) {
             String string = (String) newValue;
             try {
                 double longitude = Double.parseDouble(string);
                 if ((longitude > 180.0) || (longitude < -180.0)) {
-                    Snackbar.make(rootView, R.string.out_of_bounds_loc_error, Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(rootView, R.string.out_of_bounds_loc_error, Snackbar.LENGTH_SHORT).setTextColor(getResources().getColor(R.color.colorAccent)).show();
                 } else {
                     longitudePref.setSummary(string);
                     return true;
                 }
             } catch (NumberFormatException e) {
-                Snackbar.make(rootView, R.string.malformed_loc_error, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(rootView, R.string.malformed_loc_error, Snackbar.LENGTH_SHORT).setTextColor(getResources().getColor(R.color.colorAccent)).show();
             }
         } else if (preference == limitMagPref) {
             try {
                 Double.parseDouble((String) newValue);
                 return true;
             } catch (NumberFormatException e) {
-                Snackbar.make(rootView, R.string.not_a_number, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(rootView, R.string.not_a_number, Snackbar.LENGTH_SHORT).setTextColor(getResources().getColor(R.color.colorAccent)).show();
                 return false;
             }
         } else if (preference == gyroPref) {
@@ -195,12 +198,24 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
             try {
                 int quality = Integer.parseInt((String) newValue);
                 if ((quality < 10) || quality > 100) {
-                    Snackbar.make(rootView, R.string.invalid_value, Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(rootView, R.string.invalid_value, Snackbar.LENGTH_SHORT).setTextColor(getResources().getColor(R.color.colorAccent)).show();
                     return false;
                 }
                 return true;
             } catch (NumberFormatException e) {
-                Snackbar.make(rootView, R.string.not_a_number, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(rootView, R.string.not_a_number, Snackbar.LENGTH_SHORT).setTextColor(getResources().getColor(R.color.colorAccent)).show();
+                return false;
+            }
+        } else if (preference == indiWebPortPref) {
+            try {
+                int port = Integer.parseInt((String) newValue);
+                if ((port <= 0) || (port >= 0xFFFF)) {
+                    Snackbar.make(rootView, R.string.invalid_value, Snackbar.LENGTH_SHORT).setTextColor(getResources().getColor(R.color.colorAccent)).show();
+                    return false;
+                }
+                return true;
+            } catch (NumberFormatException e) {
+                Snackbar.make(rootView, R.string.not_a_number, Snackbar.LENGTH_SHORT).setTextColor(getResources().getColor(R.color.colorAccent)).show();
                 return false;
             }
         }
