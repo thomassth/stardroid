@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -352,7 +353,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onActionSnackRequested(String msg) {
         bottomBar.performShow();
-        fab.hide();
+        if ((getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK) < Configuration.SCREENLAYOUT_SIZE_LARGE)
+            fab.hide();
         Snackbar.make(mainCoordinator, msg, Snackbar.LENGTH_SHORT).setAnchorView(bottomBar)
                 .addCallback(new SnackBarCallBack()).show();
     }
@@ -360,7 +363,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onActionSnackRequested(int msgRes, int actionName, View.OnClickListener action) {
         bottomBar.performShow();
-        fab.hide();
+        if ((getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK) < Configuration.SCREENLAYOUT_SIZE_LARGE)
+            fab.hide();
         Snackbar.make(mainCoordinator, msgRes, Snackbar.LENGTH_SHORT).setAnchorView(bottomBar)
                 .addCallback(new SnackBarCallBack()).setAction(actionName, action).show();
     }

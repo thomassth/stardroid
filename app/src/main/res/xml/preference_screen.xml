@@ -30,6 +30,14 @@
             android:summary="@string/jpg_quality_pref_summary"
             android:title="@string/jpg_quality_pref"
             app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            android:defaultValue="8624"
+            android:dialogLayout="@layout/preference_dialog_numeric"
+            android:inputType="number"
+            android:key="web_manager_port"
+            android:title="@string/indi_web_manager_port"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
     <PreferenceCategory

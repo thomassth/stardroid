@@ -669,23 +669,25 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
             return;
         }
         if (saveModeSpinner != null) saveModeSpinner.setSelection(camera.getSaveMode().ordinal());
-        boolean hasPresets = camera.hasPresets(), captureOrPreset = camera.canCapture() || hasPresets,
+        boolean canCapture = camera.canCapture(), hasPresets = camera.hasPresets(), captureOrPreset = canCapture || hasPresets,
                 canLoop = captureOrPreset && (!camera.isCaptureLooping());
         if (exposeBtn != null) {
             exposeBtn.setEnabled(canLoop);
-            int color = Color.WHITE;
-            switch (camera.exposureP.getState()) {
-                case OK:
-                    color = context.getResources().getColor(R.color.light_green);
-                    break;
-                case ALERT:
-                    color = context.getResources().getColor(R.color.light_red);
-                    break;
-                case BUSY:
-                    color = context.getResources().getColor(R.color.light_yellow);
-                    break;
+            if (canCapture) {
+                int color = Color.WHITE;
+                switch (camera.exposureP.getState()) {
+                    case OK:
+                        color = context.getResources().getColor(R.color.light_green);
+                        break;
+                    case ALERT:
+                        color = context.getResources().getColor(R.color.light_red);
+                        break;
+                    case BUSY:
+                        color = context.getResources().getColor(R.color.light_yellow);
+                        break;
+                }
+                setButtonColor(exposeBtn, color);
             }
-            setButtonColor(exposeBtn, color);
         }
         if (loopBtn != null) loopBtn.setEnabled(canLoop);
         if (delaySlider != null) {
@@ -699,7 +701,7 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
         if (exposureTimeField != null) {
             exposureTimeField.setEnabled(captureOrPreset);
             exposureTimeField.setAdapter(hasPresets ? new SwitchPropertyStringAdapter(camera.availableExposurePresetsE) : null);
-            if (camera.canCapture()) {
+            if (canCapture) {
                 try {
                     String expString = camera.exposureE.getValueAsString().trim();
                     if (!expString.equals("0.00")) exposureTimeField.setText(expString);
