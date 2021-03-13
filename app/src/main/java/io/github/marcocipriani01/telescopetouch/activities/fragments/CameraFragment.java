@@ -689,7 +689,11 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
                 setButtonColor(exposeBtn, color);
             }
         }
-        if (loopBtn != null) loopBtn.setEnabled(canLoop);
+        if (loopBtn != null) {
+            loopBtn.setEnabled(canLoop);
+            loopBtn.setText(R.string.loop);
+            setButtonColor(loopBtn, Color.WHITE);
+        }
         if (delaySlider != null) {
             delaySlider.setEnabled(canLoop);
             delaySlider.setValue(camera.getLoopDelay() / 1000f);

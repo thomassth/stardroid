@@ -674,4 +674,6 @@
     <string name="storage_permission_required">Permesso di scrittura richiesto!</string>
     <string name="prop_unavailable">Proprietà non disponibile</string>
     <string name="web_manager_info">Puoi usare questo strumento per connetterti ad un\'istanza dell\'INDI Web Manager. Assicurati che sia installato sull\'host remoto e in ascolto sulla porta 8624.</string>
+    <string name="can_not_connect_indi_web">Impossibile connettersi al Web Manager!</string>
+    <string name="indi_web_manager_port">Porta INDI Web Manager</string>
 </resources>

@@ -21,6 +21,7 @@ import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -37,6 +38,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import org.indilib.i4j.Constants;
@@ -172,6 +174,10 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
         return -1;
     }
 
+    public int getRemainingCaptures() {
+        return loopRemainingCaptures;
+    }
+
     public int getLoopTotalCaptures() {
         return loopTotalCaptures;
     }
@@ -222,6 +228,7 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
         }
         captureLoop = true;
         connectionManager.post(this::captureLoopExposureRunnable);
+        startProgressNotification();
     }
 
     public void startCaptureLoop(INDISwitchElement captureLoopPreset, int count) throws INDIValueException {
@@ -238,6 +245,7 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
         }
         captureLoop = true;
         connectionManager.post(this::captureLoopPresetRunnable);
+        startProgressNotification();
     }
 
     public void startCaptureLoop(String exposureOrPreset, int count) throws INDIException {
@@ -262,6 +270,13 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
         } else {
             throw new UnsupportedOperationException("Unsupported capture!");
         }
+    }
+
+    private void startProgressNotification() {
+        Intent intent = new Intent(context, CameraForegroundService.class);
+        intent.setAction(CameraForegroundService.ACTION_START_SERVICE);
+        intent.putExtra(CameraForegroundService.INDI_CAMERA_EXTRA, this);
+        ContextCompat.startForegroundService(context, intent);
     }
 
     @SuppressLint("DefaultLocale")
@@ -1104,9 +1119,11 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
         default void onImageLoading() {
         }
 
-        void onImageLoaded(@Nullable Bitmap bitmap, String[] metadata);
+        default void onImageLoaded(@Nullable Bitmap bitmap, String[] metadata) {
+        }
 
-        void onBitmapDestroy();
+        default void onBitmapDestroy() {
+        }
 
         default void onImageLoadingError(Throwable e) {
         }

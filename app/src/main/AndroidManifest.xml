@@ -179,6 +179,11 @@
             android:enabled="true"
             android:exported="false" />
 
+        <service
+            android:name=".indi.CameraForegroundService"
+            android:enabled="true"
+            android:exported="false" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
