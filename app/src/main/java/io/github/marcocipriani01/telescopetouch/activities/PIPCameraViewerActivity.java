@@ -33,7 +33,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
 import java.util.Collection;
-import java.util.Objects;
 
 import io.github.marcocipriani01.livephotoview.PhotoView;
 import io.github.marcocipriani01.telescopetouch.R;
@@ -71,13 +70,18 @@ public class PIPCameraViewerActivity extends AppCompatActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        camera = Objects.requireNonNull(getIntent().getParcelableExtra(INDI_CAMERA_EXTRA));
-        pip();
-        setContentView(R.layout.activity_pip_blob);
-        darkerModeManager = new DarkerModeManager(this, null, PreferenceManager.getDefaultSharedPreferences(this));
-        photoView = findViewById(R.id.pip_blob_view);
-        photoView.setMaximumScale(20f);
-        photoView.setImageBitmap(camera.getLastBitmap());
+        camera = getIntent().getParcelableExtra(INDI_CAMERA_EXTRA);
+        if (camera == null) {
+            Toast.makeText(this, R.string.no_camera_available, Toast.LENGTH_SHORT).show();
+            finish();
+        } else {
+            pip();
+            setContentView(R.layout.activity_pip_blob);
+            darkerModeManager = new DarkerModeManager(this, null, PreferenceManager.getDefaultSharedPreferences(this));
+            photoView = findViewById(R.id.pip_blob_view);
+            photoView.setMaximumScale(20f);
+            photoView.setImageBitmap(camera.getLastBitmap());
+        }
     }
 
     @Override
@@ -154,6 +158,7 @@ public class PIPCameraViewerActivity extends AppCompatActivity
 
     @Override
     public void onConnectionLost() {
+        if (photoView != null) photoView.setImageBitmap(null);
         finishInstance();
     }
 

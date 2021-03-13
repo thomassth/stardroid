@@ -70,11 +70,12 @@ public abstract class PropPref<Element extends INDIElement> extends Preference i
                 return new BLOBPropPref(context, (INDIBLOBProperty) prop);
             } else {
                 Log.w(TAG, "INDI property \"" + prop.toString() + "\" couldn't be added, unknown type.");
+                return new UnavailablePropPref<>(context, prop);
             }
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
+            return new UnavailablePropPref<>(context, prop, e);
         }
-        return null;
     }
 
     public INDIProperty<Element> getProp() {

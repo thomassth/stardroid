@@ -319,12 +319,12 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
     public void capture(View v) {
         // PRO
         if (!ProUtils.isPro) {
-            int count = preferences.getInt(ApplicationConstants.CAPTURE_PRO_COUNTER, 0);
+            int count = preferences.getInt(ProUtils.CAPTURE_PRO_COUNTER, 0);
             if (count >= 6) {
                 requestActionSnack(R.string.buy_pro_continue_capture);
                 return;
             }
-            preferences.edit().putInt(ApplicationConstants.CAPTURE_PRO_COUNTER, count + 1).apply();
+            preferences.edit().putInt(ProUtils.CAPTURE_PRO_COUNTER, count + 1).apply();
         }
         // END PRO
         String str = exposureTimeField.getText().toString();
@@ -398,12 +398,12 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
     public void loopCapture(View v) {
         // PRO
         if (!ProUtils.isPro) {
-            int count = preferences.getInt(ApplicationConstants.CAPTURE_PRO_COUNTER, 0);
+            int count = preferences.getInt(ProUtils.CAPTURE_PRO_COUNTER, 0);
             if (count >= 6) {
                 requestActionSnack(R.string.buy_pro_continue_capture);
                 return;
             }
-            preferences.edit().putInt(ApplicationConstants.CAPTURE_PRO_COUNTER, count + 1).apply();
+            preferences.edit().putInt(ProUtils.CAPTURE_PRO_COUNTER, count + 1).apply();
         }
         // END PRO
         String str = exposureTimeField.getText().toString();

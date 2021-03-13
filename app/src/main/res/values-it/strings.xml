@@ -672,4 +672,6 @@
     <string name="indi_web_manager">INDI Web Manager</string>
     <string name="img_decoding_error">Errore di decodifica foto!</string>
     <string name="storage_permission_required">Permesso di scrittura richiesto!</string>
+    <string name="prop_unavailable">Proprietà non disponibile</string>
+    <string name="web_manager_info">Puoi usare questo strumento per connetterti ad un\'istanza dell\'INDI Web Manager. Assicurati che sia installato sull\'host remoto e in ascolto sulla porta 8624.</string>
 </resources>

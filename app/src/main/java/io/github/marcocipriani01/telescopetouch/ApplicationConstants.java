@@ -59,5 +59,5 @@ public class ApplicationConstants {
     public static final String GPS_OFF_NO_DIALOG_PREF = "gps_off_no_dialog";
     public static final String CCD_LOOP_DELAY_PREF = "ccd_loop_delay";
     public static final String JPG_QUALITY_PREF = "jpg_quality";
-    public static final String CAPTURE_PRO_COUNTER = "capture_pro_counter";
+    public static final String WEB_MANAGER_INFO_PREF = "web_manager_info";
 }
