@@ -17,6 +17,8 @@
 package io.github.marcocipriani01.telescopetouch.activities;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.webkit.WebSettings;
@@ -29,6 +31,7 @@ import androidx.preference.PreferenceManager;
 
 import java.util.Objects;
 
+import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
 
@@ -44,7 +47,8 @@ public class WebManagerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        darkerModeManager = new DarkerModeManager(this, null, PreferenceManager.getDefaultSharedPreferences(this));
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        darkerModeManager = new DarkerModeManager(this, null, preferences);
         setTheme(darkerModeManager.getPref() ? R.style.DarkerAppTheme : R.style.AppTheme);
         WebView webView = new WebView(this);
         setContentView(webView);
@@ -65,6 +69,13 @@ public class WebManagerActivity extends AppCompatActivity {
         });
         //TODO(marcocipriani01): customize port
         webView.loadUrl(Objects.requireNonNull(getIntent().getStringExtra(INTENT_HOST)) + ":8624");
+        if (preferences.getBoolean(ApplicationConstants.WEB_MANAGER_INFO_PREF, true)) {
+            new AlertDialog.Builder(this).setIcon(R.drawable.internet)
+                    .setTitle(R.string.indi_web_manager)
+                    .setPositiveButton(android.R.string.ok, (dialog, which) ->
+                            preferences.edit().putBoolean(ApplicationConstants.WEB_MANAGER_INFO_PREF, false).apply())
+                    .setMessage(R.string.web_manager_info).show();
+        }
     }
 
     @Override

@@ -672,4 +672,6 @@
     <string name="indi_web_manager">INDI Web Manager</string>
     <string name="img_decoding_error">Image decoding error!</string>
     <string name="storage_permission_required">Storage permission required!</string>
+    <string name="prop_unavailable">Unavailable property</string>
+    <string name="web_manager_info">You can use this tool to connect to an INDI Web Manager instance. Make sure it is installed on the remote host and listening on port 8624.</string>
 </resources>
