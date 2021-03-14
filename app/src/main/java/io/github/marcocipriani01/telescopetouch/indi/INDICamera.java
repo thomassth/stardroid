@@ -89,10 +89,12 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
         @Override
         public INDICamera createFromParcel(Parcel in) {
             int deviceHash = in.readInt();
-            Set<INDIDevice> devices = connectionManager.indiCameras.keySet();
-            for (INDIDevice device : devices) {
-                if (device.hashCode() == deviceHash)
-                    return connectionManager.indiCameras.get(device);
+            synchronized (connectionManager.indiCameras) {
+                Set<INDIDevice> devices = connectionManager.indiCameras.keySet();
+                for (INDIDevice device : devices) {
+                    if (device.hashCode() == deviceHash)
+                        return connectionManager.indiCameras.get(device);
+                }
             }
             return null;
         }

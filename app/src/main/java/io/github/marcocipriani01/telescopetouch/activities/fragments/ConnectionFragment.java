@@ -35,6 +35,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -44,9 +45,12 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.NSDHelper;
@@ -65,7 +69,6 @@ import static io.github.marcocipriani01.telescopetouch.activities.ServersActivit
 /**
  * The main screen of the application, which manages the connection.
  *
- * @author Romain Fafet
  * @author marcocipriani01
  */
 public class ConnectionFragment extends ActionFragment implements ConnectionManager.ManagerListener,
@@ -79,24 +82,71 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
     private SameSelectionSpinner serversSpinner;
     private EditText portEditText;
     private LogAdapter logAdapter;
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        preferences = PreferenceManager.getDefaultSharedPreferences(context);
-    }
+    private CheckBox connectDevicesBox;
+    private RecyclerView logsList;
 
     @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
         View rootView = inflater.inflate(R.layout.fragment_connection, container, false);
         setHasOptionsMenu(true);
         logAdapter = new LogAdapter(context);
-        RecyclerView logsList = rootView.findViewById(R.id.logs_recycler);
+        logsList = rootView.findViewById(R.id.logs_recycler);
         logsList.setAdapter(logAdapter);
         logsList.setLayoutManager(new LinearLayoutManager(context));
+        logsList.setItemAnimator(new SimpleItemAnimator() {
+            @Override
+            public boolean animateRemove(RecyclerView.ViewHolder holder) {
+                holder.itemView.animate().alpha(0f).translationX(-50f);
+                return false;
+            }
+
+            @Override
+            public boolean animateAdd(RecyclerView.ViewHolder holder) {
+                holder.itemView.setAlpha(0f);
+                holder.itemView.setTranslationX(50f);
+                holder.itemView.animate().alpha(1f).translationX(0f);
+                return false;
+            }
+
+            @Override
+            public boolean animateMove(RecyclerView.ViewHolder holder, int fromX, int fromY, int toX, int toY) {
+                return false;
+            }
+
+            @Override
+            public boolean animateChange(RecyclerView.ViewHolder oldHolder, RecyclerView.ViewHolder newHolder,
+                                         int fromLeft, int fromTop, int toLeft, int toTop) {
+                return false;
+            }
+
+            @Override
+            public void runPendingAnimations() {
+
+            }
+
+            @Override
+            public void endAnimation(@NonNull RecyclerView.ViewHolder item) {
+
+            }
+
+            @Override
+            public void endAnimations() {
+
+            }
+
+            @Override
+            public boolean isRunning() {
+                return false;
+            }
+        });
 
         connectionButton = rootView.findViewById(R.id.connect_button);
+        connectDevicesBox = rootView.findViewById(R.id.connect_all_checkbox);
+        boolean autoConnectDev = preferences.getBoolean(ApplicationConstants.AUTO_CONNECT_DEVICES_PREF, false);
+        connectDevicesBox.setChecked(autoConnectDev);
+        connectDevicesBox.setSelected(autoConnectDev);
         serversSpinner = rootView.findViewById(R.id.host_spinner);
         loadServers(getServers(preferences));
         portEditText = rootView.findViewById(R.id.port_field);
@@ -142,7 +192,9 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
                         }
                     }
                     preferences.edit().putInt(ApplicationConstants.INDI_PORT_PREF, port).apply();
-                    connectionManager.connect(host, port);
+                    boolean connectDev = connectDevicesBox.isChecked();
+                    preferences.edit().putBoolean(ApplicationConstants.AUTO_CONNECT_DEVICES_PREF, connectDev).apply();
+                    connectionManager.connect(host, port, connectDev);
                 } else if (state == ConnectionManager.State.CONNECTED) {
                     connectionManager.disconnect();
                 }
@@ -246,12 +298,14 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
         if (logAdapter != null)
             logAdapter.notifyItemInserted(connectionManager.getLogs().indexOf(log));
         notifyActionChange();
+        if (logsList != null) logsList.scrollToPosition(logAdapter.getItemCount() - 1);
     }
 
     @Override
     public void deviceLog(final ConnectionManager.LogItem log) {
         if (logAdapter != null) logAdapter.notifyDataSetChanged();
         notifyActionChange();
+        if (logsList != null) logsList.scrollToPosition(logAdapter.getItemCount() - 1);
     }
 
     private void refreshUi(ConnectionManager.State state) {
@@ -315,8 +369,18 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
 
     @Override
     public void run() {
-        connectionManager.getLogs().clear();
-        if (logAdapter != null) logAdapter.notifyDataSetChanged();
+        if (logAdapter == null) {
+            connectionManager.getLogs().clear();
+        } else {
+            List<ConnectionManager.LogItem> logs = connectionManager.getLogs();
+            Iterator<ConnectionManager.LogItem> iterator = logs.iterator();
+            while (iterator.hasNext()) {
+                ConnectionManager.LogItem next = iterator.next();
+                int i = logs.indexOf(next);
+                iterator.remove();
+                logAdapter.notifyItemRemoved(i);
+            }
+        }
         notifyActionChange();
     }
 

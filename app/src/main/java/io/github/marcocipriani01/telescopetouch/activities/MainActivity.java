@@ -29,13 +29,16 @@ import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -292,6 +295,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return true;
         } else if (page == Pages.SKY_MAP) {
             startActivity(new Intent(this, SkyMapActivity.class));
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             return true;
         } else if ((page != null) && (page != currentPage)) {
             showFragment(page, true);
@@ -361,7 +365,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onActionSnackRequested(int msgRes, int actionName, View.OnClickListener action) {
+    public void onActionSnackRequested(@StringRes int msgRes, int actionName, View.OnClickListener action) {
         bottomBar.performShow();
         if ((getResources().getConfiguration().screenLayout &
                 Configuration.SCREENLAYOUT_SIZE_MASK) < Configuration.SCREENLAYOUT_SIZE_LARGE)
@@ -393,7 +397,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void setNightMode(boolean nightMode) {
-        if (nightMode != this.darkerMode) recreate();
+        if (nightMode != this.darkerMode) {
+            finish();
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            startActivity(new Intent(this, MainActivity.class));
+        }
     }
 
     public void launchServersActivity() {
@@ -505,6 +513,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (navigationMenu != null)
                 selectNavItem();
             super.show();
+            ((ViewGroup) getWindow().getDecorView()).getChildAt(0)
+                    .startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.slide_up_dialog));
         }
 
         private void selectNavItem() {

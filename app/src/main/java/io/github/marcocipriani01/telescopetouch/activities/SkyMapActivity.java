@@ -68,6 +68,7 @@ import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.BuildConfig;
+import io.github.marcocipriani01.telescopetouch.ProUtils;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.dialogs.MultipleSearchResultsDialogFragment;
@@ -163,6 +164,7 @@ public class SkyMapActivity extends AppCompatActivity implements OnSharedPrefere
     private TextView pointingText;
     private View rootView;
     private boolean useAltAz = false;
+    private GestureInterpreter gestureInterpreter;
 
     @Override
     public SkyMapComponent getComponent() {
@@ -396,8 +398,10 @@ public class SkyMapActivity extends AppCompatActivity implements OnSharedPrefere
 
     @Override
     public void onResume() {
-        Log.d(TAG, "onResume");
         super.onResume();
+        // PRO
+        ProUtils.update(this);
+        // END PRO
         Log.i(TAG, "Starting view");
         skyView.onResume();
         Log.i(TAG, "Starting controller");
@@ -408,6 +412,14 @@ public class SkyMapActivity extends AppCompatActivity implements OnSharedPrefere
         }
         for (Runnable runnable : onResumeRunnables) {
             handler.post(runnable);
+        }
+        if (preferences.getBoolean(ApplicationConstants.SKY_MAP_HIGH_REFRESH_INFO_PREF, true)) {
+            new AlertDialog.Builder(this).setTitle(R.string.sky_map).setIcon(R.drawable.star_circle)
+                    .setMessage(R.string.high_refresh_rate_message)
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .setPositiveButton(R.string.menu_settings, (dialog, which) ->
+                            startActivity(new Intent(SkyMapActivity.this, SettingsActivity.class))).show();
+            preferences.edit().putBoolean(ApplicationConstants.SKY_MAP_HIGH_REFRESH_INFO_PREF, false).apply();
         }
     }
 
@@ -451,12 +463,14 @@ public class SkyMapActivity extends AppCompatActivity implements OnSharedPrefere
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    public void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
         Log.d(TAG, "Preferences changed: key=" + key);
         if (ApplicationConstants.AUTO_MODE_PREF.equals(key)) {
-            setAutoMode(sharedPreferences.getBoolean(key, true));
+            setAutoMode(preferences.getBoolean(key, true));
         } else if (ApplicationConstants.ROTATE_HORIZON_PREF.equals(key)) {
-            model.setHorizontalRotation(sharedPreferences.getBoolean(key, false));
+            model.setHorizontalRotation(preferences.getBoolean(key, false));
+        } else if (ApplicationConstants.SKY_MAP_HIGH_REFRESH_PREF.equals(key)) {
+            gestureInterpreter.setUpdateRate(preferences.getBoolean(ApplicationConstants.SKY_MAP_HIGH_REFRESH_PREF, false) ? 60 : 30);
         }
     }
 
@@ -544,7 +558,8 @@ public class SkyMapActivity extends AppCompatActivity implements OnSharedPrefere
                 new View[]{this.findViewById(R.id.layer_manual_auto_toggle), providerButtons}, buttonViews);
 
         MapMover mapMover = new MapMover(model, controller, this, preferences);
-        gestureDetector = new GestureDetector(this, new GestureInterpreter(fullscreenControlsManager, mapMover));
+        gestureInterpreter = new GestureInterpreter(fullscreenControlsManager, mapMover);
+        gestureDetector = new GestureDetector(this, gestureInterpreter);
         dragZoomRotateDetector = new DragRotateZoomGestureDetector(mapMover);
 
         Log.d(TAG, "Initializing TimePlayer UI.");

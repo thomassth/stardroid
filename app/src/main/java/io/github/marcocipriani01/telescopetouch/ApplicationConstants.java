@@ -61,4 +61,7 @@ public class ApplicationConstants {
     public static final String JPG_QUALITY_PREF = "jpg_quality";
     public static final String WEB_MANAGER_INFO_PREF = "web_manager_info";
     public static final String WEB_MANAGER_PORT_PREF = "web_manager_port";
+    public static final String AUTO_CONNECT_DEVICES_PREF = "auto_connect_devices";
+    public static final String SKY_MAP_HIGH_REFRESH_PREF = "sky_map_high_refresh";
+    public static final String SKY_MAP_HIGH_REFRESH_INFO_PREF = "sky_map_high_refresh_info";
 }

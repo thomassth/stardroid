@@ -25,8 +25,10 @@ import android.util.Log;
 
 import javax.inject.Inject;
 
-import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
+
+import static io.github.marcocipriani01.telescopetouch.ApplicationConstants.DISABLE_GYRO_PREF;
+import static io.github.marcocipriani01.telescopetouch.ApplicationConstants.SKY_MAP_HIGH_REFRESH_PREF;
 
 /**
  * Sets the direction of view from the orientation sensors.
@@ -39,25 +41,26 @@ public class SensorOrientationController extends AbstractController implements S
     private final SensorManager manager;
     private final Sensor rotationSensor;
     private final Sensor geomagneticRotationSensor;
-    private final SharedPreferences sharedPreferences;
+    private final SharedPreferences preferences;
 
     @Inject
-    SensorOrientationController(SensorManager manager, SharedPreferences sharedPreferences) {
+    SensorOrientationController(SensorManager manager, SharedPreferences preferences) {
         this.manager = manager;
         this.rotationSensor = manager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
         this.geomagneticRotationSensor = manager.getDefaultSensor(Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR);
-        this.sharedPreferences = sharedPreferences;
+        this.preferences = preferences;
     }
 
     @Override
     public void start() {
         if (manager != null) {
-            if (sharedPreferences.getBoolean(ApplicationConstants.DISABLE_GYRO_PREF, false)) {
+            if (preferences.getBoolean(DISABLE_GYRO_PREF, false)) {
                 Log.d(TAG, "Using geomagnetic rotation sensor");
                 manager.registerListener(this, geomagneticRotationSensor, SensorManager.SENSOR_DELAY_FASTEST);
             } else {
                 Log.d(TAG, "Using gyroscope sensor");
-                manager.registerListener(this, rotationSensor, SensorManager.SENSOR_DELAY_GAME);
+                manager.registerListener(this, rotationSensor,
+                        preferences.getBoolean(SKY_MAP_HIGH_REFRESH_PREF, false) ? SensorManager.SENSOR_DELAY_FASTEST : SensorManager.SENSOR_DELAY_GAME);
             }
         }
         Log.d(TAG, "Registered sensor listener");
@@ -76,12 +79,12 @@ public class SensorOrientationController extends AbstractController implements S
         } else if (type == Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR) {
             model.setPhoneSensorValues(event.values);
         } else {
-            Log.e(TAG, "Unknown Sensor readings");
+            Log.w(TAG, "Unknown Sensor readings");
         }
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        // Ignore
+
     }
 }

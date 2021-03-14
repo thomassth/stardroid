@@ -45,15 +45,15 @@
     <orderEntry type="library" name="Gradle: ./app/libs/INDIForJava.client-2.0-SNAPSHOT.jar" level="project" />
     <orderEntry type="library" name="Gradle: javax.annotation:jsr250-api:1.0" level="project" />
     <orderEntry type="module-library">
-      <library name="Gradle: com.google.protobuf:protobuf-javalite:3.15.5">
+      <library name="Gradle: com.google.protobuf:protobuf-javalite:3.15.6">
         <CLASSES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.protobuf/protobuf-javalite/3.15.5/ad05eeb88e9e4edec8c55fad4e2f275278d5a497/protobuf-javalite-3.15.5.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.protobuf/protobuf-javalite/3.15.6/c56ce8a892c7fc6f44cfb824ae4c41388c0d71b1/protobuf-javalite-3.15.6.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.protobuf/protobuf-javalite/3.15.5/136d71924b37d74de7330af9b36631d0ebbb1bce/protobuf-javalite-3.15.5-javadoc.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.protobuf/protobuf-javalite/3.15.6/e3b08a822cedbfa288e943cab65716e5b23f91b4/protobuf-javalite-3.15.6-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.protobuf/protobuf-javalite/3.15.5/1cbc8b7aeedf95aa5e9e7db7bd8bd4597a32bfd/protobuf-javalite-3.15.5-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.protobuf/protobuf-javalite/3.15.6/8c10e037159e715b3e1587258594874552b3c1a1/protobuf-javalite-3.15.6-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -84,8 +84,8 @@
     <orderEntry type="library" name="Gradle: androidx.lifecycle:lifecycle-extensions:2.1.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.jjoe64:graphview:4.2.2@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.legacy:legacy-support-v4:1.0.0@aar" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.fragment:fragment:1.3.0@aar" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.activity:activity:1.3.0-alpha03@aar" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.fragment:fragment:1.3.1@aar" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.activity:activity:1.3.0-alpha04@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.appcompat:appcompat-resources:1.2.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.legacy:legacy-support-core-ui:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.drawerlayout:drawerlayout:1.0.0@aar" level="project" />

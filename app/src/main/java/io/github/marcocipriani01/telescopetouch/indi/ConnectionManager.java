@@ -28,6 +28,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 
+import org.indilib.i4j.Constants;
 import org.indilib.i4j.client.INDIDevice;
 import org.indilib.i4j.client.INDIDeviceListener;
 import org.indilib.i4j.client.INDINumberElement;
@@ -89,13 +90,15 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
     private SharedPreferences preferences;
     private Context context;
     private Resources resources;
+    private volatile boolean connectDevices = false;
+    private final Runnable stopAutoDeviceConnection = () -> connectDevices = false;
 
-    public boolean post(@NonNull Runnable r) {
-        return indiHandler.post(r);
+    public void post(@NonNull Runnable r) {
+        indiHandler.post(r);
     }
 
-    public boolean postDelayed(@NonNull Runnable r, long delayMillis) {
-        return indiHandler.postDelayed(r, delayMillis);
+    public void postDelayed(@NonNull Runnable r, long delayMillis) {
+        indiHandler.postDelayed(r, delayMillis);
     }
 
     public void updateProperties(INDIProperty<?>... properties) {
@@ -161,7 +164,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
      * @param host the host / IP address of the INDI server
      * @param port the port of the INDI server
      */
-    public void connect(String host, int port) {
+    public void connect(String host, int port, boolean connectDevices) {
         if (getState() == State.DISCONNECTED) {
             updateState(State.BUSY);
             busy = true;
@@ -176,6 +179,10 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
                         }
                     }
                     indiConnection.connect();
+                    this.connectDevices = connectDevices;
+                    indiHandler.removeCallbacks(stopAutoDeviceConnection);
+                    if (this.connectDevices)
+                        indiHandler.postDelayed(stopAutoDeviceConnection, 20000);
                     indiConnection.askForDevices();
                     busy = false;
                     updateState(State.CONNECTED);
@@ -353,6 +360,24 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
 
     @Override
     public void newProperty(INDIDevice device, INDIProperty<?> property) {
+        String propName = property.getName();
+        if (connectDevices) {
+            try {
+                if (propName.equals("CONNECTION")) {
+                    INDISwitchElement connE = (INDISwitchElement) property.getElement(INDIStandardElement.CONNECT),
+                            discE = (INDISwitchElement) property.getElement(INDIStandardElement.DISCONNECT);
+                    if ((connE != null) && (discE != null) && (connE.getValue() == Constants.SwitchStatus.OFF)) {
+                        connE.setDesiredValue(Constants.SwitchStatus.ON);
+                        discE.setDesiredValue(Constants.SwitchStatus.OFF);
+                        updateProperties(property);
+                        log(String.format(resources.getString(R.string.connecting_device), device.getName()));
+                    }
+                    return;
+                }
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage(), e);
+            }
+        }
         INDICamera indiCamera;
         synchronized (indiCameras) {
             indiCamera = indiCameras.get(device);
@@ -373,7 +398,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
                 }
             });
         } else {
-            switch (property.getName()) {
+            switch (propName) {
                 case "EQUATORIAL_EOD_COORD":
                     if ((property instanceof INDINumberProperty) &&
                             ((telescopeCoordDec = (INDINumberElement) property.getElement(INDIStandardElement.DEC)) != null) &&
@@ -440,6 +465,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
     }
 
     private void clearTelescopeVars() {
+        preferences.edit().putBoolean(TelescopeLayer.PREFERENCE_ID, false).apply();
         telescopeCoordDec = null;
         telescopeCoordRA = null;
         telescopeCoordP = null;

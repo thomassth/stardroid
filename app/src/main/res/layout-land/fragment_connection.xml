@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="?android:attr/actionBarSize"
     android:baselineAligned="false"
     android:orientation="horizontal"
     android:paddingLeft="@dimen/activity_vertical_margin"
@@ -28,6 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="8dp"
+            android:nestedScrollingEnabled="false"
             tools:listitem="@layout/logs_item" />
     </LinearLayout>
 
@@ -77,6 +79,20 @@
             android:layout_below="@+id/host_spinner"
             android:layout_alignParentStart="true"
             android:layout_marginTop="24dp"
-            android:text="@string/connect" />
+            android:drawableLeft="@drawable/connect"
+            android:drawablePadding="-24dp"
+            android:drawableTint="@android:color/white"
+            android:minHeight="55dp"
+            android:text="@string/connect"
+            android:textStyle="bold"
+            tools:targetApi="m" />
+
+        <CheckBox
+            android:id="@+id/connect_all_checkbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/connect_button"
+            android:layout_marginTop="2dp"
+            android:text="@string/connect_all_devices" />
     </RelativeLayout>
 </LinearLayout>

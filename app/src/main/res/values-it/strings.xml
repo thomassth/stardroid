@@ -437,7 +437,7 @@
     <string name="connect_telescope_first">Connettere il telescopio prima.</string>
     <string name="gallery_copyright">Immagini di NASA (dominio pubblico), ESO (CC BY 4.0) e Adam Evans (CC BY 2.0)</string>
     <string name="telescope_control">Controllo telescopio</string>
-    <string name="go_to_database">Database go-to</string>
+    <string name="go_to_database">Database Go-To</string>
     <string name="indi_control_panel">Pannello di controllo INDI</string>
     <string name="device_remove">Dispositivo rimosso:</string>
     <string name="new_device">Nuovo dispositivo:</string>
@@ -482,7 +482,6 @@
     <string name="select_host_first">Seleziona prima un host.</string>
     <string name="database_filter">Filtro database</string>
     <string name="compass_not_available">Bussola non disponibile!</string>
-    <string name="sensor_prefs">Impostazioni sensori Sky Map</string>
     <string name="no_use_gps_pref_hint">Seleziona un punto nella mappa o inserisci le coordinate.</string>
     <string name="red_screen_light">Luce rossa con schermo</string>
     <string name="flashlight_unavailable">Torcia non disponibile</string>
@@ -676,4 +675,10 @@
     <string name="web_manager_info">Puoi usare questo strumento per connetterti ad un\'istanza dell\'INDI Web Manager. Assicurati che sia installato sull\'host remoto e in ascolto sulla porta 8624.</string>
     <string name="can_not_connect_indi_web">Impossibile connettersi al Web Manager!</string>
     <string name="indi_web_manager_port">Porta INDI Web Manager</string>
+    <string name="connect_all_devices">Connetti tutti i dispositivi</string>
+    <string name="connecting_device">Connessione di %s…</string>
+    <string name="high_refresh_rate">High refresh rate</string>
+    <string name="high_refresh_rate_summary">Ricarica la mappa stellare a 60Hz. Consuma più batteria, ma fornisce un\'esperieza superiore.</string>
+    <string name="sky_map_settings">Impostazioni mappa stellare</string>
+    <string name="high_refresh_rate_message">La modalità ad alta frequenza di aggiornamento è ora disponibile! Ricarica la mappa stellare a 60Hz, per un\'esperienza superiore!</string>
 </resources>

@@ -150,7 +150,14 @@
     <PreferenceCategory
         android:key="sensor_prefs"
         app:iconSpaceReserved="false"
-        app:title="@string/sensor_prefs">
+        app:title="@string/sky_map_settings">
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="sky_map_high_refresh"
+            android:summary="@string/high_refresh_rate_summary"
+            android:title="@string/high_refresh_rate"
+            app:iconSpaceReserved="false" />
 
         <CheckBoxPreference
             android:defaultValue="false"

@@ -20,6 +20,7 @@ import android.content.Context;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 
 public abstract class ActionFragment extends Fragment implements Runnable {
@@ -47,7 +48,7 @@ public abstract class ActionFragment extends Fragment implements Runnable {
         if (listener != null) listener.onActionDrawableChange(getActionDrawable());
     }
 
-    public void requestActionSnack(int msgRes) {
+    public void requestActionSnack(@StringRes int msgRes) {
         if (listener != null) listener.onActionSnackRequested(context.getString(msgRes));
     }
 
@@ -56,7 +57,7 @@ public abstract class ActionFragment extends Fragment implements Runnable {
     }
 
     @SuppressWarnings("SameParameterValue")
-    public void requestActionSnack(int msgRes, int actionName, View.OnClickListener action) {
+    public void requestActionSnack(@StringRes int msgRes, int actionName, View.OnClickListener action) {
         if (listener != null) listener.onActionSnackRequested(msgRes, actionName, action);
     }
 
@@ -86,7 +87,7 @@ public abstract class ActionFragment extends Fragment implements Runnable {
 
         void onActionSnackRequested(String msg);
 
-        void onActionSnackRequested(int msgRes, int actionName, View.OnClickListener action);
+        void onActionSnackRequested(@StringRes int msgRes, int actionName, View.OnClickListener action);
 
         void showActionbar();
 

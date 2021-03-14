@@ -27,15 +27,19 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.TaskStackBuilder;
 
+import org.indilib.i4j.client.INDIValueException;
+
 import java.util.Collection;
 
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.MainActivity;
 
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
@@ -47,6 +51,7 @@ public class CameraForegroundService extends Service
     public static final String ACTION_START_SERVICE = "ACTION_START_SERVICE";
     public static final String ACTION_STOP_SERVICE = "ACTION_STOP_SERVICE";
     public static final String ACTION_STOP_CAPTURE = "ACTION_STOP_CAPTURE";
+    private static final String TAG = TelescopeTouchApp.getTag(CameraForegroundService.class);
     private static final String NOTIFICATION_CHANNEL = "CCD_CAPTURE_SERVICE";
     private final Handler handler = new Handler(Looper.getMainLooper());
     private INDICamera camera;
@@ -69,7 +74,11 @@ public class CameraForegroundService extends Service
                     }
                     break;
                 case ACTION_STOP_CAPTURE:
-                    //TODO: stop capture
+                    try {
+                        camera.abort();
+                    } catch (INDIValueException e) {
+                        Log.e(TAG, e.getMessage(), e);
+                    }
                     stopForeground(true);
                     stopSelf();
                     break;
@@ -150,9 +159,11 @@ public class CameraForegroundService extends Service
 
     @Override
     public void onCamerasListChange() {
-        Collection<INDICamera> cameras = connectionManager.indiCameras.values();
-        for (INDICamera camera : cameras) {
-            if (camera == this.camera) return;
+        synchronized (connectionManager.indiCameras) {
+            Collection<INDICamera> cameras = connectionManager.indiCameras.values();
+            for (INDICamera camera : cameras) {
+                if (camera == this.camera) return;
+            }
         }
         stopForeground(true);
         stopSelf();

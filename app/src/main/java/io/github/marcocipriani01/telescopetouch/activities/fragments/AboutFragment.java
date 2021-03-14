@@ -16,6 +16,8 @@
 
 package io.github.marcocipriani01.telescopetouch.activities.fragments;
 
+import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,6 +26,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.BounceInterpolator;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,12 +47,21 @@ public class AboutFragment extends Fragment implements Toolbar.OnMenuItemClickLi
     private NestedScrollView scrollView;
     private MenuItem ossMenuItem;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_about, container, false);
         setHasOptionsMenu(true);
         scrollView = rootView.findViewById(R.id.about_scrollview);
+        ImageView icon = rootView.findViewById(R.id.icon_view);
+        icon.setOnTouchListener((v, motionEvent) -> {
+            ObjectAnimator animY = ObjectAnimator.ofFloat(icon, "translationY", 30f, 0f);
+            animY.setDuration(200);
+            animY.setInterpolator(new BounceInterpolator());
+            animY.start();
+            return false;
+        });
         return rootView;
     }
 

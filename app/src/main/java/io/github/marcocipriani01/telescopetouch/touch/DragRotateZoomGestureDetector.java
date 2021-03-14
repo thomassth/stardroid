@@ -177,7 +177,6 @@ public class DragRotateZoomGestureDetector {
         return false;
     }
 
-
     private enum State {READY, DRAGGING, DRAGGING2}
 
     /**

@@ -17,7 +17,6 @@
 package io.github.marcocipriani01.telescopetouch.activities.fragments;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -69,11 +68,9 @@ import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connect
 
 /**
  * This fragment shows directional buttons to move a telescope. It also provides
- * buttons to change speed. To activate the buttons, the driver must provide the
- * following properties:
+ * buttons to change speed. To activate the buttons, the driver must provide the following properties:
  * {@code TELESCOPE_MOTION_NS}, {@code TELESCOPE_MOTION_WE}, {@code TELESCOPE_ABORT_MOTION}, {@code TELESCOPE_MOTION_RATE}
  *
- * @author Romain Fafet
  * @author marcocipriani01
  */
 public class MountControlFragment extends ActionFragment implements INDIServerConnectionListener,
@@ -81,7 +78,6 @@ public class MountControlFragment extends ActionFragment implements INDIServerCo
 
     private static final String TAG = TelescopeTouchApp.getTag(MountControlFragment.class);
     private final Handler handler = new Handler(Looper.getMainLooper());
-    private Context context;
     private MenuItem trackingMenu;
     // Properties and elements associated to the buttons
     private volatile INDISwitchProperty telescopeMotionNSP = null;
@@ -162,12 +158,6 @@ public class MountControlFragment extends ActionFragment implements INDIServerCo
     };
     private TextView mountName = null;
     private Toolbar toolbar = null;
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        this.context = context;
-    }
 
     @Override
     public boolean isActionEnabled() {
