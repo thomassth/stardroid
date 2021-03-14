@@ -54,6 +54,7 @@ import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.NSDHelper;
+import io.github.marcocipriani01.telescopetouch.ProUtils;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.MainActivity;
 import io.github.marcocipriani01.telescopetouch.activities.WebManagerActivity;
@@ -144,6 +145,10 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
 
         connectionButton = rootView.findViewById(R.id.connect_button);
         connectDevicesBox = rootView.findViewById(R.id.connect_all_checkbox);
+        if (!ProUtils.isPro) {
+            connectDevicesBox.setEnabled(false);
+            connectDevicesBox.setText(context.getString(R.string.connect_all_devices) + " [PRO]");
+        }
         boolean autoConnectDev = preferences.getBoolean(ApplicationConstants.AUTO_CONNECT_DEVICES_PREF, false);
         connectDevicesBox.setChecked(autoConnectDev);
         connectDevicesBox.setSelected(autoConnectDev);
