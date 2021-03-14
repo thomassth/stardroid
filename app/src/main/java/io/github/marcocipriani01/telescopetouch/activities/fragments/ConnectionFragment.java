@@ -145,13 +145,18 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
 
         connectionButton = rootView.findViewById(R.id.connect_button);
         connectDevicesBox = rootView.findViewById(R.id.connect_all_checkbox);
+        // PRO
         if (!ProUtils.isPro) {
             connectDevicesBox.setEnabled(false);
             connectDevicesBox.setText(context.getString(R.string.connect_all_devices) + " [PRO]");
+            boolean autoConnectDev = preferences.getBoolean(ApplicationConstants.AUTO_CONNECT_DEVICES_PREF, false);
+            connectDevicesBox.setChecked(autoConnectDev);
+            connectDevicesBox.setSelected(autoConnectDev);
+        } else {
+            connectDevicesBox.setChecked(false);
+            connectDevicesBox.setSelected(false);
         }
-        boolean autoConnectDev = preferences.getBoolean(ApplicationConstants.AUTO_CONNECT_DEVICES_PREF, false);
-        connectDevicesBox.setChecked(autoConnectDev);
-        connectDevicesBox.setSelected(autoConnectDev);
+        // END PRO
         serversSpinner = rootView.findViewById(R.id.host_spinner);
         loadServers(getServers(preferences));
         portEditText = rootView.findViewById(R.id.port_field);
