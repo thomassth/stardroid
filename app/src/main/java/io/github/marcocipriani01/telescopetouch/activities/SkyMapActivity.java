@@ -559,6 +559,7 @@ public class SkyMapActivity extends AppCompatActivity implements OnSharedPrefere
 
         MapMover mapMover = new MapMover(model, controller, this, preferences);
         gestureInterpreter = new GestureInterpreter(fullscreenControlsManager, mapMover);
+        gestureInterpreter.setUpdateRate(preferences.getBoolean(ApplicationConstants.SKY_MAP_HIGH_REFRESH_PREF, false) ? 60 : 30);
         gestureDetector = new GestureDetector(this, gestureInterpreter);
         dragZoomRotateDetector = new DragRotateZoomGestureDetector(mapMover);
 
