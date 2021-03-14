@@ -254,7 +254,9 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
         connectionManager.addManagerListener(this);
         cameras.clear();
         if (connectionManager.isConnected()) {
-            cameras.addAll(connectionManager.indiCameras.values());
+            synchronized (connectionManager.indiCameras) {
+                cameras.addAll(connectionManager.indiCameras.values());
+            }
             cameraSelectAdapter.notifyDataSetChanged();
             if (cameras.isEmpty()) {
                 selectedCameraDev = null;
@@ -320,8 +322,14 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
         // PRO
         if (!ProUtils.isPro) {
             int count = preferences.getInt(ProUtils.CAPTURE_PRO_COUNTER, 0);
-            if (count >= 6) {
+            if (count >= 4) {
                 requestActionSnack(R.string.buy_pro_continue_capture);
+                synchronized (connectionManager.indiCameras) {
+                    Collection<INDICamera> cameras = connectionManager.indiCameras.values();
+                    for (INDICamera camera : cameras) {
+                        camera.stopReceiving();
+                    }
+                }
                 return;
             }
             preferences.edit().putInt(ProUtils.CAPTURE_PRO_COUNTER, count + 1).apply();
@@ -399,8 +407,14 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
         // PRO
         if (!ProUtils.isPro) {
             int count = preferences.getInt(ProUtils.CAPTURE_PRO_COUNTER, 0);
-            if (count >= 6) {
+            if (count >= 4) {
                 requestActionSnack(R.string.buy_pro_continue_capture);
+                synchronized (connectionManager.indiCameras) {
+                    Collection<INDICamera> cameras = connectionManager.indiCameras.values();
+                    for (INDICamera camera : cameras) {
+                        camera.stopReceiving();
+                    }
+                }
                 return;
             }
             preferences.edit().putInt(ProUtils.CAPTURE_PRO_COUNTER, count + 1).apply();
@@ -493,15 +507,19 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
         }
         int itemId = item.getItemId();
         if (itemId == R.id.menu_free_ram) {
-            Collection<INDICamera> cameras = connectionManager.indiCameras.values();
-            for (INDICamera camera : cameras) {
-                camera.freeMemory();
+            synchronized (connectionManager.indiCameras) {
+                Collection<INDICamera> cameras = connectionManager.indiCameras.values();
+                for (INDICamera camera : cameras) {
+                    camera.freeMemory();
+                }
             }
             return true;
         } else if (itemId == R.id.menu_stop_receiving_camera) {
-            Collection<INDICamera> cameras = connectionManager.indiCameras.values();
-            for (INDICamera camera : cameras) {
-                camera.stopReceiving();
+            synchronized (connectionManager.indiCameras) {
+                Collection<INDICamera> cameras = connectionManager.indiCameras.values();
+                for (INDICamera camera : cameras) {
+                    camera.stopReceiving();
+                }
             }
             return true;
         }
@@ -911,7 +929,9 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
     @Override
     public void onCamerasListChange() {
         cameras.clear();
-        cameras.addAll(connectionManager.indiCameras.values());
+        synchronized (connectionManager.indiCameras) {
+            cameras.addAll(connectionManager.indiCameras.values());
+        }
         if (cameraSelectAdapter != null)
             cameraSelectAdapter.notifyDataSetChanged();
         if (cameraSelectSpinner != null)

@@ -78,11 +78,9 @@ public class DeviceControlFragment extends PreferenceFragmentCompat implements I
                     prefScreen.addPreference(prefGroup);
                     for (INDIProperty<?> prop : props) {
                         PropPref<?> pref = PropPref.create(context, prop);
-                        if (pref != null) {
-                            pref.setIconSpaceReserved(false);
-                            preferencesMap.put(prop, pref);
-                            prefGroup.addPreference(pref);
-                        }
+                        pref.setIconSpaceReserved(false);
+                        preferencesMap.put(prop, pref);
+                        prefGroup.addPreference(pref);
                     }
                 }
             }
@@ -171,11 +169,9 @@ public class DeviceControlFragment extends PreferenceFragmentCompat implements I
                 prefScreen.addPreference(prefGroup);
             }
             PropPref<?> pref = PropPref.create(context, property);
-            if (pref != null) {
-                pref.setIconSpaceReserved(false);
-                preferencesMap.put(property, pref);
-                prefGroup.addPreference(pref);
-            }
+            pref.setIconSpaceReserved(false);
+            preferencesMap.put(property, pref);
+            prefGroup.addPreference(pref);
         });
     }
 

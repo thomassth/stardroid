@@ -25,7 +25,6 @@
     <string name="horizon">Horizon</string>
     <string name="show_sky_gradient" translation_description="This is a shading of the color of the sky used for effect">Sky Gradient</string>
     <string name="show_meteors_pref">Meteor Showers</string>
-    <string name="sensor_prefs">Sky Map sensors settings</string>
     <string name="ecliptic">Ecliptic</string>
     <string name="malformed_loc_error">Latitude or longitude setting isn\'t a number.</string>
     <string name="menu_toggle_dim">Toggle night mode</string>
@@ -676,4 +675,10 @@
     <string name="web_manager_info">You can use this tool to connect to an INDI Web Manager instance. Make sure it is installed on the remote host and listening on port 8624.</string>
     <string name="can_not_connect_indi_web">Can\'t connect to INDI Web Manager!</string>
     <string name="indi_web_manager_port">INDI Web Manager port</string>
+    <string name="connect_all_devices">Connect all devices</string>
+    <string name="connecting_device">Connecting device %s…</string>
+    <string name="high_refresh_rate">High refresh rate</string>
+    <string name="high_refresh_rate_summary">Run the Sky Map at 60Hz. Drains more battery, but looks super-cool!</string>
+    <string name="sky_map_settings">Sky Map settings</string>
+    <string name="high_refresh_rate_message">High refresh rate mode is here! Run the Sky Map at 60Hz, for a super-smooth experience!</string>
 </resources>

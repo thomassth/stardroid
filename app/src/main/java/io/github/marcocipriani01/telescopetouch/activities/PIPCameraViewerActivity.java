@@ -164,9 +164,11 @@ public class PIPCameraViewerActivity extends AppCompatActivity
 
     @Override
     public void onCamerasListChange() {
-        Collection<INDICamera> cameras = connectionManager.indiCameras.values();
-        for (INDICamera camera : cameras) {
-            if (camera == this.camera) return;
+        synchronized (connectionManager.indiCameras) {
+            Collection<INDICamera> cameras = connectionManager.indiCameras.values();
+            for (INDICamera camera : cameras) {
+                if (camera == this.camera) return;
+            }
         }
         finishInstance();
     }

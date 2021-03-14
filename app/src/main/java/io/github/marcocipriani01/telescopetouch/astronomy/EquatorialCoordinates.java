@@ -75,6 +75,7 @@ public class EquatorialCoordinates {
      * @param string an input string (right ascension)
      * @return the right ascension converted in decimal degrees.
      */
+    @SuppressWarnings("ConstantConditions")
     private static double parseRAString(String string) throws NumberFormatException, NullPointerException {
         Pattern p = Pattern.compile("([0-9]{1,2})[h:\\s]([0-9]{1,2})([m:'\\s]([0-9]{1,2})([,.]([0-9]*))?[s\"]?)?[m:'\\s]?");
         Matcher m = p.matcher(string);
@@ -112,6 +113,7 @@ public class EquatorialCoordinates {
      * @param string an input string (declination)
      * @return the declination converted in decimal degrees.
      */
+    @SuppressWarnings("ConstantConditions")
     private static double parseDecString(String string) throws NumberFormatException, NullPointerException {
         Pattern p = Pattern.compile("([+\\-]?)([0-9]{1,2})[°:\\s]([0-9]{1,2})([m:'\\s]([0-9]{1,2})([,.]([0-9]*))?[s\"]?)?[m:'\\s]?");
         Matcher m = p.matcher(string);

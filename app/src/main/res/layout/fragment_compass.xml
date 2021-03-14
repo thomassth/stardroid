@@ -17,7 +17,7 @@
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.MaterialComponents.ActionBar"
         app:popupTheme="@style/ThemeOverlay.MaterialComponents"
-        app:title="@string/app_name" />
+        app:title="@string/compass" />
 
     <TextView
         android:id="@+id/compass_heading"
