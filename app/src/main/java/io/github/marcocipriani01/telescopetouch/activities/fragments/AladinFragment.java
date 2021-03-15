@@ -194,14 +194,18 @@ public class AladinFragment extends ActionFragment implements Toolbar.OnMenuItem
     public void onPermissionAcquired(String permission) {
         if (Manifest.permission.ACCESS_FINE_LOCATION.equals(permission)) {
             locationHelper.restartLocation();
-        } else if (Manifest.permission.WRITE_EXTERNAL_STORAGE.equals(permission)) {
+        } else if (Manifest.permission.WRITE_EXTERNAL_STORAGE.equals(permission) && (bitmapToSave != null)) {
             onAladinBitmap(bitmapToSave);
+            bitmapToSave = null;
         }
     }
 
     @Override
     public void onPermissionNotAcquired(String permission) {
-        if (bitmapToSave != null) bitmapToSave.recycle();
+        if (bitmapToSave != null) {
+            bitmapToSave.recycle();
+            bitmapToSave = null;
+        }
     }
 
     @Override
@@ -327,13 +331,13 @@ public class AladinFragment extends ActionFragment implements Toolbar.OnMenuItem
                         saveMenu.setEnabled(true);
                         progressBar.hide();
                     });
-                    if (!storagePermissionRequested) {
+                    if (storagePermissionRequested) {
+                        bitmap.recycle();
+                        requestActionSnack(R.string.storage_permission_required);
+                    } else {
                         storagePermissionRequested = true;
                         bitmapToSave = bitmap;
                         requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                    } else {
-                        bitmap.recycle();
-                        requestActionSnack(R.string.storage_permission_required);
                     }
                     return;
                 }
