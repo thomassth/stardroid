@@ -76,6 +76,7 @@ import io.github.marcocipriani01.telescopetouch.activities.fragments.FlashlightF
 import io.github.marcocipriani01.telescopetouch.activities.fragments.FocuserFragment;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.GoToFragment;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.MountControlFragment;
+import io.github.marcocipriani01.telescopetouch.activities.fragments.PHD2Fragment;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.PolarisFragment;
 import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
 import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
@@ -417,6 +418,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         GOTO(R.id.menu_goto_fragment),
         CCD_CAPTURE(R.id.menu_ccd_images),
         FOCUSER(R.id.menu_focuser),
+        PHD2(R.id.menu_phd2),
         CONTROL_PANEL(R.id.menu_generic),
         SKY_MAP(R.id.menu_skymap),
         SKY_MAP_GALLERY(R.id.menu_skymap_gallery),
@@ -456,6 +458,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     break;
                 case FOCUSER:
                     lastInstance = new FocuserFragment();
+                    break;
+                case PHD2:
+                    lastInstance = new PHD2Fragment();
                     break;
                 case CONTROL_PANEL:
                     lastInstance = new ControlPanelFragment();

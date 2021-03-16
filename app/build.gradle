@@ -63,6 +63,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
     compileOnly 'javax.annotation:jsr250-api:1.0'
     implementation 'com.jjoe64:graphview:4.2.2'
+    implementation 'com.github.marcocipriani01:SimpleSocket:95507ad426'
 }
 
 apply plugin: 'com.google.android.gms.oss-licenses-plugin'
