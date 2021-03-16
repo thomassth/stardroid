@@ -79,7 +79,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/focuser_slower"
+                android:id="@+id/focuser_steps_click_less"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="32dp"
@@ -89,7 +89,7 @@
                 tools:ignore="HardcodedText" />
 
             <EditText
-                android:id="@+id/focuser_steps_box"
+                android:id="@+id/focuser_steps_click_field"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -103,7 +103,7 @@
                 tools:ignore="HardcodedText" />
 
             <Button
-                android:id="@+id/focuser_faster"
+                android:id="@+id/focuser_steps_click_more"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
@@ -117,14 +117,14 @@
             android:id="@+id/focus_speed_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/focus_speed_seekbar"
+            android:layout_above="@+id/focus_speed_slider"
             android:layout_alignParentStart="true"
             android:layout_marginStart="8dp"
             android:layout_marginBottom="8dp"
             android:text="@string/speed" />
 
         <SeekBar
-            android:id="@+id/focus_speed_seekbar"
+            android:id="@+id/focus_speed_slider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

@@ -21,6 +21,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import org.indilib.i4j.Constants;
 import org.indilib.i4j.client.INDIDevice;
 import org.indilib.i4j.client.INDINumberElement;
 import org.indilib.i4j.client.INDINumberProperty;
@@ -28,6 +29,7 @@ import org.indilib.i4j.client.INDIProperty;
 import org.indilib.i4j.client.INDIPropertyListener;
 import org.indilib.i4j.client.INDISwitchElement;
 import org.indilib.i4j.client.INDISwitchProperty;
+import org.indilib.i4j.client.INDIValueException;
 import org.indilib.i4j.properties.INDIStandardElement;
 
 import java.util.Arrays;
@@ -35,6 +37,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
+
+import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 
 public class INDIFocuser implements INDIPropertyListener {
 
@@ -64,6 +68,53 @@ public class INDIFocuser implements INDIPropertyListener {
     public static boolean isFocuserProp(INDIProperty<?> property) {
         String name = property.getName();
         return name.startsWith("FOCUS_") || name.equals("ABS_FOCUS_POSITION") || name.equals("REL_FOCUS_POSITION");
+    }
+
+    public void moveOutward(int steps) throws INDIValueException {
+        if ((!hasDirection()) || (!hasRelativePosition()))
+            throw new UnsupportedOperationException("Unsupported relative movement!");
+        outwardDirectionE.setDesiredValue(Constants.SwitchStatus.ON);
+        inwardDirectionE.setDesiredValue(Constants.SwitchStatus.OFF);
+        relPositionE.setDesiredValue((double) steps);
+        connectionManager.updateProperties(directionP, relPositionP);
+    }
+
+    public void moveInward(int steps) throws INDIValueException {
+        if (!canMoveRelative())
+            throw new UnsupportedOperationException("Unsupported relative movement!");
+        inwardDirectionE.setDesiredValue(Constants.SwitchStatus.ON);
+        outwardDirectionE.setDesiredValue(Constants.SwitchStatus.OFF);
+        relPositionE.setDesiredValue((double) steps);
+        connectionManager.updateProperties(directionP, relPositionP);
+    }
+
+    public boolean canMoveRelative() {
+        return (directionP != null) && (inwardDirectionE != null) && (outwardDirectionE != null) &&
+                (relPositionP != null) && (relPositionE != null);
+    }
+
+    public boolean hasDirection() {
+        return (directionP != null) && (inwardDirectionE != null) && (outwardDirectionE != null);
+    }
+
+    public boolean hasRelativePosition() {
+        return (relPositionP != null) && (relPositionE != null);
+    }
+
+    public boolean hasAbsolutePosition() {
+        return (absPositionP != null) && (absPositionE != null);
+    }
+
+    public boolean canSync() {
+        return (syncPositionP != null) && (syncPositionE != null);
+    }
+
+    public boolean hasSpeed() {
+        return (speedP != null) && (speedE != null);
+    }
+
+    public boolean canAbort() {
+        return (abortP != null) && (abortE != null);
     }
 
     @Override
@@ -179,7 +230,7 @@ public class INDIFocuser implements INDIPropertyListener {
                 (syncPositionP == null) && (speedP == null) && (abortP == null);
     }
 
-    private void terminate() {
+    public void terminate() {
         synchronized (listeners) {
             listeners.clear();
         }
