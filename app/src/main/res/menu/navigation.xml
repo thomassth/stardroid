@@ -29,6 +29,11 @@
             android:title="@string/menu_focuser" />
 
         <item
+            android:id="@+id/menu_phd2"
+            android:icon="@drawable/phd2"
+            android:title="@string/phd2_auto_guider" />
+
+        <item
             android:id="@+id/menu_generic"
             android:icon="@drawable/control_panel"
             android:title="@string/indi_control_panel" />
