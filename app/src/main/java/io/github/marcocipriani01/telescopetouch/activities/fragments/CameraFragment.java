@@ -128,16 +128,12 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
                 camera.removeListener(CameraFragment.this);
                 camera.stopReceiving();
             }
-            selectedCameraDev = cameras.get(pos).device;
-            camera = getCamera();
-            if (camera == null) {
-                logText.setText("-");
-            } else {
-                camera.addListener(CameraFragment.this);
-                onImageLoaded(camera.getLastBitmap(), camera.getLastMetadata());
-                String lastMessage = camera.device.getLastMessage();
-                logText.setText(((lastMessage == null) || (lastMessage.equals(""))) ? "-" : lastMessage);
-            }
+            camera = cameras.get(pos);
+            selectedCameraDev = camera.device;
+            camera.addListener(CameraFragment.this);
+            onImageLoaded(camera.getLastBitmap(), camera.getLastMetadata());
+            String lastMessage = camera.device.getLastMessage();
+            logText.setText(((lastMessage == null) || (lastMessage.equals(""))) ? "-" : lastMessage);
             onCameraFunctionsChange();
         }
     };
@@ -262,8 +258,25 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
                 selectedCameraDev = null;
                 cameraSelectSpinner.setEnabled(false);
             } else {
-                INDICamera selectedCamera = cameras.get(0);
-                selectedCameraDev = selectedCamera.device;
+                INDICamera selectedCamera;
+
+                if (selectedCameraDev == null) {
+                    selectedCamera = cameras.get(0);
+                    selectedCameraDev = selectedCamera.device;
+                } else {
+                    synchronized (connectionManager.indiCameras) {
+                        if (connectionManager.indiCameras.containsKey(selectedCameraDev)) {
+                            selectedCamera = connectionManager.indiCameras.get(selectedCameraDev);
+                            if (selectedCamera == null) {
+                                selectedCamera = cameras.get(0);
+                                selectedCameraDev = selectedCamera.device;
+                            }
+                        } else {
+                            selectedCamera = cameras.get(0);
+                            selectedCameraDev = selectedCamera.device;
+                        }
+                    }
+                }
                 selectedCamera.addListener(this);
                 selectedCamera.setStretch(stretch);
                 cameraSelectSpinner.setSelection(cameras.indexOf(selectedCamera));
@@ -322,7 +335,7 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
         // PRO
         if (!ProUtils.isPro) {
             int count = preferences.getInt(ProUtils.CAPTURE_PRO_COUNTER, 0);
-            if (count >= 4) {
+            if (count >= ProUtils.MAX_CAPTURES) {
                 requestActionSnack(R.string.buy_pro_continue_capture);
                 synchronized (connectionManager.indiCameras) {
                     Collection<INDICamera> cameras = connectionManager.indiCameras.values();
@@ -340,7 +353,7 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
         if (camera == null) {
             inputMethodManager.hideSoftInputFromWindow(exposureTimeField.getWindowToken(), 0);
             requestActionSnack(R.string.no_camera_available);
-            onCameraFunctionsChange();
+            disableControls();
         } else if (str.isEmpty()) {
             exposureTimeField.requestFocus();
             inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
@@ -382,7 +395,7 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
                 camera.capture(str);
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage(), e);
-                requestActionSnack(context.getString(R.string.error) + " " + e.getLocalizedMessage());
+                onCameraError(e);
             }
         }
     }
@@ -392,13 +405,13 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
         INDICamera camera = getCamera();
         if (camera == null) {
             requestActionSnack(R.string.no_camera_available);
-            onCameraFunctionsChange();
+            disableControls();
         } else {
             try {
                 camera.abort();
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage(), e);
-                requestActionSnack(context.getString(R.string.error) + " " + e.getLocalizedMessage());
+                onCameraError(e);
             }
         }
     }
@@ -407,7 +420,7 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
         // PRO
         if (!ProUtils.isPro) {
             int count = preferences.getInt(ProUtils.CAPTURE_PRO_COUNTER, 0);
-            if (count >= 4) {
+            if (count >= ProUtils.MAX_CAPTURES) {
                 requestActionSnack(R.string.buy_pro_continue_capture);
                 synchronized (connectionManager.indiCameras) {
                     Collection<INDICamera> cameras = connectionManager.indiCameras.values();
@@ -425,7 +438,7 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
         if (camera == null) {
             inputMethodManager.hideSoftInputFromWindow(exposureTimeField.getWindowToken(), 0);
             requestActionSnack(R.string.no_camera_available);
-            onCameraFunctionsChange();
+            disableControls();
         } else if (str.isEmpty()) {
             exposureTimeField.requestFocus();
             inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
@@ -474,7 +487,7 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
                 camera.startCaptureLoop(exposureTimeField.getText().toString(), (int) countSlider.getValue());
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage(), e);
-                requestActionSnack(context.getString(R.string.error) + " " + e.getLocalizedMessage());
+                onCameraError(e);
                 onCameraLoopStop();
             }
         }
@@ -923,7 +936,12 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
 
     @Override
     public void onCameraError(Throwable e) {
-        requestActionSnack(context.getString(R.string.error) + " " + e.getLocalizedMessage());
+        String message = e.getLocalizedMessage();
+        if ((message == null) || message.equals("?")) {
+            requestActionSnack(context.getString(R.string.unknown_exception));
+        } else {
+            requestActionSnack(context.getString(R.string.error) + " " + message);
+        }
     }
 
     @Override

@@ -16,44 +16,37 @@
 
 package io.github.marcocipriani01.telescopetouch.activities.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.SeekBar;
-import android.widget.TextView;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
 
-import org.indilib.i4j.Constants;
+import com.google.android.material.slider.Slider;
+
 import org.indilib.i4j.client.INDIDevice;
-import org.indilib.i4j.client.INDIDeviceListener;
-import org.indilib.i4j.client.INDINumberElement;
-import org.indilib.i4j.client.INDINumberProperty;
-import org.indilib.i4j.client.INDIProperty;
-import org.indilib.i4j.client.INDIPropertyListener;
-import org.indilib.i4j.client.INDIServerConnection;
-import org.indilib.i4j.client.INDIServerConnectionListener;
-import org.indilib.i4j.client.INDISwitchElement;
-import org.indilib.i4j.client.INDISwitchProperty;
-import org.indilib.i4j.properties.INDIStandardElement;
 
-import java.util.Arrays;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.util.CounterHandler;
+import io.github.marcocipriani01.telescopetouch.activities.util.ImprovedSpinnerListener;
 import io.github.marcocipriani01.telescopetouch.activities.util.LongPressHandler;
+import io.github.marcocipriani01.telescopetouch.activities.util.SimpleAdapter;
+import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
+import io.github.marcocipriani01.telescopetouch.indi.INDIFocuser;
 
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 
@@ -62,217 +55,174 @@ import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connect
  *
  * @author marcocipriani01
  */
-public class FocuserFragment extends ActionFragment implements INDIServerConnectionListener, INDIPropertyListener,
-        INDIDeviceListener, View.OnClickListener, SeekBar.OnSeekBarChangeListener, TextWatcher {
+public class FocuserFragment extends ActionFragment implements View.OnClickListener, TextWatcher,
+        Slider.OnChangeListener, INDIFocuser.FocuserListener, ConnectionManager.ManagerListener {
 
     private static final String TAG = TelescopeTouchApp.getTag(MountControlFragment.class);
-    private final Handler handler = new Handler(Looper.getMainLooper());
-    // Properties and elements associated to the buttons
-    private volatile INDISwitchProperty directionProp = null;
-    private volatile INDISwitchElement inwardDirElem = null;
-    private volatile INDISwitchElement outwardDirElem = null;
-    private volatile INDINumberProperty relPosProp = null;
-    private volatile INDINumberElement relPosElem = null;
-    private volatile INDINumberProperty absPosProp = null;
-    private volatile INDINumberElement absPosElem = null;
-    private volatile INDINumberProperty syncPosProp = null;
-    private volatile INDINumberElement syncPosElem = null;
-    private volatile INDINumberProperty speedProp = null;
-    private volatile INDINumberElement speedElem = null;
-    private volatile INDISwitchProperty abortProp = null;
-    private volatile INDISwitchElement abortElem = null;
-    // Views
-    private Button inButton = null;
-    private Button outButton = null;
-    private Button speedUpButton = null;
-    private Button speedDownButton = null;
-    private Button abortButton = null;
-    private Button setAbsPosButton = null;
-    private Button syncPosButton = null;
-    private TextView stepsText = null;
-    private EditText positionEditText = null;
-    private SeekBar speedBar = null;
+    private static INDIDevice selectedFocuserDev = null;
+    private final List<INDIFocuser> focusers = new ArrayList<>();
+    private Button inButton;
+    private Button outButton;
+    private Button stepsPerClickUpBtn;
+    private Button stepsPerClickDownBtn;
+    private Button abortButton;
+    private Button setAbsPosButton;
+    private Button syncBtn;
+    private EditText stepsPerClickField;
+    private EditText positionField;
+    private Slider speedSlider;
+    private Spinner focuserSelectSpinner;
+    private FocusersArrayAdapter focuserSelectAdapter;
     private CounterHandler stepsHandler;
-    private TextView focuserName = null;
-    private Toolbar toolbar = null;
+    private final ImprovedSpinnerListener focuserSelectListener = new ImprovedSpinnerListener() {
+        @Override
+        protected void onImprovedItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+            INDIFocuser focuser = getFocuser();
+            if (focuser != null)
+                focuser.removeListener(FocuserFragment.this);
+            focuser = focusers.get(pos);
+            selectedFocuserDev = focuser.device;
+            focuser.addListener(FocuserFragment.this);
+            onFocuserFunctionsChange();
+        }
+    };
+    private LayoutInflater inflater;
+    private InputMethodManager inputMethodManager;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        this.inflater = inflater;
         View rootView = inflater.inflate(R.layout.fragment_focuser, container, false);
-        // Set up the UI
         inButton = rootView.findViewById(R.id.focus_in);
         outButton = rootView.findViewById(R.id.focus_out);
-        speedUpButton = rootView.findViewById(R.id.focuser_faster);
-        speedDownButton = rootView.findViewById(R.id.focuser_slower);
-        stepsText = rootView.findViewById(R.id.focuser_steps_box);
+        stepsPerClickUpBtn = rootView.findViewById(R.id.focuser_steps_click_more);
+        stepsPerClickDownBtn = rootView.findViewById(R.id.focuser_steps_click_less);
+        stepsPerClickField = rootView.findViewById(R.id.focuser_steps_click_field);
         abortButton = rootView.findViewById(R.id.focuser_abort);
         setAbsPosButton = rootView.findViewById(R.id.fok_abs_pos_button);
-        syncPosButton = rootView.findViewById(R.id.fok_sync_pos_button);
-        positionEditText = rootView.findViewById(R.id.abs_pos_field);
-        speedBar = rootView.findViewById(R.id.focus_speed_seekbar);
-        focuserName = rootView.findViewById(R.id.focuser_name);
-        toolbar = rootView.findViewById(R.id.focuser_toolbar);
-        stepsHandler = new CounterHandler(speedUpButton, speedDownButton, 1, 1000000, 100, 10, 100, false) {
+        syncBtn = rootView.findViewById(R.id.fok_sync_pos_button);
+        positionField = rootView.findViewById(R.id.abs_pos_field);
+        speedSlider = rootView.findViewById(R.id.focus_speed_slider);
+        stepsHandler = new CounterHandler(stepsPerClickUpBtn, stepsPerClickDownBtn, 1, 1000000, 100, 10, 100, false) {
             @Override
             protected void onIncrement() {
                 super.onIncrement();
-                stepsText.setText(String.valueOf(getValue()));
+                stepsPerClickField.setText(String.valueOf(getValue()));
             }
 
             @Override
             protected void onDecrement() {
                 super.onDecrement();
-                stepsText.setText(String.valueOf(getValue()));
+                stepsPerClickField.setText(String.valueOf(getValue()));
             }
         };
         new LongPressHandler(outButton, inButton, 150) {
             @Override
             protected void onIncrement() {
-                if (outwardDirElem != null && inwardDirElem != null && relPosElem != null) {
+                if (stepsPerClickField != null)
+                    inputMethodManager.hideSoftInputFromWindow(stepsPerClickField.getWindowToken(), 0);
+                INDIFocuser focuser = getFocuser();
+                if ((focuser != null) && focuser.canMoveRelative()) {
                     try {
-                        outwardDirElem.setDesiredValue(Constants.SwitchStatus.ON);
-                        inwardDirElem.setDesiredValue(Constants.SwitchStatus.OFF);
-                        relPosElem.setDesiredValue((double) stepsHandler.getValue());
-                        connectionManager.updateProperties(directionProp, relPosProp);
+                        focuser.moveOutward(stepsHandler.getValue());
                     } catch (Exception e) {
                         Log.e(TAG, e.getLocalizedMessage(), e);
+                        errorSnackbar(e);
                     }
+                } else {
+                    onFocuserFunctionsChange();
                 }
             }
 
             @Override
             protected void onDecrement() {
-                if (inwardDirElem != null && outwardDirElem != null && relPosElem != null) {
+                if (stepsPerClickField != null)
+                    inputMethodManager.hideSoftInputFromWindow(stepsPerClickField.getWindowToken(), 0);
+                INDIFocuser focuser = getFocuser();
+                if ((focuser != null) && focuser.canMoveRelative()) {
                     try {
-                        inwardDirElem.setDesiredValue(Constants.SwitchStatus.ON);
-                        outwardDirElem.setDesiredValue(Constants.SwitchStatus.OFF);
-                        relPosElem.setDesiredValue((double) stepsHandler.getValue());
-                        connectionManager.updateProperties(directionProp, relPosProp);
+                        focuser.moveInward(stepsHandler.getValue());
                     } catch (Exception e) {
                         Log.e(TAG, e.getLocalizedMessage(), e);
+                        errorSnackbar(e);
                     }
+                } else {
+                    onFocuserFunctionsChange();
                 }
             }
         };
         abortButton.setOnClickListener(this);
         setAbsPosButton.setOnClickListener(this);
-        syncPosButton.setOnClickListener(this);
-        stepsText.addTextChangedListener(this);
-        speedBar.setOnSeekBarChangeListener(this);
+        syncBtn.setOnClickListener(this);
+        stepsPerClickField.addTextChangedListener(this);
+        speedSlider.addOnChangeListener(this);
+        focuserSelectAdapter = new FocusersArrayAdapter();
+        focuserSelectSpinner = rootView.findViewById(R.id.focuser_selection_spinner);
+        focuserSelectSpinner.setAdapter(focuserSelectAdapter);
+        focuserSelectListener.attach(focuserSelectSpinner);
         return rootView;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        connectionManager.addINDIListener(this);
-        // Enumerate existing properties
+        connectionManager.addManagerListener(this);
+        focusers.clear();
         if (connectionManager.isConnected()) {
-            List<INDIDevice> list = connectionManager.getIndiConnection().getDevicesAsList();
-            for (INDIDevice device : list) {
-                device.addINDIDeviceListener(this);
-                List<INDIProperty<?>> properties = device.getPropertiesAsList();
-                for (INDIProperty<?> property : properties) {
-                    newProperty0(device, property);
-                }
+            synchronized (connectionManager.indiFocusers) {
+                focusers.addAll(connectionManager.indiFocusers.values());
             }
-            updateSpeedBar();
+            focuserSelectAdapter.notifyDataSetChanged();
+            if (focusers.isEmpty()) {
+                selectedFocuserDev = null;
+                focuserSelectSpinner.setEnabled(false);
+            } else {
+                INDIFocuser selectedFocuser;
+                if (selectedFocuserDev == null) {
+                    selectedFocuser = focusers.get(0);
+                    selectedFocuserDev = selectedFocuser.device;
+                } else {
+                    synchronized (connectionManager.indiFocusers) {
+                        if (connectionManager.indiFocusers.containsKey(selectedFocuserDev)) {
+                            selectedFocuser = connectionManager.indiFocusers.get(selectedFocuserDev);
+                            if (selectedFocuser == null) {
+                                selectedFocuser = focusers.get(0);
+                                selectedFocuserDev = selectedFocuser.device;
+                            }
+                        } else {
+                            selectedFocuser = focusers.get(0);
+                            selectedFocuserDev = selectedFocuser.device;
+                        }
+                    }
+                }
+                selectedFocuser.addListener(this);
+                focuserSelectSpinner.setSelection(focusers.indexOf(selectedFocuser));
+                focuserSelectSpinner.setEnabled(true);
+            }
         } else {
-            clearVars();
+            selectedFocuserDev = null;
+            focuserSelectAdapter.notifyDataSetChanged();
+            focuserSelectSpinner.setEnabled(false);
         }
-        // Update UI
-        enableUi();
-        updateStepsText();
-        updatePositionText();
+        onFocuserFunctionsChange();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        connectionManager.removeINDIListener(this);
-    }
-
-    private void clearVars() {
-        relPosProp = null;
-        relPosElem = null;
-        absPosProp = null;
-        absPosElem = null;
-        directionProp = null;
-        outwardDirElem = null;
-        inwardDirElem = null;
-        syncPosProp = null;
-        syncPosElem = null;
-        speedProp = null;
-        speedElem = null;
-        abortElem = null;
-        abortProp = null;
-    }
-
-    private void updateSpeedBar() {
-        handler.post(() -> {
-            if ((speedBar != null) && (speedElem != null)) {
-                speedBar.setOnSeekBarChangeListener(null);
-                double step = speedElem.getStep(), min = speedElem.getMin(), max = speedElem.getMax();
-                speedBar.setMax((int) ((max - min) / step));
-                speedBar.setProgress((int) ((speedElem.getValue() - min) / step));
-                speedBar.setOnSeekBarChangeListener(this);
-            }
-        });
-    }
-
-    /**
-     * Enables the buttons if the corresponding property was found
-     */
-    private void enableUi() {
-        handler.post(() -> {
-            if (inButton != null) inButton.setEnabled(inwardDirElem != null);
-            if (outButton != null) outButton.setEnabled(outwardDirElem != null);
-            boolean relPosEn = relPosElem != null;
-            if (speedUpButton != null) speedUpButton.setEnabled(relPosEn);
-            if (speedDownButton != null) speedDownButton.setEnabled(relPosEn);
-            if (stepsText != null) stepsText.setEnabled(relPosEn);
-            if (abortButton != null) abortButton.setEnabled(abortElem != null);
-            if (syncPosButton != null) syncPosButton.setEnabled(syncPosElem != null);
-            boolean absPosEn = absPosElem != null;
-            if (setAbsPosButton != null) setAbsPosButton.setEnabled(absPosEn);
-            if (positionEditText != null) positionEditText.setEnabled(absPosEn);
-            if (speedBar != null) speedBar.setEnabled(speedElem != null);
-        });
-    }
-
-    /**
-     * Updates the speed text
-     */
-    private void updateStepsText() {
-        handler.post(() -> {
-            if (stepsText != null) {
-                if (relPosElem == null) {
-                    stepsText.setText(R.string.unavailable);
-                } else {
-                    int steps = (int) (double) relPosElem.getValue();
-                    if (steps == 0) steps = 10;
-                    stepsText.setText(String.valueOf(steps));
-                    stepsHandler.setValue(steps);
-                }
-            }
-        });
-    }
-
-    private void updatePositionText() {
-        handler.post(() -> {
-            if (positionEditText != null) {
-                if (absPosElem == null) {
-                    positionEditText.setText(R.string.unavailable);
-                } else {
-                    positionEditText.setText(String.valueOf((int) (double) absPosElem.getValue()));
-                }
-            }
-        });
+        connectionManager.removeManagerListener(this);
+        for (INDIFocuser focuser : focusers) {
+            focuser.removeListener(this);
+        }
     }
 
     @Override
-    public void afterTextChanged(Editable s) {
-
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        try {
+            stepsHandler.setValue(Integer.parseInt(s.toString()));
+        } catch (NumberFormatException ignored) {
+        }
     }
 
     @Override
@@ -281,236 +231,47 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
     }
 
     @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        try {
-            stepsHandler.setValue(Integer.parseInt(s.toString()));
-        } catch (NumberFormatException ignored) {
+    public void afterTextChanged(Editable s) {
 
-        }
     }
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
+        INDIFocuser focuser = getFocuser();
+        if (focuser == null) {
+            requestActionSnack(R.string.no_focuser_available);
+            disableControls();
+            return;
+        }
         try {
             if (id == R.id.focuser_abort) {
-                if (abortElem != null) {
-                    abortElem.setDesiredValue(Constants.SwitchStatus.ON);
-                    connectionManager.updateProperties(abortProp);
-                }
+                focuser.abort();
             } else if (id == R.id.fok_abs_pos_button) {
-                if (absPosElem != null && positionEditText != null) {
+                if (positionField != null) {
                     try {
-                        absPosElem.setDesiredValue(Double.parseDouble(positionEditText.getText().toString()));
-                        connectionManager.updateProperties(absPosProp);
+                        focuser.setAbsolutePosition(Integer.parseInt(positionField.getText().toString()));
                     } catch (NumberFormatException e) {
                         requestActionSnack(R.string.invalid_abs_position);
-                        updatePositionText();
                     }
                 }
             } else if (id == R.id.fok_sync_pos_button) {
-                if (syncPosElem != null && positionEditText != null) {
+                if (positionField != null) {
                     try {
-                        syncPosElem.setDesiredValue(Double.parseDouble(positionEditText.getText().toString()));
-                        connectionManager.updateProperties(syncPosProp);
+                        focuser.sync(Integer.parseInt(positionField.getText().toString()));
                     } catch (NumberFormatException e) {
                         requestActionSnack(R.string.invalid_abs_position);
-                        updatePositionText();
                     }
                 }
-            }
-        } catch (Exception e) {
-            Log.e(TAG, e.getLocalizedMessage(), e);
-        }
-    }
-
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (speedElem != null) {
-            try {
-                double step = speedElem.getStep(), min = speedElem.getMin();
-                speedElem.setDesiredValue(min + (progress * step));
-                connectionManager.updateProperties(speedProp);
-            } catch (Exception e) {
-                Log.e(TAG, e.getLocalizedMessage(), e);
-            }
-        }
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    // ------ Listener functions from INDI ------
-
-    @Override
-    public void connectionLost(INDIServerConnection connection) {
-        clearVars();
-        updateSpeedBar();
-        updateStepsText();
-        updatePositionText();
-        enableUi();
-    }
-
-    @Override
-    public void newDevice(INDIServerConnection connection, INDIDevice device) {
-        Log.i(TAG, "New device: " + device.getName());
-        device.addINDIDeviceListener(this);
-    }
-
-    @Override
-    public void removeDevice(INDIServerConnection connection, INDIDevice device) {
-        Log.d(TAG, "Device removed: " + device.getName());
-        device.removeINDIDeviceListener(this);
-    }
-
-    @Override
-    public void newMessage(INDIServerConnection connection, Date timestamp, String message) {
-
-    }
-
-    @Override
-    public void newProperty(INDIDevice device, INDIProperty<?> property) {
-        if (newProperty0(device, property))
-            enableUi();
-    }
-
-    private boolean newProperty0(INDIDevice device, INDIProperty<?> property) {
-        String name = property.getName(), devName = device.getName();
-        Log.i(TAG, "New Property (" + name + ") added to device " + devName
-                + ", elements: " + Arrays.toString(property.getElementNames()));
-        switch (name) {
-            case "ABS_FOCUS_POSITION": {
-                if ((absPosElem = (INDINumberElement) property.getElement(INDIStandardElement.FOCUS_ABSOLUTE_POSITION)) != null) {
-                    property.addINDIPropertyListener(this);
-                    absPosProp = (INDINumberProperty) property;
-                    updatePositionText();
-                }
-                return true;
-            }
-            case "REL_FOCUS_POSITION": {
-                if ((relPosElem = (INDINumberElement) property.getElement(INDIStandardElement.FOCUS_RELATIVE_POSITION)) != null) {
-                    relPosProp = (INDINumberProperty) property;
-                    stepsHandler.setMaxValue((int) relPosElem.getMax());
-                    stepsHandler.setMinValue((int) relPosElem.getMin());
-                    updateStepsText();
-                }
-                return true;
-            }
-            case "FOCUS_MOTION": {
-                if (((inwardDirElem = (INDISwitchElement) property.getElement(INDIStandardElement.FOCUS_INWARD)) != null)
-                        && ((outwardDirElem = (INDISwitchElement) property.getElement(INDIStandardElement.FOCUS_OUTWARD)) != null)) {
-                    directionProp = (INDISwitchProperty) property;
-                    handler.post(() -> {
-                        if (focuserName != null)
-                            focuserName.setText(devName);
-                        if (toolbar != null)
-                            toolbar.setTitle(devName);
-                    });
-                }
-                return true;
-            }
-            case "FOCUS_ABORT_MOTION": {
-                if ((abortElem = (INDISwitchElement) property.getElement(INDIStandardElement.ABORT)) != null) {
-                    abortProp = (INDISwitchProperty) property;
-                }
-                return true;
-            }
-            case "FOCUS_SPEED": {
-                if ((speedElem = (INDINumberElement) property.getElement(INDIStandardElement.FOCUS_SPEED_VALUE)) != null) {
-                    speedProp = (INDINumberProperty) property;
-                    property.addINDIPropertyListener(this);
-                    updateSpeedBar();
-                }
-                return true;
-            }
-            case "FOCUS_SYNC": {
-                if ((syncPosElem = (INDINumberElement) property.getElement(INDIStandardElement.FOCUS_SYNC_VALUE)) != null) {
-                    syncPosProp = (INDINumberProperty) property;
-                }
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public void removeProperty(INDIDevice device, INDIProperty<?> property) {
-        String name = property.getName();
-        Log.d(TAG, "Removed property (" + name + ") to device " + device.getName());
-        switch (name) {
-            case "REL_FOCUS_POSITION": {
-                relPosElem = null;
-                relPosProp = null;
-                updateStepsText();
-                break;
-            }
-            case "FOCUS_MOTION": {
-                inwardDirElem = null;
-                outwardDirElem = null;
-                directionProp = null;
-                handler.post(() -> {
-                    if (focuserName != null)
-                        focuserName.setText(R.string.focuser_control);
-                    if (toolbar != null)
-                        toolbar.setTitle(R.string.focuser_control);
-                });
-                break;
-            }
-            case "FOCUS_ABORT_MOTION": {
-                abortElem = null;
-                abortProp = null;
-                break;
-            }
-            case "ABS_FOCUS_POSITION": {
-                absPosProp = null;
-                absPosElem = null;
-                updatePositionText();
-                break;
-            }
-            case "FOCUS_SPEED": {
-                speedProp = null;
-                speedElem = null;
-                break;
-            }
-            case "FOCUS_SYNC": {
-                syncPosProp = null;
-                syncPosElem = null;
-                break;
-            }
-            default: {
+            } else {
                 return;
             }
+            if (positionField != null)
+                inputMethodManager.hideSoftInputFromWindow(positionField.getWindowToken(), 0);
+        } catch (Exception e) {
+            Log.e(TAG, e.getLocalizedMessage(), e);
+            errorSnackbar(e);
         }
-        enableUi();
-    }
-
-    @Override
-    public void propertyChanged(final INDIProperty<?> property) {
-        String name = property.getName();
-        Log.d(TAG,
-                "Changed property (" + name + "), new value" + property.getValuesAsString());
-        switch (name) {
-            case "ABS_FOCUS_POSITION": {
-                updatePositionText();
-                break;
-            }
-            case "FOCUS_SPEED": {
-                updateSpeedBar();
-                break;
-            }
-        }
-    }
-
-    @Override
-    public void messageChanged(INDIDevice device) {
-
     }
 
     @Override
@@ -526,5 +287,163 @@ public class FocuserFragment extends ActionFragment implements INDIServerConnect
     @Override
     public void run() {
 
+    }
+
+    private INDIFocuser getFocuser() {
+        if (selectedFocuserDev == null) return null;
+        return connectionManager.indiFocusers.get(selectedFocuserDev);
+    }
+
+    @Override
+    public void onFocusersListChange() {
+        focusers.clear();
+        synchronized (connectionManager.indiFocusers) {
+            focusers.addAll(connectionManager.indiFocusers.values());
+        }
+        if (focuserSelectAdapter != null)
+            focuserSelectAdapter.notifyDataSetChanged();
+        if (focuserSelectSpinner != null)
+            focuserSelectSpinner.setEnabled(!focusers.isEmpty());
+        onFocuserFunctionsChange();
+    }
+
+    @Override
+    public void onConnectionLost() {
+        selectedFocuserDev = null;
+        focusers.clear();
+        if (focuserSelectAdapter != null)
+            focuserSelectAdapter.notifyDataSetChanged();
+        if (focuserSelectSpinner != null)
+            focuserSelectSpinner.setEnabled(false);
+        disableControls();
+    }
+
+    public void errorSnackbar(Throwable e) {
+        String message = e.getLocalizedMessage();
+        if ((message == null) || message.equals("?")) {
+            requestActionSnack(context.getString(R.string.unknown_exception));
+        } else {
+            requestActionSnack(context.getString(R.string.error) + " " + message);
+        }
+    }
+
+    private void disableControls() {
+        if (inButton != null) inButton.setEnabled(false);
+        if (outButton != null) outButton.setEnabled(false);
+        if (stepsPerClickField != null) {
+            stepsPerClickField.setEnabled(false);
+            stepsPerClickField.setText(R.string.unavailable);
+        }
+        if (stepsPerClickUpBtn != null) stepsPerClickUpBtn.setEnabled(false);
+        if (stepsPerClickDownBtn != null) stepsPerClickDownBtn.setEnabled(false);
+        if (abortButton != null) abortButton.setEnabled(false);
+        if (syncBtn != null) syncBtn.setEnabled(false);
+        if (setAbsPosButton != null) setAbsPosButton.setEnabled(false);
+        if (positionField != null) {
+            positionField.setEnabled(false);
+            positionField.setText(R.string.unavailable);
+        }
+        if (speedSlider != null) speedSlider.setEnabled(false);
+    }
+
+    @Override
+    public void onFocuserFunctionsChange() {
+        INDIFocuser focuser = getFocuser();
+        if (focuser == null) {
+            disableControls();
+            return;
+        }
+        boolean canMoveRelative = focuser.canMoveRelative();
+        if (inButton != null) inButton.setEnabled(canMoveRelative);
+        if (outButton != null) outButton.setEnabled(canMoveRelative);
+        if (stepsPerClickField != null) {
+            stepsPerClickField.setEnabled(canMoveRelative);
+            if (canMoveRelative) {
+                int steps = (int) (double) focuser.relPositionE.getValue();
+                if (steps == 0) steps = 10;
+                stepsPerClickField.setText(String.valueOf(steps));
+                stepsHandler.setValue(steps);
+            } else {
+                stepsPerClickField.setText(R.string.unavailable);
+            }
+        }
+        if (stepsPerClickUpBtn != null) stepsPerClickUpBtn.setEnabled(canMoveRelative);
+        if (stepsPerClickDownBtn != null) stepsPerClickDownBtn.setEnabled(canMoveRelative);
+        if (abortButton != null) abortButton.setEnabled(focuser.canAbort());
+        boolean canSync = focuser.canSync();
+        if (syncBtn != null) syncBtn.setEnabled(canSync);
+        boolean hasAbsolutePosition = focuser.hasAbsolutePosition();
+        if (setAbsPosButton != null) setAbsPosButton.setEnabled(hasAbsolutePosition);
+        if (positionField != null) {
+            positionField.setEnabled(hasAbsolutePosition || canSync);
+            if (hasAbsolutePosition) {
+                positionField.setText(String.valueOf((int) (double) focuser.absPositionE.getValue()));
+            } else if (canSync) {
+                positionField.setText(String.valueOf((int) (double) focuser.syncPositionE.getValue()));
+            } else {
+                positionField.setText(R.string.unavailable);
+            }
+        }
+        if (speedSlider != null) {
+            boolean hasSpeed = focuser.hasSpeed();
+            speedSlider.setEnabled(hasSpeed);
+            if (hasSpeed) {
+                speedSlider.setValueFrom((float) focuser.speedE.getMin());
+                speedSlider.setValueTo((float) focuser.speedE.getMax());
+                speedSlider.setValue((float) (double) focuser.speedE.getValue());
+            }
+        }
+    }
+
+    @Override
+    public void onFocuserPositionChange(int position) {
+        if (positionField != null) positionField.setText(String.valueOf(position));
+    }
+
+    @Override
+    public void onFocuserSpeedChange(int value) {
+        if (speedSlider != null) speedSlider.setValue(value);
+    }
+
+    @Override
+    public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
+        if (fromUser) {
+            INDIFocuser focuser = getFocuser();
+            if ((slider == speedSlider) && (focuser != null)) {
+                try {
+                    focuser.setSpeed(speedSlider.getValue());
+                } catch (Exception e) {
+                    Log.e(TAG, e.getMessage(), e);
+                    errorSnackbar(e);
+                }
+            }
+        }
+    }
+
+    private class FocusersArrayAdapter extends SimpleAdapter {
+
+        FocusersArrayAdapter() {
+            super(inflater);
+        }
+
+        @Override
+        public int getCount() {
+            return focusers.size();
+        }
+
+        @Override
+        public INDIFocuser getItem(int position) {
+            return focusers.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return focusers.get(position).hashCode();
+        }
+
+        @Override
+        protected String getStringAt(int position) {
+            return focusers.get(position).toString();
+        }
     }
 }

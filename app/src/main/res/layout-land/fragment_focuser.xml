@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -79,7 +80,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/focuser_slower"
+                android:id="@+id/focuser_steps_click_less"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="32dp"
@@ -89,7 +90,7 @@
                 tools:ignore="HardcodedText" />
 
             <EditText
-                android:id="@+id/focuser_steps_box"
+                android:id="@+id/focuser_steps_click_field"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -103,7 +104,7 @@
                 tools:ignore="HardcodedText" />
 
             <Button
-                android:id="@+id/focuser_faster"
+                android:id="@+id/focuser_steps_click_more"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
@@ -117,34 +118,39 @@
             android:id="@+id/focus_speed_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/focus_speed_seekbar"
+            android:layout_above="@+id/focus_speed_slider"
             android:layout_alignParentStart="true"
             android:layout_marginStart="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="4dp"
             android:text="@string/speed" />
 
-        <SeekBar
-            android:id="@+id/focus_speed_seekbar"
+        <com.google.android.material.slider.Slider
+            android:id="@+id/focus_speed_slider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:padding="8dp" />
+            android:stepSize="1"
+            app:haloColor="@color/colorAccent"
+            app:thumbColor="@color/colorAccent"
+            app:thumbStrokeColor="@color/colorAccent"
+            app:tickColor="@color/colorAccent"
+            app:tickVisible="false"
+            app:trackColorActive="@color/colorAccent"
+            app:trackHeight="3dp" />
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_marginLeft="8dp"
         android:layout_weight="1">
 
-        <TextView
-            android:id="@+id/focuser_name"
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/focuser_selection_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingBottom="4dp"
-            android:text="@string/focuser_control"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            tools:ignore="InconsistentLayout" />
+            android:layout_alignParentTop="true"
+            tools:listitem="@layout/simple_spinner_item" />
 
         <LinearLayout
             android:layout_width="match_parent"

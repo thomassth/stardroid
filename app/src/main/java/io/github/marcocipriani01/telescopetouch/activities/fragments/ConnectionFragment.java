@@ -76,7 +76,6 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
         NSDHelper.NSDListener, Toolbar.OnMenuItemClickListener, NewServerDialog.Callback {
 
     private static int selectedSpinnerItem = 0;
-    private static boolean nsdUnavailableWarned = false;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private SharedPreferences preferences;
     private Button connectionButton;
@@ -96,63 +95,21 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
         logsList = rootView.findViewById(R.id.logs_recycler);
         logsList.setAdapter(logAdapter);
         logsList.setLayoutManager(new LinearLayoutManager(context));
-        logsList.setItemAnimator(new SimpleItemAnimator() {
-            @Override
-            public boolean animateRemove(RecyclerView.ViewHolder holder) {
-                holder.itemView.animate().alpha(0f).translationX(-50f);
-                return false;
-            }
-
-            @Override
-            public boolean animateAdd(RecyclerView.ViewHolder holder) {
-                holder.itemView.setAlpha(0f);
-                holder.itemView.setTranslationX(50f);
-                holder.itemView.animate().alpha(1f).translationX(0f);
-                return false;
-            }
-
-            @Override
-            public boolean animateMove(RecyclerView.ViewHolder holder, int fromX, int fromY, int toX, int toY) {
-                return false;
-            }
-
-            @Override
-            public boolean animateChange(RecyclerView.ViewHolder oldHolder, RecyclerView.ViewHolder newHolder,
-                                         int fromLeft, int fromTop, int toLeft, int toTop) {
-                return false;
-            }
-
-            @Override
-            public void runPendingAnimations() {
-
-            }
-
-            @Override
-            public void endAnimation(@NonNull RecyclerView.ViewHolder item) {
-
-            }
-
-            @Override
-            public void endAnimations() {
-
-            }
-
-            @Override
-            public boolean isRunning() {
-                return false;
-            }
-        });
+        logsList.setItemAnimator(new LogsAnimator());
 
         connectionButton = rootView.findViewById(R.id.connect_button);
         connectDevicesBox = rootView.findViewById(R.id.connect_all_checkbox);
         // PRO
-        if (!ProUtils.isPro) {
-            connectDevicesBox.setEnabled(false);
-            connectDevicesBox.setText(context.getString(R.string.connect_all_devices) + " [PRO]");
+        if (ProUtils.isPro) {
+            connectDevicesBox.setEnabled(true);
             boolean autoConnectDev = preferences.getBoolean(ApplicationConstants.AUTO_CONNECT_DEVICES_PREF, false);
             connectDevicesBox.setChecked(autoConnectDev);
             connectDevicesBox.setSelected(autoConnectDev);
+            Toolbar toolbar = rootView.findViewById(R.id.connection_fragment_toolbar);
+            if (toolbar != null) toolbar.setTitle(context.getString(R.string.app_name) + " Pro");
         } else {
+            connectDevicesBox.setEnabled(false);
+            connectDevicesBox.setText(context.getString(R.string.connect_all_devices) + " [PRO]");
             connectDevicesBox.setChecked(false);
             connectDevicesBox.setSelected(false);
         }
@@ -224,18 +181,29 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
                 }
             }
         }.attach(serversSpinner);
+        return rootView;
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
         refreshUi(connectionManager.getState());
         connectionManager.addManagerListener(this);
+        nsdHelper.setListener(this);
+        logsList.scrollToPosition(logAdapter.getItemCount() - 1);
+    }
 
-        if (nsdHelper != null) {
-            nsdHelper.setListener(this);
-            if ((!nsdHelper.isAvailable()) && (!nsdUnavailableWarned)) {
-                connectionManager.log(context.getString(R.string.nsd_not_available));
-                nsdUnavailableWarned = true;
-            }
-        }
-        return rootView;
+    @Override
+    public void onPause() {
+        super.onPause();
+        selectedSpinnerItem = serversSpinner.getSelectedItemPosition();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        nsdHelper.setListener(null);
+        connectionManager.removeManagerListener(this);
     }
 
     @Override
@@ -286,19 +254,6 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        selectedSpinnerItem = serversSpinner.getSelectedItemPosition();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (nsdHelper != null) nsdHelper.setListener(null);
-        connectionManager.removeManagerListener(this);
-    }
-
-    @Override
     public void updateConnectionState(ConnectionManager.State state) {
         refreshUi(state);
     }
@@ -308,14 +263,16 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
         if (logAdapter != null)
             logAdapter.notifyItemInserted(connectionManager.getLogs().indexOf(log));
         notifyActionChange();
-        if (logsList != null) logsList.scrollToPosition(logAdapter.getItemCount() - 1);
+        if ((logsList != null) && (logAdapter != null))
+            logsList.scrollToPosition(logAdapter.getItemCount() - 1);
     }
 
     @Override
     public void deviceLog(final ConnectionManager.LogItem log) {
         if (logAdapter != null) logAdapter.notifyDataSetChanged();
         notifyActionChange();
-        if (logsList != null) logsList.scrollToPosition(logAdapter.getItemCount() - 1);
+        if ((logsList != null) && (logAdapter != null))
+            logsList.scrollToPosition(logAdapter.getItemCount() - 1);
     }
 
     private void refreshUi(ConnectionManager.State state) {
@@ -325,6 +282,7 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
                 connectionButton.setEnabled(true);
                 serversSpinner.setEnabled(false);
                 portEditText.setEnabled(false);
+                connectDevicesBox.setEnabled(false);
                 break;
             }
             case DISCONNECTED: {
@@ -332,6 +290,9 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
                 connectionButton.setEnabled(true);
                 serversSpinner.setEnabled(true);
                 portEditText.setEnabled(true);
+                // PRO
+                connectDevicesBox.setEnabled(ProUtils.isPro);
+                // END PRO
                 break;
             }
             case BUSY: {
@@ -339,6 +300,7 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
                 connectionButton.setEnabled(false);
                 serversSpinner.setEnabled(false);
                 portEditText.setEnabled(false);
+                connectDevicesBox.setEnabled(false);
                 break;
             }
         }
@@ -346,7 +308,7 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
 
     @Override
     public void loadServers(ArrayList<String> servers) {
-        if (nsdHelper != null) {
+        if (nsdHelper.isAvailable()) {
             HashMap<String, String> services = nsdHelper.getDiscoveredServices();
             for (String name : services.keySet()) {
                 String ip = services.get(name);
@@ -434,6 +396,54 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
             super(itemView);
             log = itemView.findViewById(R.id.logs_item1);
             timestamp = itemView.findViewById(R.id.logs_item2);
+        }
+    }
+
+    private static class LogsAnimator extends SimpleItemAnimator {
+
+        @Override
+        public boolean animateRemove(RecyclerView.ViewHolder holder) {
+            holder.itemView.animate().alpha(0f).translationX(-50f);
+            return false;
+        }
+
+        @Override
+        public boolean animateAdd(RecyclerView.ViewHolder holder) {
+            holder.itemView.setAlpha(0f);
+            holder.itemView.setTranslationX(50f);
+            holder.itemView.animate().alpha(1f).translationX(0f);
+            return false;
+        }
+
+        @Override
+        public boolean animateMove(RecyclerView.ViewHolder holder, int fromX, int fromY, int toX, int toY) {
+            return false;
+        }
+
+        @Override
+        public boolean animateChange(RecyclerView.ViewHolder oldHolder, RecyclerView.ViewHolder newHolder,
+                                     int fromLeft, int fromTop, int toLeft, int toTop) {
+            return false;
+        }
+
+        @Override
+        public void runPendingAnimations() {
+
+        }
+
+        @Override
+        public void endAnimation(@NonNull RecyclerView.ViewHolder item) {
+
+        }
+
+        @Override
+        public void endAnimations() {
+
+        }
+
+        @Override
+        public boolean isRunning() {
+            return false;
         }
     }
 }

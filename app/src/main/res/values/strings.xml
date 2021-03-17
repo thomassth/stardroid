@@ -564,7 +564,7 @@
     <string name="hemisphere_auto">Automatic detection</string>
     <string name="hemisphere_northern">Northern (Polaris)</string>
     <string name="hemisphere_southern">Southern (Sigma Octantis)</string>
-    <string name="nsd_pref_description">Automatically discover Zeroconf network services. Requires restart.</string>
+    <string name="nsd_pref_description">Automatically discover Zeroconf network services.</string>
     <string name="nsd_pref">Network Service Discovery</string>
     <string name="polaris_finder_reticle">Polar finder reticle</string>
     <string name="reticle_skywatcher">New Sky-Watcher reticle</string>
@@ -597,8 +597,8 @@
     <string name="aladin_sky_atlas">Aladin Sky Atlas</string>
     <string name="dark_mode_not_supported">Cannot toggle dark mode in Aladin!</string>
     <string name="no_internet_connection">No internet connection!</string>
-    <string name="aladin_api_error">The Aladin Sky Atlas requires Android 6.0 or greater. You can still try running it in your browser.</string>
-    <string name="open">Open</string>
+    <string name="aladin_api_error">The Aladin Sky Atlas requires Android 6.0 or greater. You can still try running it in your browser, or enable the compatibility mode in the settings.</string>
+    <string name="open_in_settings">Open in browser</string>
     <string name="cds_copyright">© Centre de Données astronomiques de Strasbourg, Unistra/CNRS.</string>
     <string name="aladin_welcome">Aladin is an interactive sky atlas developed by the Strasbourg astronomical Data Center. It uses HiPS (Hierarchical Progressive Surveys) technology.\nTelescope.Touch integrates an Aladin client, so you can see your targets with extremely high quality before pointing the telescope! You can also slew the telescope from the map or search from objects, thanks to the Sesame object resolver.</string>
     <string name="vizier_catalogue_service">VizieR Catalogue Service</string>
@@ -654,6 +654,7 @@
     <string name="save_mode_warning">Warning: this setting may interfere with other clients using the camera at the same time.</string>
     <string name="loop">Loop</string>
     <string name="no_camera_available">No camera available!</string>
+    <string name="no_focuser_available">No focuser available!</string>
     <string name="ccd_loop_interval">Loop interval:</string>
     <string name="file_format">File format:</string>
     <string name="ccd_camera_formatting">%e = exposure, %f = frame type, %d = date, %t = time</string>
@@ -681,5 +682,8 @@
     <string name="high_refresh_rate_summary">Run the Sky Map at 60Hz. Drains more battery, but looks super-cool!</string>
     <string name="sky_map_settings">Sky Map settings</string>
     <string name="high_refresh_rate_message">High refresh rate mode is here! Run the Sky Map at 60Hz, for a super-smooth experience!</string>
+    <string name="ccd_capture_notification">CCD capture</string>
+    <string name="capture_in_progress">CCD capture in progress</string>
+    <string name="stop_capture">Stop capture</string>
     <string name="phd2_auto_guider">PHD2 auto-guider</string>
 </resources>

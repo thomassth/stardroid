@@ -64,6 +64,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
     private static final String TAG = TelescopeTouchApp.getTag(ConnectionManager.class);
     public final EquatorialCoordinates telescopeCoordinates = new EquatorialCoordinates();
     public final Map<INDIDevice, INDICamera> indiCameras = new HashMap<>();
+    public final Map<INDIDevice, INDIFocuser> indiFocusers = new HashMap<>();
     private final Handler uiHandler = new Handler(Looper.getMainLooper());
     private final Set<ManagerListener> managerListeners = new HashSet<>();
     private final Set<INDIServerConnectionListener> indiListeners = new HashSet<>();
@@ -218,7 +219,12 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
     }
 
     public void log(Exception e) {
-        log(resources.getString(R.string.error) + " " + e.getLocalizedMessage());
+        String message = e.getLocalizedMessage();
+        if ((message == null) || message.equals("?")) {
+            log(resources.getString(R.string.unknown_exception));
+        } else {
+            log(resources.getString(R.string.error) + " " + message);
+        }
     }
 
     /**
@@ -322,15 +328,32 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
         log(resources.getString(R.string.device_remove) + " " + device.getName());
         if (device.getName().equals(telescopeName)) clearTelescopeVars();
         synchronized (indiCameras) {
-            INDICamera indiCamera = indiCameras.get(device);
-            if (indiCamera != null) indiCamera.terminate();
-            uiHandler.post(() -> {
-                synchronized (managerListeners) {
-                    for (ManagerListener listener : managerListeners) {
-                        listener.onCamerasListChange();
+            INDICamera camera = indiCameras.get(device);
+            if (camera != null) {
+                camera.terminate();
+                indiCameras.remove(device);
+                uiHandler.post(() -> {
+                    synchronized (managerListeners) {
+                        for (ManagerListener listener : managerListeners) {
+                            listener.onCamerasListChange();
+                        }
                     }
-                }
-            });
+                });
+            }
+        }
+        synchronized (indiFocusers) {
+            INDIFocuser focuser = indiFocusers.get(device);
+            if (focuser != null) {
+                focuser.terminate();
+                indiFocusers.remove(device);
+                uiHandler.post(() -> {
+                    synchronized (managerListeners) {
+                        for (ManagerListener listener : managerListeners) {
+                            listener.onFocusersListChange();
+                        }
+                    }
+                });
+            }
         }
     }
 
@@ -340,7 +363,16 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
         this.indiConnection = null;
         clearTelescopeVars();
         synchronized (indiCameras) {
+            for (INDICamera camera : indiCameras.values()) {
+                camera.terminate();
+            }
             indiCameras.clear();
+        }
+        synchronized (indiFocusers) {
+            for (INDIFocuser focuser : indiFocusers.values()) {
+                focuser.terminate();
+            }
+            indiFocusers.clear();
         }
         log(resources.getString(R.string.connection_lost));
         uiHandler.post(() -> {
@@ -360,32 +392,54 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
 
     @Override
     public void newProperty(INDIDevice device, INDIProperty<?> property) {
-        String propName = property.getName();
-        if (connectDevices) {
-            try {
-                if (propName.equals("CONNECTION")) {
-                    INDISwitchElement connE = (INDISwitchElement) property.getElement(INDIStandardElement.CONNECT),
-                            discE = (INDISwitchElement) property.getElement(INDIStandardElement.DISCONNECT);
-                    if ((connE != null) && (discE != null) && (connE.getValue() == Constants.SwitchStatus.OFF)) {
-                        connE.setDesiredValue(Constants.SwitchStatus.ON);
-                        discE.setDesiredValue(Constants.SwitchStatus.OFF);
-                        updateProperties(property);
-                        log(String.format(resources.getString(R.string.connecting_device), device.getName()));
+        switch (property.getName()) {
+            case "CONNECTION":
+                if (connectDevices) {
+                    try {
+                        INDISwitchElement connE = (INDISwitchElement) property.getElement(INDIStandardElement.CONNECT),
+                                discE = (INDISwitchElement) property.getElement(INDIStandardElement.DISCONNECT);
+                        if ((connE != null) && (discE != null) && (connE.getValue() == Constants.SwitchStatus.OFF)) {
+                            connE.setDesiredValue(Constants.SwitchStatus.ON);
+                            discE.setDesiredValue(Constants.SwitchStatus.OFF);
+                            updateProperties(property);
+                            log(String.format(resources.getString(R.string.connecting_device), device.getName()));
+                        }
+                    } catch (Exception e) {
+                        Log.e(TAG, e.getMessage(), e);
                     }
-                    return;
                 }
-            } catch (Exception e) {
-                Log.e(TAG, e.getMessage(), e);
-            }
+                return;
+            case "EQUATORIAL_EOD_COORD":
+                if ((property instanceof INDINumberProperty) &&
+                        ((telescopeCoordDec = (INDINumberElement) property.getElement(INDIStandardElement.DEC)) != null) &&
+                        ((telescopeCoordRA = (INDINumberElement) property.getElement(INDIStandardElement.RA)) != null)) {
+                    property.addINDIPropertyListener(this);
+                    telescopeCoordP = (INDINumberProperty) property;
+                    telescopeName = device.getName();
+                    telescopeCoordinates.ra = telescopeCoordRA.getValue() * 15.0;
+                    telescopeCoordinates.dec = telescopeCoordDec.getValue();
+                    uiHandler.post(() -> preferences.edit().putBoolean(TelescopeLayer.PREFERENCE_ID, true).apply());
+                }
+                return;
+            case "ON_COORD_SET":
+                if ((property instanceof INDISwitchProperty) &&
+                        ((telescopeOnCoordSetTrack = (INDISwitchElement) property.getElement(INDIStandardElement.TRACK)) != null) &&
+                        ((telescopeOnCoordSetSlew = (INDISwitchElement) property.getElement(INDIStandardElement.SLEW)) != null) &&
+                        ((telescopeOnCoordSetSync = (INDISwitchElement) property.getElement(INDIStandardElement.SYNC)) != null)) {
+                    property.addINDIPropertyListener(this);
+                    telescopeOnCoordSetP = (INDISwitchProperty) property;
+                }
+                return;
         }
-        INDICamera indiCamera;
+
+        INDICamera camera;
         synchronized (indiCameras) {
-            indiCamera = indiCameras.get(device);
+            camera = indiCameras.get(device);
         }
-        if (indiCamera != null) {
-            indiCamera.processNewProp(property);
+        if (camera != null) {
+            camera.processNewProp(property);
         } else if (INDICamera.isCameraProp(property)) {
-            INDICamera camera = new INDICamera(device, context, uiHandler);
+            camera = new INDICamera(device, context, uiHandler);
             camera.processNewProp(property);
             synchronized (indiCameras) {
                 indiCameras.put(device, camera);
@@ -397,42 +451,56 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
                     }
                 }
             });
-        } else {
-            switch (propName) {
-                case "EQUATORIAL_EOD_COORD":
-                    if ((property instanceof INDINumberProperty) &&
-                            ((telescopeCoordDec = (INDINumberElement) property.getElement(INDIStandardElement.DEC)) != null) &&
-                            ((telescopeCoordRA = (INDINumberElement) property.getElement(INDIStandardElement.RA)) != null)) {
-                        property.addINDIPropertyListener(this);
-                        telescopeCoordP = (INDINumberProperty) property;
-                        telescopeName = device.getName();
-                        telescopeCoordinates.ra = telescopeCoordRA.getValue() * 15.0;
-                        telescopeCoordinates.dec = telescopeCoordDec.getValue();
-                        uiHandler.post(() -> preferences.edit().putBoolean(TelescopeLayer.PREFERENCE_ID, true).apply());
-                    }
-                    break;
-                case "ON_COORD_SET":
-                    if ((property instanceof INDISwitchProperty) &&
-                            ((telescopeOnCoordSetTrack = (INDISwitchElement) property.getElement(INDIStandardElement.TRACK)) != null) &&
-                            ((telescopeOnCoordSetSlew = (INDISwitchElement) property.getElement(INDIStandardElement.SLEW)) != null) &&
-                            ((telescopeOnCoordSetSync = (INDISwitchElement) property.getElement(INDIStandardElement.SYNC)) != null)) {
-                        property.addINDIPropertyListener(this);
-                        telescopeOnCoordSetP = (INDISwitchProperty) property;
-                    }
-                    break;
+        }
+
+        INDIFocuser focuser;
+        synchronized (indiFocusers) {
+            focuser = indiFocusers.get(device);
+        }
+        if (focuser != null) {
+            focuser.processNewProp(property);
+        } else if (INDIFocuser.isFocuserProp(property)) {
+            focuser = new INDIFocuser(device, uiHandler);
+            focuser.processNewProp(property);
+            synchronized (indiFocusers) {
+                indiFocusers.put(device, focuser);
             }
+            uiHandler.post(() -> {
+                synchronized (managerListeners) {
+                    for (ManagerListener listener : managerListeners) {
+                        listener.onFocusersListChange();
+                    }
+                }
+            });
         }
     }
 
     @Override
     public void removeProperty(INDIDevice device, INDIProperty<?> property) {
-        INDICamera indiCamera;
-        synchronized (indiCameras) {
-            indiCamera = indiCameras.get(device);
+        switch (property.getName()) {
+            case "EQUATORIAL_EOD_COORD":
+                telescopeCoordDec = null;
+                telescopeCoordRA = null;
+                telescopeCoordP = null;
+                telescopeName = null;
+                telescopeCoordinates.ra = 0;
+                telescopeCoordinates.dec = 0;
+                uiHandler.post(() -> preferences.edit().putBoolean(TelescopeLayer.PREFERENCE_ID, false).apply());
+                return;
+            case "ON_COORD_SET":
+                telescopeCoordP = null;
+                telescopeCoordRA = null;
+                telescopeCoordDec = null;
+                return;
         }
-        if (indiCamera != null) {
-            if (indiCamera.removeProp(property)) {
-                indiCamera.terminate();
+
+        INDICamera camera;
+        synchronized (indiCameras) {
+            camera = indiCameras.get(device);
+        }
+        if (camera != null) {
+            if (camera.removeProp(property)) {
+                camera.terminate();
                 synchronized (indiCameras) {
                     indiCameras.remove(device);
                 }
@@ -444,28 +512,31 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
                     }
                 });
             }
-        } else {
-            switch (property.getName()) {
-                case "EQUATORIAL_EOD_COORD":
-                    telescopeCoordDec = null;
-                    telescopeCoordRA = null;
-                    telescopeCoordP = null;
-                    telescopeName = null;
-                    telescopeCoordinates.ra = 0;
-                    telescopeCoordinates.dec = 0;
-                    uiHandler.post(() -> preferences.edit().putBoolean(TelescopeLayer.PREFERENCE_ID, false).apply());
-                    break;
-                case "ON_COORD_SET":
-                    telescopeCoordP = null;
-                    telescopeCoordRA = null;
-                    telescopeCoordDec = null;
-                    break;
+        }
+
+        INDIFocuser focuser;
+        synchronized (indiFocusers) {
+            focuser = indiFocusers.get(device);
+        }
+        if (focuser != null) {
+            if (focuser.removeProp(property)) {
+                focuser.terminate();
+                synchronized (indiFocusers) {
+                    indiFocusers.remove(device);
+                }
+                uiHandler.post(() -> {
+                    synchronized (managerListeners) {
+                        for (ManagerListener listener : managerListeners) {
+                            listener.onFocusersListChange();
+                        }
+                    }
+                });
             }
         }
     }
 
     private void clearTelescopeVars() {
-        preferences.edit().putBoolean(TelescopeLayer.PREFERENCE_ID, false).apply();
+        uiHandler.post(() -> preferences.edit().putBoolean(TelescopeLayer.PREFERENCE_ID, false).apply());
         telescopeCoordDec = null;
         telescopeCoordRA = null;
         telescopeCoordP = null;
@@ -515,6 +586,9 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
         }
 
         default void onCamerasListChange() {
+        }
+
+        default void onFocusersListChange() {
         }
     }
 
