@@ -40,6 +40,9 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
         //viewport.setMaxX(200);
         //viewport.setXAxisBoundsManual(true);
         //viewport.setYAxisBoundsManual(true);
+        viewport.setYAxisBoundsManual(true);
+        viewport.setMinY(-4);
+        viewport.setMaxY(4);
         viewport.setScalable(true);
         return rootView;
     }

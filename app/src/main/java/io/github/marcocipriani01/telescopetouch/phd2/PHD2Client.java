@@ -32,8 +32,8 @@ public class PHD2Client extends SimpleClient {
 
     public PHD2Client(String address, int port) {
         super(address, port);
-        guidingDataRA.setColor(Color.BLUE);
-        guidingDataDec.setColor(Color.RED);
+        guidingDataRA.setColor(Color.parseColor("#448AFF"));
+        guidingDataDec.setColor(Color.parseColor("#FF1744"));
     }
 
     public void addListener(PHD2Listener listener) {
