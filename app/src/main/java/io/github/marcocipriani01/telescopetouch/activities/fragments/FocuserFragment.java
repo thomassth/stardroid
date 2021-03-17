@@ -25,9 +25,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.SeekBar;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 
@@ -41,6 +42,7 @@ import org.indilib.i4j.client.INDIProperty;
 import org.indilib.i4j.client.INDIServerConnection;
 import org.indilib.i4j.client.INDISwitchElement;
 import org.indilib.i4j.client.INDISwitchProperty;
+import org.indilib.i4j.client.INDIValueException;
 import org.indilib.i4j.properties.INDIStandardElement;
 
 import java.util.ArrayList;
@@ -50,9 +52,10 @@ import java.util.List;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.activities.util.CounterHandler;
+import io.github.marcocipriani01.telescopetouch.activities.util.ImprovedSpinnerListener;
 import io.github.marcocipriani01.telescopetouch.activities.util.LongPressHandler;
+import io.github.marcocipriani01.telescopetouch.activities.util.SimpleAdapter;
 import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
-import io.github.marcocipriani01.telescopetouch.indi.INDICamera;
 import io.github.marcocipriani01.telescopetouch.indi.INDIFocuser;
 
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
@@ -62,27 +65,42 @@ import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connect
  *
  * @author marcocipriani01
  */
-public class FocuserFragment extends ActionFragment
-        implements View.OnClickListener, TextWatcher, INDIFocuser.FocuserListener, ConnectionManager.ManagerListener {
+public class FocuserFragment extends ActionFragment implements View.OnClickListener, TextWatcher,
+        Slider.OnChangeListener, INDIFocuser.FocuserListener, ConnectionManager.ManagerListener {
 
     private static final String TAG = TelescopeTouchApp.getTag(MountControlFragment.class);
     private static INDIDevice selectedFocuserDev = null;
-    private final List<INDICamera> focusers = new ArrayList<>();
+    private final List<INDIFocuser> focusers = new ArrayList<>();
     private final Handler handler = new Handler(Looper.getMainLooper());
-    private Button inButton = null;
-    private Button outButton = null;
-    private Button stepsPerClickUpBtn = null;
-    private Button stepsPerClickDownBtn = null;
-    private Button abortButton = null;
-    private Button setAbsPosButton = null;
-    private Button syncBtn = null;
-    private EditText stepsPerClickField = null;
-    private EditText positionField = null;
-    private Slider speedSlider = null;
+    private final ImprovedSpinnerListener focuserSelectListener = new ImprovedSpinnerListener() {
+        @Override
+        protected void onImprovedItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+            INDIFocuser focuser = getFocuser();
+            if (focuser != null)
+                focuser.removeListener(FocuserFragment.this);
+            focuser = focusers.get(pos);
+            selectedFocuserDev = focuser.device;
+            focuser.addListener(FocuserFragment.this);
+        }
+    };
+    private Button inButton;
+    private Button outButton;
+    private Button stepsPerClickUpBtn;
+    private Button stepsPerClickDownBtn;
+    private Button abortButton;
+    private Button setAbsPosButton;
+    private Button syncBtn;
+    private EditText stepsPerClickField;
+    private EditText positionField;
+    private Slider speedSlider;
+    private Spinner focuserSelectSpinner;
+    private FocusersArrayAdapter focuserSelectAdapter;
     private CounterHandler stepsHandler;
+    private LayoutInflater inflater;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        this.inflater = inflater;
         View rootView = inflater.inflate(R.layout.fragment_focuser, container, false);
         inButton = rootView.findViewById(R.id.focus_in);
         outButton = rootView.findViewById(R.id.focus_out);
@@ -142,14 +160,14 @@ public class FocuserFragment extends ActionFragment
         setAbsPosButton.setOnClickListener(this);
         syncBtn.setOnClickListener(this);
         stepsPerClickField.addTextChangedListener(this);
-        speedSlider.setOnSeekBarChangeListener(this);
+        speedSlider.addOnChangeListener(this);
         return rootView;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        connectionManager.addINDIListener(this);
+        connectionManager.addManagerListener(this);
         // Enumerate existing properties
         if (connectionManager.isConnected()) {
             List<INDIDevice> list = connectionManager.getIndiConnection().getDevicesAsList();
@@ -173,7 +191,7 @@ public class FocuserFragment extends ActionFragment
     @Override
     public void onStop() {
         super.onStop();
-        connectionManager.removeINDIListener(this);
+        connectionManager.removeManagerListener(this);
     }
 
     private void updateSpeedBar() {
@@ -233,7 +251,6 @@ public class FocuserFragment extends ActionFragment
         try {
             stepsHandler.setValue(Integer.parseInt(s.toString()));
         } catch (NumberFormatException ignored) {
-
         }
     }
 
@@ -270,29 +287,6 @@ public class FocuserFragment extends ActionFragment
         } catch (Exception e) {
             Log.e(TAG, e.getLocalizedMessage(), e);
         }
-    }
-
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (speedElem != null) {
-            try {
-                double step = speedElem.getStep(), min = speedElem.getMin();
-                speedElem.setDesiredValue(min + (progress * step));
-                connectionManager.updateProperties(speedProp);
-            } catch (Exception e) {
-                Log.e(TAG, e.getLocalizedMessage(), e);
-            }
-        }
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-
     }
 
     @Override
@@ -442,12 +436,26 @@ public class FocuserFragment extends ActionFragment
 
     @Override
     public void onFocusersListChange() {
-
+        focusers.clear();
+        synchronized (connectionManager.indiFocusers) {
+            focusers.addAll(connectionManager.indiFocusers.values());
+        }
+        if (cameraSelectAdapter != null)
+            cameraSelectAdapter.notifyDataSetChanged();
+        if (focuserSelectSpinner != null)
+            focuserSelectSpinner.setEnabled(!focusers.isEmpty());
+        onCameraFunctionsChange();
     }
 
     @Override
     public void onConnectionLost() {
-
+        selectedFocuserDev = null;
+        focusers.clear();
+        if (cameraSelectAdapter != null)
+            cameraSelectAdapter.notifyDataSetChanged();
+        if (focuserSelectSpinner != null)
+            focuserSelectSpinner.setEnabled(false);
+        disableControls();
     }
 
     public void errorSnackbar(Throwable e) {
@@ -503,5 +511,44 @@ public class FocuserFragment extends ActionFragment
     @Override
     public void onFocuserSpeedChange(int value) {
         if (speedSlider != null) speedSlider.setValue(value);
+    }
+
+    @Override
+    public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
+        INDIFocuser focuser = getFocuser();
+        if ((slider == speedSlider) && (focuser != null)) {
+            try {
+                focuser.setSpeed(speedSlider.getValue());
+            } catch (INDIValueException e) {
+                //TODO
+            }
+        }
+    }
+
+    private class FocusersArrayAdapter extends SimpleAdapter {
+
+        FocusersArrayAdapter() {
+            super(inflater);
+        }
+
+        @Override
+        public int getCount() {
+            return focusers.size();
+        }
+
+        @Override
+        public INDIFocuser getItem(int position) {
+            return focusers.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return focusers.get(position).hashCode();
+        }
+
+        @Override
+        protected String getStringAt(int position) {
+            return focusers.get(position).toString();
+        }
     }
 }

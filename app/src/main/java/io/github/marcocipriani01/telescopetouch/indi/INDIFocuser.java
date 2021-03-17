@@ -70,6 +70,18 @@ public class INDIFocuser implements INDIPropertyListener {
         return name.startsWith("FOCUS_") || name.equals("ABS_FOCUS_POSITION") || name.equals("REL_FOCUS_POSITION");
     }
 
+    public void addListener(FocuserListener listener) {
+        synchronized (listeners) {
+            this.listeners.add(listener);
+        }
+    }
+
+    public void removeListener(FocuserListener listener) {
+        synchronized (listeners) {
+            this.listeners.remove(listener);
+        }
+    }
+
     public void moveOutward(int steps) throws INDIValueException {
         if ((!hasDirection()) || (!hasRelativePosition()))
             throw new UnsupportedOperationException("Unsupported relative movement!");
@@ -86,6 +98,13 @@ public class INDIFocuser implements INDIPropertyListener {
         outwardDirectionE.setDesiredValue(Constants.SwitchStatus.OFF);
         relPositionE.setDesiredValue((double) steps);
         connectionManager.updateProperties(directionP, relPositionP);
+    }
+
+    public void setSpeed(double val) throws INDIValueException {
+        if (!hasSpeed())
+            throw new UnsupportedOperationException("Unsupported speed!");
+        speedE.setDesiredValue(val);
+        connectionManager.updateProperties(speedP);
     }
 
     public boolean canMoveRelative() {

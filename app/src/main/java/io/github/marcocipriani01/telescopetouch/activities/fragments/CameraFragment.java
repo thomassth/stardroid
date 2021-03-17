@@ -128,16 +128,12 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
                 camera.removeListener(CameraFragment.this);
                 camera.stopReceiving();
             }
-            selectedCameraDev = cameras.get(pos).device;
-            camera = getCamera();
-            if (camera == null) {
-                logText.setText("-");
-            } else {
-                camera.addListener(CameraFragment.this);
-                onImageLoaded(camera.getLastBitmap(), camera.getLastMetadata());
-                String lastMessage = camera.device.getLastMessage();
-                logText.setText(((lastMessage == null) || (lastMessage.equals(""))) ? "-" : lastMessage);
-            }
+            camera = cameras.get(pos);
+            selectedCameraDev = camera.device;
+            camera.addListener(CameraFragment.this);
+            onImageLoaded(camera.getLastBitmap(), camera.getLastMetadata());
+            String lastMessage = camera.device.getLastMessage();
+            logText.setText(((lastMessage == null) || (lastMessage.equals(""))) ? "-" : lastMessage);
             onCameraFunctionsChange();
         }
     };
