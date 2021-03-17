@@ -258,8 +258,25 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
                 selectedCameraDev = null;
                 cameraSelectSpinner.setEnabled(false);
             } else {
-                INDICamera selectedCamera = cameras.get(0);
-                selectedCameraDev = selectedCamera.device;
+                INDICamera selectedCamera;
+
+                if (selectedCameraDev == null) {
+                    selectedCamera = cameras.get(0);
+                    selectedCameraDev = selectedCamera.device;
+                } else {
+                    synchronized (connectionManager.indiCameras) {
+                        if (connectionManager.indiCameras.containsKey(selectedCameraDev)) {
+                            selectedCamera = connectionManager.indiCameras.get(selectedCameraDev);
+                            if (selectedCamera == null) {
+                                selectedCamera = cameras.get(0);
+                                selectedCameraDev = selectedCamera.device;
+                            }
+                        } else {
+                            selectedCamera = cameras.get(0);
+                            selectedCameraDev = selectedCamera.device;
+                        }
+                    }
+                }
                 selectedCamera.addListener(this);
                 selectedCamera.setStretch(stretch);
                 cameraSelectSpinner.setSelection(cameras.indexOf(selectedCamera));
@@ -336,7 +353,7 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
         if (camera == null) {
             inputMethodManager.hideSoftInputFromWindow(exposureTimeField.getWindowToken(), 0);
             requestActionSnack(R.string.no_camera_available);
-            onCameraFunctionsChange();
+            disableControls();
         } else if (str.isEmpty()) {
             exposureTimeField.requestFocus();
             inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
@@ -388,7 +405,7 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
         INDICamera camera = getCamera();
         if (camera == null) {
             requestActionSnack(R.string.no_camera_available);
-            onCameraFunctionsChange();
+            disableControls();
         } else {
             try {
                 camera.abort();
@@ -421,7 +438,7 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
         if (camera == null) {
             inputMethodManager.hideSoftInputFromWindow(exposureTimeField.getWindowToken(), 0);
             requestActionSnack(R.string.no_camera_available);
-            onCameraFunctionsChange();
+            disableControls();
         } else if (str.isEmpty()) {
             exposureTimeField.requestFocus();
             inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);

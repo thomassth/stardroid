@@ -82,6 +82,27 @@ public class INDIFocuser implements INDIPropertyListener {
         }
     }
 
+    public void abort() throws INDIValueException {
+        if (!canAbort())
+            throw new UnsupportedOperationException("Unsupported abort!");
+        abortE.setDesiredValue(Constants.SwitchStatus.ON);
+        connectionManager.updateProperties(abortP);
+    }
+
+    public void setAbsolutePosition(int val) throws INDIValueException {
+        if (!hasAbsolutePosition())
+            throw new UnsupportedOperationException("Unsupported absolute position!");
+        absPositionE.setDesiredValue((double) val);
+        connectionManager.updateProperties(absPositionP);
+    }
+
+    public void sync(int position) throws INDIValueException {
+        if (!canSync())
+            throw new UnsupportedOperationException("Unsupported sync!");
+        syncPositionE.setDesiredValue((double) position);
+        connectionManager.updateProperties(syncPositionP);
+    }
+
     public void moveOutward(int steps) throws INDIValueException {
         if ((!hasDirection()) || (!hasRelativePosition()))
             throw new UnsupportedOperationException("Unsupported relative movement!");

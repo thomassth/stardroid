@@ -654,6 +654,7 @@
     <string name="save_mode_warning">Attenzione: questa impostazione potrebbe interferire con altri client che utilizzano la fotocamera nello stesso momento.</string>
     <string name="loop">Ciclo</string>
     <string name="no_camera_available">Nessuna fotocamera disponibile!</string>
+    <string name="no_focuser_available">Nessun focheggiatore disponibile!</string>
     <string name="ccd_loop_interval">Intervallo ciclo:</string>
     <string name="file_format">Formato file:</string>
     <string name="ccd_camera_formatting">%e = tempo exp., %f = tipo, %d = data, %t = ora</string>

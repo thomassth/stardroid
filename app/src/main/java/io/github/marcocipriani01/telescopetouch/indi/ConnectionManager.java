@@ -459,7 +459,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
         }
         if (focuser != null) {
             focuser.processNewProp(property);
-        } else if (INDICamera.isCameraProp(property)) {
+        } else if (INDIFocuser.isFocuserProp(property)) {
             focuser = new INDIFocuser(device, uiHandler);
             focuser.processNewProp(property);
             synchronized (indiFocusers) {

@@ -654,6 +654,7 @@
     <string name="save_mode_warning">Warning: this setting may interfere with other clients using the camera at the same time.</string>
     <string name="loop">Loop</string>
     <string name="no_camera_available">No camera available!</string>
+    <string name="no_focuser_available">No focuser available!</string>
     <string name="ccd_loop_interval">Loop interval:</string>
     <string name="file_format">File format:</string>
     <string name="ccd_camera_formatting">%e = exposure, %f = frame type, %d = date, %t = time</string>

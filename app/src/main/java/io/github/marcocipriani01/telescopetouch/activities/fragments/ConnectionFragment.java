@@ -101,16 +101,17 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
         connectDevicesBox = rootView.findViewById(R.id.connect_all_checkbox);
         // PRO
         if (ProUtils.isPro) {
+            connectDevicesBox.setEnabled(true);
             boolean autoConnectDev = preferences.getBoolean(ApplicationConstants.AUTO_CONNECT_DEVICES_PREF, false);
             connectDevicesBox.setChecked(autoConnectDev);
             connectDevicesBox.setSelected(autoConnectDev);
             Toolbar toolbar = rootView.findViewById(R.id.connection_fragment_toolbar);
             if (toolbar != null) toolbar.setTitle(context.getString(R.string.app_name) + " Pro");
         } else {
+            connectDevicesBox.setEnabled(false);
             connectDevicesBox.setText(context.getString(R.string.connect_all_devices) + " [PRO]");
             connectDevicesBox.setChecked(false);
             connectDevicesBox.setSelected(false);
-            connectDevicesBox.setEnabled(false);
         }
         // END PRO
         serversSpinner = rootView.findViewById(R.id.host_spinner);
@@ -180,11 +181,29 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
                 }
             }
         }.attach(serversSpinner);
+        return rootView;
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
         refreshUi(connectionManager.getState());
         connectionManager.addManagerListener(this);
         nsdHelper.setListener(this);
-        return rootView;
+        logsList.scrollToPosition(logAdapter.getItemCount() - 1);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        selectedSpinnerItem = serversSpinner.getSelectedItemPosition();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        nsdHelper.setListener(null);
+        connectionManager.removeManagerListener(this);
     }
 
     @Override
@@ -235,19 +254,6 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        selectedSpinnerItem = serversSpinner.getSelectedItemPosition();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        nsdHelper.setListener(null);
-        connectionManager.removeManagerListener(this);
-    }
-
-    @Override
     public void updateConnectionState(ConnectionManager.State state) {
         refreshUi(state);
     }
@@ -257,14 +263,16 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
         if (logAdapter != null)
             logAdapter.notifyItemInserted(connectionManager.getLogs().indexOf(log));
         notifyActionChange();
-        if (logsList != null) logsList.scrollToPosition(logAdapter.getItemCount() - 1);
+        if ((logsList != null) && (logAdapter != null))
+            logsList.scrollToPosition(logAdapter.getItemCount() - 1);
     }
 
     @Override
     public void deviceLog(final ConnectionManager.LogItem log) {
         if (logAdapter != null) logAdapter.notifyDataSetChanged();
         notifyActionChange();
-        if (logsList != null) logsList.scrollToPosition(logAdapter.getItemCount() - 1);
+        if ((logsList != null) && (logAdapter != null))
+            logsList.scrollToPosition(logAdapter.getItemCount() - 1);
     }
 
     private void refreshUi(ConnectionManager.State state) {
@@ -274,6 +282,7 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
                 connectionButton.setEnabled(true);
                 serversSpinner.setEnabled(false);
                 portEditText.setEnabled(false);
+                connectDevicesBox.setEnabled(false);
                 break;
             }
             case DISCONNECTED: {
@@ -281,6 +290,9 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
                 connectionButton.setEnabled(true);
                 serversSpinner.setEnabled(true);
                 portEditText.setEnabled(true);
+                // PRO
+                connectDevicesBox.setEnabled(ProUtils.isPro);
+                // END PRO
                 break;
             }
             case BUSY: {
@@ -288,6 +300,7 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
                 connectionButton.setEnabled(false);
                 serversSpinner.setEnabled(false);
                 portEditText.setEnabled(false);
+                connectDevicesBox.setEnabled(false);
                 break;
             }
         }
