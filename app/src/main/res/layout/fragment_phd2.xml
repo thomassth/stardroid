@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="?android:attr/actionBarSize"
@@ -16,13 +17,280 @@
         app:popupTheme="@style/ThemeOverlay.MaterialComponents"
         app:title="@string/phd2_auto_guider" />
 
-    <com.jjoe64.graphview.GraphView
-        android:id="@+id/phd_graph"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:orientation="horizontal">
+
+        <Spinner
+            android:id="@+id/phd2_host_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="2"
+            android:prompt="@string/host_prompt"
+            tools:listitem="@layout/simple_spinner_item" />
+
+        <EditText
+            android:id="@+id/phd2_port_field"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="6"
+            android:hint="4400"
+            android:imeOptions="flagNoExtractUi"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            tools:ignore="HardcodedText" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/phd2_connect_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:drawableLeft="@drawable/connect"
+        android:drawablePadding="-24dp"
+        android:drawableTint="@android:color/white"
+        android:text="@string/connect"
+        tools:targetApi="m" />
+
+    <TextView
+        android:id="@+id/phd2_state"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:text="@string/current_state_default"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/phd2_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        app:tabGravity="fill"
+        app:tabMode="fixed">
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/live_view" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/graph" />
+    </com.google.android.material.tabs.TabLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:layout_weight="0" />
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/phd2_live_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <io.github.marcocipriani01.livephotoview.PhotoView
+                android:id="@+id/phd2_live_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="0"
+                    android:text="@string/exposure_time_short"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/white" />
+
+                <Spinner
+                    android:id="@+id/phd2_exposure_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_weight="1"
+                    tools:listitem="@layout/simple_spinner_item" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="#FFFFFF" />
+
+            <LinearLayout
+                style="@style/Widget.AppCompat.ButtonBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:orientation="horizontal"
+                tools:ignore="NestedWeights">
+
+                <ImageButton
+                    android:id="@+id/phd_loop_btn"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/loop"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/loop"
+                    android:tooltipText="@string/loop"
+                    tools:targetApi="o" />
+
+                <ImageButton
+                    android:id="@+id/phd_auto_select_btn"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/select_star"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/select_star"
+                    android:tooltipText="@string/select_star"
+                    tools:targetApi="o" />
+
+                <ImageButton
+                    android:id="@+id/phd_guide_btn"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/guide"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/phd2"
+                    android:tint="@android:color/white"
+                    android:tooltipText="@string/guide"
+                    tools:targetApi="o" />
+
+                <ImageButton
+                    android:id="@+id/phd_stop_btn"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/stop"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/stop"
+                    android:tooltipText="@string/stop"
+                    tools:targetApi="o" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/phd2_graph_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.jjoe64.graphview.GraphView
+                    android:id="@+id/phd_graph"
+                    android:layout_width="match_parent"
+                    android:layout_height="350dp" />
+
+                <TableRow
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_weight="0"
+                        android:text="@string/vertical_zoom"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/white" />
+
+                    <com.google.android.material.slider.Slider
+                        android:id="@+id/phd2_zoom_slider"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_weight="1"
+                        android:stepSize="2"
+                        android:valueFrom="1"
+                        android:valueTo="15"
+                        app:haloColor="@color/colorAccent"
+                        app:thumbColor="@color/colorAccent"
+                        app:thumbStrokeColor="@color/colorAccent"
+                        app:tickColor="@color/colorAccent"
+                        app:tickVisible="false"
+                        app:trackColorActive="@color/colorAccent"
+                        app:trackHeight="3dp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:text="@string/show"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/white" />
+
+                    <LinearLayout android:orientation="vertical">
+
+                        <CheckBox
+                            android:id="@+id/phd2_corrections_box"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_weight="1"
+                            android:text="@string/corrections"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                        <CheckBox
+                            android:id="@+id/phd2_snr_box"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_weight="1"
+                            android:text="@string/snr"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                        <CheckBox
+                            android:id="@+id/phd2_star_mass_box"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_weight="1"
+                            android:text="@string/star_mass"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                    </LinearLayout>
+                </TableRow>
+            </TableLayout>
+        </androidx.core.widget.NestedScrollView>
+    </FrameLayout>
 </LinearLayout>

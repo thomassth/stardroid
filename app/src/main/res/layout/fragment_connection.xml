@@ -7,11 +7,11 @@
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/connection_fragment_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
         android:background="@color/colorPrimary"
-        android:id="@+id/connection_fragment_toolbar"
         android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.MaterialComponents.Dark"
         app:title="@string/app_name" />
@@ -37,14 +37,15 @@
 
         <io.github.marcocipriani01.telescopetouch.activities.views.SameSelectionSpinner
             android:id="@+id/host_spinner"
-            android:layout_width="186dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/port_field"
             android:layout_alignParentStart="true"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="8dp"
             android:layout_toStartOf="@+id/port_field"
-            android:prompt="@string/host_prompt" />
+            android:prompt="@string/host_prompt"
+            tools:listitem="@layout/simple_spinner_item" />
 
         <EditText
             android:id="@+id/port_field"
@@ -55,8 +56,9 @@
             android:ems="6"
             android:hint="7624"
             android:imeOptions="flagNoExtractUi"
+            android:importantForAutofill="no"
             android:inputType="number"
-            tools:ignore="Autofill,HardcodedText" />
+            tools:ignore="HardcodedText" />
 
         <Button
             android:id="@+id/connect_button"

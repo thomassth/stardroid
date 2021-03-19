@@ -686,4 +686,25 @@
     <string name="capture_in_progress">CCD capture in progress</string>
     <string name="stop_capture">Stop capture</string>
     <string name="phd2_auto_guider">PHD2 auto-guider</string>
+    <string name="guide">Guide</string>
+    <string name="stop">Stop</string>
+    <string name="select_star">Select star</string>
+    <string name="vertical_zoom">Vertical zoom:</string>
+    <string name="port">Port:</string>
+    <string name="star_mass">Star mass</string>
+    <string name="snr">SNR</string>
+    <string name="corrections">Corrections</string>
+    <string name="show">Show:</string>
+    <string name="live_view">Live view</string>
+    <string name="graph">Graph</string>
+    <string name="exposure_time_short">Exp. time:</string>
+    <string name="current_state">Current state: %s</string>
+    <string name="current_state_default">Current state: -</string>
+    <string name="phd2_stopped">stopped</string>
+    <string name="phd2_selected">star selected</string>
+    <string name="phd2_calibrating">calibrating</string>
+    <string name="phd2_guiding">guiding</string>
+    <string name="phd2_star_lost">star lost</string>
+    <string name="phd2_paused">paused</string>
+    <string name="phd2_looping">looping</string>
 </resources>

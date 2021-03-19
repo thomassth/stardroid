@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Marco Cipriani (@marcocipriani01)
+ * Copyright 2021 Marco Cipriani (@marcocipriani01)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ public class ApplicationConstants {
     public static final String LATITUDE_PREF = "latitude";
     public static final String INDI_SERVERS_PREF = "INDI_SERVERS_PREF";
     public static final String INDI_PORT_PREF = "indi_port";
+    public static final String PHD2_PORT_PREF = "phd2_port";
     public static final String NSD_PREF = "network_service_discovery";
     public static final String POLARIS_HEMISPHERE_PREF = "polaris_hr_hemisphere";
     public static final String HEMISPHERE_AUTO = "hemisphere_auto";

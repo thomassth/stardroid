@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Marco Cipriani (@marcocipriani01)
+ * Copyright 2021 Marco Cipriani (@marcocipriani01)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package io.github.marcocipriani01.telescopetouch;
 import android.app.Application;
 
 import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
+import io.github.marcocipriani01.telescopetouch.phd2.PHD2Client;
 
 /**
  * The main application class.
@@ -32,6 +33,7 @@ public class TelescopeTouchApp extends Application {
      */
     public static final ConnectionManager connectionManager = new ConnectionManager();
     public static final NSDHelper nsdHelper = new NSDHelper();
+    public static final PHD2Client phd2 = new PHD2Client();
     private ApplicationComponent component;
 
     /**

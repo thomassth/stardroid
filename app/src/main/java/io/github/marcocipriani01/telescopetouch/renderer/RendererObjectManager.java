@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Marco Cipriani (@marcocipriani01) and the Sky Map Team
+ * Copyright 2021 Marco Cipriani (@marcocipriani01) and the Sky Map Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

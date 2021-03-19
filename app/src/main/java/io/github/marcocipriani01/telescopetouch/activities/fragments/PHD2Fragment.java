@@ -1,45 +1,189 @@
+/*
+ * Copyright 2021 Marco Cipriani (@marcocipriani01)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.github.marcocipriani01.telescopetouch.activities.fragments;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
+import androidx.preference.PreferenceManager;
 
+import com.google.android.material.slider.Slider;
+import com.google.android.material.tabs.TabLayout;
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.Viewport;
 
-import io.github.marcocipriani01.simplesocket.ConnectionException;
+import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.phd2.PHD2Client;
 
-public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Listener {
+import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.nsdHelper;
+import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.phd2;
+import static io.github.marcocipriani01.telescopetouch.activities.ServersActivity.getServers;
 
-    private PHD2Client phd2;
+public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Listener, Slider.OnChangeListener {
+
+    private static int selectedSpinnerItem = 0;
+    private SharedPreferences preferences;
     private GraphView graph;
+    private Button connectionButton;
+    private Spinner serversSpinner;
+    private EditText portEditText;
+    private TextView statusLabel;
 
+    @SuppressLint("SetTextI18n")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
         View rootView = inflater.inflate(R.layout.fragment_phd2, container, false);
+        Slider zoomSlider = rootView.findViewById(R.id.phd2_zoom_slider);
+        zoomSlider.addOnChangeListener(this);
+        statusLabel = rootView.findViewById(R.id.phd2_state);
+        connectionButton = rootView.findViewById(R.id.phd2_connect_button);
+        serversSpinner = rootView.findViewById(R.id.phd2_host_spinner);
+        loadServers(getServers(preferences));
+        portEditText = rootView.findViewById(R.id.phd2_port_field);
+        portEditText.setText(String.valueOf(preferences.getInt(ApplicationConstants.PHD2_PORT_PREF, 4400)));
+
+        connectionButton.setOnClickListener(v -> {
+            ((InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE))
+                    .hideSoftInputFromWindow(portEditText.getWindowToken(), 0);
+            String host = (String) serversSpinner.getSelectedItem();
+            if (host == null) {
+                requestActionSnack(R.string.unknown_error);
+                return;
+            }
+            try {
+                if (phd2.isConnected()) {
+                    phd2.disconnect();
+                } else {
+                    if (host.contains("@")) {
+                        String[] split = host.split("@");
+                        if (split.length == 2) host = split[1];
+                    }
+                    String portStr = portEditText.getText().toString();
+                    int port;
+                    if (portStr.equals("")) {
+                        port = 4400;
+                        portEditText.setText("4400");
+                    } else {
+                        try {
+                            port = Integer.parseInt(portStr);
+                        } catch (NumberFormatException e) {
+                            requestActionSnack(R.string.invalid_port);
+                            return;
+                        }
+                        if ((port <= 0) || (port >= 0xFFFF)) {
+                            requestActionSnack(R.string.invalid_port);
+                            return;
+                        }
+                    }
+                    preferences.edit().putInt(ApplicationConstants.PHD2_PORT_PREF, port).apply();
+                    connectionButton.setText(context.getString(R.string.connecting));
+                    connectionButton.setEnabled(false);
+                    serversSpinner.setEnabled(false);
+                    portEditText.setEnabled(false);
+                    phd2.connect(host, port);
+                }
+            } catch (Exception e) {
+                errorSnackbar(e);
+            }
+        });
+
+        NestedScrollView graphTab = rootView.findViewById(R.id.phd2_graph_layout);
+        View viewTab = rootView.findViewById(R.id.phd2_live_layout);
+        rootView.<TabLayout>findViewById(R.id.phd2_tabs)
+                .addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                    @Override
+                    public void onTabSelected(TabLayout.Tab tab) {
+                        if (tab.getPosition() == 0) {
+                            graphTab.stopNestedScroll();
+                            graphTab.animate().alpha(0f).setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    graphTab.setVisibility(View.GONE);
+                                }
+                            });
+                            viewTab.animate().alpha(1f).setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    viewTab.setVisibility(View.VISIBLE);
+                                    showActionbar();
+                                }
+                            });
+                        } else {
+                            graphTab.animate().alpha(1f).setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    graphTab.setVisibility(View.VISIBLE);
+                                }
+                            });
+                            viewTab.animate().alpha(0f).setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    viewTab.setVisibility(View.GONE);
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onTabUnselected(TabLayout.Tab tab) {
+
+                    }
+
+                    @Override
+                    public void onTabReselected(TabLayout.Tab tab) {
+
+                    }
+                });
+
         graph = rootView.findViewById(R.id.phd_graph);
-        phd2 = new PHD2Client("192.168.1.2", 4400);
         graph.addSeries(phd2.guidingDataRA);
         graph.addSeries(phd2.guidingDataDec);
         GridLabelRenderer gridLabel = graph.getGridLabelRenderer();
         gridLabel.setLabelFormatter(new DefaultLabelFormatter());
-        gridLabel.setNumHorizontalLabels(3);
+        gridLabel.setNumHorizontalLabels(4);
         gridLabel.setNumVerticalLabels(6);
         gridLabel.setHorizontalLabelsAngle(45);
         Viewport viewport = graph.getViewport();
-        //viewport.setMinX(0);
-        //viewport.setMaxX(200);
-        //viewport.setXAxisBoundsManual(true);
-        //viewport.setYAxisBoundsManual(true);
         viewport.setYAxisBoundsManual(true);
         viewport.setMinY(-4);
         viewport.setMaxY(4);
@@ -51,10 +195,62 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
     public void onStart() {
         super.onStart();
         phd2.addListener(this);
-        try {
-            phd2.connect();
-        } catch (ConnectionException e) {
-            e.printStackTrace();
+        if (phd2.isConnected()) {
+            PHD2Client.AppState state = phd2.appState;
+            Resources resources = context.getResources();
+            if (state == null) {
+                statusLabel.setText(context.getString(R.string.current_state_default));
+            } else {
+                statusLabel.setText(String.format(resources.getString(R.string.current_state), state.getDescription(resources)));
+            }
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        selectedSpinnerItem = serversSpinner.getSelectedItemPosition();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        phd2.removeListener(this);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (graph != null) phd2.clearGraphReference(graph);
+    }
+
+    public void errorSnackbar(Throwable e) {
+        requestActionSnack(context.getString(R.string.error) + " " + e.getLocalizedMessage());
+    }
+
+    public void loadServers(ArrayList<String> servers) {
+        if (nsdHelper.isAvailable()) {
+            HashMap<String, String> services = nsdHelper.getDiscoveredServices();
+            for (String name : services.keySet()) {
+                String ip = services.get(name);
+                if (ip != null) servers.add(name.replace("@", "") + "@" + ip);
+            }
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, servers);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        serversSpinner.setAdapter(adapter);
+        if (adapter.getCount() > selectedSpinnerItem)
+            serversSpinner.setSelection(selectedSpinnerItem);
+    }
+
+    @Override
+    public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
+        if (fromUser && (graph != null)) {
+            Viewport viewport = graph.getViewport();
+            viewport.setMinY(-value);
+            viewport.setMaxY(value);
+            graph.invalidate();
+            graph.onDataChanged(false, false);
         }
     }
 
@@ -65,26 +261,55 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
 
     @Override
     public int getActionDrawable() {
-        return R.drawable.navigation;
-    }
-
-    @Override
-    public void onPHD2ParamUpdate(PHD2Client.PHD2Param param) {
-
-    }
-
-    @Override
-    public void onPHD2CriticalError(Exception e) {
-
-    }
-
-    @Override
-    public void onPHD2Close() {
-
+        return 0;
     }
 
     @Override
     public void run() {
 
+    }
+
+    @Override
+    public void onPHD2ParamUpdate(PHD2Client.PHD2Param param) {
+        switch (param) {
+            case STATE:
+                if (statusLabel != null) {
+                    Resources resources = context.getResources();
+                    statusLabel.setText(String.format(resources.getString(R.string.current_state), phd2.appState.getDescription(resources)));
+                }
+                break;
+            case GRAPHS:
+                int graphIndex = phd2.getGraphIndex();
+                if (graphIndex < 50) {
+                    Viewport viewport = graph.getViewport();
+                    viewport.setMinX(Math.max(0, graphIndex - 50));
+                    viewport.setMaxX(graphIndex);
+                    graph.onDataChanged(false, false);
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onPHD2Connected() {
+        connectionButton.setText(context.getString(R.string.disconnect));
+        connectionButton.setEnabled(true);
+        serversSpinner.setEnabled(false);
+        portEditText.setEnabled(false);
+    }
+
+    @Override
+    public void onPHD2Disconnected() {
+        connectionButton.setText(context.getString(R.string.connect));
+        connectionButton.setEnabled(true);
+        serversSpinner.setEnabled(true);
+        portEditText.setEnabled(true);
+        statusLabel.setText(context.getString(R.string.current_state_default));
+    }
+
+    @Override
+    public void onPHD2Error(Exception e) {
+        if (!(e instanceof SocketException))
+            errorSnackbar(e);
     }
 }

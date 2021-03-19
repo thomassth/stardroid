@@ -21,19 +21,19 @@
         android:id="@+id/ccd_selection_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
         android:layout_marginTop="4dp"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
         android:layout_marginBottom="8dp"
         android:layout_weight="0"
-        android:paddingLeft="@dimen/activity_vertical_margin"
-        android:paddingRight="@dimen/activity_vertical_margin"
         tools:listitem="@layout/simple_spinner_item" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/ccd_viewer_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/activity_vertical_margin"
-        android:paddingRight="@dimen/activity_vertical_margin"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
         app:tabGravity="fill"
         app:tabMode="fixed">
 
