@@ -451,10 +451,8 @@
     <string name="rotate_horizon_preference_title">Ruota orizzonte</string>
     <string name="press_back_exit">Premi ancora per uscire</string>
     <string name="invalid_abs_position">Posizione assoluta non valida!</string>
-    <string name="nsd_not_available">Ricerca in LAN non disponibile.</string>
     <string name="catalog_load_error">Errore di caricamento del catalogo</string>
     <string name="capture_view_ccd">Cattura e visualizza</string>
-    <string name="receive_images">Ricevi immagini</string>
     <string name="unknown">sconosciuto</string>
     <string name="file_size">Peso file:</string>
     <string name="dimensions">Dimensioni:</string>
@@ -467,8 +465,6 @@
     <string name="saving_error">Errore di salvataggio!</string>
     <string name="nothing_to_save">Nulla da salvare</string>
     <string name="unsupported_format">Formato non supportato.</string>
-    <string name="empty_property">Proprietà vuota.</string>
-    <string name="error_multi_image_prop">Proprietà multi-immagine non suportata.</string>
     <string name="open_host_in_browser">Apri dispositivo nel browser</string>
     <string name="out_of_memory">Memoria non sufficiente!</string>
     <string name="truncated_file">File troncato!</string>
@@ -685,4 +681,24 @@
     <string name="ccd_capture_notification">Cattura CCD</string>
     <string name="capture_in_progress">Cattura in corso</string>
     <string name="stop_capture">Ferma</string>
+    <string name="phd2_auto_guider">Auto-guida PHD2 (SPERIMENTAL)</string>
+    <string name="guide">Guida</string>
+    <string name="stop">Ferma</string>
+    <string name="select_star">Seleziona stella</string>
+    <string name="vertical_zoom">Zoom verticale:</string>
+    <string name="live_view">Live view</string>
+    <string name="graph">Grafico</string>
+    <string name="exposure_time_short">Tempo exp.:</string>
+    <string name="current_state">Stato corrente: %s</string>
+    <string name="current_state_default">Stato corrente: -</string>
+    <string name="phd2_stopped">fermato</string>
+    <string name="phd2_selected">stella selezionata</string>
+    <string name="phd2_calibrating">calibrazione</string>
+    <string name="phd2_guiding">guida</string>
+    <string name="phd2_star_lost">stella persa</string>
+    <string name="phd2_paused">in pausa</string>
+    <string name="phd2_looping">cattura in corso</string>
+    <string name="half_flux_diameter">HDF</string>
+    <string name="signal_to_noise">SNR</string>
+    <string name="phd2_experimental_notice">La connessione con PHD2 è sperimentale, e sarà disponibile gratuitamente fino a che non sarà finita!\n\nSolamente il grafico e i pulsanti di controllo funzionano ora.\n\nPer favore, considera l'acquisto della versione Pro per supportare lo sviluppo!</string>
 </resources>

@@ -88,6 +88,7 @@ import static io.github.marcocipriani01.telescopetouch.ApplicationConstants.ACTI
 import static io.github.marcocipriani01.telescopetouch.ApplicationConstants.EXIT_ACTION_PREF;
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.nsdHelper;
+import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.phd2;
 
 /**
  * The main activity of the application, that manages all the fragments.
@@ -210,6 +211,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (connectionManager.isConnected())
                 Toast.makeText(this, R.string.disconnected, Toast.LENGTH_SHORT).show();
             connectionManager.disconnect();
+            if (phd2.isConnected()) phd2.disconnect();
         }
     }
 

@@ -106,16 +106,32 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <io.github.marcocipriani01.livephotoview.PhotoView
+            <!--<io.github.marcocipriani01.livephotoview.PhotoView
                 android:id="@+id/phd2_live_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1" />-->
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fillViewport="true">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:text="@string/phd2_experimental_notice"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/white" />
+            </ScrollView>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp">
+                android:layout_marginBottom="4dp"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"

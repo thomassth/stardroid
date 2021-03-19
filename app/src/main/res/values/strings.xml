@@ -521,10 +521,8 @@
     <string name="connection_busy_2">Already connected or busy!</string>
     <string name="press_back_exit">Press back again to exit</string>
     <string name="invalid_abs_position">Invalid absolute position!</string>
-    <string name="nsd_not_available">Network discovery unavailable</string>
     <string name="catalog_load_error">Catalog loading error!</string>
     <string name="capture_view_ccd">Capture &amp; view</string>
-    <string name="receive_images">Receive images</string>
     <string name="unknown">unknown</string>
     <string name="file_size">File size:</string>
     <string name="dimensions">Dimensions:</string>
@@ -537,8 +535,6 @@
     <string name="saving_error">Saving error!</string>
     <string name="nothing_to_save">Nothing to save</string>
     <string name="unsupported_format">Unsupported format.</string>
-    <string name="empty_property">Empty property.</string>
-    <string name="error_multi_image_prop">Unsupported multi-image property.</string>
     <string name="open_host_in_browser">Open host in browser</string>
     <string name="out_of_memory">Not enough processing memory!</string>
     <string name="truncated_file">Truncated file!</string>
@@ -685,16 +681,11 @@
     <string name="ccd_capture_notification">CCD capture</string>
     <string name="capture_in_progress">CCD capture in progress</string>
     <string name="stop_capture">Stop capture</string>
-    <string name="phd2_auto_guider">PHD2 auto-guider</string>
+    <string name="phd2_auto_guider">PHD2 auto-guider (EXPERIMENTAL)</string>
     <string name="guide">Guide</string>
     <string name="stop">Stop</string>
     <string name="select_star">Select star</string>
     <string name="vertical_zoom">Vertical zoom:</string>
-    <string name="port">Port:</string>
-    <string name="star_mass">Star mass</string>
-    <string name="snr">SNR</string>
-    <string name="corrections">Corrections</string>
-    <string name="show">Show:</string>
     <string name="live_view">Live view</string>
     <string name="graph">Graph</string>
     <string name="exposure_time_short">Exp. time:</string>
@@ -709,4 +700,5 @@
     <string name="phd2_looping">looping</string>
     <string name="half_flux_diameter">HDF</string>
     <string name="signal_to_noise">SNR</string>
+    <string name="phd2_experimental_notice">Connection with PHD2 is experimental, and will be available for free until it is completed!\n\nOnly the graph and the control buttons work now.\n\nPlase, consider buying Pro to support the development!</string>
 </resources>
