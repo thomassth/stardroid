@@ -707,4 +707,6 @@
     <string name="phd2_star_lost">star lost</string>
     <string name="phd2_paused">paused</string>
     <string name="phd2_looping">looping</string>
+    <string name="half_flux_diameter">HDF</string>
+    <string name="signal_to_noise">SNR</string>
 </resources>

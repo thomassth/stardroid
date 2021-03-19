@@ -23,7 +23,6 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
@@ -47,22 +46,22 @@ public class PHD2Client extends SimpleClient {
     private static final int DEC_COLOR = Color.parseColor("#FF1744");
     public final LineGraphSeries<DataPoint> guidingDataRA = new LineGraphSeries<>();
     public final LineGraphSeries<DataPoint> guidingDataDec = new LineGraphSeries<>();
-    public final BarGraphSeries<DataPoint> correctionDataRA = new BarGraphSeries<>();
-    public final BarGraphSeries<DataPoint> correctionDataDec = new BarGraphSeries<>();
-    public final LineGraphSeries<DataPoint> starMassData = new LineGraphSeries<>();
-    public final LineGraphSeries<DataPoint> snrData = new LineGraphSeries<>();
     private final Handler uiHandler = new Handler(Looper.getMainLooper());
     private final Set<PHD2Listener> listeners = new HashSet<>();
+    private final AtomicInteger graphIndex = new AtomicInteger();
+    public int raCorrection = 0;
+    public boolean raCorrectionSign = false;
+    public int decCorrection = 0;
+    public boolean decCorrectionSign = false;
+    public double hdf = -1.0;
+    public double snr = -1.0;
     public volatile String version;
     public volatile AppState appState;
-    private volatile AtomicInteger graphIndex = new AtomicInteger();
 
     public PHD2Client() {
         super();
         guidingDataRA.setColor(RA_COLOR);
         guidingDataDec.setColor(DEC_COLOR);
-        correctionDataRA.setColor(RA_COLOR);
-        correctionDataDec.setColor(DEC_COLOR);
     }
 
     public int getGraphIndex() {
@@ -96,20 +95,12 @@ public class PHD2Client extends SimpleClient {
     public void clearGraphReference(GraphView graph) {
         guidingDataRA.clearReference(graph);
         guidingDataDec.clearReference(graph);
-        correctionDataRA.clearReference(graph);
-        correctionDataDec.clearReference(graph);
-        starMassData.clearReference(graph);
-        snrData.clearReference(graph);
     }
 
     public void clearData() {
         graphIndex.set(0);
         guidingDataRA.resetData(new DataPoint[0]);
         guidingDataDec.resetData(new DataPoint[0]);
-        correctionDataRA.resetData(new DataPoint[0]);
-        correctionDataDec.resetData(new DataPoint[0]);
-        starMassData.resetData(new DataPoint[0]);
-        snrData.resetData(new DataPoint[0]);
     }
 
     @Override
@@ -140,8 +131,10 @@ public class PHD2Client extends SimpleClient {
         Log.i(TAG, msg.replace("\n", " | "));
         try {
             JSONObject block = new JSONObject(msg);
-            Event event = Event.get(block.getString("Event"));
-            if (event != null) event.parse(this, block);
+            if (block.has("Event")) {
+                Event event = Event.get(block.getString("Event"));
+                if (event != null) event.parse(this, block);
+            }
         } catch (JSONException e) {
             onError(e);
         }
@@ -159,8 +152,24 @@ public class PHD2Client extends SimpleClient {
         });
     }
 
+    public void startLoop() {
+        println("{\"method\": \"loop\", \"id\": 0}");
+    }
+
+    public void findStar() {
+        println("{\"method\": \"find_star\", \"id\": 0}");
+    }
+
+    public void stopCapture() {
+        println("{\"method\": \"stop_capture\", \"id\": 0}");
+    }
+
+    public void startGuiding() {
+        println("{\"method\": \"guide\", \"params\": {\"settle\": {\"pixels\": 3.0, \"time\": 10, \"timeout\": 40}}, \"id\": 0}");
+    }
+
     public enum PHD2Param {
-        VERSION, STATE, GRAPHS
+        VERSION, STATE, GUIDE_VALUES
     }
 
     public enum Event {
@@ -212,7 +221,21 @@ public class PHD2Client extends SimpleClient {
                 phd.guidingDataRA.appendData(raVal, true, maxDataPoints);
                 phd.guidingDataDec.appendData(decVal, true, maxDataPoints);
             });
-        }, PHD2Param.STATE, PHD2Param.GRAPHS),
+            if (msg.has("RADuration")) {
+                phd.raCorrection = msg.getInt("RADuration");
+                phd.raCorrectionSign = msg.getString("RADirection").equals("East");
+            } else {
+                phd.raCorrection = 0;
+            }
+            if (msg.has("DECDuration")) {
+                phd.decCorrection = msg.getInt("DECDuration");
+                phd.decCorrectionSign = msg.getString("DECDirection").equals("North");
+            } else {
+                phd.decCorrection = 0;
+            }
+            phd.hdf = msg.getDouble("HFD");
+            phd.snr = msg.getDouble("SNR");
+        }, PHD2Param.STATE, PHD2Param.GUIDE_VALUES),
         GuidingDithered(null),
         LockPositionLost(null),
         Alert(null),

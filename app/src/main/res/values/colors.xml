@@ -15,4 +15,8 @@
     <color name="light_green">#4CAF50</color>
     <color name="light_red">#F44336</color>
     <color name="light_yellow">#FFEB3B</color>
+
+    <color name="phd2_ra">#448AFF</color>
+    <color name="phd2_dec">#FF1744</color>
+    <color name="phd2_hfd">#FFEB3B</color>
 </resources>

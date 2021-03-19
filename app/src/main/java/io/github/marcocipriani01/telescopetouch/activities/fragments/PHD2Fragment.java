@@ -30,11 +30,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.preference.PreferenceManager;
 
@@ -57,7 +59,7 @@ import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.nsdHelp
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.phd2;
 import static io.github.marcocipriani01.telescopetouch.activities.ServersActivity.getServers;
 
-public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Listener, Slider.OnChangeListener {
+public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Listener, Slider.OnChangeListener, View.OnClickListener {
 
     private static int selectedSpinnerItem = 0;
     private SharedPreferences preferences;
@@ -66,6 +68,9 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
     private Spinner serversSpinner;
     private EditText portEditText;
     private TextView statusLabel;
+    private TextView raCorrectionLabel, decCorrectionLabel;
+    private TextView hdfLabel, snrLabel;
+    private ImageButton loopBtn, findStarBtn, guideBtn, stopBtn;
 
     @SuppressLint("SetTextI18n")
     @Nullable
@@ -76,6 +81,18 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
         Slider zoomSlider = rootView.findViewById(R.id.phd2_zoom_slider);
         zoomSlider.addOnChangeListener(this);
         statusLabel = rootView.findViewById(R.id.phd2_state);
+        raCorrectionLabel = rootView.findViewById(R.id.phd2_correction_ra);
+        decCorrectionLabel = rootView.findViewById(R.id.phd2_correction_dec);
+        hdfLabel = rootView.findViewById(R.id.phd2_star_mass);
+        snrLabel = rootView.findViewById(R.id.phd2_snr);
+        loopBtn = rootView.findViewById(R.id.phd_loop_btn);
+        loopBtn.setOnClickListener(this);
+        findStarBtn = rootView.findViewById(R.id.phd_auto_select_btn);
+        findStarBtn.setOnClickListener(this);
+        guideBtn = rootView.findViewById(R.id.phd_guide_btn);
+        guideBtn.setOnClickListener(this);
+        stopBtn = rootView.findViewById(R.id.phd_stop_btn);
+        stopBtn.setOnClickListener(this);
         connectionButton = rootView.findViewById(R.id.phd2_connect_button);
         serversSpinner = rootView.findViewById(R.id.phd2_host_spinner);
         loadServers(getServers(preferences));
@@ -196,6 +213,7 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
         super.onStart();
         phd2.addListener(this);
         if (phd2.isConnected()) {
+            onPHD2Connected();
             PHD2Client.AppState state = phd2.appState;
             Resources resources = context.getResources();
             if (state == null) {
@@ -203,6 +221,8 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
             } else {
                 statusLabel.setText(String.format(resources.getString(R.string.current_state), state.getDescription(resources)));
             }
+        } else {
+            onPHD2Disconnected();
         }
     }
 
@@ -244,6 +264,23 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
     }
 
     @Override
+    public void onClick(View v) {
+        try {
+            if (v == loopBtn) {
+                phd2.startLoop();
+            } else if (v == findStarBtn) {
+                phd2.findStar();
+            } else if (v == guideBtn) {
+                phd2.startGuiding();
+            } else if (v == stopBtn) {
+                phd2.stopCapture();
+            }
+        } catch (Exception e) {
+            errorSnackbar(e);
+        }
+    }
+
+    @Override
     public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
         if (fromUser && (graph != null)) {
             Viewport viewport = graph.getViewport();
@@ -269,6 +306,7 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
 
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onPHD2ParamUpdate(PHD2Client.PHD2Param param) {
         switch (param) {
@@ -278,14 +316,36 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
                     statusLabel.setText(String.format(resources.getString(R.string.current_state), phd2.appState.getDescription(resources)));
                 }
                 break;
-            case GRAPHS:
+            case GUIDE_VALUES:
                 int graphIndex = phd2.getGraphIndex();
-                if (graphIndex < 50) {
+                if ((graphIndex < 50) && (graph != null)) {
                     Viewport viewport = graph.getViewport();
                     viewport.setMinX(Math.max(0, graphIndex - 50));
                     viewport.setMaxX(graphIndex);
                     graph.onDataChanged(false, false);
                 }
+                if (raCorrectionLabel != null) {
+                    if (phd2.raCorrection == 0) {
+                        raCorrectionLabel.setVisibility(View.INVISIBLE);
+                    } else {
+                        raCorrectionLabel.setText(phd2.raCorrection + " ms");
+                        raCorrectionLabel.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context,
+                                phd2.raCorrectionSign ? R.drawable.arrow_forward : R.drawable.arrow_back), null, null, null);
+                        raCorrectionLabel.setVisibility(View.VISIBLE);
+                    }
+                }
+                if (decCorrectionLabel != null) {
+                    if (phd2.decCorrection == 0) {
+                        decCorrectionLabel.setVisibility(View.INVISIBLE);
+                    } else {
+                        decCorrectionLabel.setText(phd2.decCorrection + " ms");
+                        decCorrectionLabel.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context,
+                                phd2.decCorrectionSign ? R.drawable.arrow_upward : R.drawable.arrow_downward), null, null, null);
+                        decCorrectionLabel.setVisibility(View.VISIBLE);
+                    }
+                }
+                hdfLabel.setText("HDF " + phd2.hdf);
+                snrLabel.setText("SNR " + phd2.snr);
                 break;
         }
     }
@@ -296,6 +356,10 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
         connectionButton.setEnabled(true);
         serversSpinner.setEnabled(false);
         portEditText.setEnabled(false);
+        loopBtn.setEnabled(true);
+        findStarBtn.setEnabled(true);
+        guideBtn.setEnabled(true);
+        stopBtn.setEnabled(true);
     }
 
     @Override
@@ -305,6 +369,14 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
         serversSpinner.setEnabled(true);
         portEditText.setEnabled(true);
         statusLabel.setText(context.getString(R.string.current_state_default));
+        raCorrectionLabel.setVisibility(View.INVISIBLE);
+        decCorrectionLabel.setVisibility(View.INVISIBLE);
+        hdfLabel.setText(R.string.half_flux_diameter);
+        snrLabel.setText(R.string.signal_to_noise);
+        loopBtn.setEnabled(false);
+        findStarBtn.setEnabled(false);
+        guideBtn.setEnabled(false);
+        stopBtn.setEnabled(false);
     }
 
     @Override

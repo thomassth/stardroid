@@ -217,6 +217,64 @@
                     android:layout_width="match_parent"
                     android:layout_height="350dp" />
 
+                <LinearLayout>
+
+                    <TextView
+                        android:id="@+id/phd2_correction_ra"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:drawablePadding="8dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/phd2_ra"
+                        android:visibility="invisible"
+                        app:drawableLeftCompat="@drawable/arrow_forward"
+                        app:drawableTint="@color/phd2_ra" />
+
+                    <TextView
+                        android:id="@+id/phd2_correction_dec"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:drawablePadding="8dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/phd2_dec"
+                        android:visibility="invisible"
+                        app:drawableLeftCompat="@drawable/arrow_upward"
+                        app:drawableTint="@color/phd2_dec" />
+                </LinearLayout>
+
+                <LinearLayout android:layout_marginTop="4dp">
+
+                    <TextView
+                        android:id="@+id/phd2_star_mass"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:drawablePadding="8dp"
+                        android:text="@string/half_flux_diameter"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/phd2_hfd"
+                        app:drawableLeftCompat="@drawable/star_circle"
+                        app:drawableTint="@color/phd2_hfd" />
+
+                    <TextView
+                        android:id="@+id/phd2_snr"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:drawablePadding="8dp"
+                        android:text="@string/signal_to_noise"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/white"
+                        app:drawableLeftCompat="@drawable/blur"
+                        app:drawableTint="@android:color/white" />
+                </LinearLayout>
+
                 <TableRow
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp">
@@ -246,49 +304,6 @@
                         app:tickVisible="false"
                         app:trackColorActive="@color/colorAccent"
                         app:trackHeight="3dp" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:text="@string/show"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="@android:color/white" />
-
-                    <LinearLayout android:orientation="vertical">
-
-                        <CheckBox
-                            android:id="@+id/phd2_corrections_box"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="8dp"
-                            android:layout_weight="1"
-                            android:text="@string/corrections"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-                        <CheckBox
-                            android:id="@+id/phd2_snr_box"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="8dp"
-                            android:layout_weight="1"
-                            android:text="@string/snr"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-                        <CheckBox
-                            android:id="@+id/phd2_star_mass_box"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="8dp"
-                            android:layout_weight="1"
-                            android:text="@string/star_mass"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-                    </LinearLayout>
                 </TableRow>
             </TableLayout>
         </androidx.core.widget.NestedScrollView>
