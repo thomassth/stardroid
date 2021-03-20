@@ -681,7 +681,7 @@
     <string name="ccd_capture_notification">Cattura CCD</string>
     <string name="capture_in_progress">Cattura in corso</string>
     <string name="stop_capture">Ferma</string>
-    <string name="phd2_auto_guider">Auto-guida PHD2 (SPERIMENTAL)</string>
+    <string name="phd2_auto_guider">Auto-guida PHD2 (SPERIMENTALE)</string>
     <string name="guide">Guida</string>
     <string name="stop">Ferma</string>
     <string name="select_star">Seleziona stella</string>
@@ -700,6 +700,5 @@
     <string name="phd2_looping">cattura in corso</string>
     <string name="half_flux_diameter">HDF</string>
     <string name="signal_to_noise">SNR</string>
-    <string name="phd2_experimental_notice">La connessione con PHD2 è sperimentale, e sarà disponibile gratuitamente fino a che non sarà finita!\n\nSolamente il grafico e i pulsanti di controllo funzionano ora.\n\nPer favore, considera l\'acquisto della versione Pro per supportare lo sviluppo!</string>
     <string name="guide_settled">Auto-guida stabilizzata con successo</string>
 </resources>
