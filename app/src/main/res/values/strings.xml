@@ -681,7 +681,7 @@
     <string name="ccd_capture_notification">CCD capture</string>
     <string name="capture_in_progress">CCD capture in progress</string>
     <string name="stop_capture">Stop capture</string>
-    <string name="phd2_auto_guider">PHD2 auto-guider (EXPERIMENTAL)</string>
+    <string name="phd2_auto_guider">PHD2 auto-guider</string>
     <string name="guide">Guide</string>
     <string name="stop">Stop</string>
     <string name="select_star">Select star</string>
@@ -702,4 +702,6 @@
     <string name="signal_to_noise">SNR</string>
     <string name="phd2_experimental_notice">Connection with PHD2 is experimental, and will be available for free until it is completed!\n\nOnly the graph and the control buttons work now.\n\nPlase, consider buying Pro to support the development!</string>
     <string name="guide_settled">Auto-guider settled successfully</string>
+    <string name="receive_images">Receive images</string>
+    <string name="auto_stretch_image">Auto-stretch image</string>
 </resources>

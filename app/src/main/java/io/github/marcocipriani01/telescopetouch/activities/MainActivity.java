@@ -331,6 +331,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             // END PRO
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+        } else if (page == Pages.PHD2) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         } else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_USER);
         }

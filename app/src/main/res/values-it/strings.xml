@@ -681,7 +681,7 @@
     <string name="ccd_capture_notification">Cattura CCD</string>
     <string name="capture_in_progress">Cattura in corso</string>
     <string name="stop_capture">Ferma</string>
-    <string name="phd2_auto_guider">Auto-guida PHD2 (SPERIMENTALE)</string>
+    <string name="phd2_auto_guider">Auto-guida PHD2</string>
     <string name="guide">Guida</string>
     <string name="stop">Ferma</string>
     <string name="select_star">Seleziona stella</string>
@@ -701,4 +701,6 @@
     <string name="half_flux_diameter">HDF</string>
     <string name="signal_to_noise">SNR</string>
     <string name="guide_settled">Auto-guida stabilizzata con successo</string>
+    <string name="receive_images">Ricevi immagini</string>
+    <string name="auto_stretch_image">Stira immagini</string>
 </resources>
