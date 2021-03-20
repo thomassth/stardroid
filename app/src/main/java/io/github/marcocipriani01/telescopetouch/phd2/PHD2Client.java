@@ -57,6 +57,7 @@ public class PHD2Client extends SimpleClient {
     public double snr = -1.0;
     public volatile String version;
     public volatile AppState appState;
+    public volatile ConnectionState connectionState = ConnectionState.UNKNOWN;
 
     public PHD2Client() {
         super();
@@ -168,15 +169,18 @@ public class PHD2Client extends SimpleClient {
         println("{\"method\": \"guide\", \"params\": {\"settle\": {\"pixels\": 3.0, \"time\": 10, \"timeout\": 40}}, \"id\": 0}");
     }
 
+    //private enum PHD2RPC {
+    //}
+
     public enum PHD2Param {
-        VERSION, STATE, GUIDE_VALUES
+        VERSION, STATE, GUIDE_VALUES, SETTLE_DONE
     }
 
-    public enum Event {
+    private enum Event {
         Version((phd, msg) -> {
             phd.version = msg.getString("PHDVersion");
             if (msg.getInt("MsgVersion") != SUPPORTED_MSG_VERSION) {
-                phd.onError(new UnsupportedOperationException("Unsupported PHD2 message protocol!"));
+                phd.onError(new UnsupportedOperationException("Unsupported PHD2 version!"));
                 phd.disconnect();
             }
         }, PHD2Param.VERSION),
@@ -205,7 +209,7 @@ public class PHD2Client extends SimpleClient {
         }, PHD2Param.STATE),
         SettleBegin(null),
         Settling(null),
-        SettleDone(null),
+        SettleDone(null, PHD2Param.SETTLE_DONE),
         StarLost((phd, msg) -> {
             phd.appState = PHD2Client.AppState.LostLock;
         }, PHD2Param.STATE),
@@ -258,11 +262,13 @@ public class PHD2Client extends SimpleClient {
         }
 
         void parse(PHD2Client client, JSONObject msg) throws JSONException {
-            if (action != null) {
-                action.run(client, msg);
-                if (updatedParams.length != 0) client.notifyParamUpdate(updatedParams);
-            }
+            if (action != null) action.run(client, msg);
+            if (updatedParams.length != 0) client.notifyParamUpdate(updatedParams);
         }
+    }
+
+    public enum ConnectionState {
+        CONNECTED, DISCONNECTED, UNKNOWN
     }
 
     public enum AppState {

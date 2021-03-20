@@ -347,6 +347,9 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
                 hdfLabel.setText("HDF " + phd2.hdf);
                 snrLabel.setText("SNR " + phd2.snr);
                 break;
+            case SETTLE_DONE:
+                requestActionSnack(R.string.guide_settled);
+                break;
         }
     }
 

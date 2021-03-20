@@ -701,4 +701,5 @@
     <string name="half_flux_diameter">HDF</string>
     <string name="signal_to_noise">SNR</string>
     <string name="phd2_experimental_notice">Connection with PHD2 is experimental, and will be available for free until it is completed!\n\nOnly the graph and the control buttons work now.\n\nPlase, consider buying Pro to support the development!</string>
+    <string name="guide_settled">Auto-guider settled successfully</string>
 </resources>
