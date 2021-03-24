@@ -46,7 +46,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.widget.NestedScrollView;
 import androidx.preference.PreferenceManager;
 
 import com.google.android.material.slider.Slider;
@@ -203,8 +202,8 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
             }
         });
 
-        NestedScrollView graphTab = rootView.findViewById(R.id.phd2_graph_layout);
-        View viewTab = rootView.findViewById(R.id.phd2_live_layout);
+        View graphTab = rootView.findViewById(R.id.phd2_graph_layout),
+                viewTab = rootView.findViewById(R.id.phd2_live_layout);
         rootView.<TabLayout>findViewById(R.id.phd2_tabs)
                 .addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                     @Override
@@ -271,7 +270,7 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
     public void onStart() {
         super.onStart();
         phd2.addListener(this);
-        if (phd2.isConnected()) {
+        if (phd2.isConnected() && (statusLabel != null)) {
             onPHD2Connected();
             PHD2Client.AppState state = phd2.appState;
             Resources resources = context.getResources();

@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="?android:attr/actionBarSize"
+    android:orientation="vertical"
+    android:paddingBottom="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
+        android:layout_weight="0"
+        android:orientation="horizontal">
+
+        <Spinner
+            android:id="@+id/phd2_host_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="2"
+            android:prompt="@string/host_prompt"
+            tools:listitem="@layout/simple_spinner_item" />
+
+        <EditText
+            android:id="@+id/phd2_port_field"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:ems="5"
+            android:hint="4400"
+            android:imeOptions="flagNoExtractUi"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            tools:ignore="HardcodedText" />
+
+        <Button
+            android:id="@+id/phd2_connect_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/connect"
+            android:drawableTint="@android:color/white"
+            android:text="@string/connect"
+            tools:targetApi="m" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/phd2_tabs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_weight="1"
+            app:tabGravity="fill"
+            app:tabMode="fixed">
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/live_view" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/graph" />
+        </com.google.android.material.tabs.TabLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
+        android:layout_weight="1"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            style="@style/Widget.AppCompat.ButtonBar"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="0"
+            android:orientation="vertical"
+            tools:ignore="NestedWeights">
+
+            <ImageButton
+                android:id="@+id/phd_connect_dev_btn"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:contentDescription="@string/connect"
+                android:scaleType="fitCenter"
+                android:src="@drawable/connect"
+                android:tint="@android:color/white"
+                android:tooltipText="@string/connect"
+                tools:targetApi="o" />
+
+            <ImageButton
+                android:id="@+id/phd_loop_btn"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:contentDescription="@string/loop"
+                android:scaleType="fitCenter"
+                android:src="@drawable/loop"
+                android:tooltipText="@string/loop"
+                tools:targetApi="o" />
+
+            <ImageButton
+                android:id="@+id/phd_auto_select_btn"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:contentDescription="@string/select_star"
+                android:scaleType="fitCenter"
+                android:src="@drawable/select_star"
+                android:tooltipText="@string/select_star"
+                tools:targetApi="o" />
+
+            <ImageButton
+                android:id="@+id/phd_guide_btn"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:contentDescription="@string/guide"
+                android:scaleType="fitCenter"
+                android:src="@drawable/phd2"
+                android:tint="@android:color/white"
+                android:tooltipText="@string/guide"
+                tools:targetApi="o" />
+
+            <ImageButton
+                android:id="@+id/phd_stop_btn"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:contentDescription="@string/stop"
+                android:scaleType="fitCenter"
+                android:src="@drawable/stop"
+                android:tooltipText="@string/stop"
+                tools:targetApi="o" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:id="@+id/phd2_live_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_weight="0"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/phd_receive_images_switch"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="16dp"
+                        android:layout_weight="1"
+                        android:text="@string/receive_images"
+                        app:switchMinWidth="60dp"
+                        tools:ignore="NestedWeights" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/phd_stretch_images_switch"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/auto_stretch_image"
+                        app:switchMinWidth="60dp" />
+                </LinearLayout>
+
+                <io.github.marcocipriani01.livephotoview.PhotoView
+                    android:id="@+id/phd2_live_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="6dp">
+
+                    <TextView
+                        android:layout_width="79dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_weight="1"
+                        android:text="@string/exposure_time_short"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/white" />
+
+                    <io.github.marcocipriani01.telescopetouch.activities.views.SameSelectionSpinner
+                        android:id="@+id/phd2_exposure_spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_weight="2"
+                        tools:listitem="@layout/simple_spinner_item" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <ScrollView
+                android:id="@+id/phd2_graph_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.jjoe64.graphview.GraphView
+                        android:id="@+id/phd_graph"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/guiding_values_in_pixels" />
+
+                    <LinearLayout android:layout_marginTop="4dp">
+
+                        <TextView
+                            android:id="@+id/phd2_correction_ra"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:drawablePadding="8dp"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/phd2_ra"
+                            android:visibility="invisible"
+                            app:drawableLeftCompat="@drawable/arrow_forward"
+                            app:drawableTint="@color/phd2_ra" />
+
+                        <TextView
+                            android:id="@+id/phd2_correction_dec"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:drawablePadding="8dp"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/phd2_dec"
+                            android:visibility="invisible"
+                            app:drawableLeftCompat="@drawable/arrow_upward"
+                            app:drawableTint="@color/phd2_dec" />
+                    </LinearLayout>
+
+                    <LinearLayout android:layout_marginTop="4dp">
+
+                        <TextView
+                            android:id="@+id/phd2_star_mass"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:drawablePadding="8dp"
+                            android:text="@string/half_flux_diameter"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/phd2_hfd"
+                            app:drawableLeftCompat="@drawable/star_circle"
+                            app:drawableTint="@color/phd2_hfd" />
+
+                        <TextView
+                            android:id="@+id/phd2_snr"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:drawablePadding="8dp"
+                            android:text="@string/signal_to_noise"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@android:color/white"
+                            app:drawableLeftCompat="@drawable/blur"
+                            app:drawableTint="@android:color/white" />
+                    </LinearLayout>
+
+                    <TableRow
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:layout_weight="0"
+                            android:text="@string/vertical_zoom"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@android:color/white" />
+
+                        <com.google.android.material.slider.Slider
+                            android:id="@+id/phd2_zoom_slider"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_weight="1"
+                            android:stepSize="2"
+                            android:valueFrom="1"
+                            android:valueTo="15"
+                            app:haloColor="@color/colorAccent"
+                            app:thumbColor="@color/colorAccent"
+                            app:thumbStrokeColor="@color/colorAccent"
+                            app:tickColor="@color/colorAccent"
+                            app:tickVisible="false"
+                            app:trackColorActive="@color/colorAccent"
+                            app:trackHeight="3dp" />
+                    </TableRow>
+
+                    <TableRow android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:text="@string/declination_guide_mode"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@android:color/white" />
+
+                        <io.github.marcocipriani01.telescopetouch.activities.views.SameSelectionSpinner
+                            android:id="@+id/phd2_dec_guide_mode"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_weight="1"
+                            tools:listitem="@layout/simple_spinner_item" />
+                    </TableRow>
+                </TableLayout>
+            </ScrollView>
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>
