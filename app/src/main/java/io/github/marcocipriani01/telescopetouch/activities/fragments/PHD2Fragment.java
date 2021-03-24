@@ -270,15 +270,14 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
     public void onStart() {
         super.onStart();
         phd2.addListener(this);
-        if (phd2.isConnected() && (statusLabel != null)) {
+        if (phd2.isConnected()) {
             onPHD2Connected();
             PHD2Client.AppState state = phd2.appState;
             Resources resources = context.getResources();
-            if (state == null) {
-                statusLabel.setText(context.getString(R.string.current_state_default));
-            } else {
-                statusLabel.setText(String.format(resources.getString(R.string.current_state), state.getDescription(resources)));
-            }
+            if (statusLabel != null)
+                statusLabel.setText((state == null) ?
+                        context.getString(R.string.current_state_default) :
+                        String.format(resources.getString(R.string.current_state), state.getDescription(resources)));
         } else {
             onPHD2Disconnected();
         }

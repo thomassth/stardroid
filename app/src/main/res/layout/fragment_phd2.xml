@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="?android:attr/actionBarSize"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
@@ -23,7 +24,7 @@
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:orientation="horizontal">
 
-        <Spinner
+        <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/phd2_host_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -102,7 +103,6 @@
             android:id="@+id/phd2_live_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="?android:attr/actionBarSize"
             android:orientation="vertical">
 
             <androidx.appcompat.widget.SwitchCompat
@@ -233,16 +233,16 @@
             </LinearLayout>
         </LinearLayout>
 
-        <androidx.core.widget.NestedScrollView
+        <ScrollView
             android:id="@+id/phd2_graph_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#00FFFFFF"
             android:visibility="gone">
 
             <TableLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="?android:attr/actionBarSize">
+                android:layout_height="wrap_content">
 
                 <com.jjoe64.graphview.GraphView
                     android:id="@+id/phd_graph"
@@ -362,6 +362,6 @@
                         tools:listitem="@layout/simple_spinner_item" />
                 </TableRow>
             </TableLayout>
-        </androidx.core.widget.NestedScrollView>
+        </ScrollView>
     </FrameLayout>
 </LinearLayout>
