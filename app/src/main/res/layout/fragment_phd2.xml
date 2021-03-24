@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="?android:attr/actionBarSize"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
@@ -104,6 +103,7 @@
             android:id="@+id/phd2_live_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="?android:attr/actionBarSize"
             android:orientation="vertical">
 
             <androidx.appcompat.widget.SwitchCompat
@@ -170,8 +170,7 @@
                 android:orientation="horizontal"
                 tools:ignore="NestedWeights">
 
-                <!--TODO: implement-->
-                <!--<ImageButton
+                <ImageButton
                     android:id="@+id/phd_connect_dev_btn"
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="wrap_content"
@@ -181,8 +180,8 @@
                     android:scaleType="fitCenter"
                     android:src="@drawable/connect"
                     android:tint="@android:color/white"
-                    android:tooltipText="@string/loop"
-                    tools:targetApi="o" />-->
+                    android:tooltipText="@string/connect"
+                    tools:targetApi="o" />
 
                 <ImageButton
                     android:id="@+id/phd_loop_btn"
@@ -243,14 +242,20 @@
 
             <TableLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginBottom="?android:attr/actionBarSize">
 
                 <com.jjoe64.graphview.GraphView
                     android:id="@+id/phd_graph"
                     android:layout_width="match_parent"
                     android:layout_height="350dp" />
 
-                <LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/guiding_values_in_pixels" />
+
+                <LinearLayout android:layout_marginTop="4dp">
 
                     <TextView
                         android:id="@+id/phd2_correction_ra"
@@ -337,6 +342,25 @@
                         app:tickVisible="false"
                         app:trackColorActive="@color/colorAccent"
                         app:trackHeight="3dp" />
+                </TableRow>
+
+                <TableRow android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:text="@string/declination_guide_mode"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/white" />
+
+                    <io.github.marcocipriani01.telescopetouch.activities.views.SameSelectionSpinner
+                        android:id="@+id/phd2_dec_guide_mode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_weight="1"
+                        tools:listitem="@layout/simple_spinner_item" />
                 </TableRow>
             </TableLayout>
         </androidx.core.widget.NestedScrollView>

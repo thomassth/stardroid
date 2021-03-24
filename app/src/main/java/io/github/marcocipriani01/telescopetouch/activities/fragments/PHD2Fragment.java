@@ -20,6 +20,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.BlendMode;
@@ -57,10 +58,12 @@ import com.jjoe64.graphview.Viewport;
 
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import io.github.marcocipriani01.livephotoview.PhotoView;
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
+import io.github.marcocipriani01.telescopetouch.ProUtils;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.activities.util.ImprovedSpinnerListener;
 import io.github.marcocipriani01.telescopetouch.activities.views.SameSelectionSpinner;
@@ -76,7 +79,21 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
     private final ImprovedSpinnerListener exposureSpinnerListener = new ImprovedSpinnerListener() {
         @Override
         protected void onImprovedItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-            PHD2Client.PHD2Command.set_exposure.run(phd2, (int) phd2.exposureTimes[pos] * 1000);
+            try {
+                PHD2Client.PHD2Command.set_exposure.run(phd2, (int) phd2.exposureTimes[pos] * 1000);
+            } catch (Exception e) {
+                requestActionSnack(context.getString(R.string.error) + " " + e.getLocalizedMessage());
+            }
+        }
+    };
+    private final ImprovedSpinnerListener decGuideModeSpinnerListener = new ImprovedSpinnerListener() {
+        @Override
+        protected void onImprovedItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+            try {
+                PHD2Client.PHD2Command.set_dec_guide_mode.run(phd2, PHD2Client.DEC_GUIDE_MODES[pos]);
+            } catch (Exception e) {
+                requestActionSnack(context.getString(R.string.error) + " " + e.getLocalizedMessage());
+            }
         }
     };
     private SharedPreferences preferences;
@@ -87,10 +104,12 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
     private TextView statusLabel;
     private TextView raCorrectionLabel, decCorrectionLabel;
     private TextView hdfLabel, snrLabel;
-    private ImageButton loopBtn, findStarBtn, guideBtn, stopBtn;
+    private ImageButton connectDevBtn, loopBtn, findStarBtn, guideBtn, stopBtn;
     private SameSelectionSpinner exposureSpinner;
     private PhotoView liveView;
     private SwitchCompat receiveImagesSwitch, stretchImagesSwitch;
+    private int selectedItemTemp;
+    private SameSelectionSpinner decGuideModeSpinner;
 
     @SuppressLint("SetTextI18n")
     @Nullable
@@ -102,6 +121,9 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
         zoomSlider.addOnChangeListener(this);
         exposureSpinner = rootView.findViewById(R.id.phd2_exposure_spinner);
         exposureSpinnerListener.attach(exposureSpinner);
+        decGuideModeSpinner = rootView.findViewById(R.id.phd2_dec_guide_mode);
+        decGuideModeSpinner.setAdapter(new ArrayAdapter<>(context, R.layout.simple_spinner_item, PHD2Client.DEC_GUIDE_MODES));
+        decGuideModeSpinnerListener.attach(decGuideModeSpinner);
         receiveImagesSwitch = rootView.findViewById(R.id.phd_receive_images_switch);
         stretchImagesSwitch = rootView.findViewById(R.id.phd_stretch_images_switch);
         liveView = rootView.findViewById(R.id.phd2_live_view);
@@ -110,6 +132,8 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
         decCorrectionLabel = rootView.findViewById(R.id.phd2_correction_dec);
         hdfLabel = rootView.findViewById(R.id.phd2_star_mass);
         snrLabel = rootView.findViewById(R.id.phd2_snr);
+        connectDevBtn = rootView.findViewById(R.id.phd_connect_dev_btn);
+        connectDevBtn.setOnClickListener(this);
         loopBtn = rootView.findViewById(R.id.phd_loop_btn);
         loopBtn.setOnClickListener(this);
         findStarBtn = rootView.findViewById(R.id.phd_auto_select_btn);
@@ -136,6 +160,16 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
                 if (phd2.isConnected()) {
                     phd2.disconnect();
                 } else {
+                    // PRO
+                    if (!ProUtils.isPro) {
+                        int count = preferences.getInt(ProUtils.PHD2_PRO_COUNTER, 0);
+                        if (count >= ProUtils.MAX_PHD2_CONNECTIONS) {
+                            requestActionSnack(R.string.buy_pro_continue_phd2);
+                            return;
+                        }
+                        preferences.edit().putInt(ProUtils.PHD2_PRO_COUNTER, count + 1).apply();
+                    }
+                    // END PRO
                     if (host.contains("@")) {
                         String[] split = host.split("@");
                         if (split.length == 2) host = split[1];
@@ -288,13 +322,41 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
     public void onClick(View v) {
         try {
             if (v == loopBtn) {
-                phd2.startLoop();
+                PHD2Client.PHD2Command.loop.run(phd2);
             } else if (v == findStarBtn) {
-                phd2.findStar();
+                PHD2Client.PHD2Command.find_star.run(phd2);
             } else if (v == guideBtn) {
-                phd2.startGuiding();
+                PHD2Client.PHD2Command.guide.run(phd2);
             } else if (v == stopBtn) {
-                phd2.stopCapture();
+                PHD2Client.PHD2Command.stop_capture.run(phd2);
+            } else if (v == connectDevBtn) {
+                String[] profiles;
+                selectedItemTemp = 0;
+                synchronized (phd2.profiles) {
+                    int size = phd2.profiles.size(), i = 0;
+                    profiles = new String[size];
+                    for (String p : phd2.profiles.keySet()) {
+                        profiles[i] = p;
+                        if (p.equals(phd2.currentProfile))
+                            selectedItemTemp = i;
+                        i++;
+                    }
+                }
+                new AlertDialog.Builder(context)
+                        .setTitle(R.string.phd2_auto_guider).setIcon(R.drawable.phd2)
+                        .setSingleChoiceItems(profiles, selectedItemTemp, (dialog, which) -> selectedItemTemp = which)
+                        .setPositiveButton(R.string.connect, (dialog, which) -> {
+                            Integer id;
+                            synchronized (phd2.profiles) {
+                                id = phd2.profiles.get(profiles[selectedItemTemp]);
+                            }
+                            if (id != null)
+                                PHD2Client.PHD2Command.set_profile.run(phd2, (int) id);
+                            PHD2Client.PHD2Command.set_connected.run(phd2, true);
+                        })
+                        .setNeutralButton(R.string.disconnect, (dialog, which) ->
+                                PHD2Client.PHD2Command.set_connected.run(phd2, false))
+                        .setNegativeButton(android.R.string.cancel, null).show();
             }
         } catch (Exception e) {
             requestActionSnack(context.getString(R.string.error) + " " + e.getLocalizedMessage());
@@ -437,6 +499,20 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
             case IMAGE:
                 if (liveView != null) liveView.setImageBitmap(phd2.bitmap);
                 break;
+            case CONNECTION:
+                if (connectDevBtn != null)
+                    setButtonColor(connectDevBtn, context.getResources()
+                            .getColor((phd2.connectionState == PHD2Client.ConnectionState.CONNECTED) ?
+                                    R.color.light_green : R.color.light_red));
+                break;
+            case PROFILES:
+                if (connectDevBtn != null)
+                    connectDevBtn.setEnabled(true);
+                break;
+            case DEC_GUIDE_MODE:
+                if (decGuideModeSpinner != null)
+                    decGuideModeSpinner.setSelection(Arrays.asList(PHD2Client.DEC_GUIDE_MODES).indexOf(phd2.currentDecGuideMode));
+                break;
         }
     }
 
@@ -446,8 +522,19 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
             connectionButton.setEnabled(true);
             connectionButton.setText(context.getString(R.string.disconnect));
         }
+        if (connectDevBtn != null) {
+            connectDevBtn.setEnabled(!phd2.profiles.isEmpty());
+            if (phd2.connectionState == PHD2Client.ConnectionState.CONNECTED) {
+                setButtonColor(connectDevBtn, context.getResources().getColor(R.color.light_green));
+            } else if (phd2.connectionState == PHD2Client.ConnectionState.DISCONNECTED) {
+                setButtonColor(connectDevBtn, context.getResources().getColor(R.color.light_red));
+            } else {
+                setButtonColor(connectDevBtn, Color.WHITE);
+            }
+        }
         if (serversSpinner != null) serversSpinner.setEnabled(false);
         if (portEditText != null) portEditText.setEnabled(false);
+        if (decGuideModeSpinner != null) decGuideModeSpinner.setEnabled(true);
         if (loopBtn != null) loopBtn.setEnabled(true);
         if (findStarBtn != null) findStarBtn.setEnabled(true);
         if (guideBtn != null) guideBtn.setEnabled(true);
@@ -490,12 +577,19 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
 
     @Override
     public void onPHD2Disconnected() {
-        if (connectionButton != null) connectionButton.setText(context.getString(R.string.connect));
-        if (connectionButton != null) connectionButton.setEnabled(true);
+        if (connectionButton != null) {
+            connectionButton.setText(context.getString(R.string.connect));
+            connectionButton.setEnabled(true);
+        }
+        if (connectDevBtn != null) {
+            connectDevBtn.setEnabled(false);
+            setButtonColor(connectDevBtn, Color.WHITE);
+        }
         if (serversSpinner != null) serversSpinner.setEnabled(true);
         if (portEditText != null) portEditText.setEnabled(true);
         if (statusLabel != null)
             statusLabel.setText(context.getString(R.string.current_state_default));
+        if (decGuideModeSpinner != null) decGuideModeSpinner.setEnabled(false);
         if (raCorrectionLabel != null) raCorrectionLabel.setVisibility(View.INVISIBLE);
         if (decCorrectionLabel != null) decCorrectionLabel.setVisibility(View.INVISIBLE);
         if (hdfLabel != null) hdfLabel.setText(R.string.half_flux_diameter);

@@ -704,4 +704,6 @@
     <string name="guide_settled">Auto-guider settled successfully</string>
     <string name="receive_images">Receive images</string>
     <string name="auto_stretch_image">Auto-stretch image</string>
+    <string name="guiding_values_in_pixels">Guiding values are in pixels</string>
+    <string name="declination_guide_mode">Dec guide mode:</string>
 </resources>

@@ -37,7 +37,9 @@ import org.json.JSONObject;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -47,15 +49,20 @@ import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
 public class PHD2Client extends SimpleClient {
 
+    public static final String[] DEC_GUIDE_MODES = new String[]{
+            "Off", "Auto", "North", "South"
+    };
     private static final String TAG = TelescopeTouchApp.getTag(PHD2Client.class);
     private static final int SUPPORTED_MSG_VERSION = 1;
     private static final int RA_COLOR = Color.parseColor("#448AFF");
     private static final int DEC_COLOR = Color.parseColor("#FF1744");
     public final LineGraphSeries<DataPoint> guidingDataRA = new LineGraphSeries<>();
     public final LineGraphSeries<DataPoint> guidingDataDec = new LineGraphSeries<>();
+    public final Map<String, Integer> profiles = new HashMap<>();
     private final Handler uiHandler = new Handler(Looper.getMainLooper());
     private final Set<PHD2Listener> listeners = new HashSet<>();
     private final AtomicInteger graphIndex = new AtomicInteger();
+    public String currentProfile = null;
     public int raCorrection = 0;
     public boolean raCorrectionSign = false;
     public int decCorrection = 0;
@@ -64,12 +71,13 @@ public class PHD2Client extends SimpleClient {
     public double snr = -1.0;
     public volatile String version;
     public volatile AppState appState;
-    public volatile ConnectionState connectionState = ConnectionState.UNKNOWN;
+    public volatile ConnectionState connectionState;
     public volatile double[] exposureTimes = null;
     public volatile double exposureTime = -1;
     public volatile Bitmap bitmap = null;
     public volatile boolean receiveImages = false;
     public volatile boolean stretchImages = false;
+    public volatile String currentDecGuideMode = null;
 
     public PHD2Client() {
         super();
@@ -120,6 +128,9 @@ public class PHD2Client extends SimpleClient {
     protected void onConnected() {
         PHD2Command.get_connected.run(this);
         PHD2Command.get_exposure_durations.run(this);
+        PHD2Command.get_profiles.run(this);
+        PHD2Command.get_profile.run(this);
+        PHD2Command.get_dec_guide_mode.run(this);
         uiHandler.postDelayed(() -> {
             synchronized (listeners) {
                 for (PHD2Listener l : listeners) {
@@ -136,6 +147,11 @@ public class PHD2Client extends SimpleClient {
                 for (PHD2Listener l : listeners) {
                     l.onPHD2Disconnected();
                 }
+            }
+            appState = null;
+            connectionState = null;
+            synchronized (profiles) {
+                profiles.clear();
             }
             if (bitmap != null) {
                 bitmap.recycle();
@@ -173,22 +189,6 @@ public class PHD2Client extends SimpleClient {
         });
     }
 
-    public void startLoop() {
-        println("{\"method\": \"loop\", \"id\": 0}");
-    }
-
-    public void findStar() {
-        println("{\"method\": \"find_star\", \"id\": 0}");
-    }
-
-    public void stopCapture() {
-        println("{\"method\": \"stop_capture\", \"id\": 0}");
-    }
-
-    public void startGuiding() {
-        println("{\"method\": \"guide\", \"params\": {\"settle\": {\"pixels\": 3.0, \"time\": 10, \"timeout\": 40}}, \"id\": 0}");
-    }
-
     public enum PHD2Command {
         loop,
         find_star,
@@ -217,7 +217,26 @@ public class PHD2Client extends SimpleClient {
                     result.getInt("height"), result.getString("pixels"),
                     star_pos.getDouble(0), star_pos.getDouble(1));
             thread.start();
-        }, PHD2Param.IMAGE);
+        }, PHD2Param.IMAGE),
+        set_connected("[%b]", PHD2Command.get_connected::run),
+        set_profile("[%d]"),
+        get_profile(null, (phd, msg) -> {
+            phd.currentProfile = msg.getJSONObject("result").getString("name");
+        }, PHD2Param.PROFILE),
+        get_profiles(null, (phd, msg) -> {
+            synchronized (phd.profiles) {
+                phd.profiles.clear();
+                JSONArray result = msg.getJSONArray("result");
+                for (int i = 0; i < result.length(); i++) {
+                    JSONObject profile = result.getJSONObject(i);
+                    phd.profiles.put(profile.getString("name"), profile.getInt("id"));
+                }
+            }
+        }, PHD2Param.PROFILES),
+        set_dec_guide_mode("[\"%s\"]"),
+        get_dec_guide_mode(null, (phd, msg) -> {
+            phd.currentDecGuideMode = msg.getString("result");
+        }, PHD2Param.DEC_GUIDE_MODE);
 
         private final String paramsFormat;
         private final PHD2Action responseAction;
@@ -267,7 +286,7 @@ public class PHD2Client extends SimpleClient {
     public enum PHD2Param {
         VERSION, STATE, GUIDE_VALUES, SETTLE_DONE,
         EXPOSURE_TIMES, EXPOSURE_TIME, CONNECTION,
-        IMAGE
+        IMAGE, PROFILE, PROFILES, DEC_GUIDE_MODE
     }
 
     private enum Event {
@@ -371,7 +390,7 @@ public class PHD2Client extends SimpleClient {
     }
 
     public enum ConnectionState {
-        CONNECTED, DISCONNECTED, UNKNOWN
+        CONNECTED, DISCONNECTED
     }
 
     public enum AppState {

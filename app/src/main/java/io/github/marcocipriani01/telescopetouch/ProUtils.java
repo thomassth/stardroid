@@ -37,12 +37,14 @@ import static io.github.marcocipriani01.telescopetouch.ApplicationConstants.SKY_
 public class ProUtils {
 
     public static final String PRO_ID = "io.github.marcocipriani01.telescopetouchpro";
-    public static final String PRO_MESSAGE_PREF = "pro_message_1";
+    public static final String PRO_MESSAGE_PREF = "pro_message_2";
     public static final int MAX_CAPTURES = 3;
+    public static final int MAX_PHD2_CONNECTIONS = 3;
     public static final String[] PRO_PREFERENCES = {
             NSD_PREF, EXIT_ACTION_PREF, POLARIS_HEMISPHERE_PREF, POLARIS_RETICLE_PREF, SKY_MAP_HIGH_REFRESH_PREF
     };
     public static final String CAPTURE_PRO_COUNTER = "capture_pro_counter";
+    public static final String PHD2_PRO_COUNTER = "phd2_connection_counter";
     public static boolean isPro = false;
 
     public static void maybeProVersionDialog(SharedPreferences preferences, Context context) {

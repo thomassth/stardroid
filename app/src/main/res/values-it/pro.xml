@@ -7,4 +7,5 @@
     <string name="goto_dialog_pro">Compra Pro per vedere le anteprime e i grafici altezza</string>
     <string name="cannot_change_pro">Impossibile cambiare - funzionalità Pro!</string>
     <string name="buy_pro_continue_capture">Compra Pro per continuare a scattare!</string>
+    <string name="buy_pro_continue_phd2">Compra Pro per continuare ad usare PHD2!</string>
 </resources>

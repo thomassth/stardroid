@@ -20,7 +20,6 @@ import android.annotation.SuppressLint;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.ToggleButton;
 
 /**
  * @author marcocipriani01
@@ -30,7 +29,7 @@ public abstract class ImprovedToggleListener implements CompoundButton.OnChecked
     boolean touched = false;
 
     @SuppressLint("ClickableViewAccessibility")
-    public void attach(ToggleButton button) {
+    public void attach(CompoundButton button) {
         button.setOnCheckedChangeListener(this);
         button.setOnTouchListener(this);
     }

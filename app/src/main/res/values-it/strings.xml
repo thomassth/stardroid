@@ -703,4 +703,6 @@
     <string name="guide_settled">Auto-guida stabilizzata con successo</string>
     <string name="receive_images">Ricevi immagini</string>
     <string name="auto_stretch_image">Stira immagini</string>
+    <string name="guiding_values_in_pixels">I valori di guida sono in pixel</string>
+    <string name="declination_guide_mode">Guida dec.:</string>
 </resources>
