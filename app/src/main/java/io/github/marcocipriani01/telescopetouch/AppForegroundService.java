@@ -28,6 +28,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
@@ -41,6 +42,7 @@ import static io.github.marcocipriani01.telescopetouch.ApplicationConstants.ACTI
 import static io.github.marcocipriani01.telescopetouch.ApplicationConstants.ACTION_DO_NOTHING;
 import static io.github.marcocipriani01.telescopetouch.ApplicationConstants.EXIT_ACTION_PREF;
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
+import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.phd2;
 
 public class AppForegroundService extends Service implements ConnectionManager.ManagerListener {
 
@@ -48,6 +50,7 @@ public class AppForegroundService extends Service implements ConnectionManager.M
     public static final String SERVICE_STOP = "service_stop";
     public static final String SERVICE_ACTION_EXIT = "action_stop";
     public static final String SERVICE_ACTION_DISCONNECT = "action_disconnect";
+    private static final String TAG = TelescopeTouchApp.getTag(AppForegroundService.class);
     private static final String NOTIFICATION_CHANNEL = "TELESCOPE_TOUCH_SERVICE";
     private static final int NOTIFICATION_ID = 1;
     private static final int PENDING_INTENT_OPEN_APP = 1;
@@ -69,6 +72,13 @@ public class AppForegroundService extends Service implements ConnectionManager.M
                     break;
                 case SERVICE_ACTION_DISCONNECT:
                     if (connectionManager.isConnected()) connectionManager.disconnect();
+                    if (phd2.isConnected()) {
+                        try {
+                            phd2.disconnect();
+                        } catch (Exception e) {
+                            Log.e(TAG, e.getMessage(), e);
+                        }
+                    }
                     Toast.makeText(this, R.string.disconnected, Toast.LENGTH_SHORT).show();
                     stopForeground(true);
                     stopSelf();
@@ -146,12 +156,14 @@ public class AppForegroundService extends Service implements ConnectionManager.M
     public void onConnectionLost() {
         handler.post(() -> {
             Toast.makeText(this, R.string.connection_indi_lost, Toast.LENGTH_SHORT).show();
-            stopForeground(true);
-            if (PreferenceManager.getDefaultSharedPreferences(this)
-                    .getString(EXIT_ACTION_PREF, ACTION_DO_NOTHING).equals(ACTION_BACKGROUND_ALWAYS)) {
-                start();
-            } else {
-                stopSelf();
+            if (!phd2.isConnected()) {
+                stopForeground(true);
+                if (PreferenceManager.getDefaultSharedPreferences(this)
+                        .getString(EXIT_ACTION_PREF, ACTION_DO_NOTHING).equals(ACTION_BACKGROUND_ALWAYS)) {
+                    start();
+                } else {
+                    stopSelf();
+                }
             }
         });
     }
