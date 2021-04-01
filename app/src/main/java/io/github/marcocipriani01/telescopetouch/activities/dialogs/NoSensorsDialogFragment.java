@@ -39,7 +39,8 @@ import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
 
 /**
  * No sensors dialog fragment.
- * Created by johntaylor on 4/9/16.
+ *
+ * @author johntaylor
  */
 public class NoSensorsDialogFragment extends DialogFragment {
 

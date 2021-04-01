@@ -552,16 +552,15 @@ public class SkyMapActivity extends AppCompatActivity implements OnSharedPrefere
                 }
             }
         } else {
-            // Missing at least one sensor.  Warn the user.
+            // Missing at least one sensor. Warn the user.
             handler.post(() -> {
+                // Force manual mode.
+                preferences.edit().putBoolean(ApplicationConstants.AUTO_MODE_PREF, false).apply();
+                setAutoMode(false);
                 if (preferences.getBoolean(ApplicationConstants.NO_WARN_MISSING_SENSORS_PREF, false)) {
                     Snackbar.make(rootView, R.string.no_sensor_warning, Snackbar.LENGTH_SHORT).show();
-                    // Don't force manual mode second time through - leave it up to the user.
                 } else {
                     noSensorsDialogFragment.show(fragmentManager, "No sensors dialog");
-                    // First time, force manual mode.
-                    preferences.edit().putBoolean(ApplicationConstants.AUTO_MODE_PREF, false).apply();
-                    setAutoMode(false);
                 }
             });
         }
@@ -693,7 +692,13 @@ public class SkyMapActivity extends AppCompatActivity implements OnSharedPrefere
         AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(R.string.point_telescope);
         if (!connectionManager.isConnected()) {
             builder.setMessage(R.string.connect_telescope_first)
-                    .setPositiveButton(android.R.string.ok, (dialog, which) -> startActivity(new Intent(this, MainActivity.class)));
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                        Intent intent = new Intent(this, MainActivity.class);
+                        intent.putExtra(MainActivity.ACTION, MainActivity.ACTION_CONNECT);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
+                    });
         } else if ((connectionManager.telescopeName == null) ||
                 (connectionManager.telescopeCoordP == null) || (connectionManager.telescopeOnCoordSetP == null)) {
             builder.setMessage(R.string.no_telescope_found);

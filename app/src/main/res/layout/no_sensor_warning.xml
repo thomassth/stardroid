@@ -7,14 +7,15 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:autoLink="web"
-        android:padding="4dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="8dp"
         android:text="@string/missing_sensor_dialog_text" />
 
     <CheckBox
         android:id="@+id/no_show_dialog_again"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:layout_gravity="center_horizontal"
         android:text="@string/do_not_show_again" />
 </LinearLayout>

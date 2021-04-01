@@ -345,8 +345,7 @@
     <string name="puppidvelids" translation_description="Meteor Shower">Púpidas-Vélidas</string>
     <string name="ursids" translation_description="Meteor Shower">Úrsidas</string>
     <string name="warning_dialog_title">¡Malas noticias!</string>
-    <string name="missing_sensor_dialog_text">\n
-        Lamentablemente, es posible que tu dispositivo no tenga uno de los sensores que Sky Map necesita.\n\n
+    <string name="missing_sensor_dialog_text">Lamentablemente, es posible que tu dispositivo no tenga uno de los sensores que Sky Map necesita.\n\n
         Para mostrarte el cielo en la dirección en la que apunta tu teléfono Sky Map necesita tanto
         la brújula incorporada como un acelerómetro. Tu dispositivo informa que falta uno de ellos.\n\n
         Si a tu dispositivo realmente le falta un sensor, el modo automático no funcionará. Sin embargo, aun

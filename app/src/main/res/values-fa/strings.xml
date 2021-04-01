@@ -349,8 +349,7 @@
     <string name="puppidvelids" translation_description="Meteor Shower">بارش شهابی پی‌کشتیدمی</string>
     <string name="ursids" translation_description="Meteor Shower">بارش شهابی دبی</string>
     <string name="warning_dialog_title">یه خبر بد!</string>
-    <string name="missing_sensor_dialog_text">\n
-        متأسفانه دستگاه شما فاقد یکی از حسگرهای لازم برای برنامه است.\n\n
+    <string name="missing_sensor_dialog_text">        متأسفانه دستگاه شما فاقد یکی از حسگرهای لازم برای برنامه است.\n\n
 		برای نمایش آسمان در افقی که گوشی شما به آن سمت گرفته شده؛ برنامه نیاز به قطب‌نما و شتاب‌سنج دارد که ظاهر گوشی شما فاقد یکی از آنهاست.
 		در گوشی‌های فاقد، حالت «خودکار» کار نمی‌کند و شما لازم است از حالت دستی استفاده کنید و با انگشتان‌تان، صفحه را به سمتی که می‌خواهید، حرکت دهید یا بچرخانید یا بزرگنمایی کنید.\n\n
     </string>

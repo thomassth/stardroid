@@ -588,8 +588,7 @@
     <string name="puppidvelids" translation_description="Meteor Shower">Puppidi-velidi</string>
     <string name="ursids" translation_description="Meteor Shower">Ursidi</string>
     <string name="warning_dialog_title">Brutte notizie!</string>
-    <string name="missing_sensor_dialog_text">\n
-        Sfortunatamente, il dispositivo non sembra avere i sensori di cui Sky Map ha bisogno.\n\n
+    <string name="missing_sensor_dialog_text">Sfortunatamente, il dispositivo non sembra avere i sensori di cui Sky Map ha bisogno.\n\n
         Per mostrare la posizione del cielo che si sta puntando Sky Map
         necessita di una bussola e un accelerometro. Il tuo dispositivo non ha uno dei due.\n\n
         Se il tuo dispositivo veramente non dispone di questi sensori, non potrai usare la modalità automatica.

@@ -341,8 +341,7 @@
     <string name="puppidvelids" translation_description="Meteor Shower">Πρυμνίδες-Ιστιίδες</string>
     <string name="ursids" translation_description="Meteor Shower">Αρκτίδες</string>
     <string name="warning_dialog_title">Άσχημα νέα!</string>
-    <string name="missing_sensor_dialog_text">\n
-        Δυστυχώς η συσκευή σας πιθανόν δεν έχει κάποιον από
+    <string name="missing_sensor_dialog_text">Δυστυχώς η συσκευή σας πιθανόν δεν έχει κάποιον από
         τους αισθητήρες που χρειάζεται το Sky Map.\n\n
         Για να εμφανίσουμε τον ουρανό στην κατεύθυνση που δείχνει η συσκευή
         σας, το Sky Map χρειάζεται και ενσωματωμένη πυξίδα και επιταχυνσιόμετρο. Φαίνεται πως ένα από

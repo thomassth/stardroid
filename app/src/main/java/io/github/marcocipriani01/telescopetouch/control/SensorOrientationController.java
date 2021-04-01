@@ -61,7 +61,8 @@ public class SensorOrientationController extends AbstractController implements S
             } else {
                 Log.d(TAG, "Using gyroscope sensor");
                 manager.registerListener(this, rotationSensor,
-                        preferences.getBoolean(SKY_MAP_HIGH_REFRESH_PREF, false) ? SensorManager.SENSOR_DELAY_FASTEST : SensorManager.SENSOR_DELAY_GAME);
+                        preferences.getBoolean(SKY_MAP_HIGH_REFRESH_PREF, false) ?
+                                SensorManager.SENSOR_DELAY_FASTEST : SensorManager.SENSOR_DELAY_GAME);
             }
         }
         Log.d(TAG, "Registered sensor listener");

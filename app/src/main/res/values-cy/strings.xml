@@ -340,8 +340,7 @@
     <string name="puppidvelids" translation_description="Meteor Shower">Puppid-Velids</string>
     <string name="ursids" translation_description="Meteor Shower">Ursids</string>
     <string name="warning_dialog_title">Newyddion drwg!</string>
-    <string name="missing_sensor_dialog_text">\n
-        Yn anffodus, mae\'n bosib nad oes gan dy ddyfais un o\'r synwyryddion sydd ei angen ar Sky Map.\n\n
+    <string name="missing_sensor_dialog_text">Yn anffodus, mae\'n bosib nad oes gan dy ddyfais un o\'r synwyryddion sydd ei angen ar Sky Map.\n\n
         Er mwyn dangos yr awyr yn y cyfeiriad mae dy ddyfais yn pwyntio mae ar Sky Map angen
         cwmpawd a mesurydd cyflymiad. Mae dy ddyfais yn adrodd bod un ohonynt ar goll.\n\n
         Os oes wir synhwyrydd ar goll o dy ddyfais, ni fydd modd awto-synhwyro yn gweithio.

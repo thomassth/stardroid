@@ -335,8 +335,7 @@
     <string name="puppidvelids" translation_description="Meteor Shower">Пуппіди-Веліди</string>
     <string name="ursids" translation_description="Meteor Shower">Урсіди</string>
     <string name="warning_dialog_title">Погані новини!</string>
-    <string name="missing_sensor_dialog_text">\n
-        На жаль, у вашого пристрою може не бути одного з тих датчиків, які потребує Sky Map.\n\n
+    <string name="missing_sensor_dialog_text">На жаль, у вашого пристрою може не бути одного з тих датчиків, які потребує Sky Map.\n\n
         Щоб показати вам частину неба, на яку вказує телефон, Sky Map
         потрібен як вбудований компас, так і акселерометр. Ваш пристрій повідомляє, що один з них відсутній.\n\n
         Якщо на вашому пристрої відсутній сенсор, то автоматичний режим не працюватиме. Тим не менш
