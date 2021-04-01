@@ -21,17 +21,22 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.PowerManager;
+import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -62,13 +67,13 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Vector;
 
-import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.BuildConfig;
 import io.github.marcocipriani01.telescopetouch.R;
 import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
@@ -82,6 +87,7 @@ public class SFTPFolderActivity extends AppCompatActivity {
     private final ArrayList<DirectoryElement> elements = new ArrayList<>();
     private final HandlerThread sftpThread = new HandlerThread("SFTP thread");
     private final Handler handler = new Handler(Looper.getMainLooper());
+    private RecyclerView recyclerView;
     private Handler sftpHandler;
     private ActionBar actionBar;
     private FolderAdapter adapter;
@@ -119,7 +125,8 @@ public class SFTPFolderActivity extends AppCompatActivity {
             sftpHandler.post(new GetFilesTask());
             swipeRefreshLayout.setRefreshing(false);
         });
-        RecyclerView recyclerView = findViewById(R.id.folder_list);
+
+        recyclerView = findViewById(R.id.folder_list);
         adapter = new FolderAdapter(elements);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -218,6 +225,7 @@ public class SFTPFolderActivity extends AppCompatActivity {
                     Collections.sort(elements);
                     adapter.notifyDataSetChanged();
                     actionBar.setTitle(currentPath);
+                    recyclerView.scheduleLayoutAnimation();
                 });
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage(), e);
@@ -333,37 +341,82 @@ public class SFTPFolderActivity extends AppCompatActivity {
         @SuppressWarnings("ResultOfMethodCallIgnored")
         @Override
         public void run() {
-            File dir = new File(Environment.getExternalStorageDirectory() + "/" + ApplicationConstants.APP_NAME);
-            if (!dir.exists()) dir.mkdirs();
-            File file = new File(Environment.getExternalStorageDirectory() + "/" + ApplicationConstants.APP_NAME + "/" + element.shortName);
-            try (BufferedInputStream bis = new BufferedInputStream(TelescopeTouchApp.channel.get(element.name));
-                 BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(
-                         file))) {
+            OutputStream stream = null;
+            try (BufferedInputStream bis = new BufferedInputStream(TelescopeTouchApp.channel.get(element.name))) {
+                Uri uri;
+                String folderName;
+                final boolean isImage;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    ContentResolver resolver = getContentResolver();
+                    ContentValues contentValues = new ContentValues();
+                    contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, element.shortName);
+                    if (element.getFileType() == DirectoryElement.FileType.IMAGE) {
+                        isImage = true;
+                        contentValues.put(MediaStore.Images.Media.MIME_TYPE, "image/*");
+                        folderName = Environment.DIRECTORY_DCIM + File.separator + getString(R.string.app_name);
+                        contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, folderName);
+                        uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+                    } else {
+                        isImage = false;
+                        contentValues.put(MediaStore.Downloads.MIME_TYPE, MediaStore.Downloads.CONTENT_TYPE);
+                        folderName = Environment.DIRECTORY_DOWNLOADS;
+                        contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, folderName);
+                        uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
+                    }
+                    stream = resolver.openOutputStream(uri);
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    isImage = false;
+                    folderName = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getPath() +
+                            File.separator + getString(R.string.app_name);
+                    File dir = new File(folderName);
+                    if (!dir.exists()) dir.mkdir();
+                    File file = new File(dir, element.shortName);
+                    uri = FileProvider.getUriForFile(SFTPFolderActivity.this, BuildConfig.APPLICATION_ID + ".provider", file);
+                    stream = new FileOutputStream(file);
+                    MediaScannerConnection.scanFile(SFTPFolderActivity.this, new String[]{dir.getPath()}, null, null);
+                } else {
+                    isImage = false;
+                    folderName = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getPath() +
+                            File.separator + getString(R.string.app_name);
+                    File dir = new File(folderName);
+                    if (!dir.exists()) dir.mkdir();
+                    File file = new File(dir, element.shortName);
+                    uri = Uri.fromFile(file);
+                    stream = new FileOutputStream(file);
+                    MediaScannerConnection.scanFile(SFTPFolderActivity.this, new String[]{dir.getPath()}, null, null);
+                }
                 byte[] buffer = new byte[1024];
                 int readCount;
                 long progress = 0;
                 long size = element.size;
                 while ((readCount = bis.read(buffer)) > 0) {
-                    bos.write(buffer, 0, readCount);
+                    stream.write(buffer, 0, readCount);
                     progress += buffer.length;
                     final int percentage = (int) (progress * 100 / size);
                     handler.post(() -> progressDialog.setProgress(percentage));
                 }
+                stream.flush();
+                stream.close();
                 handler.post(() -> {
                     if (wakeLock != null) wakeLock.release();
                     progressDialog.dismiss();
                     Snackbar.make(coordinator, String.format(getString(R.string.file_downloaded_message),
-                            Environment.getExternalStorageDirectory() + "/" + ApplicationConstants.APP_NAME),
-                            Snackbar.LENGTH_SHORT).setAction("Open", v -> {
+                            folderName), Snackbar.LENGTH_SHORT).setAction(R.string.open, v -> {
                         Intent intent = new Intent();
-                        intent.setDataAndType(FileProvider.getUriForFile(SFTPFolderActivity.this,
-                                BuildConfig.APPLICATION_ID + ".provider", file), "*/*");
+                        intent.setDataAndType(uri, isImage ? "image/*" : "*/*");
                         intent.setAction(Intent.ACTION_VIEW);
                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        startActivity(Intent.createChooser(intent, "Open file"));
+                        startActivity(Intent.createChooser(intent, getString(R.string.open_file)));
                     }).show();
                 });
             } catch (Exception e) {
+                if (stream != null) {
+                    try {
+                        stream.close();
+                    } catch (Exception ex) {
+                        Log.e(TAG, e.getMessage(), ex);
+                    }
+                }
                 Log.e(TAG, e.getMessage(), e);
                 handler.post(() -> {
                     if (wakeLock != null) wakeLock.release();
@@ -483,8 +536,18 @@ public class SFTPFolderActivity extends AppCompatActivity {
             View childView = view.findChildViewUnder(e.getX(), e.getY());
             if ((childView != null) && gestureDetector.onTouchEvent(e)) {
                 DirectoryElement element = elements.get(view.getChildAdapterPosition(childView));
-                if (element.isDirectory || element.isLink())
+                if (element.isDirectory || element.isLink()) {
                     sftpHandler.post(new GetFilesTask(element.name));
+                } else {
+                    new AlertDialog.Builder(SFTPFolderActivity.this).setTitle(R.string.app_name)
+                            .setMessage(String.format(getString(R.string.select_action), element.name))
+                            .setIcon(R.drawable.file)
+                            .setPositiveButton(R.string.download, (dialog, which) ->
+                                    sftpHandler.post(new DownloadTask(element)))
+                            .setNeutralButton(R.string.delete, (dialog, which) ->
+                                    sftpHandler.post(new DeleteTask(element)))
+                            .setNegativeButton(android.R.string.cancel, null).show();
+                }
                 return true;
             }
             return false;

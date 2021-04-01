@@ -32,10 +32,10 @@ import io.github.marcocipriani01.telescopetouch.R;
 
 public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder> {
 
-    private final List<DirectoryElement> directoryElement;
+    private final List<DirectoryElement> elements;
 
-    public FolderAdapter(List<DirectoryElement> dir) {
-        directoryElement = dir;
+    public FolderAdapter(List<DirectoryElement> elements) {
+        this.elements = elements;
     }
 
     @NonNull
@@ -48,20 +48,20 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull FolderAdapter.ViewHolder viewHolder, int position) {
-        DirectoryElement directoryElement = this.directoryElement.get(position);
-        if (directoryElement.isDirectory) {
+        DirectoryElement element = this.elements.get(position);
+        if (element.isDirectory) {
             viewHolder.icon.setImageResource(R.drawable.folder);
-        } else if (directoryElement.isLink()) {
+        } else if (element.isLink()) {
             viewHolder.icon.setImageResource(R.drawable.link);
         } else {
-            viewHolder.icon.setImageResource(R.drawable.file);
+            viewHolder.icon.setImageResource(element.getFileType().getDrawable());
         }
-        viewHolder.filename.setText(directoryElement.name);
+        viewHolder.filename.setText(element.name);
     }
 
     @Override
     public int getItemCount() {
-        return directoryElement.size();
+        return elements.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

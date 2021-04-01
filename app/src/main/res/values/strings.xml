@@ -720,7 +720,7 @@
     <string name="read_error">Read error: %s</string>
     <string name="delete_error">Delete error: %s</string>
     <string name="deleted_ok">Deleted successfully.</string>
-    <string name="downloading_message">Downloading \"%s\" (%.2f)</string>
+    <string name="downloading_message">Downloading \"%s\" (%.2fMB)</string>
     <string name="download_error">Download error: %s</string>
     <string name="file_downloaded_message">File downloaded in: \"%s\"</string>
     <string name="something_missing">Something is missing…</string>
@@ -741,4 +741,6 @@
     <string name="no_host_selected">No host selected!</string>
     <string name="no_host_available">No available hosts</string>
     <string name="keep_screen_on">Keep screen on</string>
+    <string name="open">Open</string>
+    <string name="open_file">Open file</string>
 </resources>

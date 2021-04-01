@@ -98,29 +98,15 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
     private final List<INDICamera> cameras = new ArrayList<>();
     private SharedPreferences preferences;
     private SwitchCompat fitsStretchSwitch;
-    private TextView fileSizeText;
-    private TextView dimensionsText;
-    private TextView formatText;
-    private TextView bppText;
-    private TextView errorText;
+    private TextView fileSizeText, dimensionsText, formatText, bppText, errorText, logText;
     private PhotoView photoViewer;
     private ProgressBar progressBar;
-    private Button exposeBtn;
-    private Button abortBtn;
-    private Button loopBtn;
-    private Spinner isoSpinner;
-    private Spinner binningSpinner;
-    private Spinner frameTypeSpinner;
-    private Spinner saveModeSpinner;
+    private Button exposeBtn, abortBtn, loopBtn;
+    private Spinner isoSpinner, binningSpinner, frameTypeSpinner, saveModeSpinner;
     private AutoCompleteTextView exposureTimeField;
-    private EditText prefixField;
-    private EditText remoteFolderField;
-    private Slider gainSlider;
-    private Slider countSlider;
-    private Spinner formatSpinner;
-    private Spinner transferFormatSpinner;
-    private TextView logText;
-    private Slider delaySlider;
+    private EditText prefixField, remoteFolderField;
+    private Slider gainSlider, countSlider, delaySlider;
+    private Spinner formatSpinner, transferFormatSpinner, cameraSelectSpinner;
     private final ImprovedSpinnerListener cameraSelectListener = new ImprovedSpinnerListener() {
         @Override
         protected void onImprovedItemSelected(AdapterView<?> parent, View view, int pos, long id) {
@@ -139,7 +125,6 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
         }
     };
     private boolean storagePermissionRequested = false;
-    private Spinner cameraSelectSpinner;
     private CamerasArrayAdapter cameraSelectAdapter;
     private boolean pipSupported = false;
     private MenuItem pipMenuItem = null;

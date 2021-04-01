@@ -11,11 +11,10 @@
 
     <ImageView
         android:id="@+id/sftp_item_icon"
-        android:layout_width="64dp"
-        android:layout_marginTop="4dp"
-        android:layout_height="wrap_content"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_marginStart="8dp"
-        android:layout_weight="1"
+        android:layout_marginTop="4dp"
         android:contentDescription="@string/icon"
         android:scaleType="centerInside" />
 
@@ -24,6 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_weight="1"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 </LinearLayout>

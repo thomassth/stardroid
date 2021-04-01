@@ -27,22 +27,20 @@
             android:title="@string/menu_focuser" />
 
         <item
-            android:id="@+id/menu_phd2"
-            android:icon="@drawable/phd2"
-            android:title="@string/phd2_auto_guider" />
-
-        <item
             android:id="@+id/menu_indi_control_panel"
             android:icon="@drawable/control_panel"
             android:title="@string/indi_control_panel" />
 
         <item
+            android:id="@+id/menu_phd2"
+            android:icon="@drawable/phd2"
+            android:title="@string/phd2_auto_guider" />
+
+        <item
             android:id="@+id/menu_sftp"
             android:icon="@drawable/folder"
             android:title="@string/remote_file_manager" />
-    </group>
 
-    <group android:checkableBehavior="single">
         <item
             android:id="@+id/menu_skymap"
             android:icon="@drawable/map"
@@ -57,9 +55,7 @@
             android:id="@+id/menu_skymap_gallery"
             android:icon="@drawable/images"
             android:title="@string/sky_map_gallery" />
-    </group>
 
-    <group android:checkableBehavior="single">
         <item
             android:id="@+id/menu_polaris"
             android:icon="@drawable/time"
@@ -74,9 +70,7 @@
             android:id="@+id/menu_flashlight"
             android:icon="@drawable/flashlight"
             android:title="@string/flashlight" />
-    </group>
 
-    <group android:checkableBehavior="single">
         <item
             android:id="@+id/menu_about"
             android:icon="@drawable/info"

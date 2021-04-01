@@ -17,7 +17,11 @@
 
 package io.github.marcocipriani01.telescopetouch.sftp;
 
+import androidx.annotation.DrawableRes;
+
 import com.jcraft.jsch.ChannelSftp;
+
+import io.github.marcocipriani01.telescopetouch.R;
 
 public class DirectoryElement implements Comparable<DirectoryElement> {
 
@@ -34,15 +38,62 @@ public class DirectoryElement implements Comparable<DirectoryElement> {
         this.sftpInfo = sftpInfo;
         this.shortName = name.substring(name.lastIndexOf("/") + 1);
         this.size = size;
-        this.sizeMB = size / 2048.0;
+        this.sizeMB = size / 1048576.0;
     }
 
     public boolean isLink() {
         return sftpInfo.getAttrs().isLink();
     }
 
+    public FileType getFileType() {
+        if (isDirectory || isLink())
+            throw new IllegalStateException("Folders don't have file types!");
+        String extension = "";
+        int i = shortName.lastIndexOf('.');
+        if (i > 0) extension = shortName.substring(i + 1);
+        switch (extension.toLowerCase()) {
+            case "dng":
+            case "crw":
+            case "cr3":
+            case "cr2":
+            case "nef":
+            case "jpg":
+            case "tiff":
+            case "tif":
+            case "png":
+            case "svg":
+            case "bmp":
+                return FileType.IMAGE;
+            case "fits":
+            case "fit":
+            case "fts":
+                return FileType.FITS_IMAGE;
+            case "txt":
+                return FileType.TEXT;
+            default:
+                return FileType.UNKNOWN;
+        }
+    }
+
     @Override
     public int compareTo(DirectoryElement o) {
         return name.compareTo(o.name);
+    }
+
+    public enum FileType {
+        IMAGE(R.drawable.images),
+        FITS_IMAGE(R.drawable.stars_on),
+        TEXT(R.drawable.text),
+        UNKNOWN(R.drawable.file);
+
+        private final int drawable;
+
+        FileType(@DrawableRes int drawable) {
+            this.drawable = drawable;
+        }
+
+        public int getDrawable() {
+            return drawable;
+        }
     }
 }
