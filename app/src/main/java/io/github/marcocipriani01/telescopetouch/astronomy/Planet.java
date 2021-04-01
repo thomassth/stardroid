@@ -21,6 +21,9 @@ import android.content.res.Resources;
 import android.location.Location;
 import android.util.Log;
 
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
+
 import java.util.Calendar;
 import java.util.TimeZone;
 
@@ -31,7 +34,7 @@ import io.github.marcocipriani01.telescopetouch.maths.MathsUtils;
 import static io.github.marcocipriani01.telescopetouch.astronomy.EquatorialCoordinates.getInstance;
 
 public enum Planet {
-    // The order here is the order in which they are drawn.  To ensure that during
+    // The order here is the order in which they are drawn. To ensure that during
     // conjunctions they display "naturally" order them in reverse distance from Earth.
     Pluto(R.drawable.pluto, R.drawable.gallery_pluto, R.string.pluto, TimeUtils.MILLISECONDS_PER_HOUR),
     Neptune(R.drawable.neptune, R.drawable.gallery_neptune, R.string.neptune, TimeUtils.MILLISECONDS_PER_HOUR),
@@ -61,7 +64,8 @@ public enum Planet {
      */
     private final int nameResourceId;
 
-    Planet(int mapResourceId, int galleryResourceId, int nameResourceId, long updateFreqMs) {
+    Planet(@DrawableRes int mapResourceId, @DrawableRes int galleryResourceId,
+           @StringRes int nameResourceId, long updateFreqMs) {
         this.mapResourceId = mapResourceId;
         this.galleryResourceId = galleryResourceId;
         this.nameResourceId = nameResourceId;

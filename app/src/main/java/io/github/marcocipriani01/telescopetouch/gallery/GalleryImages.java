@@ -19,6 +19,9 @@ package io.github.marcocipriani01.telescopetouch.gallery;
 
 import android.content.Context;
 
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
+
 import io.github.marcocipriani01.telescopetouch.R;
 
 /**
@@ -57,14 +60,14 @@ public enum GalleryImages {
     private final int searchTerm;
     private final String gotoName;
 
-    GalleryImages(int imageId, int name, int searchTerm) {
+    GalleryImages(@DrawableRes int imageId, @StringRes int name, @StringRes int searchTerm) {
         this.imageId = imageId;
         this.name = name;
         this.searchTerm = searchTerm;
         this.gotoName = null;
     }
 
-    GalleryImages(int imageId, int name, int searchTerm, String gotoName) {
+    GalleryImages(@DrawableRes int imageId, @StringRes int name, @StringRes int searchTerm, String gotoName) {
         this.imageId = imageId;
         this.name = name;
         this.searchTerm = searchTerm;
