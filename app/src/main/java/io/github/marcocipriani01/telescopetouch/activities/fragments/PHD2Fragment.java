@@ -1,17 +1,18 @@
 /*
  * Copyright 2021 Marco Cipriani (@marcocipriani01)
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package io.github.marcocipriani01.telescopetouch.activities.fragments;
@@ -39,11 +40,11 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
@@ -68,11 +69,13 @@ import io.github.marcocipriani01.telescopetouch.activities.util.ImprovedSpinnerL
 import io.github.marcocipriani01.telescopetouch.activities.views.SameSelectionSpinner;
 import io.github.marcocipriani01.telescopetouch.phd2.PHD2Client;
 
+import static io.github.marcocipriani01.telescopetouch.ApplicationConstants.PHD2_GRAPH_ZOOM_PREF;
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.nsdHelper;
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.phd2;
 import static io.github.marcocipriani01.telescopetouch.activities.ServersActivity.getServers;
 
-public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Listener, Slider.OnChangeListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Listener,
+        Slider.OnChangeListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private static int selectedSpinnerItem = 0;
     private final ImprovedSpinnerListener exposureSpinnerListener = new ImprovedSpinnerListener() {
@@ -98,7 +101,7 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
     private SharedPreferences preferences;
     private GraphView graph;
     private Button connectionButton;
-    private Spinner serversSpinner;
+    private AppCompatSpinner serversSpinner;
     private EditText portEditText;
     private TextView statusLabel;
     private TextView raCorrectionLabel, decCorrectionLabel;
@@ -109,6 +112,7 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
     private SwitchCompat receiveImagesSwitch, stretchImagesSwitch;
     private int selectedItemTemp;
     private SameSelectionSpinner decGuideModeSpinner;
+    private boolean hostsAvailable;
 
     @SuppressLint("SetTextI18n")
     @Nullable
@@ -152,7 +156,7 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
                     .hideSoftInputFromWindow(portEditText.getWindowToken(), 0);
             String host = (String) serversSpinner.getSelectedItem();
             if (host == null) {
-                requestActionSnack(R.string.unknown_error);
+                requestActionSnack(R.string.no_host_selected);
                 return;
             }
             try {
@@ -260,9 +264,11 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
         gridLabel.setHorizontalLabelsAngle(45);
         Viewport viewport = graph.getViewport();
         viewport.setYAxisBoundsManual(true);
-        viewport.setMinY(-4);
-        viewport.setMaxY(4);
+        float zoom = preferences.getFloat(PHD2_GRAPH_ZOOM_PREF, 4f);
+        viewport.setMinY(-zoom);
+        viewport.setMaxY(zoom);
         viewport.setScalable(true);
+        zoomSlider.setValue(zoom);
         return rootView;
     }
 
@@ -301,7 +307,7 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
         if (graph != null) phd2.clearGraphReference(graph);
     }
 
-    public void loadServers(ArrayList<String> servers) {
+    private void loadServers(ArrayList<String> servers) {
         if (nsdHelper.isAvailable()) {
             HashMap<String, String> services = nsdHelper.getDiscoveredServices();
             for (String name : services.keySet()) {
@@ -309,10 +315,13 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
                 if (ip != null) servers.add(name.replace("@", "") + "@" + ip);
             }
         }
+        hostsAvailable = servers.size() > 0;
+        serversSpinner.setEnabled(hostsAvailable);
+        if (!hostsAvailable) servers.add(context.getString(R.string.no_host_available));
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, servers);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         serversSpinner.setAdapter(adapter);
-        if (adapter.getCount() > selectedSpinnerItem)
+        if (hostsAvailable && (adapter.getCount() > selectedSpinnerItem))
             serversSpinner.setSelection(selectedSpinnerItem);
     }
 
@@ -349,7 +358,7 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
                                 id = phd2.profiles.get(profiles[selectedItemTemp]);
                             }
                             if (id != null)
-                                PHD2Client.PHD2Command.set_profile.run(phd2, (int) id);
+                                PHD2Client.PHD2Command.set_profile.run(phd2, id);
                             PHD2Client.PHD2Command.set_connected.run(phd2, true);
                         })
                         .setNeutralButton(R.string.disconnect, (dialog, which) ->
@@ -369,6 +378,7 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
             viewport.setMaxY(value);
             graph.invalidate();
             graph.onDataChanged(false, false);
+            preferences.edit().putFloat(PHD2_GRAPH_ZOOM_PREF, value).apply();
         }
     }
 
@@ -379,21 +389,6 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
         } else if (buttonView == stretchImagesSwitch) {
             phd2.stretchImages = isChecked;
         }
-    }
-
-    @Override
-    public boolean isActionEnabled() {
-        return false;
-    }
-
-    @Override
-    public int getActionDrawable() {
-        return 0;
-    }
-
-    @Override
-    public void run() {
-
     }
 
     private void setButtonColor(ImageButton btn, int color) {
@@ -577,13 +572,13 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
     public void onPHD2Disconnected() {
         if (connectionButton != null) {
             connectionButton.setText(context.getString(R.string.connect));
-            connectionButton.setEnabled(true);
+            connectionButton.setEnabled(hostsAvailable);
         }
         if (connectDevBtn != null) {
             connectDevBtn.setEnabled(false);
             setButtonColor(connectDevBtn, Color.WHITE);
         }
-        if (serversSpinner != null) serversSpinner.setEnabled(true);
+        if (serversSpinner != null) serversSpinner.setEnabled(hostsAvailable);
         if (portEditText != null) portEditText.setEnabled(true);
         if (statusLabel != null)
             statusLabel.setText(context.getString(R.string.current_state_default));

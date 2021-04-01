@@ -1,22 +1,24 @@
 /*
  * Copyright 2021 Marco Cipriani (@marcocipriani01)
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package io.github.marcocipriani01.telescopetouch.indi;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.Spannable;
@@ -25,11 +27,13 @@ import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.SeekBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+
+import com.google.android.material.slider.Slider;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.indilib.i4j.Constants;
 import org.indilib.i4j.client.INDIElement;
@@ -44,12 +48,7 @@ import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 
-public class NumberPropPref extends PropPref<INDINumberElement>
-        implements TextWatcher, SeekBar.OnSeekBarChangeListener {
-
-    private SeekBar seekBar;
-    private EditText editText;
-    private double step, min, max;
+public class NumberPropPref extends PropPref<INDINumberElement> {
 
     public NumberPropPref(Context context, INDIProperty<INDINumberElement> prop) {
         super(context, prop);
@@ -95,29 +94,59 @@ public class NumberPropPref extends PropPref<INDINumberElement>
             layoutParams.setMargins(padding, 0, padding, 0);
 
             for (INDINumberElement element : elements) {
-                TextView textView = new TextView(context);
-                textView.setText(element.getLabel());
-                textView.setPadding(padding, padding, padding, 0);
-                layout.addView(textView, layoutParams);
-                editText = new EditText(context);
+                TextInputLayout inputLayout = new TextInputLayout(context);
+                inputLayout.setPadding(padding, padding, padding, 0);
+                inputLayout.setHint(element.getLabel());
+                TextInputEditText editText = new TextInputEditText(context);
                 editText.setText(element.getValueAsString().trim());
-                editText.setPadding(padding, padding, padding, padding);
                 editText.setEnabled(prop.getPermission() != Constants.PropertyPermissions.RO);
                 editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 editTextViews.add(editText);
-                layout.addView(editText, layoutParams);
-                step = element.getStep();
-                min = element.getMin();
-                max = element.getMax();
-                int interval = (int) ((max - min) / step);
-                if (interval <= 1000) {
-                    seekBar = new SeekBar(context);
-                    seekBar.setPadding(padding * 2, padding, padding * 2, padding);
-                    seekBar.setMax(interval);
-                    seekBar.setProgress((int) ((element.getValue() - min) / step));
-                    seekBar.setOnSeekBarChangeListener(this);
-                    editText.addTextChangedListener(this);
-                    layout.addView(seekBar, layoutParams);
+                inputLayout.addView(editText);
+                layout.addView(inputLayout, layoutParams);
+
+                float min = (float) element.getMin(),
+                        max = (float) element.getMax();
+                if ((max - min) <= 1000f) {
+                    Slider slider = new Slider(context);
+                    slider.setThumbStrokeColorResource(R.color.colorAccent);
+                    ColorStateList colorStateList = ColorStateList.valueOf(resources.getColor(R.color.colorAccent));
+                    slider.setHaloTintList(colorStateList);
+                    slider.setTickTintList(colorStateList);
+                    slider.setTrackActiveTintList(colorStateList);
+                    slider.setThumbTintList(colorStateList);
+                    slider.setTickVisible(false);
+                    slider.setTrackHeight(resources.getDimensionPixelSize(R.dimen.slider_track_height));
+                    slider.setPadding(padding * 2, 0, padding * 2, padding);
+                    slider.setValueFrom(min);
+                    slider.setValueTo(max);
+                    slider.setStepSize(((float) element.getStep()));
+                    slider.setValue((float) (double) element.getValue());
+                    slider.addOnChangeListener((slider1, value, fromUser) -> {
+                        if (fromUser)
+                            editText.setText(String.valueOf(value));
+                    });
+                    editText.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            try {
+                                float value = Float.parseFloat(s.toString());
+                                if ((value >= min) && (value <= max)) slider.setValue(value);
+                            } catch (NumberFormatException ignored) {
+                            }
+                        }
+                    });
+                    layout.addView(slider, layoutParams);
                 }
             }
 
@@ -145,44 +174,5 @@ public class NumberPropPref extends PropPref<INDINumberElement>
             }
             builder.show();
         }
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-        try {
-            double value = Double.parseDouble(s.toString());
-            if ((value >= min) && (value <= max)) {
-                seekBar.setOnSeekBarChangeListener(null);
-                seekBar.setProgress((int) ((value - min) / step));
-                seekBar.setOnSeekBarChangeListener(this);
-            }
-        } catch (NumberFormatException ignored) {
-
-        }
-    }
-
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        editText.setText(String.valueOf((int) (min + (progress * step))));
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-
     }
 }

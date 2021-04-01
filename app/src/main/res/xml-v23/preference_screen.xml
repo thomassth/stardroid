@@ -6,6 +6,12 @@
         android:title="@string/general"
         app:iconSpaceReserved="false">
 
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="keep_screen_on"
+            android:title="@string/keep_screen_on"
+            app:iconSpaceReserved="false" />
+
         <ListPreference
             android:defaultValue="do_nothing"
             android:entries="@array/exit_action_pref"

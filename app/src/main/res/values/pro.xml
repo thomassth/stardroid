@@ -8,4 +8,5 @@
     <string name="cannot_change_pro">Cannot change - Pro feature!</string>
     <string name="buy_pro_continue_capture">Buy Pro to continue capturing!</string>
     <string name="buy_pro_continue_phd2">Buy Pro to continue using PHD2!</string>
+    <string name="buy_pro_continue_sftp">Buy Pro to continue file browsing!</string>
 </resources>

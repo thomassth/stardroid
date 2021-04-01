@@ -49,6 +49,7 @@
             android:drawableLeft="@drawable/connect"
             android:drawableTint="@android:color/white"
             android:text="@string/connect"
+            android:textStyle="bold"
             tools:targetApi="m" />
 
         <com.google.android.material.tabs.TabLayout

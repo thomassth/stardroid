@@ -6,4 +6,5 @@
     <dimen name="graph_height">300dp</dimen>
     <dimen name="details_photo_height">280dp</dimen>
     <dimen name="dialog_margin">24dp</dimen>
+    <dimen name="slider_track_height">3dp</dimen>
 </resources>

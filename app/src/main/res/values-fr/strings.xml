@@ -649,7 +649,7 @@
     <string name="exposure_time_short">Temps exp. :</string>
     <string name="exposure_time">Temps exposition</string>
     <string name="file_format">Format fichier :</string>
-    <string name="ccd_file_prefix">Préfix fichier :</string>
+    <string name="ccd_file_prefix">Préfix fichier</string>
     <string name="ccd_frame_type">Image :</string>
     <string name="free_ram">Vider RAM</string>
     <string name="ccd_gain">Gain :</string>
@@ -673,7 +673,7 @@
     <string name="phd2_auto_guider">Auto-guidage PHD2</string>
     <string name="jpg_quality_pref">Qualité images JPG</string>
     <string name="receive_images">Réception images</string>
-    <string name="ccd_remote_folder">Dossier distant :</string>
+    <string name="ccd_remote_folder">Dossier distant</string>
     <string name="high_refresh_rate_summary">Faire tourner Sky Map à 60Hz. Use plus de batterie, mais offre une expérience supérieure !</string>
     <string name="save_preview">Sauvegarder/Aperçu :</string>
     <string name="ccd_image_save_show">Sauvegarder JPG sur le mobile et afficher</string>
@@ -697,6 +697,5 @@
     <string name="prop_unavailable">Propriété indisponible</string>
     <string name="vertical_zoom">Zoom verticale :</string>
     <string name="view">Vue</string>
-    <string name="save_mode_warning">Attention : ce réglage pourrait interférer avec d\'autres clients utilisant simultanément la caméra.</string>
     <string name="web_manager_info">Vous pouvez utilser cet outil pour vous connecter à l\'instance INDI Web Manager. Vérifier qu\'elle est installé sur le serveur INDI et réglé sur le port 8624.</string>
 </resources>

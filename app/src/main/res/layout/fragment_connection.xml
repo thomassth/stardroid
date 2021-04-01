@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/host_label"
             android:layout_alignParentEnd="true"
-            android:ems="6"
+            android:ems="4"
             android:hint="7624"
             android:imeOptions="flagNoExtractUi"
             android:importantForAutofill="no"

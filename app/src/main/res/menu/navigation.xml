@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group
-        android:id="@+id/menu_group_telescope"
-        android:checkableBehavior="none">
+    <group android:checkableBehavior="single">
         <item
             android:id="@+id/menu_connection"
             android:icon="@drawable/connect"
@@ -34,14 +32,17 @@
             android:title="@string/phd2_auto_guider" />
 
         <item
-            android:id="@+id/menu_generic"
+            android:id="@+id/menu_indi_control_panel"
             android:icon="@drawable/control_panel"
             android:title="@string/indi_control_panel" />
+
+        <item
+            android:id="@+id/menu_sftp"
+            android:icon="@drawable/folder"
+            android:title="@string/remote_file_manager" />
     </group>
 
-    <group
-        android:id="@+id/menu_group_skympap"
-        android:checkableBehavior="none">
+    <group android:checkableBehavior="single">
         <item
             android:id="@+id/menu_skymap"
             android:icon="@drawable/map"
@@ -58,9 +59,7 @@
             android:title="@string/sky_map_gallery" />
     </group>
 
-    <group
-        android:id="@+id/menu_group_compass"
-        android:checkableBehavior="none">
+    <group android:checkableBehavior="single">
         <item
             android:id="@+id/menu_polaris"
             android:icon="@drawable/time"
@@ -77,9 +76,7 @@
             android:title="@string/flashlight" />
     </group>
 
-    <group
-        android:id="@+id/menu_group_about"
-        android:checkableBehavior="none">
+    <group android:checkableBehavior="single">
         <item
             android:id="@+id/menu_about"
             android:icon="@drawable/info"

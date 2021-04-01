@@ -19,3 +19,4 @@ app/release/output-metadata.json
 app/release/
 app/api.properties
 /.idea/assetWizardSettings.xml
+.keystore

@@ -1,17 +1,18 @@
 /*
- * Copyright 2021 Marco Cipriani (@marcocipriani01) and the Sky Map Team
+ * Copyright 2021 Marco Cipriani (@marcocipriani01)
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package io.github.marcocipriani01.telescopetouch.activities;
@@ -42,6 +43,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -115,7 +117,6 @@ public class SkyMapActivity extends AppCompatActivity implements OnSharedPrefere
     private static final String TAG = TelescopeTouchApp.getTag(SkyMapActivity.class);
     // A list of runnables to post on the handler when we resume.
     private final List<Runnable> onResumeRunnables = new ArrayList<>();
-    // End Activity for result Ids
     @Inject
     ControllerGroup controller;
     private final ActivityResultLauncher<String> locationPermissionLauncher = registerForActivityResult(
@@ -165,11 +166,6 @@ public class SkyMapActivity extends AppCompatActivity implements OnSharedPrefere
     private View rootView;
     private boolean useAltAz = false;
     private GestureInterpreter gestureInterpreter;
-
-    @Override
-    public SkyMapComponent getComponent() {
-        return daggerComponent;
-    }
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -247,63 +243,29 @@ public class SkyMapActivity extends AppCompatActivity implements OnSharedPrefere
             doSearchWithIntent(intent);
     }
 
-    public void requestLocationPermission() {
-        locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (Intent.ACTION_SEARCH.equals(intent.getAction()))
+            doSearchWithIntent(intent);
     }
 
-    private void checkForSensorsAndMaybeWarn() {
-        if (hasSensors(Sensor.TYPE_ACCELEROMETER, Sensor.TYPE_MAGNETIC_FIELD)) {
-            Log.i(TAG, "Minimum sensors present");
-            setAutoMode(preferences.getBoolean(ApplicationConstants.AUTO_MODE_PREF, true));
-            // Enable Gyro if available and user hasn't already disabled it.
-            if (!preferences.contains(ApplicationConstants.DISABLE_GYRO_PREF))
-                preferences.edit().putBoolean(ApplicationConstants.DISABLE_GYRO_PREF,
-                        !hasSensors(Sensor.TYPE_ROTATION_VECTOR, Sensor.TYPE_GYROSCOPE)).apply();
-            if (BuildConfig.DEBUG) {
-                // Lastly a dump of all the sensors.
-                Log.d(TAG, "List of device sensors:");
-                List<Sensor> allSensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
-                for (Sensor sensor : allSensors) {
-                    Log.d(TAG, sensor.getName() + ", sensor type: " + sensor.getStringType() + " (" + sensor.getType() + ")");
-                }
-            }
-        } else {
-            // Missing at least one sensor.  Warn the user.
-            handler.post(() -> {
-                if (preferences.getBoolean(ApplicationConstants.NO_WARN_MISSING_SENSORS_PREF, false)) {
-                    Snackbar.make(rootView, R.string.no_sensor_warning, Snackbar.LENGTH_SHORT).show();
-                    // Don't force manual mode second time through - leave it up to the user.
-                } else {
-                    noSensorsDialogFragment.show(fragmentManager, "No sensors dialog");
-                    // First time, force manual mode.
-                    preferences.edit().putBoolean(ApplicationConstants.AUTO_MODE_PREF, false).apply();
-                    setAutoMode(false);
-                }
-            });
+    @Override
+    protected void onRestoreInstanceState(Bundle icicle) {
+        Log.d(TAG, "Sky Map onRestoreInstanceState");
+        super.onRestoreInstanceState(icicle);
+        if (icicle == null) return;
+        searchMode = icicle.getBoolean(BUNDLE_SEARCH_MODE);
+        float x = icicle.getFloat(BUNDLE_X_TARGET);
+        float y = icicle.getFloat(BUNDLE_Y_TARGET);
+        float z = icicle.getFloat(BUNDLE_Z_TARGET);
+        searchTarget = new GeocentricCoordinates(x, y, z);
+        searchTargetName = icicle.getString(ApplicationConstants.BUNDLE_TARGET_NAME);
+        if (searchMode) {
+            Log.d(TAG, "Searching for target " + searchTargetName + " at target=" + searchTarget);
+            rendererController.queueEnableSearchOverlay(searchTarget, searchTargetName);
+            cancelSearchButton.setVisibility(View.VISIBLE);
         }
-    }
-
-    private boolean hasSensors(int... sensorTypes) {
-        if (sensorManager == null) return false;
-        for (int sensorType : sensorTypes) {
-            Sensor sensor = sensorManager.getDefaultSensor(sensorType);
-            if (sensor == null) return false;
-            SensorEventListener dummy = new SensorEventListener() {
-                @Override
-                public void onSensorChanged(SensorEvent event) {
-                    // Nothing
-                }
-
-                @Override
-                public void onAccuracyChanged(Sensor sensor, int accuracy) {
-                    // Nothing
-                }
-            };
-            boolean b = sensorManager.registerListener(dummy, sensor, SensorManager.SENSOR_DELAY_UI);
-            sensorManager.unregisterListener(dummy);
-            if (!b) return false;
-        }
-        return true;
     }
 
     @Override
@@ -330,35 +292,68 @@ public class SkyMapActivity extends AppCompatActivity implements OnSharedPrefere
     }
 
     @Override
-    public void onDestroy() {
-        Log.d(TAG, "Sky Map onDestroy");
-        super.onDestroy();
+    protected void onStart() {
+        super.onStart();
+        if (preferences.getBoolean(ApplicationConstants.KEEP_SCREEN_ON_PREF, false)) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        } else {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        switch (keyCode) {
-            case (KeyEvent.KEYCODE_DPAD_LEFT):
-                Log.d(TAG, "Key left");
-                controller.rotate(-10.0f);
-                break;
-            case (KeyEvent.KEYCODE_DPAD_RIGHT):
-                Log.d(TAG, "Key right");
-                controller.rotate(10.0f);
-                break;
-            case (KeyEvent.KEYCODE_BACK):
-                // If we're in search mode when the user presses 'back' the natural
-                // thing is to back out of search.
-                Log.d(TAG, "In search mode " + searchMode);
-                if (searchMode) {
-                    cancelSearch();
-                    break;
-                }
-            default:
-                Log.d(TAG, "Key: " + event);
-                return super.onKeyDown(keyCode, event);
+    public void onResume() {
+        super.onResume();
+        // PRO
+        ProUtils.update(this);
+        // END PRO
+        Log.i(TAG, "Starting view");
+        skyView.onResume();
+        Log.i(TAG, "Starting controller");
+        controller.start();
+        darkerModeManager.start();
+        if (controller.isAutoMode()) {
+            sensorAccuracyMonitor.start();
         }
-        return true;
+        for (Runnable runnable : onResumeRunnables) {
+            handler.post(runnable);
+        }
+        if (preferences.getBoolean(ApplicationConstants.SKY_MAP_HIGH_REFRESH_INFO_PREF, true)) {
+            new AlertDialog.Builder(this).setTitle(R.string.sky_map).setIcon(R.drawable.star_circle)
+                    .setMessage(R.string.high_refresh_rate_message)
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .setPositiveButton(R.string.menu_settings, (dialog, which) ->
+                            startActivity(new Intent(SkyMapActivity.this, SettingsActivity.class))).show();
+            preferences.edit().putBoolean(ApplicationConstants.SKY_MAP_HIGH_REFRESH_INFO_PREF, false).apply();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        sensorAccuracyMonitor.stop();
+        for (Runnable runnable : onResumeRunnables) {
+            handler.removeCallbacks(runnable);
+        }
+        darkerModeManager.stop();
+        controller.stop();
+        skyView.onPause();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle icicle) {
+        Log.d(TAG, "Sky Map onSaveInstanceState");
+        icicle.putBoolean(BUNDLE_SEARCH_MODE, searchMode);
+        icicle.putFloat(BUNDLE_X_TARGET, (float) searchTarget.x);
+        icicle.putFloat(BUNDLE_Y_TARGET, (float) searchTarget.y);
+        icicle.putFloat(BUNDLE_Z_TARGET, (float) searchTarget.z);
+        icicle.putString(ApplicationConstants.BUNDLE_TARGET_NAME, searchTargetName);
+        super.onSaveInstanceState(icicle);
+    }
+
+    @Override
+    public SkyMapComponent getComponent() {
+        return daggerComponent;
     }
 
     @Override
@@ -397,88 +392,8 @@ public class SkyMapActivity extends AppCompatActivity implements OnSharedPrefere
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        // PRO
-        ProUtils.update(this);
-        // END PRO
-        Log.i(TAG, "Starting view");
-        skyView.onResume();
-        Log.i(TAG, "Starting controller");
-        controller.start();
-        darkerModeManager.start();
-        if (controller.isAutoMode()) {
-            sensorAccuracyMonitor.start();
-        }
-        for (Runnable runnable : onResumeRunnables) {
-            handler.post(runnable);
-        }
-        if (preferences.getBoolean(ApplicationConstants.SKY_MAP_HIGH_REFRESH_INFO_PREF, true)) {
-            new AlertDialog.Builder(this).setTitle(R.string.sky_map).setIcon(R.drawable.star_circle)
-                    .setMessage(R.string.high_refresh_rate_message)
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .setPositiveButton(R.string.menu_settings, (dialog, which) ->
-                            startActivity(new Intent(SkyMapActivity.this, SettingsActivity.class))).show();
-            preferences.edit().putBoolean(ApplicationConstants.SKY_MAP_HIGH_REFRESH_INFO_PREF, false).apply();
-        }
-    }
-
-    public void setTimeTravelMode(Date newTime) {
-        Log.d(TAG, "Showing TimePlayer UI.");
-        pointingText.setVisibility(View.GONE);
-        timePlayerUI.setVisibility(View.VISIBLE);
-        timePlayerUI.requestFocus();
-        flashMap();
-        controller.goTimeTravel(newTime);
-    }
-
-    public void setNormalTimeModel() {
-        flashMap();
-        controller.useRealTime();
-        Snackbar.make(rootView, R.string.time_travel_close_message, Snackbar.LENGTH_SHORT).show();
-        Log.d(TAG, "Leaving Time Travel mode.");
-        timePlayerUI.setVisibility(View.GONE);
-        pointingText.setVisibility(View.VISIBLE);
-    }
-
-    private void flashMap() {
-        final View mask = findViewById(R.id.view_mask);
-        // We don't need to set it invisible again - the end of the animation will see to that.
-        mask.setVisibility(View.VISIBLE);
-        mask.startAnimation(flashAnimation);
-    }
-
-    @Override
-    public void onPause() {
-        Log.d(TAG, "Sky Map onPause");
-        super.onPause();
-        sensorAccuracyMonitor.stop();
-        for (Runnable runnable : onResumeRunnables) {
-            handler.removeCallbacks(runnable);
-        }
-        darkerModeManager.stop();
-        controller.stop();
-        skyView.onPause();
-        Log.d(TAG, "Sky Map -onPause");
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
-        Log.d(TAG, "Preferences changed: key=" + key);
-        if (ApplicationConstants.AUTO_MODE_PREF.equals(key)) {
-            setAutoMode(preferences.getBoolean(key, true));
-        } else if (ApplicationConstants.ROTATE_HORIZON_PREF.equals(key)) {
-            model.setHorizontalRotation(preferences.getBoolean(key, false));
-        } else if (ApplicationConstants.SKY_MAP_HIGH_REFRESH_PREF.equals(key)) {
-            gestureInterpreter.setUpdateRate(preferences.getBoolean(ApplicationConstants.SKY_MAP_HIGH_REFRESH_PREF, false) ? 60 : 30);
-        }
-    }
-
-    @Override
     public boolean onTouchEvent(MotionEvent event) {
-        // Log.d(TAG, "Touch event " + event);
-        // Either of the following detectors can absorb the event, but one
-        // must not hide it from the other
+        // Either of the following detectors can absorb the event, but one must not hide it from the other
         boolean eventAbsorbed = false;
         if (gestureDetector.onTouchEvent(event)) {
             eventAbsorbed = true;
@@ -490,46 +405,53 @@ public class SkyMapActivity extends AppCompatActivity implements OnSharedPrefere
     }
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case (KeyEvent.KEYCODE_DPAD_LEFT):
+                Log.d(TAG, "Key left");
+                controller.rotate(-10.0f);
+                break;
+            case (KeyEvent.KEYCODE_DPAD_RIGHT):
+                Log.d(TAG, "Key right");
+                controller.rotate(10.0f);
+                break;
+            case (KeyEvent.KEYCODE_BACK):
+                // If we're in search mode when the user presses 'back' the natural
+                // thing is to back out of search.
+                Log.d(TAG, "In search mode " + searchMode);
+                if (searchMode) {
+                    cancelSearch();
+                    break;
+                }
+            default:
+                Log.d(TAG, "Key: " + event);
+                return super.onKeyDown(keyCode, event);
+        }
+        return true;
+    }
+
+    @Override
     public boolean onTrackballEvent(MotionEvent event) {
-        // Log.d(TAG, "Trackball motion " + event);
         controller.rotate(event.getX() * ROTATION_SPEED);
         return true;
     }
 
-    private void doSearchWithIntent(Intent searchIntent) {
-        // If we're already in search mode, cancel it.
-        if (searchMode) cancelSearch();
-        Log.d(TAG, "Performing Search");
-        final String queryString = searchIntent.getStringExtra(SearchManager.QUERY);
-        searchMode = true;
-        Log.d(TAG, "Query string " + queryString);
-        List<SearchResult> results = layerManager.searchByObjectName(queryString);
-        if (results.isEmpty()) {
-            Log.d(TAG, "No results returned");
-            noSearchResultsDialogFragment.show(fragmentManager, "No Search Results");
-        } else if (results.size() > 1) {
-            Log.d(TAG, "Multiple results returned");
-            showUserChooseResultDialog(results);
-        } else {
-            Log.d(TAG, "One result returned.");
-            final SearchResult result = results.get(0);
-            activateSearchTarget(result.coords, result.capitalizedName);
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
+        if (ApplicationConstants.AUTO_MODE_PREF.equals(key)) {
+            setAutoMode(preferences.getBoolean(key, true));
+        } else if (ApplicationConstants.ROTATE_HORIZON_PREF.equals(key)) {
+            model.setHorizontalRotation(preferences.getBoolean(key, false));
+        } else if (ApplicationConstants.SKY_MAP_HIGH_REFRESH_PREF.equals(key)) {
+            gestureInterpreter.setUpdateRate(preferences.getBoolean(ApplicationConstants.SKY_MAP_HIGH_REFRESH_PREF, false) ? 60 : 30);
         }
-    }
-
-    private void showUserChooseResultDialog(List<SearchResult> results) {
-        multipleSearchResultsDialogFragment.clearResults();
-        for (SearchResult result : results) {
-            multipleSearchResultsDialogFragment.add(result);
-        }
-        multipleSearchResultsDialogFragment.show(fragmentManager, "Multiple Search Results");
     }
 
     private void initializeModelViewController() {
         Log.i(TAG, "Initializing Model, View and Controller");
         setContentView(R.layout.skyrenderer);
         rootView = getWindow().getDecorView().getRootView();
-        skyView = findViewById(R.id.skyrenderer_view);
+        skyView = findViewById(R.id.sky_renderer_view);
         // We don't want a depth buffer.
         skyView.setEGLConfigChooser(false);
         SkyRenderer renderer = new SkyRenderer(getResources());
@@ -617,6 +539,117 @@ public class SkyMapActivity extends AppCompatActivity implements OnSharedPrefere
         });
     }
 
+    public void requestLocationPermission() {
+        locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+    }
+
+    private void checkForSensorsAndMaybeWarn() {
+        if (hasSensors(Sensor.TYPE_ACCELEROMETER, Sensor.TYPE_MAGNETIC_FIELD)) {
+            Log.i(TAG, "Minimum sensors present");
+            setAutoMode(preferences.getBoolean(ApplicationConstants.AUTO_MODE_PREF, true));
+            // Enable Gyro if available and user hasn't already disabled it.
+            if (!preferences.contains(ApplicationConstants.DISABLE_GYRO_PREF))
+                preferences.edit().putBoolean(ApplicationConstants.DISABLE_GYRO_PREF,
+                        !hasSensors(Sensor.TYPE_ROTATION_VECTOR, Sensor.TYPE_GYROSCOPE)).apply();
+            if (BuildConfig.DEBUG) {
+                // Lastly a dump of all the sensors.
+                Log.d(TAG, "List of device sensors:");
+                List<Sensor> allSensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
+                for (Sensor sensor : allSensors) {
+                    Log.d(TAG, sensor.getName() + ", sensor type: " + sensor.getStringType() + " (" + sensor.getType() + ")");
+                }
+            }
+        } else {
+            // Missing at least one sensor.  Warn the user.
+            handler.post(() -> {
+                if (preferences.getBoolean(ApplicationConstants.NO_WARN_MISSING_SENSORS_PREF, false)) {
+                    Snackbar.make(rootView, R.string.no_sensor_warning, Snackbar.LENGTH_SHORT).show();
+                    // Don't force manual mode second time through - leave it up to the user.
+                } else {
+                    noSensorsDialogFragment.show(fragmentManager, "No sensors dialog");
+                    // First time, force manual mode.
+                    preferences.edit().putBoolean(ApplicationConstants.AUTO_MODE_PREF, false).apply();
+                    setAutoMode(false);
+                }
+            });
+        }
+    }
+
+    private boolean hasSensors(int... sensorTypes) {
+        if (sensorManager == null) return false;
+        for (int sensorType : sensorTypes) {
+            Sensor sensor = sensorManager.getDefaultSensor(sensorType);
+            if (sensor == null) return false;
+            SensorEventListener dummy = new SensorEventListener() {
+                @Override
+                public void onSensorChanged(SensorEvent event) {
+                }
+
+                @Override
+                public void onAccuracyChanged(Sensor sensor, int accuracy) {
+                }
+            };
+            boolean b = sensorManager.registerListener(dummy, sensor, SensorManager.SENSOR_DELAY_UI);
+            sensorManager.unregisterListener(dummy);
+            if (!b) return false;
+        }
+        return true;
+    }
+
+    public void setTimeTravelMode(Date newTime) {
+        Log.d(TAG, "Showing TimePlayer UI.");
+        pointingText.setVisibility(View.GONE);
+        timePlayerUI.setVisibility(View.VISIBLE);
+        timePlayerUI.requestFocus();
+        flashMap();
+        controller.goTimeTravel(newTime);
+    }
+
+    public void setNormalTimeModel() {
+        flashMap();
+        controller.useRealTime();
+        Snackbar.make(rootView, R.string.time_travel_close_message, Snackbar.LENGTH_SHORT).show();
+        Log.d(TAG, "Leaving Time Travel mode.");
+        timePlayerUI.setVisibility(View.GONE);
+        pointingText.setVisibility(View.VISIBLE);
+    }
+
+    private void flashMap() {
+        final View mask = findViewById(R.id.view_mask);
+        // We don't need to set it invisible again - the end of the animation will see to that.
+        mask.setVisibility(View.VISIBLE);
+        mask.startAnimation(flashAnimation);
+    }
+
+    private void doSearchWithIntent(Intent searchIntent) {
+        // If we're already in search mode, cancel it.
+        if (searchMode) cancelSearch();
+        Log.d(TAG, "Performing Search");
+        final String queryString = searchIntent.getStringExtra(SearchManager.QUERY);
+        searchMode = true;
+        Log.d(TAG, "Query string " + queryString);
+        List<SearchResult> results = layerManager.searchByObjectName(queryString);
+        if (results.isEmpty()) {
+            Log.d(TAG, "No results returned");
+            noSearchResultsDialogFragment.show(fragmentManager, "No Search Results");
+        } else if (results.size() > 1) {
+            Log.d(TAG, "Multiple results returned");
+            showUserChooseResultDialog(results);
+        } else {
+            Log.d(TAG, "One result returned.");
+            final SearchResult result = results.get(0);
+            activateSearchTarget(result.coords, result.capitalizedName);
+        }
+    }
+
+    private void showUserChooseResultDialog(List<SearchResult> results) {
+        multipleSearchResultsDialogFragment.clearResults();
+        for (SearchResult result : results) {
+            multipleSearchResultsDialogFragment.add(result);
+        }
+        multipleSearchResultsDialogFragment.show(fragmentManager, "Multiple Search Results");
+    }
+
     private void setAutoMode(boolean auto) {
         controller.setAutoMode(auto);
         if (auto) {
@@ -631,42 +664,6 @@ public class SkyMapActivity extends AppCompatActivity implements OnSharedPrefere
         searchControlBar.setVisibility(View.INVISIBLE);
         rendererController.queueDisableSearchOverlay();
         searchMode = false;
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        if (Intent.ACTION_SEARCH.equals(intent.getAction()))
-            doSearchWithIntent(intent);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle icicle) {
-        Log.d(TAG, "Sky Map onRestoreInstanceState");
-        super.onRestoreInstanceState(icicle);
-        if (icicle == null) return;
-        searchMode = icicle.getBoolean(BUNDLE_SEARCH_MODE);
-        float x = icicle.getFloat(BUNDLE_X_TARGET);
-        float y = icicle.getFloat(BUNDLE_Y_TARGET);
-        float z = icicle.getFloat(BUNDLE_Z_TARGET);
-        searchTarget = new GeocentricCoordinates(x, y, z);
-        searchTargetName = icicle.getString(ApplicationConstants.BUNDLE_TARGET_NAME);
-        if (searchMode) {
-            Log.d(TAG, "Searching for target " + searchTargetName + " at target=" + searchTarget);
-            rendererController.queueEnableSearchOverlay(searchTarget, searchTargetName);
-            cancelSearchButton.setVisibility(View.VISIBLE);
-        }
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle icicle) {
-        Log.d(TAG, "Sky Map onSaveInstanceState");
-        icicle.putBoolean(BUNDLE_SEARCH_MODE, searchMode);
-        icicle.putFloat(BUNDLE_X_TARGET, (float) searchTarget.x);
-        icicle.putFloat(BUNDLE_Y_TARGET, (float) searchTarget.y);
-        icicle.putFloat(BUNDLE_Z_TARGET, (float) searchTarget.z);
-        icicle.putString(ApplicationConstants.BUNDLE_TARGET_NAME, searchTargetName);
-        super.onSaveInstanceState(icicle);
     }
 
     public void activateSearchTarget(GeocentricCoordinates target, final String searchTerm) {
@@ -765,9 +762,8 @@ public class SkyMapActivity extends AppCompatActivity implements OnSharedPrefere
      */
     private class RendererModelUpdateClosure extends AbstractUpdateClosure {
 
-        public RendererModelUpdateClosure() {
-            boolean horizontalRotation = preferences.getBoolean(ApplicationConstants.ROTATE_HORIZON_PREF, false);
-            model.setHorizontalRotation(horizontalRotation);
+        RendererModelUpdateClosure() {
+            model.setHorizontalRotation(preferences.getBoolean(ApplicationConstants.ROTATE_HORIZON_PREF, false));
         }
 
         @Override

@@ -1,17 +1,18 @@
 /*
  * Copyright 2021 Marco Cipriani (@marcocipriani01)
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package io.github.marcocipriani01.telescopetouch;
@@ -74,4 +75,13 @@ public class ApplicationConstants {
     public static final String AUTO_CONNECT_DEVICES_PREF = "auto_connect_devices";
     public static final String SKY_MAP_HIGH_REFRESH_PREF = "sky_map_high_refresh";
     public static final String SKY_MAP_HIGH_REFRESH_INFO_PREF = "sky_map_high_refresh_info";
+    public static final String PORT_PREF = "sftp_port";
+    public static final String USERNAME_PREF = "sftp_username";
+    public static final String PASSWORD_PREF = "sftp_password";
+    public static final String USE_PEM_PREF = "sftp_use_pem_key";
+    public static final String USE_PEM_PASSWORD_PREF = "sftp_use_pem_password";
+    public static final String PEM_PASSWORD_PREF = "sftp_pem_password";
+    public static final String SAVE_PASSWORDS_PREF = "sftp_save_passwords";
+    public static final String PHD2_GRAPH_ZOOM_PREF = "phd2_graph_zoom";
+    public static final String KEEP_SCREEN_ON_PREF = "keep_screen_on";
 }

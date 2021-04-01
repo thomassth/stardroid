@@ -4,11 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:keepScreenOn="true"
     tools:ignore="ContentDescription, RtlSymmetry, RtlHardcoded">
 
     <android.opengl.GLSurfaceView
-        android:id="@+id/skyrenderer_view"
+        android:id="@+id/sky_renderer_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

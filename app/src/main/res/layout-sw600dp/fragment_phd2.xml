@@ -26,19 +26,19 @@
 
         <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/phd2_host_spinner"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:layout_marginEnd="16dp"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:prompt="@string/host_prompt"
             tools:listitem="@layout/simple_spinner_item" />
 
         <EditText
             android:id="@+id/phd2_port_field"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:ems="6"
             android:hint="4400"
             android:imeOptions="flagNoExtractUi"
@@ -58,6 +58,7 @@
         android:drawablePadding="-24dp"
         android:drawableTint="@android:color/white"
         android:text="@string/connect"
+        android:textStyle="bold"
         tools:targetApi="m" />
 
     <TextView

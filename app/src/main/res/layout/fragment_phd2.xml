@@ -39,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="6"
+            android:ems="4"
             android:hint="4400"
             android:imeOptions="flagNoExtractUi"
             android:importantForAutofill="no"
@@ -58,6 +58,7 @@
         android:drawablePadding="-24dp"
         android:drawableTint="@android:color/white"
         android:text="@string/connect"
+        android:textStyle="bold"
         tools:targetApi="m" />
 
     <TextView

@@ -1,17 +1,18 @@
 /*
  * Copyright 2021 Marco Cipriani (@marcocipriani01)
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package io.github.marcocipriani01.telescopetouch.activities;
@@ -78,6 +79,7 @@ import io.github.marcocipriani01.telescopetouch.activities.fragments.GoToFragmen
 import io.github.marcocipriani01.telescopetouch.activities.fragments.MountControlFragment;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.PHD2Fragment;
 import io.github.marcocipriani01.telescopetouch.activities.fragments.PolarisFragment;
+import io.github.marcocipriani01.telescopetouch.activities.fragments.SFTPFragment;
 import io.github.marcocipriani01.telescopetouch.activities.util.DarkerModeManager;
 import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
 
@@ -107,6 +109,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final String MESSAGE = "MainActivityMessage";
     private static Pages currentPage = Pages.CONNECTION;
     private final Handler handler = new Handler(Looper.getMainLooper());
+    private final ActivityResultLauncher<Intent> fileChooserLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (currentPage.lastInstance instanceof SFTPFragment)
+                    ((SFTPFragment) currentPage.lastInstance).onFileChosen(result);
+            });
     private String lastRequestedPermission = null;
     private final ActivityResultLauncher<String> permissionLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(),
@@ -201,6 +209,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return;
             }
         }
+        if (preferences.getBoolean(ApplicationConstants.KEEP_SCREEN_ON_PREF, false)) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        } else {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
     }
 
     @Override
@@ -208,9 +221,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onDestroy();
         nsdHelper.stop();
         if (ACTION_DISCONNECT_EXIT.equals(preferences.getString(EXIT_ACTION_PREF, ACTION_DO_NOTHING))) {
-            if (connectionManager.isConnected())
+            if (connectionManager.isConnected()) {
                 Toast.makeText(this, R.string.disconnected, Toast.LENGTH_SHORT).show();
-            connectionManager.disconnect();
+                connectionManager.disconnect();
+            }
             if (phd2.isConnected()) phd2.disconnect();
         }
     }
@@ -221,7 +235,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         connectionManager.removeManagerListener(this);
         String exitAction = preferences.getString(EXIT_ACTION_PREF, ACTION_DO_NOTHING);
         if (ACTION_BACKGROUND_ALWAYS.equals(exitAction) ||
-                (ACTION_BACKGROUND_IF_CONNECTED.equals(exitAction) && connectionManager.isConnected())) {
+                (ACTION_BACKGROUND_IF_CONNECTED.equals(exitAction) &&
+                        (connectionManager.isConnected() || phd2.isConnected()))) {
             Intent intent = new Intent(this, AppForegroundService.class);
             intent.setAction(AppForegroundService.SERVICE_START);
             ContextCompat.startForegroundService(this, intent);
@@ -426,6 +441,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         serversActivityLauncher.launch(new Intent(this, ServersActivity.class));
     }
 
+    public void launchSFTPFileChooser() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");
+        fileChooserLauncher.launch(intent);
+    }
+
     /**
      * @author marcocipriani01
      */
@@ -436,7 +458,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         CCD_CAPTURE(R.id.menu_ccd_images),
         FOCUSER(R.id.menu_focuser),
         PHD2(R.id.menu_phd2),
-        CONTROL_PANEL(R.id.menu_generic),
+        CONTROL_PANEL(R.id.menu_indi_control_panel),
+        SFTP(R.id.menu_sftp),
         SKY_MAP(R.id.menu_skymap),
         SKY_MAP_GALLERY(R.id.menu_skymap_gallery),
         ALADIN(R.id.menu_aladin),
@@ -481,6 +504,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     break;
                 case CONTROL_PANEL:
                     lastInstance = new ControlPanelFragment();
+                    break;
+                case SFTP:
+                    lastInstance = new SFTPFragment();
                     break;
                 case ALADIN:
                     lastInstance = new AladinFragment();
