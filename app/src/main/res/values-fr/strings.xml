@@ -382,7 +382,7 @@
     <string name="slew_ok" >Pointage en cours</string>
     <string name="arcmin">arcmin</string>
     <string name="menu_connection">Connecter</string>
-    <string name="error">Erreur :</string>
+    <string name="error">"Erreur : "</string>
     <string name="hdf">Champ profond de Hubble</string>
     <string name="no_use_gps_pref_hint">Choisir un lieu sur la carte ou entrer les coordonnées</string>
     <string name="solar_system">Système solaire</string>
@@ -469,6 +469,7 @@
         ★ Le projet IPARCOS, Licence GPL v3\n
         ★ Le projet SKY MAP, Licence Apache 2.0\n
         ★ Les projets VizieR et Aladin\n
+        ★ Spider SFTP, Licence GPL v3\n
         ★ INDIForJava, Licence LGPL v3\n
         ★ Icônes matériels, Licence Apache 2.0\n
         ★ Icône Telescope, Licence Flaticon\n

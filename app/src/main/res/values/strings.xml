@@ -468,7 +468,8 @@
         \n\n<b>Credits:</b>\n
         ★ The IPARCOS project, GPL v3 license\n
         ★ The Sky Map project, Apache 2.0 license\n
-        ★ The VizieR and Aladin projects\n
+        ★ The VizieR and Aladin services\n
+        ★ Spider SFTP, GPL v3 license\n
         ★ INDIForJava, LGPL v3 license\n
         ★ Material icons, Apache 2.0 license\n
         ★ Telescope icon, Flaticon license\n
@@ -476,7 +477,7 @@
         ★ Compass by iutinvg, MIT License
     </string>
     <string name="error_no_devices">No devices found!</string>
-    <string name="error">Error:</string>
+    <string name="error">"Error: "</string>
     <string name="remove_server">Remove the selected server?</string>
     <string name="servers_list_snack_msg">Long click to remove, drag to rearrange</string>
     <string name="focus_in">Focus in</string>
@@ -676,7 +677,6 @@
     <string name="high_refresh_rate">High refresh rate</string>
     <string name="high_refresh_rate_summary">Run the Sky Map at 60Hz. Drains more battery, but looks super-cool!</string>
     <string name="sky_map_settings">Sky Map settings</string>
-    <string name="high_refresh_rate_message">High refresh rate mode is here! Run the Sky Map at 60Hz, for a super-smooth experience!</string>
     <string name="ccd_capture_notification">CCD capture</string>
     <string name="capture_in_progress">CCD capture in progress</string>
     <string name="stop_capture">Stop capture</string>
@@ -743,4 +743,6 @@
     <string name="keep_screen_on">Keep screen on</string>
     <string name="open">Open</string>
     <string name="open_file">Open file</string>
+    <string name="no_star_selected">No star selected!</string>
+    <string name="find_star">Find star</string>
 </resources>

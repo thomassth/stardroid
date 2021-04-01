@@ -309,7 +309,7 @@ public class FocuserFragment extends ActionFragment implements View.OnClickListe
         if ((message == null) || message.equals("?")) {
             requestActionSnack(context.getString(R.string.unknown_exception));
         } else {
-            requestActionSnack(context.getString(R.string.error) + " " + message);
+            requestActionSnack(context.getString(R.string.error) + message);
         }
     }
 

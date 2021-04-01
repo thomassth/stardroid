@@ -190,6 +190,17 @@ public class PHD2Client extends SimpleClient {
         });
     }
 
+    private void noStarSelected() {
+        receiveImages = false;
+        uiHandler.post(() -> {
+            synchronized (listeners) {
+                for (PHD2Listener l : listeners) {
+                    l.onPHD2NoStarSelected();
+                }
+            }
+        });
+    }
+
     public enum PHD2Command {
         loop,
         find_star,
@@ -263,7 +274,12 @@ public class PHD2Client extends SimpleClient {
 
         public static void parseResponse(PHD2Client phd, JSONObject msg) throws JSONException {
             if (msg.has("error")) {
-                phd.onError(new RuntimeException("PHD2 returned " + msg.getJSONObject("error").getString("message")));
+                String message = msg.getJSONObject("error").getString("message");
+                if (message.equals("no star selected")) {
+                    phd.noStarSelected();
+                } else {
+                    phd.onError(new RuntimeException("PHD2 returned " + message));
+                }
             } else if (msg.has("result")) {
                 int id = msg.getInt("id");
                 PHD2Command[] values = values();
@@ -425,6 +441,8 @@ public class PHD2Client extends SimpleClient {
         void onPHD2Connected();
 
         void onPHD2Disconnected();
+
+        void onPHD2NoStarSelected();
 
         void onPHD2Error(Exception e);
 

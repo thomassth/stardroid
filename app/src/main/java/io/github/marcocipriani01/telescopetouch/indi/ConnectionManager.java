@@ -224,7 +224,7 @@ public class ConnectionManager implements INDIServerConnectionListener, INDIDevi
         if ((message == null) || message.equals("?")) {
             log(resources.getString(R.string.unknown_exception));
         } else {
-            log(resources.getString(R.string.error) + " " + message);
+            log(resources.getString(R.string.error) + message);
         }
     }
 

@@ -926,7 +926,7 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
         if ((message == null) || message.equals("?")) {
             requestActionSnack(context.getString(R.string.unknown_exception));
         } else {
-            requestActionSnack(context.getString(R.string.error) + " " + message);
+            requestActionSnack(context.getString(R.string.error) + message);
         }
     }
 

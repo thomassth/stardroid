@@ -74,7 +74,6 @@ public class ApplicationConstants {
     public static final String WEB_MANAGER_PORT_PREF = "web_manager_port";
     public static final String AUTO_CONNECT_DEVICES_PREF = "auto_connect_devices";
     public static final String SKY_MAP_HIGH_REFRESH_PREF = "sky_map_high_refresh";
-    public static final String SKY_MAP_HIGH_REFRESH_INFO_PREF = "sky_map_high_refresh_info";
     public static final String PORT_PREF = "sftp_port";
     public static final String USERNAME_PREF = "sftp_username";
     public static final String PASSWORD_PREF = "sftp_password";

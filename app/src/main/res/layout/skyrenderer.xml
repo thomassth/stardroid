@@ -52,10 +52,9 @@
             android:layout_toLeftOf="@id/cancel_search_button"
             android:layout_toRightOf="@id/search_icon"
             android:gravity="center"
-            android:text="Looking for..."
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textStyle="bold"
-            tools:ignore="HardcodedText" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/search_prompt"
@@ -301,8 +300,8 @@
             android:layout_alignParentEnd="true"
             android:background="@android:color/transparent"
             android:clickable="true"
-            android:paddingBottom="16dp"
             android:focusable="true"
+            android:paddingBottom="16dp"
             android:src="@drawable/move" />
 
         <ImageButton

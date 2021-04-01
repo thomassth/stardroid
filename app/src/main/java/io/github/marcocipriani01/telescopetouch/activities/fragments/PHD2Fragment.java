@@ -30,6 +30,8 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,7 +86,7 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
             try {
                 PHD2Client.PHD2Command.set_exposure.run(phd2, (int) phd2.exposureTimes[pos] * 1000);
             } catch (Exception e) {
-                requestActionSnack(context.getString(R.string.error) + " " + e.getLocalizedMessage());
+                requestActionSnack(context.getString(R.string.error) + e.getLocalizedMessage());
             }
         }
     };
@@ -94,7 +96,7 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
             try {
                 PHD2Client.PHD2Command.set_dec_guide_mode.run(phd2, PHD2Client.DEC_GUIDE_MODES[pos]);
             } catch (Exception e) {
-                requestActionSnack(context.getString(R.string.error) + " " + e.getLocalizedMessage());
+                requestActionSnack(context.getString(R.string.error) + e.getLocalizedMessage());
             }
         }
     };
@@ -202,7 +204,7 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
                     phd2.connect(host, port);
                 }
             } catch (Exception e) {
-                requestActionSnack(context.getString(R.string.error) + " " + e.getLocalizedMessage());
+                requestActionSnack(context.getString(R.string.error) + e.getLocalizedMessage());
             }
         });
 
@@ -366,7 +368,7 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
                         .setNegativeButton(android.R.string.cancel, null).show();
             }
         } catch (Exception e) {
-            requestActionSnack(context.getString(R.string.error) + " " + e.getLocalizedMessage());
+            requestActionSnack(context.getString(R.string.error) + e.getLocalizedMessage());
         }
     }
 
@@ -610,8 +612,24 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
     }
 
     @Override
+    public void onPHD2NoStarSelected() {
+        requestActionSnack(R.string.no_star_selected, R.string.find_star, v -> {
+            try {
+                PHD2Client.PHD2Command.find_star.run(phd2);
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    phd2.receiveImages = true;
+                    receiveImagesSwitch.setChecked(true);
+                }, 1000);
+            } catch (Exception e) {
+                requestActionSnack(context.getString(R.string.error) + e.getLocalizedMessage());
+            }
+        });
+        receiveImagesSwitch.setChecked(false);
+    }
+
+    @Override
     public void onPHD2Error(Exception e) {
         if (!(e instanceof SocketException))
-            requestActionSnack(context.getString(R.string.error) + " " + e.getLocalizedMessage());
+            requestActionSnack(context.getString(R.string.error) + e.getLocalizedMessage());
     }
 }

@@ -388,7 +388,8 @@
         \n\n<b>Crediti:</b>\n
         ★ Il progetto IPARCOS, licenza GPL v3\n
         ★ Il progetto Sky Map, licenza Apache 2.0\n
-        ★ I progetti VizieR e Aladin\n
+        ★ I servizi VizieR e Aladin\n
+        ★ Spider SFTP, licenza GPL v3\n
         ★ INDIForJava, licenza LGPL v3\n
         ★ Material icons, licenza Apache 2.0\n
         ★ Telescope icon, licenza Flaticon\n
@@ -396,7 +397,7 @@
         ★ Compass di iutinvg, licenza MIT
     </string>
     <string name="error_no_devices">Nessun dispositivo trovato!</string>
-    <string name="error">Errore:</string>
+    <string name="error">"Errore: "</string>
     <string name="host_manage">Gestisci i server</string>
     <string name="remove_server">Rimuovere il server selezionato?</string>
     <string name="servers_list_snack_msg">Tieni premuto per cancellare, trascina per riorganizzare</string>
@@ -675,7 +676,6 @@
     <string name="high_refresh_rate">High refresh rate</string>
     <string name="high_refresh_rate_summary">Ricarica la mappa stellare a 60Hz. Consuma più batteria, ma fornisce un\'esperieza superiore.</string>
     <string name="sky_map_settings">Impostazioni mappa stellare</string>
-    <string name="high_refresh_rate_message">La modalità ad alta frequenza di aggiornamento è ora disponibile! Ricarica la mappa stellare a 60Hz, per un\'esperienza superiore!</string>
     <string name="ccd_capture_notification">Cattura CCD</string>
     <string name="capture_in_progress">Cattura in corso</string>
     <string name="stop_capture">Ferma</string>
@@ -742,4 +742,6 @@
     <string name="keep_screen_on">Tieni schermo acceso</string>
     <string name="open">Apri</string>
     <string name="open_file">Apri file</string>
+    <string name="no_star_selected">Nessuna stella selezionata!</string>
+    <string name="find_star">Cerca stella</string>
 </resources>

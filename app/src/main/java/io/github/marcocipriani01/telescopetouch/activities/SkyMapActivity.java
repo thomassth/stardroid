@@ -318,14 +318,6 @@ public class SkyMapActivity extends AppCompatActivity implements OnSharedPrefere
         for (Runnable runnable : onResumeRunnables) {
             handler.post(runnable);
         }
-        if (preferences.getBoolean(ApplicationConstants.SKY_MAP_HIGH_REFRESH_INFO_PREF, true)) {
-            new AlertDialog.Builder(this).setTitle(R.string.sky_map).setIcon(R.drawable.star_circle)
-                    .setMessage(R.string.high_refresh_rate_message)
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .setPositiveButton(R.string.menu_settings, (dialog, which) ->
-                            startActivity(new Intent(SkyMapActivity.this, SettingsActivity.class))).show();
-            preferences.edit().putBoolean(ApplicationConstants.SKY_MAP_HIGH_REFRESH_INFO_PREF, false).apply();
-        }
     }
 
     @Override
@@ -749,7 +741,8 @@ public class SkyMapActivity extends AppCompatActivity implements OnSharedPrefere
 
     private void setPointingText(Pointing pointing) {
         if (useAltAz) {
-            pointingText.setText(HorizontalCoordinates.getInstance(pointing.getLineOfSight(), model.getLocation(), Calendar.getInstance()).toStringArcmin());
+            pointingText.setText(HorizontalCoordinates.getInstance(pointing.getLineOfSight(),
+                    model.getLocation(), Calendar.getInstance()).toStringArcmin());
         } else {
             pointingText.setText(EquatorialCoordinates.getInstance(pointing.getLineOfSight()).toStringArcmin());
         }
