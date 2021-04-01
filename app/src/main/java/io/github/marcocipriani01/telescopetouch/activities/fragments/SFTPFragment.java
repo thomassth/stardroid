@@ -23,6 +23,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -30,6 +31,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -75,10 +77,12 @@ public class SFTPFragment extends ActionFragment {
     private SharedPreferences preferences;
     private Button privateKeyButton;
     private String remoteFolder;
+    private InputMethodManager inputMethodManager;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         setHasOptionsMenu(true);
         View rootView = inflater.inflate(R.layout.fragment_sftp, container, false);
         savePasswordBox = rootView.findViewById(R.id.sftp_save_password_box);
@@ -136,7 +140,9 @@ public class SFTPFragment extends ActionFragment {
         if (privateKeyBytes != null)
             privateKeyButton.setText(R.string.private_key_selected);
 
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+        if ((Build.VERSION.SDK_INT < Build.VERSION_CODES.R) &&
+                (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
+                        PackageManager.PERMISSION_GRANTED))
             requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         return rootView;
     }
@@ -171,6 +177,10 @@ public class SFTPFragment extends ActionFragment {
             preferences.edit().putInt(ProUtils.SFTP_PRO_COUNTER, count + 1).apply();
         }
         // END PRO
+        inputMethodManager.hideSoftInputFromWindow(usernameField.getWindowToken(), 0);
+        inputMethodManager.hideSoftInputFromWindow(passwordField.getWindowToken(), 0);
+        inputMethodManager.hideSoftInputFromWindow(pemPasswordField.getWindowToken(), 0);
+        inputMethodManager.hideSoftInputFromWindow(portField.getWindowToken(), 0);
         String ip = (String) ipSpinner.getSelectedItem();
         if (ip == null) {
             requestActionSnack(R.string.no_host_selected);
@@ -219,7 +229,13 @@ public class SFTPFragment extends ActionFragment {
     }
 
     private void chosePEMKeyAction(View view) {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+        inputMethodManager.hideSoftInputFromWindow(usernameField.getWindowToken(), 0);
+        inputMethodManager.hideSoftInputFromWindow(passwordField.getWindowToken(), 0);
+        inputMethodManager.hideSoftInputFromWindow(pemPasswordField.getWindowToken(), 0);
+        inputMethodManager.hideSoftInputFromWindow(portField.getWindowToken(), 0);
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) ||
+                (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                        PackageManager.PERMISSION_GRANTED)) {
             FragmentActivity activity = getActivity();
             if (activity instanceof MainActivity)
                 ((MainActivity) activity).launchSFTPFileChooser();

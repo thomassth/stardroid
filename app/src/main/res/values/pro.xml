@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="pro_new_msg">Telescope.Touch Pro is now available! Pro features include: CCD capture, Aladin Sky Atlas, objects previews, altitude graphs and advanced settings!</string>
+    <string name="pro_new_msg">Telescope.Touch Pro is now available! Pro features include: CCD capture, Aladin Sky Atlas, DSO previews, remote file manager and more!</string>
     <string name="get_it">Get it!</string>
     <string name="pro_feature">Pro feature!</string>
     <string name="get_telescope_touch_pro">Get Telescope.Touch Pro!</string>

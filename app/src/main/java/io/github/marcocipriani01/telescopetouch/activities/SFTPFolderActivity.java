@@ -83,6 +83,7 @@ import io.github.marcocipriani01.telescopetouch.sftp.FolderAdapter;
 public class SFTPFolderActivity extends AppCompatActivity {
 
     public static final String EXTRA_REMOTE_FOLDER = "REMOTE_FOLDER";
+    private static final String TAG = TelescopeTouchApp.getTag(SFTPFolderActivity.class);
     private static final int STORAGE_PERMISSION_REQUEST = 20;
     private final ArrayList<DirectoryElement> elements = new ArrayList<>();
     private final HandlerThread sftpThread = new HandlerThread("SFTP thread");
@@ -100,12 +101,16 @@ public class SFTPFolderActivity extends AppCompatActivity {
                 if ((result.getResultCode() == Activity.RESULT_OK) && (intent != null))
                     sftpHandler.post(new UploadTask(intent.getData(), currentPath));
             });
+    private PowerManager.WakeLock wakeLock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         currentPath = Objects.requireNonNull(getIntent().getStringExtra(EXTRA_REMOTE_FOLDER));
         setContentView(R.layout.activity_folder);
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        if (pm != null)
+            wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName());
         coordinator = findViewById(R.id.folder_activity_coordinator);
         actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -170,6 +175,26 @@ public class SFTPFolderActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if ((requestCode == STORAGE_PERMISSION_REQUEST) && (grantResults[0] != PackageManager.PERMISSION_GRANTED))
             Snackbar.make(coordinator, R.string.storage_permission_required, Snackbar.LENGTH_SHORT).show();
+    }
+
+    private void wakeLock() {
+        if (wakeLock != null) {
+            try {
+                wakeLock.acquire(10 * 60);
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage(), e);
+            }
+        }
+    }
+
+    private void noWakeLock() {
+        if (wakeLock != null) {
+            try {
+                if (wakeLock.isHeld()) wakeLock.release();
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage(), e);
+            }
+        }
     }
 
     private class GetFilesTask implements Runnable {
@@ -241,17 +266,12 @@ public class SFTPFolderActivity extends AppCompatActivity {
         private final Uri file;
         private final String path;
         private final ProgressDialog progressDialog;
-        private PowerManager.WakeLock wakeLock;
 
         UploadTask(Uri file, String remotePath) {
             this.file = file;
             this.path = remotePath;
             // Take CPU lock to prevent CPU from going off if the user presses the power button during download
-            PowerManager pm = (PowerManager) SFTPFolderActivity.this.getSystemService(Context.POWER_SERVICE);
-            if (pm != null) {
-                wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName());
-                wakeLock.acquire(10 * 60);
-            }
+            wakeLock();
             progressDialog = new ProgressDialog(SFTPFolderActivity.this);
             progressDialog.setMessage(String.format(getString(R.string.uploading), file.getLastPathSegment()));
             progressDialog.setMax(100);
@@ -298,14 +318,14 @@ public class SFTPFolderActivity extends AppCompatActivity {
                 }
                 handler.post(() -> {
                     sftpHandler.post(new GetFilesTask());
-                    if (wakeLock != null) wakeLock.release();
+                    noWakeLock();
                     progressDialog.dismiss();
                     Snackbar.make(coordinator, R.string.file_uploaded, Snackbar.LENGTH_LONG).show();
                 });
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage(), e);
                 handler.post(() -> {
-                    if (wakeLock != null) wakeLock.release();
+                    noWakeLock();
                     progressDialog.dismiss();
                     Snackbar.make(coordinator, String.format(getString(R.string.upload_error), e.getMessage()), Snackbar.LENGTH_SHORT).show();
                 });
@@ -319,16 +339,11 @@ public class SFTPFolderActivity extends AppCompatActivity {
         private final String TAG = TelescopeTouchApp.getTag(DownloadTask.class);
         private final DirectoryElement element;
         private final ProgressDialog progressDialog;
-        private PowerManager.WakeLock wakeLock;
 
         DownloadTask(DirectoryElement element) {
             this.element = element;
             // Take CPU lock to prevent CPU from going off if the user presses the power button during download
-            PowerManager pm = (PowerManager) SFTPFolderActivity.this.getSystemService(Context.POWER_SERVICE);
-            if (pm != null) {
-                wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName());
-                wakeLock.acquire(10 * 60);
-            }
+            wakeLock();
             progressDialog = new ProgressDialog(SFTPFolderActivity.this);
             progressDialog.setMessage(String.format(getString(R.string.downloading_message), element.shortName, element.sizeMB));
             progressDialog.setMax(100);
@@ -398,15 +413,20 @@ public class SFTPFolderActivity extends AppCompatActivity {
                 stream.flush();
                 stream.close();
                 handler.post(() -> {
-                    if (wakeLock != null) wakeLock.release();
+                    noWakeLock();
                     progressDialog.dismiss();
                     Snackbar.make(coordinator, String.format(getString(R.string.file_downloaded_message),
                             folderName), Snackbar.LENGTH_SHORT).setAction(R.string.open, v -> {
                         Intent intent = new Intent();
-                        intent.setDataAndType(uri, isImage ? "image/*" : "*/*");
                         intent.setAction(Intent.ACTION_VIEW);
                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        startActivity(Intent.createChooser(intent, getString(R.string.open_file)));
+                        if (isImage) {
+                            intent.setDataAndType(uri, "image/*");
+                            startActivity(Intent.createChooser(intent, getString(R.string.open_photo)));
+                        } else {
+                            intent.setDataAndType(uri, "*/*");
+                            startActivity(Intent.createChooser(intent, getString(R.string.open_file)));
+                        }
                     }).show();
                 });
             } catch (Exception e) {
@@ -419,7 +439,7 @@ public class SFTPFolderActivity extends AppCompatActivity {
                 }
                 Log.e(TAG, e.getMessage(), e);
                 handler.post(() -> {
-                    if (wakeLock != null) wakeLock.release();
+                    noWakeLock();
                     progressDialog.dismiss();
                     Snackbar.make(coordinator, String.format(getString(R.string.download_error), e.getMessage()),
                             Snackbar.LENGTH_SHORT).show();
@@ -500,8 +520,9 @@ public class SFTPFolderActivity extends AppCompatActivity {
                 public void onLongPress(MotionEvent e) {
                     View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
                     if (child != null) {
-                        if (ContextCompat.checkSelfPermission(SFTPFolderActivity.this,
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) ||
+                                (ContextCompat.checkSelfPermission(SFTPFolderActivity.this,
+                                        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
                             DirectoryElement element = elements.get(recyclerView.getChildAdapterPosition(child));
                             if (element.isDirectory) {
                                 new AlertDialog.Builder(SFTPFolderActivity.this).setTitle(R.string.app_name)
