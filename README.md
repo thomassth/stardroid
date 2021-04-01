@@ -68,21 +68,19 @@ If you feel extra-generous, you can also donate via PayPal. **Thank you!**
 You can access the sky map by pressing on the map icon in the navigation bar. There, you'll find all the usual Sky Map features
 with a renewed user interface and high-definition planet thumbnails.
 
-## Developed by
-
-- **Marco Cipriani** (@marcocipriani01): main developer
-- **Romain Fafet** (@farom57): [IPARCOS](https://github.com/INDIForJava/IPARCOS) codebase
-- **Sky Map team**: [Sky Map](https://github.com/sky-map-team/stardroid) codebase
-
 ### Contributors
 
 - Valentin Chevalier, for the French translation and his support
 - theChef613 for his help in bringing the app to the Google Play Store
+- Romain Fafet (@farom57): [IPARCOS](https://github.com/INDIForJava/IPARCOS) codebase
+- Sky Map team (@sky-map-team): [Sky Map](https://github.com/sky-map-team/stardroid) codebase
+- Nick Durante (@nickdurante): [Spider SFTP](https://github.com/nickdurante/Spider) codebase
 
 ### Libraries and credits
 
 - The [IPARCOS](https://github.com/INDIForJava/IPARCOS) project, GPL v3 license
 - The [Sky Map](https://github.com/sky-map-team/stardroid) project, Apache 2.0 license
+- [Spider SFTP](https://github.com/marcocipriani01/Spider), GPL v3 license
 - [INDIForJava](https://github.com/INDIForJava/INDIForJava), LGPL v3 license
 - [Material icons](https://material.io/resources/icons/), Apache 2.0 license
 - [Telescope icon](https://www.flaticon.com/free-icon/telescope_1086070?term=telescope&page=1&position=81&related_item_id=1086070), Flaticon License
