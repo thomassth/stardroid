@@ -68,6 +68,11 @@ If you feel extra-generous, you can also donate via PayPal. **Thank you!**
 You can access the sky map by pressing on the map icon in the navigation bar. There, you'll find all the usual Sky Map features
 with a renewed user interface and high-definition planet thumbnails.
 
+## About this app
+
+Telescope.Touch is developed by Marco Cipriani ([@marcocipriani01](https://github.com/marcocipriani01)).
+More info about me [on my website](https://marcocipriani01.github.io/).
+
 ### Contributors
 
 - Valentin Chevalier, for the French translation and his support
