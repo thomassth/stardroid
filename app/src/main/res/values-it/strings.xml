@@ -430,7 +430,7 @@
     <string name="sky_map_gallery">Galleria di Sky Map</string>
     <string name="hdf">Campo profondo Hubble (HDF)</string>
     <string name="shortcuts_not_supported">Il tuo dispositivo non supporta le scorciatoie.</string>
-    <string name="add_sky_map_shortcut">Aggiungi icona mappa stellare</string>
+    <string name="add_sky_map_shortcut">Aggiungi Sky Map alla home</string>
     <string name="deep_sky">Cielo profondo</string>
     <string name="solar_system">Sistema solare</string>
     <string name="point_telescope">Punta telescopio</string>

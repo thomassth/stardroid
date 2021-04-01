@@ -96,6 +96,7 @@
                     android:id="@+id/sftp_password_field"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:imeOptions="actionGo"
                     android:importantForAutofill="no"
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -132,6 +133,7 @@
                     android:id="@+id/sftp_pem_password_field"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:imeOptions="actionGo"
                     android:importantForAutofill="no"
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>

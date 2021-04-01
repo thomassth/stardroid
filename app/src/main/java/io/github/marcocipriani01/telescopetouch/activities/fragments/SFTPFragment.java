@@ -28,13 +28,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResult;
 import androidx.annotation.NonNull;
@@ -88,6 +91,7 @@ public class SFTPFragment extends ActionFragment {
         savePasswordBox = rootView.findViewById(R.id.sftp_save_password_box);
         usePEMKeySwitch = rootView.findViewById(R.id.sftp_pem_switch);
         passwordField = rootView.findViewById(R.id.sftp_password_field);
+        passwordField.setOnEditorActionListener(this::onEditorAction);
         usernameField = rootView.findViewById(R.id.sftp_username_field);
         ipSpinner = rootView.findViewById(R.id.sftp_host_spinner);
         portField = rootView.findViewById(R.id.sftp_port_field);
@@ -96,6 +100,7 @@ public class SFTPFragment extends ActionFragment {
         privateKeyButton = rootView.findViewById(R.id.sftp_choose_pem_btn);
         pemPasswordSwitch = rootView.findViewById(R.id.sftp_pem_has_password_switch);
         pemPasswordField = rootView.findViewById(R.id.sftp_pem_password_field);
+        pemPasswordField.setOnEditorActionListener(this::onEditorAction);
         usePEMKeySwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 passwordFieldLayout.setVisibility(View.GONE);
@@ -279,6 +284,14 @@ public class SFTPFragment extends ActionFragment {
     @Override
     public void onPermissionNotAcquired(String permission) {
         requestActionSnack(R.string.storage_permission_required);
+    }
+
+    private boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_GO) {
+            SFTPFragment.this.connectAction(null);
+            return true;
+        }
+        return false;
     }
 
     class ConnectTask extends Thread {
