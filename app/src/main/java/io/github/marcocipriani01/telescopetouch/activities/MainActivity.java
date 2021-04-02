@@ -336,7 +336,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return false;
     }
 
-    private void showFragment(Pages page, boolean animate) {
+    public void showFragment(Pages page, boolean animate) {
         if (page == Pages.ALADIN) {
             // PRO
             if (!ProUtils.isPro) {
@@ -359,11 +359,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             ActionFragment actionFragment = (ActionFragment) fragment;
             actionFragment.setActionEnabledListener(this);
             int drawable = actionFragment.getActionDrawable();
-            if ((drawable != 0) && actionFragment.isActionEnabled()) {
+            if (drawable != 0) {
                 fab.setImageResource(drawable);
-                fab.show();
-            } else {
-                fab.hide();
+                if (actionFragment.isActionEnabled()) {
+                    fab.show();
+                } else {
+                    fab.hide();
+                }
             }
         } else {
             fab.hide();
@@ -451,7 +453,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     /**
      * @author marcocipriani01
      */
-    private enum Pages {
+    public enum Pages {
         CONNECTION(R.id.menu_connection),
         MOUNT_CONTROL(R.id.menu_move),
         GOTO(R.id.menu_goto_fragment),
@@ -482,7 +484,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return null;
         }
 
-        Fragment newInstance() {
+        private Fragment newInstance() {
             switch (this) {
                 case CONNECTION:
                     lastInstance = new ConnectionFragment();

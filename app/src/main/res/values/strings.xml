@@ -380,7 +380,7 @@
     <string name="diagnostics_activity_universal_time">Universal datetime</string>
     <string name="diagnostics_activity_network_heading">Network</string>
     <string name="diagnostics_activity_connection">Connection</string>
-    <string name="diagnostics_activity_rotation_matrix">Rot Matrix</string>
+    <string name="diagnostics_activity_rotation_matrix">Rotation</string>
     <string name="enabled">Enabled</string>
     <string name="disabled">Disabled</string>
     <string name="permission_disabled">Permission disabled</string>
@@ -388,7 +388,7 @@
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
     <string name="wifi">" (Wi-Fi)"</string>
-    <string name="cell_network">" (cell)"</string>
+    <string name="cell_network">" (cellular)"</string>
     <string name="menu_calibrate">Calibrate</string>
     <string name="compass_calibration_activity_warning">Your compass needs to be calibrated</string>
     <string name="sensor_reverse_preference_title">Reverse Magnetic Z</string>

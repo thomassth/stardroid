@@ -214,7 +214,17 @@ public class AladinFragment extends ActionFragment implements Toolbar.OnMenuItem
         AlertDialog.Builder builder = new AlertDialog.Builder(context).setTitle(R.string.point_telescope);
         if (!connectionManager.isConnected()) {
             builder.setMessage(R.string.connect_telescope_first)
-                    .setPositiveButton(android.R.string.ok, (dialog, which) -> startActivity(new Intent(context, MainActivity.class)));
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                        FragmentActivity activity = getActivity();
+                        if (activity instanceof MainActivity) {
+                            ((MainActivity) activity).showFragment(MainActivity.Pages.CONNECTION, true);
+                        } else {
+                            Intent intent = new Intent(context, MainActivity.class);
+                            intent.putExtra(MainActivity.ACTION, MainActivity.ACTION_CONNECT);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
+                    });
         } else if ((connectionManager.telescopeName == null) ||
                 (connectionManager.telescopeCoordP == null) || (connectionManager.telescopeOnCoordSetP == null)) {
             builder.setMessage(R.string.no_telescope_found);
