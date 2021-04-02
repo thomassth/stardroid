@@ -21,7 +21,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
@@ -63,7 +62,6 @@ public class NoSensorsDialogFragment extends DialogFragment {
                 .setTitle(R.string.warning_dialog_title)
                 .setView(view).setNegativeButton(android.R.string.ok,
                         (dialog, whichButton) -> {
-                            Log.d(TAG, "No Sensor Dialog closed");
                             preferences.edit().putBoolean(
                                     ApplicationConstants.NO_WARN_MISSING_SENSORS_PREF,
                                     ((CheckBox) view.findViewById(R.id.no_show_dialog_again)).isChecked()).apply();

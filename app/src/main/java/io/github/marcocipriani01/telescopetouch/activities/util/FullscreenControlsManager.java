@@ -18,12 +18,15 @@
 package io.github.marcocipriani01.telescopetouch.activities.util;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 /**
@@ -36,18 +39,14 @@ public class FullscreenControlsManager {
 
     private static final int AUTO_HIDE_DELAY_MILLIS = 4000;
     private static final int UI_ANIMATION_DELAY = 150;
-
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final AppCompatActivity activity;
     private final View[] viewsToHide;
     private final Runnable showRunnable = new Runnable() {
         @Override
         public void run() {
-            ActionBar actionBar;
-            actionBar = activity.getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.show();
-            }
+            //ActionBar actionBar = activity.getSupportActionBar();
+            //if (actionBar != null) actionBar.show();
             for (View view : viewsToHide) {
                 view.setVisibility(View.VISIBLE);
             }
@@ -96,12 +95,25 @@ public class FullscreenControlsManager {
 
     private void hide() {
         handler.removeCallbacks(showRunnable);
-        ActionBar actionBar = activity.getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
+        //ActionBar actionBar = activity.getSupportActionBar();
+        //if (actionBar != null) actionBar.hide();
         for (View view : viewsToHide) {
             view.setVisibility(View.GONE);
+        }
+        Window window = activity.getWindow();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE);
+        } else {
+            window.setDecorFitsSystemWindows(false);
+            WindowInsetsController controller = window.getInsetsController();
+            if (controller != null) {
+                controller.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
+                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+            }
         }
         visible = false;
     }

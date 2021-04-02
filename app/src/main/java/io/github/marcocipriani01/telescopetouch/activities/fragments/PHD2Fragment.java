@@ -270,6 +270,12 @@ public class PHD2Fragment extends ActionFragment implements PHD2Client.PHD2Liste
         viewport.setMinY(-zoom);
         viewport.setMaxY(zoom);
         viewport.setScalable(true);
+        float valueFrom = zoomSlider.getValueFrom(), valueTo = zoomSlider.getValueTo();
+        if (zoom < valueFrom) {
+            zoom = valueFrom;
+        } else if (zoom > valueTo) {
+            zoom = valueTo;
+        }
         zoomSlider.setValue(zoom);
         return rootView;
     }

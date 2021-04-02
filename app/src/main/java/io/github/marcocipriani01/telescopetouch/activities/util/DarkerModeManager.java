@@ -55,22 +55,24 @@ public class DarkerModeManager implements OnSharedPreferenceChangeListener {
     private void update() {
         nightMode = preferences.getBoolean(ApplicationConstants.DARKER_MODE_KEY, false);
         if (nightModeListener != null) nightModeListener.setNightMode(nightMode);
-        WindowManager.LayoutParams params = window.getAttributes();
-        if (nightMode) {
-            try {
-                float brightness = Settings.System.getInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS) / 255.0f;
-                if (brightness > BRIGHTNESS_DIM)
+        if (!TelescopeTouchApp.DEVICE_IS_CHROME_BOOK) {
+            WindowManager.LayoutParams params = window.getAttributes();
+            if (nightMode) {
+                try {
+                    float brightness = Settings.System.getInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS) / 255.0f;
+                    if (brightness > BRIGHTNESS_DIM)
+                        params.screenBrightness = BRIGHTNESS_DIM;
+                } catch (Settings.SettingNotFoundException e) {
+                    Log.e(TAG, e.getLocalizedMessage(), e);
                     params.screenBrightness = BRIGHTNESS_DIM;
-            } catch (Settings.SettingNotFoundException e) {
-                Log.e(TAG, e.getLocalizedMessage(), e);
-                params.screenBrightness = BRIGHTNESS_DIM;
+                }
+                params.buttonBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_OFF;
+            } else {
+                params.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE;
+                params.buttonBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE;
             }
-            params.buttonBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_OFF;
-        } else {
-            params.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE;
-            params.buttonBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE;
+            window.setAttributes(params);
         }
-        window.setAttributes(params);
     }
 
     public boolean getPref() {

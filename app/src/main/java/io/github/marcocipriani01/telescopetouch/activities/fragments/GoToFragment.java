@@ -31,6 +31,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Spannable;
 import android.text.format.DateFormat;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -227,8 +228,16 @@ public class GoToFragment extends ActionFragment implements SearchView.OnQueryTe
             if (context instanceof Activity && ((Activity) context).isInMultiWindowMode())
                 list.setIndexBarVisibility(false);
         }
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
-            list.setIndexBarVisibility(false);
+
+        Activity activity = getActivity();
+        if (activity != null) {
+            DisplayMetrics metrics = new DisplayMetrics();
+            activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            float y = metrics.heightPixels / metrics.ydpi, x = metrics.widthPixels / metrics.xdpi;
+            if ((Math.sqrt(x * x + y * y) < 6.5) &&
+                    (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE))
+                list.setIndexBarVisibility(false);
+        }
         handler.postDelayed(this::maybeStartIntentSearch, 300);
     }
 

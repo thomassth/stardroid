@@ -9,7 +9,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 31
-        versionName "1.8.0.1"
+        versionName "1.8.1"
         multiDexEnabled true
         if (file('api.properties').exists()) {
             Properties properties = new Properties()

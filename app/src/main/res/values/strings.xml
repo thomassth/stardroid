@@ -347,7 +347,6 @@
     <string name="orionids" translation_description="Meteor Shower">Orionids</string>
     <string name="puppidvelids" translation_description="Meteor Shower">Puppid-Velids</string>
     <string name="ursids" translation_description="Meteor Shower">Ursids</string>
-    <string name="no_sensor_warning">Your device lacks orientation sensors!</string>
     <string name="warning_dialog_title">Bad news!</string>
     <string name="missing_sensor_dialog_text">Unfortunately, your device might not have one of the sensors that Sky Map needs.\n\n
         To show you the sky in the direction your phone is pointing Sky Map

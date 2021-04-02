@@ -29,7 +29,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -40,9 +39,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowInsets;
-import android.view.WindowInsetsController;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.widget.Button;
@@ -168,8 +164,8 @@ public class SkyMapActivity extends AppCompatActivity implements OnSharedPrefere
     private GestureInterpreter gestureInterpreter;
 
     @Override
-    public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         daggerComponent = DaggerSkyMapComponent.builder()
                 .applicationComponent(((TelescopeTouchApp) getApplication()).getApplicationComponent())
                 .skyMapModule(new SkyMapModule(this)).build();
@@ -180,23 +176,6 @@ public class SkyMapActivity extends AppCompatActivity implements OnSharedPrefere
         checkForSensorsAndMaybeWarn();
         magneticSwitcher.init();
 
-        Window window = getWindow();
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE);
-        } else {
-            window.setDecorFitsSystemWindows(false);
-            WindowInsetsController controller = window.getInsetsController();
-            if (controller != null) {
-                controller.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
-                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
-            }
-        }
-
         // Search related
         setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
 
@@ -205,6 +184,7 @@ public class SkyMapActivity extends AppCompatActivity implements OnSharedPrefere
 
         Intent intent = getIntent();
         String intentAction = intent.getAction();
+        setSupportActionBar(findViewById(R.id.sky_map_toolbar));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             boolean isSkyMapOnly = ((intentAction != null) && (intentAction.equals(SKY_MAP_INTENT_ACTION)));
@@ -236,7 +216,6 @@ public class SkyMapActivity extends AppCompatActivity implements OnSharedPrefere
             startActivity(mainIntent);
             finish();
         });
-        pointingText = findViewById(R.id.skymap_pointing);
 
         // Were we started as the result of a search?
         if (Intent.ACTION_SEARCH.equals(intentAction))
@@ -460,6 +439,7 @@ public class SkyMapActivity extends AppCompatActivity implements OnSharedPrefere
 
         cancelSearchButton = findViewById(R.id.cancel_search_button);
         cancelSearchButton.setOnClickListener(v1 -> cancelSearch());
+        pointingText = findViewById(R.id.skymap_pointing);
 
         FloatingButtonsLayout providerButtons = findViewById(R.id.layer_buttons_control);
         int numChildren = providerButtons.getChildCount();
@@ -469,7 +449,7 @@ public class SkyMapActivity extends AppCompatActivity implements OnSharedPrefere
         }
         buttonViews[numChildren] = findViewById(R.id.manual_auto_toggle);
         fullscreenControlsManager = new FullscreenControlsManager(this,
-                new View[]{this.findViewById(R.id.layer_manual_auto_toggle), providerButtons}, buttonViews);
+                new View[]{this.findViewById(R.id.layer_manual_auto_toggle), providerButtons, pointingText}, buttonViews);
 
         MapMover mapMover = new MapMover(model, controller, this, preferences);
         gestureInterpreter = new GestureInterpreter(fullscreenControlsManager, mapMover);
@@ -557,11 +537,8 @@ public class SkyMapActivity extends AppCompatActivity implements OnSharedPrefere
                 // Force manual mode.
                 preferences.edit().putBoolean(ApplicationConstants.AUTO_MODE_PREF, false).apply();
                 setAutoMode(false);
-                if (preferences.getBoolean(ApplicationConstants.NO_WARN_MISSING_SENSORS_PREF, false)) {
-                    Snackbar.make(rootView, R.string.no_sensor_warning, Snackbar.LENGTH_SHORT).show();
-                } else {
+                if (!preferences.getBoolean(ApplicationConstants.NO_WARN_MISSING_SENSORS_PREF, false))
                     noSensorsDialogFragment.show(fragmentManager, "No sensors dialog");
-                }
             });
         }
     }
@@ -652,7 +629,7 @@ public class SkyMapActivity extends AppCompatActivity implements OnSharedPrefere
 
     private void cancelSearch() {
         View searchControlBar = findViewById(R.id.search_control_bar);
-        searchControlBar.setVisibility(View.INVISIBLE);
+        searchControlBar.setVisibility(View.GONE);
         rendererController.queueDisableSearchOverlay();
         searchMode = false;
     }

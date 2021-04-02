@@ -35,6 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:contentDescription="@string/app_name"
+                android:elevation="4dp"
                 android:src="@mipmap/app_icon" />
 
             <TextView

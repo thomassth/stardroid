@@ -21,7 +21,6 @@ import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,6 +28,7 @@ import android.view.animation.AlphaAnimation;
 import android.widget.LinearLayout;
 
 import io.github.marcocipriani01.telescopetouch.R;
+import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 
 /**
  * Contains the provider buttons.
@@ -36,7 +36,6 @@ import io.github.marcocipriani01.telescopetouch.R;
 
 public class FloatingButtonsLayout extends LinearLayout {
 
-    private static final boolean IS_CHROME_OS = (Build.DEVICE != null) && Build.DEVICE.matches(".+_cheets|cheets_.+");
     private final int fadeTime;
     private final float distance;
     private final boolean invertDirection;
@@ -64,7 +63,7 @@ public class FloatingButtonsLayout extends LinearLayout {
 
     @Override
     public void setVisibility(int visibility) {
-        if (IS_CHROME_OS) {
+        if (TelescopeTouchApp.DEVICE_IS_CHROME_BOOK) {
             // Chrome OS seems to have troubles with translating views outside the screen.
             // They disappear completely and never come back.
             // Fading instead of translating is an acceptable workaround.

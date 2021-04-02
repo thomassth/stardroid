@@ -406,7 +406,6 @@
     <string name="orionids" translation_description="Meteor Shower">Orionides</string>
     <string name="puppidvelids" translation_description="Meteor Shower">Puppid-Velids</string>
     <string name="ursids" translation_description="Meteor Shower">Ursides</string>
-    <string name="no_sensor_warning">Votre appareil ne possède pas de capteur d\'orientation !</string>
     <string name="warning_dialog_title">Mauvaise nouvelle !</string>
     <string name="missing_sensor_dialog_text">Malheureusement votre appareil ne possède pas un des capteurs nécessaire à Sky Map.\n\n
         Pour afficher le ciel dans la direction pointée par l\'appareil, Sky Map a besoin de la

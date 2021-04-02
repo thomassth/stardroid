@@ -18,6 +18,7 @@
 package io.github.marcocipriani01.telescopetouch;
 
 import android.app.Application;
+import android.os.Build;
 
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.Session;
@@ -37,6 +38,7 @@ public class TelescopeTouchApp extends Application {
      */
     public static final ConnectionManager connectionManager = new ConnectionManager();
     public static final NSDHelper nsdHelper = new NSDHelper();
+    public static final boolean DEVICE_IS_CHROME_BOOK = (Build.DEVICE != null) && Build.DEVICE.matches(".+_cheets|cheets_.+");
     public static final PHD2Client phd2 = new PHD2Client();
     public static Session session;
     public static ChannelSftp channel;
