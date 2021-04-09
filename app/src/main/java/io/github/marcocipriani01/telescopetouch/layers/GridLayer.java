@@ -44,23 +44,23 @@ public class GridLayer extends AbstractLayer {
 
     public static final int DEPTH_ORDER = 30;
     public static final String PREFERENCE_ID = "source_provider.4";
-    private final int numRightAscentionLines;
-    private final int numDeclinationLines;
+    private final int raLinesCount;
+    private final int decLinesCount;
 
     /**
-     * @param numDeclinationLines The number of declination lines to show including the poles
-     *                            on each side of the equator. 9 is a good number for 10 degree
-     *                            intervals.
+     * @param decLinesCount The number of declination lines to show including the poles
+     *                      on each side of the equator. 9 is a good number for 10 degree
+     *                      intervals.
      */
-    public GridLayer(Resources resources, int numRightAscentionLines, int numDeclinationLines) {
+    public GridLayer(Resources resources, int raLinesCount, int decLinesCount) {
         super(resources, false);
-        this.numRightAscentionLines = numRightAscentionLines;
-        this.numDeclinationLines = numDeclinationLines;
+        this.raLinesCount = raLinesCount;
+        this.decLinesCount = decLinesCount;
     }
 
     @Override
     protected void initializeAstroSources(List<AstronomicalSource> sources) {
-        sources.add(new GridSource(getResources(), numRightAscentionLines, numDeclinationLines));
+        sources.add(new GridSource(getResources(), raLinesCount, decLinesCount));
     }
 
     @Override

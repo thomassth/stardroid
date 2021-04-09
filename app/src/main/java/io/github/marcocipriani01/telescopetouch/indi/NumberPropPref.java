@@ -78,6 +78,29 @@ public class NumberPropPref extends PropPref<INDINumberElement> {
         }
     }
 
+    public static void setSliderValues(Slider slider, float min, float max, float step, float value) {
+        float diff = max - min;
+        if (step > diff) step = diff;
+        float mod = diff % step;
+        if (mod > .0001) max -= mod;
+        mod = (value - min) % step;
+        if (mod > .0001) value -= mod;
+        if (value > max)
+            value = max;
+        else if (value < min)
+            value = min;
+        slider.setValueFrom(min);
+        slider.setValueTo(max);
+        slider.setStepSize(step);
+        slider.setValue(value);
+    }
+
+    public static void setSliderValues(Slider slider, INDINumberElement element) {
+        setSliderValues(slider, (float) element.getMin(),
+                (float) element.getMax(), (float) element.getStep(),
+                (float) (double) element.getValue());
+    }
+
     @Override
     protected void onClick() {
         Context context = getContext();
@@ -92,6 +115,7 @@ public class NumberPropPref extends PropPref<INDINumberElement> {
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             int padding = resources.getDimensionPixelSize(R.dimen.padding_medium);
             layoutParams.setMargins(padding, 0, padding, 0);
+            boolean notReadOnly = prop.getPermission() != Constants.PropertyPermissions.RO;
 
             for (INDINumberElement element : elements) {
                 TextInputLayout inputLayout = new TextInputLayout(context);
@@ -99,7 +123,7 @@ public class NumberPropPref extends PropPref<INDINumberElement> {
                 inputLayout.setHint(element.getLabel());
                 TextInputEditText editText = new TextInputEditText(context);
                 editText.setText(element.getValueAsString().trim());
-                editText.setEnabled(prop.getPermission() != Constants.PropertyPermissions.RO);
+                editText.setEnabled(notReadOnly);
                 editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 editTextViews.add(editText);
                 inputLayout.addView(editText);
@@ -107,7 +131,7 @@ public class NumberPropPref extends PropPref<INDINumberElement> {
 
                 float min = (float) element.getMin(),
                         max = (float) element.getMax();
-                if ((max - min) <= 1000f) {
+                if (notReadOnly && ((max - min) <= 2000f)) {
                     Slider slider = new Slider(context);
                     slider.setThumbStrokeColorResource(R.color.colorAccent);
                     ColorStateList colorStateList = ColorStateList.valueOf(resources.getColor(R.color.colorAccent));
@@ -118,10 +142,7 @@ public class NumberPropPref extends PropPref<INDINumberElement> {
                     slider.setTickVisible(false);
                     slider.setTrackHeight(resources.getDimensionPixelSize(R.dimen.slider_track_height));
                     slider.setPadding(padding * 2, 0, padding * 2, padding);
-                    slider.setValueFrom(min);
-                    slider.setValueTo(max);
-                    slider.setStepSize(((float) element.getStep()));
-                    slider.setValue((float) (double) element.getValue());
+                    setSliderValues(slider, min, max, (float) element.getStep(), (float) (double) element.getValue());
                     slider.addOnChangeListener((slider1, value, fromUser) -> {
                         if (fromUser)
                             editText.setText(String.valueOf(value));
@@ -154,7 +175,7 @@ public class NumberPropPref extends PropPref<INDINumberElement> {
             scrollView.addView(layout);
             builder.setView(scrollView);
 
-            if (prop.getPermission() != Constants.PropertyPermissions.RO) {
+            if (notReadOnly) {
                 builder.setPositiveButton(R.string.send_request, (dialog, id) -> {
                     try {
                         for (int i = 0; i < elements.size(); i++) {

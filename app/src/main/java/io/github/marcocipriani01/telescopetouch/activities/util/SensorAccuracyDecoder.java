@@ -26,7 +26,7 @@ import javax.inject.Inject;
 import io.github.marcocipriani01.telescopetouch.R;
 
 /**
- * Created by johntaylor on 4/24/16.
+ * @author johntaylor
  */
 public class SensorAccuracyDecoder {
 

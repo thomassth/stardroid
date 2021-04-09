@@ -24,7 +24,6 @@ import android.content.res.Resources;
 import android.hardware.SensorManager;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
-import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
@@ -64,7 +63,6 @@ public class ApplicationModule {
     private final TelescopeTouchApp app;
 
     public ApplicationModule(TelescopeTouchApp app) {
-        Log.d(TAG, "Creating application module for " + app);
         this.app = app;
     }
 
@@ -82,7 +80,6 @@ public class ApplicationModule {
     @Provides
     @Singleton
     SharedPreferences provideSharedPreferences() {
-        Log.d(TAG, "Providing shared preferences");
         return PreferenceManager.getDefaultSharedPreferences(app);
     }
 
@@ -147,7 +144,6 @@ public class ApplicationModule {
     @Singleton
     LayerManager provideLayerManager(AssetManager assetManager, Resources resources,
                                      AstronomerModel model, SharedPreferences preferences) {
-        Log.i(TAG, "Initializing LayerManager");
         LayerManager layerManager = new LayerManager(preferences);
         layerManager.addLayer(new StarsLayer(assetManager, resources));
         layerManager.addLayer(new MessierLayer(assetManager, resources));

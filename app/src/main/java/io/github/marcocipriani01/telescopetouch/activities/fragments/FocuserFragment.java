@@ -48,6 +48,7 @@ import io.github.marcocipriani01.telescopetouch.activities.util.LongPressHandler
 import io.github.marcocipriani01.telescopetouch.activities.util.SimpleAdapter;
 import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
 import io.github.marcocipriani01.telescopetouch.indi.INDIFocuser;
+import io.github.marcocipriani01.telescopetouch.indi.NumberPropPref;
 
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 
@@ -373,11 +374,7 @@ public class FocuserFragment extends ActionFragment implements View.OnClickListe
         if (speedSlider != null) {
             boolean hasSpeed = focuser.hasSpeed();
             speedSlider.setEnabled(hasSpeed);
-            if (hasSpeed) {
-                speedSlider.setValueFrom((float) focuser.speedE.getMin());
-                speedSlider.setValueTo((float) focuser.speedE.getMax());
-                speedSlider.setValue((float) (double) focuser.speedE.getValue());
-            }
+            if (hasSpeed) NumberPropPref.setSliderValues(speedSlider, focuser.speedE);
         }
     }
 

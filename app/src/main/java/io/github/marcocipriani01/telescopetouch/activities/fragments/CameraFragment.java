@@ -86,6 +86,7 @@ import io.github.marcocipriani01.telescopetouch.activities.util.ImprovedSpinnerL
 import io.github.marcocipriani01.telescopetouch.activities.util.SimpleAdapter;
 import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
 import io.github.marcocipriani01.telescopetouch.indi.INDICamera;
+import io.github.marcocipriani01.telescopetouch.indi.NumberPropPref;
 
 import static io.github.marcocipriani01.telescopetouch.ApplicationConstants.CCD_LOOP_DELAY_PREF;
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
@@ -738,12 +739,7 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
         if (gainSlider != null) {
             boolean hasGain = camera.hasGain();
             gainSlider.setEnabled(hasGain);
-            if (hasGain) {
-                gainSlider.setValueFrom((float) camera.gainE.getMin());
-                gainSlider.setValueTo((float) camera.gainE.getMax());
-                gainSlider.setStepSize((float) camera.gainE.getStep());
-                gainSlider.setValue((float) (double) camera.gainE.getValue());
-            }
+            if (hasGain) NumberPropPref.setSliderValues(gainSlider, camera.gainE);
         }
         if (isoSpinner != null) {
             boolean hasISO = camera.hasISO();
