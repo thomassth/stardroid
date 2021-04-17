@@ -452,7 +452,7 @@
     <string name="entry_short_triStar">Triple star</string>
     <string name="entry_short_doubleStar">Double star</string>
     <string name="entry_short_star">Star</string>
-    <string name="entry_short_uncertain">Uncertain</string>
+    <string name="entry_short_uncertain" translatable="false">Uncertain</string>
     <string name="entry_short_blank">Unknown</string>
     <string name="entry_short_minus">Nonexistent</string>
     <string name="entry_short_PD">Photographic defect</string>
@@ -696,7 +696,7 @@
     <string name="phd2_star_lost">star lost</string>
     <string name="phd2_paused">paused</string>
     <string name="phd2_looping">looping</string>
-    <string name="half_flux_diameter">HDF</string>
+    <string name="half_flux_diameter">HFD</string>
     <string name="signal_to_noise">SNR</string>
     <string name="guide_settled">Auto-guider settled successfully</string>
     <string name="receive_images">Receive images</string>
