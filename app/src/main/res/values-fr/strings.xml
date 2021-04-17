@@ -637,7 +637,7 @@
     <string name="camera_log">Caméra log :</string>
     <string name="can_not_connect_indi_web">Impossible de se connecter à  INDI Web Manager !</string>
     <string name="ccd_capture">Capturer</string>
-    <string name="capture_view_ccd">Capture et visualiser</string>
+    <string name="capture_view_ccd">Capture et visualisation</string>
     <string name="ccd_capture_notification">Capture CCD</string>
     <string name="capture_in_progress">Capture CCD en cours</string>
     <string name="connect_all_devices">Connecter tous les appareils</string>
@@ -743,4 +743,5 @@
     <string name="indi_web_manager_port">Port serveur web INDI</string>
     <string name="indi_web_manager">Serveur web INDI</string>
     <string name="ccd_binning">Binning :</string>
+    <string name="expose">Exposer</string>
 </resources>
