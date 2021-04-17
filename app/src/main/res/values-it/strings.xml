@@ -694,7 +694,7 @@
     <string name="phd2_star_lost">stella persa</string>
     <string name="phd2_paused">in pausa</string>
     <string name="phd2_looping">cattura in corso</string>
-    <string name="half_flux_diameter">HDF</string>
+    <string name="half_flux_diameter">HFD</string>
     <string name="signal_to_noise">SNR</string>
     <string name="guide_settled">Auto-guida stabilizzata con successo</string>
     <string name="receive_images">Ricevi immagini</string>

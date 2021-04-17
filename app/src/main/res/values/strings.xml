@@ -451,7 +451,7 @@
     <string name="entry_short_triStar">Triple star</string>
     <string name="entry_short_doubleStar">Double star</string>
     <string name="entry_short_star">Star</string>
-    <string name="entry_short_uncertain" translatable="false">Uncertain</string>
+    <string name="entry_short_uncertain">Uncertain</string>
     <string name="entry_short_blank">Unknown</string>
     <string name="entry_short_minus">Nonexistent</string>
     <string name="entry_short_PD">Photographic defect</string>
