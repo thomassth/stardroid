@@ -75,8 +75,8 @@ More info about me [on my website](https://marcocipriani01.github.io/).
 
 ### Contributors
 
-- Valentin Chevalier, for the French translation and his support
-- theChef613 for his help in bringing the app to the Google Play Store
+- Valentin Chevalier (@Phylastik), for the French translation and his support
+- @theChef613 for his help in bringing the app to the Google Play Store
 - Romain Fafet (@farom57): [IPARCOS](https://github.com/INDIForJava/IPARCOS) codebase
 - Sky Map team (@sky-map-team): [Sky Map](https://github.com/sky-map-team/stardroid) codebase
 - Nick Durante (@nickdurante): [Spider SFTP](https://github.com/nickdurante/Spider) codebase
