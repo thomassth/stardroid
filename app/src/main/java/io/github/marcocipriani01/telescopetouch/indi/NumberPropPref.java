@@ -78,6 +78,7 @@ public class NumberPropPref extends PropPref<INDINumberElement> {
         }
     }
 
+    @SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
     public static void setSliderValues(Slider slider, float min, float max, float step, float value) {
         float diff = max - min;
         if (step > diff) step = diff;
@@ -89,10 +90,12 @@ public class NumberPropPref extends PropPref<INDINumberElement> {
             value = max;
         else if (value < min)
             value = min;
-        slider.setValueFrom(min);
-        slider.setValueTo(max);
-        slider.setStepSize(step);
-        slider.setValue(value);
+        synchronized (slider) {
+            slider.setValueFrom(min);
+            slider.setValueTo(max);
+            slider.setStepSize(step);
+            slider.setValue(value);
+        }
     }
 
     public static void setSliderValues(Slider slider, INDINumberElement element) {

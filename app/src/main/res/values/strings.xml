@@ -673,7 +673,7 @@
     <string name="connect_all_devices">Connect all devices</string>
     <string name="connecting_device">Connecting device %s…</string>
     <string name="high_refresh_rate">High refresh rate</string>
-    <string name="high_refresh_rate_summary">Run the Sky Map at 60Hz. Drains more battery, but looks super-cool!</string>
+    <string name="high_refresh_rate_summary">Run the Sky Map at 60Hz. Drains more battery, but looks super cool!</string>
     <string name="sky_map_settings">Sky Map settings</string>
     <string name="ccd_capture_notification">CCD capture</string>
     <string name="capture_in_progress">CCD capture in progress</string>
@@ -743,4 +743,6 @@
     <string name="open_file">Open file</string>
     <string name="no_star_selected">No star selected!</string>
     <string name="find_star">Find star</string>
+    <string name="receive_every_photo">Receive every photo</string>
+    <string name="receive_every_photo_summary">By default, Telescope.Touch only downloads photos taken using the app. Enable this setting to receive images taken by any INDI client (e.g. KStars). May quickly drain the battery.</string>
 </resources>

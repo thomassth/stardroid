@@ -83,4 +83,5 @@ public class ApplicationConstants {
     public static final String SAVE_PASSWORDS_PREF = "sftp_save_passwords";
     public static final String PHD2_GRAPH_ZOOM_PREF = "phd2_graph_zoom";
     public static final String KEEP_SCREEN_ON_PREF = "keep_screen_on";
+    public static final String RECEIVE_ALL_PHOTOS_PREF = "ccd_receive_all_photos";
 }

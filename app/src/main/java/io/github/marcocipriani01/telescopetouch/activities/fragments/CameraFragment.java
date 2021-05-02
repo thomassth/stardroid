@@ -89,6 +89,7 @@ import io.github.marcocipriani01.telescopetouch.indi.INDICamera;
 import io.github.marcocipriani01.telescopetouch.indi.NumberPropPref;
 
 import static io.github.marcocipriani01.telescopetouch.ApplicationConstants.CCD_LOOP_DELAY_PREF;
+import static io.github.marcocipriani01.telescopetouch.ApplicationConstants.RECEIVE_ALL_PHOTOS_PREF;
 import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
 
 public class CameraFragment extends ActionFragment implements INDICamera.CameraListener,
@@ -114,7 +115,8 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
             INDICamera camera = getCamera();
             if (camera != null) {
                 camera.removeListener(CameraFragment.this);
-                camera.stopReceiving();
+                if (!preferences.getBoolean(RECEIVE_ALL_PHOTOS_PREF, false))
+                    camera.stopReceiving();
             }
             camera = cameras.get(pos);
             selectedCameraDev = camera.device;
@@ -238,7 +240,16 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
         cameras.clear();
         if (connectionManager.isConnected()) {
             synchronized (connectionManager.indiCameras) {
-                cameras.addAll(connectionManager.indiCameras.values());
+                Collection<INDICamera> cameras = connectionManager.indiCameras.values();
+                if (preferences.getBoolean(RECEIVE_ALL_PHOTOS_PREF, false)) {
+                    INDICamera.SaveMode saveMode = (INDICamera.SaveMode) saveModeSpinner.getSelectedItem();
+                    for (INDICamera camera : cameras) {
+                        this.cameras.add(camera);
+                        camera.setSaveMode(saveMode);
+                    }
+                } else {
+                    this.cameras.addAll(cameras);
+                }
             }
             cameraSelectAdapter.notifyDataSetChanged();
             if (cameras.isEmpty()) {
@@ -246,7 +257,6 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
                 cameraSelectSpinner.setEnabled(false);
             } else {
                 INDICamera selectedCamera;
-
                 if (selectedCameraDev == null) {
                     selectedCamera = cameras.get(0);
                     selectedCameraDev = selectedCamera.device;
@@ -470,7 +480,7 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
                     String dir = remoteFolderField.getText().toString();
                     if (!dir.equals("")) camera.setUploadDir(dir);
                 }
-                camera.setLoopDelay(loopDelay * 1000);
+                camera.setLoopDelay(loopDelay);
                 camera.startCaptureLoop(exposureTimeField.getText().toString(), (int) countSlider.getValue());
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage(), e);
@@ -714,7 +724,7 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
         }
         if (delaySlider != null) {
             delaySlider.setEnabled(canLoop);
-            delaySlider.setValue(camera.getLoopDelay() / 1000f);
+            NumberPropPref.setSliderValues(delaySlider, 0, 30, 1, camera.getLoopDelay());
         }
         if (countSlider != null) {
             countSlider.setEnabled(canLoop);
@@ -930,7 +940,16 @@ public class CameraFragment extends ActionFragment implements INDICamera.CameraL
     public void onCamerasListChange() {
         cameras.clear();
         synchronized (connectionManager.indiCameras) {
-            cameras.addAll(connectionManager.indiCameras.values());
+            Collection<INDICamera> cameras = connectionManager.indiCameras.values();
+            if ((saveModeSpinner == null) || (!preferences.getBoolean(RECEIVE_ALL_PHOTOS_PREF, false))) {
+                this.cameras.addAll(cameras);
+            } else {
+                INDICamera.SaveMode saveMode = (INDICamera.SaveMode) saveModeSpinner.getSelectedItem();
+                for (INDICamera camera : cameras) {
+                    this.cameras.add(camera);
+                    camera.setSaveMode(saveMode);
+                }
+            }
         }
         if (cameraSelectAdapter != null)
             cameraSelectAdapter.notifyDataSetChanged();

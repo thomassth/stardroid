@@ -153,7 +153,7 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
     private volatile INDISwitchElement captureLoopPreset = null;
     private volatile double captureLoopExposure = -1;
     private volatile String[] metadata = new String[]{null, null, null, null};
-    private volatile int loopDelay = 0;
+    private volatile float loopDelay = 0f;
     private volatile int loopTotalCaptures = 0;
     private volatile int loopRemainingCaptures = 0;
     private volatile String filePrefix = null;
@@ -200,11 +200,11 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
         return (transferFormatP != null) && (transferFormatsE != null);
     }
 
-    public int getLoopDelay() {
+    public float getLoopDelay() {
         return loopDelay;
     }
 
-    public void setLoopDelay(int loopDelay) {
+    public void setLoopDelay(float loopDelay) {
         this.loopDelay = loopDelay;
     }
 
@@ -488,10 +488,10 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
                     switch (state) {
                         case OK:
                             if ((captureLoopExposure != -1) && (captureLoopPreset == null)) {
-                                connectionManager.postDelayed(this::captureLoopExposureRunnable, loopDelay);
+                                connectionManager.postDelayed(this::captureLoopExposureRunnable, (long) (loopDelay * 1000));
                                 break;
                             } else if ((captureLoopPreset != null) && (captureLoopExposure == -1)) {
-                                connectionManager.postDelayed(this::captureLoopPresetRunnable, loopDelay);
+                                connectionManager.postDelayed(this::captureLoopPresetRunnable, (long) (loopDelay * 1000));
                                 break;
                             }
                         case ALERT:
@@ -512,9 +512,9 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
                     switch (state) {
                         case OK:
                             if ((captureLoopExposure != -1) && (captureLoopPreset == null)) {
-                                connectionManager.postDelayed(this::captureLoopExposureRunnable, loopDelay);
+                                connectionManager.postDelayed(this::captureLoopExposureRunnable, (long) (loopDelay * 1000));
                             } else if ((captureLoopPreset != null) && (captureLoopExposure == -1)) {
-                                connectionManager.postDelayed(this::captureLoopPresetRunnable, loopDelay);
+                                connectionManager.postDelayed(this::captureLoopPresetRunnable, (long) (loopDelay * 1000));
                             } else {
                                 break;
                             }

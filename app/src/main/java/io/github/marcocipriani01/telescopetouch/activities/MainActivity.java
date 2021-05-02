@@ -354,6 +354,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (animate)
             transaction.setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out);
         Fragment fragment = currentPage.newInstance();
+        if (fragment == null) {
+            currentPage = Pages.CONNECTION;
+            fragment = Objects.requireNonNull(currentPage.newInstance());
+        }
         transaction.replace(R.id.content_frame, fragment).commit();
         if (fragment instanceof ActionFragment) {
             ActionFragment actionFragment = (ActionFragment) fragment;
@@ -471,7 +475,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ABOUT(R.id.menu_about);
 
         private final int itemId;
-        private Fragment lastInstance;
+        private Fragment lastInstance = null;
 
         Pages(int itemId) {
             this.itemId = itemId;
@@ -525,6 +529,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 case ABOUT:
                     lastInstance = new AboutFragment();
                     break;
+                default:
+                    return null;
             }
             return lastInstance;
         }
