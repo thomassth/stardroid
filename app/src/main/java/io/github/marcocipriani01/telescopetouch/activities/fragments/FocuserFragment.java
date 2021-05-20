@@ -386,7 +386,7 @@ public class FocuserFragment extends ActionFragment implements View.OnClickListe
     @Override
     public void onFocuserSpeedChange(int value) {
         INDIFocuser focuser = getFocuser();
-        if ((speedSlider != null) && (focuser == null))
+        if ((speedSlider != null) && (focuser != null))
             NumberPropPref.setSliderValues(speedSlider, (float) focuser.speedE.getMin(),
                     (float) focuser.speedE.getMax(), (float) focuser.speedE.getStep(), value);
     }

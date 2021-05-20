@@ -38,7 +38,7 @@ import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
 import io.github.marcocipriani01.telescopetouch.search.SearchResult;
 
 /**
- * Created by johntaylor on 4/3/16.
+ * @author johntaylor
  */
 public class MultipleSearchResultsDialogFragment extends DialogFragment {
 

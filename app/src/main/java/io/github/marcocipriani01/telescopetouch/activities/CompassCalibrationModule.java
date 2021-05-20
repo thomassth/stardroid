@@ -24,7 +24,7 @@ import dagger.Provides;
 import io.github.marcocipriani01.telescopetouch.inject.PerActivity;
 
 /**
- * Created by johntaylor on 4/24/16.
+ * @author johntaylor
  */
 @Module
 public class CompassCalibrationModule {

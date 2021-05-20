@@ -342,7 +342,6 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
         this.jpgQuality = jpgQuality;
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isBitmapSaved() {
         return bitmapSaved;
     }
@@ -1160,7 +1159,6 @@ public class INDICamera implements INDIPropertyListener, Parcelable {
             this.blobValue = blobValue;
         }
 
-        @SuppressWarnings("SpellCheckingInspection")
         @SuppressLint("DefaultLocale")
         @Override
         public void run() {

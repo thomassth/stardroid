@@ -96,8 +96,9 @@
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/sky_map"
             android:launchMode="singleTop"
-            android:screenOrientation="userPortrait"
-            android:theme="@style/FullscreenThemeNoActionBar">
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenThemeNoActionBar"
+            tools:ignore="LockedOrientationActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
@@ -131,12 +132,12 @@
         <activity
             android:name=".activities.DiagnosticActivity"
             android:label="@string/menu_diagnostics"
-            android:screenOrientation="userPortrait" />
+            android:screenOrientation="locked" />
         <activity
             android:name=".activities.CompassCalibrationActivity"
             android:label="@string/menu_calibrate"
             android:launchMode="singleTop"
-            android:screenOrientation="userPortrait" />
+            android:screenOrientation="locked" />
         <activity
             android:name=".activities.ServersActivity"
             android:label="@string/host_manage"

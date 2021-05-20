@@ -33,7 +33,8 @@ import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
 
 /**
  * End User License agreement dialog.
- * Created by johntaylor on 4/3/16.
+ *
+ * @author johntaylor
  */
 public class NoSearchResultsDialogFragment extends DialogFragment {
 

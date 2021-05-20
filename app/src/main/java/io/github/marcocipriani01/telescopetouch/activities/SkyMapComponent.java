@@ -26,7 +26,7 @@ import io.github.marcocipriani01.telescopetouch.activities.dialogs.TimeTravelDia
 import io.github.marcocipriani01.telescopetouch.inject.PerActivity;
 
 /**
- * Created by johntaylor on 3/29/16.
+ * @author johntaylor
  */
 @PerActivity
 @Component(modules = SkyMapModule.class, dependencies = ApplicationComponent.class)

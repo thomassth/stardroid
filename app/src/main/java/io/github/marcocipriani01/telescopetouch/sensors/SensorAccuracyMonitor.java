@@ -39,7 +39,8 @@ import io.github.marcocipriani01.telescopetouch.astronomy.TimeUtils;
 
 /**
  * Monitors the compass accuracy and if it is not medium or high warns the user.
- * Created by johntaylor on 4/24/16.
+ *
+ * @author johntaylor
  */
 public class SensorAccuracyMonitor implements SensorEventListener {
 

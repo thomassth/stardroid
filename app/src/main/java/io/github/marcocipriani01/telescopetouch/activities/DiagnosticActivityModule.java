@@ -27,7 +27,7 @@ import dagger.Provides;
 import io.github.marcocipriani01.telescopetouch.inject.PerActivity;
 
 /**
- * Created by johntaylor on 4/15/16.
+ * @author johntaylor
  */
 @Module
 public class DiagnosticActivityModule {

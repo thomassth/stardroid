@@ -17,6 +17,7 @@
 
 package io.github.marcocipriani01.telescopetouch.activities;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
@@ -393,6 +394,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         invalidateOptionsMenu();
     }
 
+    @SuppressLint("ShowToast")
     @Override
     public void onActionSnackRequested(String msg) {
         bottomBar.performShow();
@@ -403,6 +405,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .addCallback(new SnackBarCallBack()).show();
     }
 
+    @SuppressLint("ShowToast")
     @Override
     public void onActionSnackRequested(@StringRes int msgRes, int actionName, View.OnClickListener action) {
         bottomBar.performShow();

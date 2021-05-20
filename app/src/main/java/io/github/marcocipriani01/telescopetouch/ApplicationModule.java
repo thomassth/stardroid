@@ -53,8 +53,9 @@ import io.github.marcocipriani01.telescopetouch.layers.StarsLayer;
 import io.github.marcocipriani01.telescopetouch.layers.TelescopeLayer;
 
 /**
- * Dagger module
- * Created by johntaylor on 3/26/16.
+ * Dagger module.
+ *
+ * @author johntaylor
  */
 @Module
 public class ApplicationModule {

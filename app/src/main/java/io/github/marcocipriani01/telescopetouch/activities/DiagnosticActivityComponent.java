@@ -22,7 +22,7 @@ import io.github.marcocipriani01.telescopetouch.ApplicationComponent;
 import io.github.marcocipriani01.telescopetouch.inject.PerActivity;
 
 /**
- * Created by johntaylor on 4/15/16.
+ * @author johntaylor
  */
 @PerActivity
 @Component(modules = DiagnosticActivityModule.class, dependencies = ApplicationComponent.class)

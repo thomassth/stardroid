@@ -33,7 +33,6 @@ import javax.inject.Inject;
 
 import io.github.marcocipriani01.telescopetouch.ApplicationConstants;
 import io.github.marcocipriani01.telescopetouch.R;
-import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
 
 /**
@@ -43,7 +42,6 @@ import io.github.marcocipriani01.telescopetouch.inject.HasComponent;
  */
 public class NoSensorsDialogFragment extends DialogFragment {
 
-    private static final String TAG = TelescopeTouchApp.getTag(NoSensorsDialogFragment.class);
     @Inject
     Activity parentActivity;
     @Inject
@@ -61,11 +59,9 @@ public class NoSensorsDialogFragment extends DialogFragment {
         return new AlertDialog.Builder(parentActivity)
                 .setTitle(R.string.warning_dialog_title)
                 .setView(view).setNegativeButton(android.R.string.ok,
-                        (dialog, whichButton) -> {
-                            preferences.edit().putBoolean(
-                                    ApplicationConstants.NO_WARN_MISSING_SENSORS_PREF,
-                                    ((CheckBox) view.findViewById(R.id.no_show_dialog_again)).isChecked()).apply();
-                        }).create();
+                        (dialog, whichButton) -> preferences.edit().putBoolean(
+                                ApplicationConstants.NO_WARN_MISSING_SENSORS_PREF,
+                                ((CheckBox) view.findViewById(R.id.no_show_dialog_again)).isChecked()).apply()).create();
     }
 
     public interface ActivityComponent {
