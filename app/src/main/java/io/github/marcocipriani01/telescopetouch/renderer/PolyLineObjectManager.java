@@ -46,102 +46,101 @@ public class PolyLineObjectManager extends RendererObjectManager {
         super(layer, textureManager);
     }
 
-    public void updateObjects(List<LineSource> lines, EnumSet<UpdateType> updateType) {
+    @SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
+    public synchronized void updateObjects(List<LineSource> lines, EnumSet<UpdateType> updateType) {
         // We only care about updates to positions, ignore any other updates.
-        if (!updateType.contains(UpdateType.Reset) &&
-                !updateType.contains(UpdateType.UpdatePositions)) {
+        if (!updateType.contains(UpdateType.Reset) && !updateType.contains(UpdateType.UpdatePositions)) {
             return;
         }
         int numLineSegments = 0;
-        for (LineSource l : lines) {
-            numLineSegments += l.getVertices().size() - 1;
-        }
-
-        // To render everything in one call, we render everything as a line list
-        // rather than a series of line strips.
-        int numVertices = 4 * numLineSegments;
-        int numIndices = 6 * numLineSegments;
-
-        VertexBuffer vb = mVertexBuffer;
-        vb.reset(4 * numLineSegments);
-        NightVisionColorBuffer cb = mColorBuffer;
-        cb.reset(4 * numLineSegments);
-        TexCoordBuffer tb = mTexCoordBuffer;
-        tb.reset(numVertices);
-        IndexBuffer ib = mIndexBuffer;
-        ib.reset(numIndices);
-
-        // See comment in PointObjectManager for justification of this calculation.
-        float fovyInRadians = 60 * (float) Math.PI / 180.0f;
-        float sizeFactor = (float) Math.sin(fovyInRadians * 0.5f) / (float) Math.cos(fovyInRadians * 0.5f) / 480;
-
-        boolean opaque = true;
-
-        short vertexIndex = 0;
-        for (LineSource l : lines) {
-            List<GeocentricCoordinates> coords = l.getVertices();
-            if (coords.size() < 2)
-                continue;
-
-            // If the color isn't fully opaque, set opaque to false.
-            int color = l.getColor();
-            opaque &= (color & 0xff000000) == 0xff000000;
-
-            // Add the vertices.
-            for (int i = 0; i < coords.size() - 1; i++) {
-                Vector3 p1 = coords.get(i);
-                Vector3 p2 = coords.get(i + 1);
-                Vector3 u = Vector3.difference(p2, p1);
-                // The normal to the quad should face the origin at its midpoint.
-                Vector3 avg = Vector3.sum(p1, p2);
-                avg.scale(0.5f);
-                // I'm assuming that the points will already be on a unit sphere.  If this is not the case,
-                // then we should normalize it here.
-                Vector3 v = Vector3.normalized(Vector3.vectorProduct(u, avg));
-                v.scale(sizeFactor * l.getLineWidth());
-
-
-                // Add the vertices
-
-                // Lower left corner
-                vb.addPoint(Vector3.difference(p1, v));
-                cb.addColor(color);
-                tb.addTexCoords(0, 1);
-
-                // Upper left corner
-                vb.addPoint(Vector3.sum(p1, v));
-                cb.addColor(color);
-                tb.addTexCoords(0, 0);
-
-                // Lower left corner
-                vb.addPoint(Vector3.difference(p2, v));
-                cb.addColor(color);
-                tb.addTexCoords(1, 1);
-
-                // Upper left corner
-                vb.addPoint(Vector3.sum(p2, v));
-                cb.addColor(color);
-                tb.addTexCoords(1, 0);
-
-
-                // Add the indices
-                short bottomLeft = vertexIndex++;
-                short topLeft = vertexIndex++;
-                short bottomRight = vertexIndex++;
-                short topRight = vertexIndex++;
-
-                // First triangle
-                ib.addIndex(bottomLeft);
-                ib.addIndex(topLeft);
-                ib.addIndex(bottomRight);
-
-                // Second triangle
-                ib.addIndex(bottomRight);
-                ib.addIndex(topLeft);
-                ib.addIndex(topRight);
+        synchronized (lines) {
+            for (LineSource l : lines) {
+                numLineSegments += l.getVertices().size() - 1;
             }
+
+            // To render everything in one call, we render everything as a line list
+            // rather than a series of line strips.
+            int numVertices = 4 * numLineSegments;
+            int numIndices = 6 * numLineSegments;
+
+            VertexBuffer vb = mVertexBuffer;
+            vb.reset(4 * numLineSegments);
+            NightVisionColorBuffer cb = mColorBuffer;
+            cb.reset(4 * numLineSegments);
+            TexCoordBuffer tb = mTexCoordBuffer;
+            tb.reset(numVertices);
+            IndexBuffer ib = mIndexBuffer;
+            ib.reset(numIndices);
+
+            // See comment in PointObjectManager for justification of this calculation.
+            float fovyInRadians = 60 * (float) Math.PI / 180.0f;
+            float sizeFactor = (float) Math.sin(fovyInRadians * 0.5f) / (float) Math.cos(fovyInRadians * 0.5f) / 480;
+            boolean opaque = true;
+            short vertexIndex = 0;
+            for (LineSource l : lines) {
+                List<GeocentricCoordinates> coords = l.getVertices();
+                if (coords.size() < 2)
+                    continue;
+
+                // If the color isn't fully opaque, set opaque to false.
+                int color = l.getColor();
+                opaque &= (color & 0xff000000) == 0xff000000;
+
+                // Add the vertices.
+                for (int i = 0; i < coords.size() - 1; i++) {
+                    Vector3 p1 = coords.get(i);
+                    Vector3 p2 = coords.get(i + 1);
+                    Vector3 u = Vector3.difference(p2, p1);
+                    // The normal to the quad should face the origin at its midpoint.
+                    Vector3 avg = Vector3.sum(p1, p2);
+                    avg.scale(0.5f);
+                    // I'm assuming that the points will already be on a unit sphere.  If this is not the case,
+                    // then we should normalize it here.
+                    Vector3 v = Vector3.normalized(Vector3.vectorProduct(u, avg));
+                    v.scale(sizeFactor * l.getLineWidth());
+
+                    // Add the vertices
+
+                    // Lower left corner
+                    vb.addPoint(Vector3.difference(p1, v));
+                    cb.addColor(color);
+                    tb.addTexCoords(0, 1);
+
+                    // Upper left corner
+                    vb.addPoint(Vector3.sum(p1, v));
+                    cb.addColor(color);
+                    tb.addTexCoords(0, 0);
+
+                    // Lower left corner
+                    vb.addPoint(Vector3.difference(p2, v));
+                    cb.addColor(color);
+                    tb.addTexCoords(1, 1);
+
+                    // Upper left corner
+                    vb.addPoint(Vector3.sum(p2, v));
+                    cb.addColor(color);
+                    tb.addTexCoords(1, 0);
+
+
+                    // Add the indices
+                    short bottomLeft = vertexIndex++;
+                    short topLeft = vertexIndex++;
+                    short bottomRight = vertexIndex++;
+                    short topRight = vertexIndex++;
+
+                    // First triangle
+                    ib.addIndex(bottomLeft);
+                    ib.addIndex(topLeft);
+                    ib.addIndex(bottomRight);
+
+                    // Second triangle
+                    ib.addIndex(bottomRight);
+                    ib.addIndex(topLeft);
+                    ib.addIndex(topRight);
+                }
+            }
+            mOpaque = opaque;
         }
-        mOpaque = opaque;
     }
 
     @Override

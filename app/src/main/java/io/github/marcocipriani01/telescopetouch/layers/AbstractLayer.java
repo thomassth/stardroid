@@ -181,11 +181,6 @@ public abstract class AbstractLayer implements Layer {
             renderer.addUpdateClosure(closure);
     }
 
-    protected void removeUpdateClosure(UpdateClosure closure) {
-        if (renderer != null)
-            renderer.removeUpdateCallback(closure);
-    }
-
     /**
      * Updates the renderer (using the given {@link UpdateType}), with then given set of
      * UI elements.  Depending on the value of {@link UpdateType}, current sources will
@@ -223,7 +218,6 @@ public abstract class AbstractLayer implements Layer {
         if (sources == null || sources.isEmpty()) {
             if (manager != null) {
                 // TODO(brent): we should really just disable this layer, but in a manner that it will automatically be re-enabled when appropriate.
-                Log.d(TAG, "       " + clazz.getSimpleName());
                 manager.queueObjects(Collections.emptyList(), updateType, atomic);
             }
             return;
