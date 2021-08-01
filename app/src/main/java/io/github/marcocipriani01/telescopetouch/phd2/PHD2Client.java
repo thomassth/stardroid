@@ -292,10 +292,14 @@ public class PHD2Client extends SimpleClient {
         }
 
         public void run(PHD2Client phd, Object... params) {
-            if (paramsFormat == null) {
-                phd.println("{\"method\": \"" + name() + "\", \"id\": " + ordinal() + "}");
-            } else {
-                phd.println("{\"method\": \"" + name() + "\", \"params\": " + String.format(paramsFormat, params) + ", \"id\": " + ordinal() + "}");
+            try {
+                if (paramsFormat == null) {
+                    phd.println("{\"method\": \"" + name() + "\", \"id\": " + ordinal() + "}");
+                } else {
+                    phd.println("{\"method\": \"" + name() + "\", \"params\": " + String.format(paramsFormat, params) + ", \"id\": " + ordinal() + "}");
+                }
+            } catch (IllegalStateException e) {
+                phd.onError(e);
             }
         }
     }
