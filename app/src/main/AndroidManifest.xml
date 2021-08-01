@@ -72,6 +72,7 @@
         <activity
             android:name=".activities.MainActivity"
             android:configChanges="uiMode"
+            android:exported="true"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="fullUser"
@@ -94,6 +95,7 @@
         <activity
             android:name=".activities.SkyMapActivity"
             android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
             android:label="@string/sky_map"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

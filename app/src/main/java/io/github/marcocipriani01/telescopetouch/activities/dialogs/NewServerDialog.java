@@ -80,8 +80,13 @@ public class NewServerDialog {
         layout.addView(input, layoutParams);
         InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
 
-        if (lastDialog != null)
-            lastDialog.dismiss();
+        if (lastDialog != null) {
+            try {
+                lastDialog.dismiss();
+            } catch (Exception ignored) {
+
+            }
+        }
         lastDialog = new AlertDialog.Builder(context)
                 .setTitle(R.string.host_prompt_text).setView(layout).setCancelable(false)
                 .setPositiveButton(android.R.string.ok, (dialog12, id) -> {

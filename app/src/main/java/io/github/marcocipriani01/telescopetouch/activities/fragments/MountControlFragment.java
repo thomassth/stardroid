@@ -605,25 +605,25 @@ public class MountControlFragment extends ActionFragment implements INDIServerCo
         switch (property.getName()) {
             case "TELESCOPE_MOTION_NS": {
                 handler.post(() -> {
-                    if (btnMoveN != null)
+                    if ((btnMoveN != null) && (telescopeMotionNE != null))
                         btnMoveN.setPressed(telescopeMotionNE.getValue() == Constants.SwitchStatus.ON);
-                    if (btnMoveS != null)
+                    if ((btnMoveS != null) && (telescopeMotionSE != null))
                         btnMoveS.setPressed(telescopeMotionSE.getValue() == Constants.SwitchStatus.ON);
                 });
                 break;
             }
             case "TELESCOPE_MOTION_WE": {
                 handler.post(() -> {
-                    if (btnMoveE != null)
+                    if ((btnMoveE != null) && (telescopeMotionEE != null))
                         btnMoveE.setPressed(telescopeMotionEE.getValue() == Constants.SwitchStatus.ON);
-                    if (btnMoveW != null)
+                    if ((btnMoveW != null) && (telescopeMotionWE != null))
                         btnMoveW.setPressed(telescopeMotionWE.getValue() == Constants.SwitchStatus.ON);
                 });
                 break;
             }
             case "TELESCOPE_SLEW_RATE": {
                 handler.post(() -> {
-                    if (slewRateSpinner != null) {
+                    if ((slewRateSpinner != null) && (telescopeSlewRateP != null)) {
                         String selected = null;
                         for (INDISwitchElement element : telescopeSlewRateP) {
                             if (element.getValue() == Constants.SwitchStatus.ON)
@@ -647,7 +647,7 @@ public class MountControlFragment extends ActionFragment implements INDIServerCo
             }
             case "TELESCOPE_TRACK_STATE": {
                 handler.post(() -> {
-                    if (trackingMenu != null)
+                    if ((trackingMenu != null) && (telescopeTrackE != null))
                         trackingMenu.setIcon((telescopeTrackE.getValue() == Constants.SwitchStatus.ON) ?
                                 R.drawable.lock_closed : R.drawable.lock_open);
                 });
