@@ -3,7 +3,6 @@
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="1.8">
       <module name="Telescope.Touch.app" target="11" />
-      <module name="Telescope.Touch.tools" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

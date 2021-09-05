@@ -1,15 +1,20 @@
-apply plugin: 'java-library'
-apply plugin: 'com.google.protobuf'
-apply plugin: 'idea'
+apply plugin: "java-library"
+apply plugin: "com.google.protobuf"
+apply plugin: "idea"
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
 
 dependencies {
-    implementation 'com.google.protobuf:protobuf-javalite:3.15.6'
+    implementation "com.google.protobuf:protobuf-javalite:3.15.6"
 }
 
 protobuf {
     protoc {
         // Download from repositories
-        artifact = 'com.google.protobuf:protoc:3.13.0'
+        artifact = "com.google.protobuf:protoc:3.13.0"
     }
 
     generateProtoTasks {
@@ -22,6 +27,3 @@ protobuf {
         }
     }
 }
-
-sourceCompatibility = "1.8"
-targetCompatibility = "1.8"

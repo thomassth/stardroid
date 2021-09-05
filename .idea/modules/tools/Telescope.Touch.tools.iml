@@ -10,12 +10,11 @@
     </facet>
     <facet type="java-gradle" name="Java-Gradle">
       <configuration>
-        <option name="BUILD_FOLDER_PATH" value="$MODULE_DIR$/../../../tools/build" />
         <option name="BUILDABLE" value="true" />
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_11">
+  <component name="NewModuleRootManager">
     <output url="file://$MODULE_DIR$/../../../tools/build/classes/java/main" />
     <output-test url="file://$MODULE_DIR$/../../../tools/build/classes/java/test" />
     <exclude-output />
