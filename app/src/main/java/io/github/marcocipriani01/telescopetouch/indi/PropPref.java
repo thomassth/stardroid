@@ -47,6 +47,7 @@ public abstract class PropPref<Element extends INDIElement> extends Preference i
     protected final INDIProperty<Element> prop;
     protected final Resources resources;
     protected View title = null;
+    protected String lastTitle = null;
 
     protected PropPref(Context context, INDIProperty<Element> prop) {
         super(context);
@@ -96,7 +97,8 @@ public abstract class PropPref<Element extends INDIElement> extends Preference i
      * @return the title
      */
     protected Spannable createTitle() {
-        Spannable titleText = new SpannableString(prop.getLabel());
+        lastTitle = prop.getLabel();
+        Spannable titleText = new SpannableString(lastTitle);
         int color;
         switch (prop.getState()) {
             case ALERT: {
@@ -120,12 +122,20 @@ public abstract class PropPref<Element extends INDIElement> extends Preference i
         return titleText;
     }
 
+    protected boolean shouldUpdateTitle() {
+        return !prop.getLabel().equals(lastTitle);
+    }
+
     /**
      * Create the summary rich-text string
      *
      * @return the summary
      */
     protected abstract Spannable createSummary();
+
+    protected boolean shouldUpdateSummary() {
+        return true;
+    }
 
     @Override
     public void propertyChanged(INDIProperty<?> property) {
@@ -135,8 +145,8 @@ public abstract class PropPref<Element extends INDIElement> extends Preference i
         }
         if (title != null) title.post(() -> {
             try {
-                PropPref.this.setSummary(createSummary());
-                PropPref.this.setTitle(createTitle());
+                if (shouldUpdateTitle()) setTitle(createTitle());
+                if (shouldUpdateSummary()) setSummary(createSummary());
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage(), e);
             }

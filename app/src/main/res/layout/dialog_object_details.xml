@@ -63,7 +63,7 @@
             android:paddingHorizontal="8dp"
             android:visibility="gone">
 
-            <com.jjoe64.graphview.GraphView
+            <io.github.marcocipriani01.graphview.GraphView
                 android:id="@+id/details_graph"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/graph_height" />

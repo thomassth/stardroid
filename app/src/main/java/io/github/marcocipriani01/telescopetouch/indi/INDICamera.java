@@ -86,7 +86,7 @@ import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connect
 
 public class INDICamera implements INDIPropertyListener, Parcelable {
 
-    public static final Parcelable.Creator<INDICamera> CREATOR = new Parcelable.Creator<>() {
+    public static final Parcelable.Creator<INDICamera> CREATOR = new Parcelable.Creator<INDICamera>() {
         @Override
         public INDICamera createFromParcel(Parcel in) {
             int deviceHash = in.readInt();

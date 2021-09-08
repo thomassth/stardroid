@@ -209,11 +209,6 @@ public class SkyRegionMap<RegionRenderingData> {
                 activeStandardRegions.add(i);
             }
         }
-
-        // Log.d("SkyRegionMap", "ScreenAngle: " + screenAngle);
-        // Log.d("SkyRegionMap", "Angle Threshold: " + angleThreshold);
-        // Log.d("SkyRegionMap", "DP Threshold: " + dotProductThreshold);
-
         return new ActiveRegionData(regionCenterDotProducts, screenAngle,
                 activeStandardRegions);
     }

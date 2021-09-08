@@ -70,21 +70,16 @@ public class DragRotateZoomGestureDetector {
         //   last position1 = current position1
         //   last position2 = current position2
         int actionCode = ev.getAction() & MotionEvent.ACTION_MASK;
-        // Log.d(TAG, "Action: " + actionCode + ", current state " + currentState);
         if (actionCode == MotionEvent.ACTION_DOWN || currentState == State.READY) {
             currentState = State.DRAGGING;
             last1X = ev.getX();
             last1Y = ev.getY();
-            // Log.d(TAG, "Down.  Store last position " + last1X + ", " + last1Y);
             return true;
         }
 
         if (actionCode == MotionEvent.ACTION_MOVE && currentState == State.DRAGGING) {
-            // Log.d(TAG, "Move");
             float current1X = ev.getX();
             float current1Y = ev.getY();
-            // Log.d(TAG, "Move.  Last position " + last1X + ", " + last1Y +
-            //    "Current position " + current1X + ", " + current1Y);
             listener.onDrag(current1X - last1X, current1Y - last1Y);
             last1X = current1X;
             last1Y = current1Y;
@@ -102,18 +97,11 @@ public class DragRotateZoomGestureDetector {
             float current1Y = ev.getY(0);
             float current2X = ev.getX(1);
             float current2Y = ev.getY(1);
-            // Log.d(TAG, "Old Point 1: " + lastPointer1X + ", " + lastPointer1Y);
-            // Log.d(TAG, "Old Point 2: " + lastPointer2X + ", " + lastPointer2Y);
-            // Log.d(TAG, "New Point 1: " + current1X + ", " + current1Y);
-            // Log.d(TAG, "New Point 2: " + current2X + ", " + current2Y);
 
             float distanceMovedX1 = current1X - last1X;
             float distanceMovedY1 = current1Y - last1Y;
             float distanceMovedX2 = current2X - last2X;
             float distanceMovedY2 = current2Y - last2Y;
-
-            // Log.d(TAG, "Point 1 moved by: " + distanceMovedX1 + ", " + distanceMovedY1);
-            // Log.d(TAG, "Point 2 moved by: " + distanceMovedX2 + ", " + distanceMovedY2);
 
             // Dragging map by the mean of the points
             listener.onDrag((distanceMovedX1 + distanceMovedX2) / 2,
@@ -125,18 +113,11 @@ public class DragRotateZoomGestureDetector {
             float vectorCurrentX = current1X - current2X;
             float vectorCurrentY = current1Y - current2Y;
 
-            // Log.d(TAG, "Previous vector: " + vectorBeforeX + ", " + vectorBeforeY);
-            // Log.d(TAG, "Current vector: " + vectorCurrentX + ", " + vectorCurrentY);
-
             float lengthRatio = (float) Math.sqrt(normSquared(vectorCurrentX, vectorCurrentY) / normSquared(vectorLastX, vectorLastY));
-            // Log.d(TAG, "Stretching map by ratio " + ratio);
             listener.onStretch(lengthRatio);
             float angleLast = (float) Math.atan2(vectorLastX, vectorLastY);
             float angleCurrent = (float) Math.atan2(vectorCurrentX, vectorCurrentY);
-            // Log.d(TAG, "Angle before " + angleBefore);
-            // Log.d(TAG, "Angle after " + angleAfter);
             float angleDelta = angleCurrent - angleLast;
-            // Log.d(TAG, "Rotating map by angle delta " + angleDelta);
             listener.onRotate(angleDelta * (180 / (float) Math.PI));
 
             last1X = current1X;

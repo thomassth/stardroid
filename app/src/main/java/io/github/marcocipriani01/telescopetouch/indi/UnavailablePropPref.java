@@ -49,6 +49,16 @@ public class UnavailablePropPref<Element extends INDIElement> extends PropPref<E
     }
 
     @Override
+    protected boolean shouldUpdateTitle() {
+        return false;
+    }
+
+    @Override
+    protected boolean shouldUpdateSummary() {
+        return false;
+    }
+
+    @Override
     protected Spannable createSummary() {
         return (error == null) ? new SpannableString(resources.getString(R.string.prop_unavailable)) :
                 new SpannableString(error.getLocalizedMessage());

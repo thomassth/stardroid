@@ -57,12 +57,12 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.tabs.TabLayout;
-import com.jjoe64.graphview.DefaultLabelFormatter;
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GridLabelRenderer;
-import com.jjoe64.graphview.Viewport;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
+import io.github.marcocipriani01.graphview.DefaultLabelFormatter;
+import io.github.marcocipriani01.graphview.GraphView;
+import io.github.marcocipriani01.graphview.GridLabelRenderer;
+import io.github.marcocipriani01.graphview.Viewport;
+import io.github.marcocipriani01.graphview.series.DataPoint;
+import io.github.marcocipriani01.graphview.series.LineGraphSeries;
 
 import org.indilib.i4j.Constants;
 import org.indilib.i4j.client.INDIValueException;

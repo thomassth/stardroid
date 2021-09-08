@@ -53,10 +53,10 @@ import androidx.preference.PreferenceManager;
 
 import com.google.android.material.slider.Slider;
 import com.google.android.material.tabs.TabLayout;
-import com.jjoe64.graphview.DefaultLabelFormatter;
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GridLabelRenderer;
-import com.jjoe64.graphview.Viewport;
+import io.github.marcocipriani01.graphview.DefaultLabelFormatter;
+import io.github.marcocipriani01.graphview.GraphView;
+import io.github.marcocipriani01.graphview.GridLabelRenderer;
+import io.github.marcocipriani01.graphview.Viewport;
 
 import java.net.SocketException;
 import java.util.ArrayList;

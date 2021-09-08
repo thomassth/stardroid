@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Progetti/Telescope.Touch/app/src/main/res/layout/dialog_object_details.xml" value="0.12302631578947368" />
+        <entry key="..\:/Progetti/Telescope.Touch/app/src/main/res/layout/fragment_control_panel.xml" value="0.22138157894736843" />
+      </map>
+    </option>
+  </component>
   <component name="EntryPointsManager">
     <list size="1">
       <item index="0" class="java.lang.String" itemvalue="android.webkit.JavascriptInterface" />

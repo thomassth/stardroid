@@ -27,9 +27,9 @@ import android.os.Looper;
 import android.util.Base64;
 import android.util.Log;
 
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
+import io.github.marcocipriani01.graphview.GraphView;
+import io.github.marcocipriani01.graphview.series.DataPoint;
+import io.github.marcocipriani01.graphview.series.LineGraphSeries;
 
 import org.json.JSONArray;
 import org.json.JSONException;

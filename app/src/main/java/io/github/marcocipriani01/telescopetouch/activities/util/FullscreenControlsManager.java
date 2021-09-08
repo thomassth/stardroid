@@ -45,8 +45,6 @@ public class FullscreenControlsManager {
     private final Runnable showRunnable = new Runnable() {
         @Override
         public void run() {
-            //ActionBar actionBar = activity.getSupportActionBar();
-            //if (actionBar != null) actionBar.show();
             for (View view : viewsToHide) {
                 view.setVisibility(View.VISIBLE);
             }
@@ -95,8 +93,6 @@ public class FullscreenControlsManager {
 
     private void hide() {
         handler.removeCallbacks(showRunnable);
-        //ActionBar actionBar = activity.getSupportActionBar();
-        //if (actionBar != null) actionBar.hide();
         for (View view : viewsToHide) {
             view.setVisibility(View.GONE);
         }

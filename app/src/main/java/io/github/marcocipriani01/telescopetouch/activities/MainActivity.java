@@ -364,7 +364,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             ActionFragment actionFragment = (ActionFragment) fragment;
             actionFragment.setActionEnabledListener(this);
             int drawable = actionFragment.getActionDrawable();
-            if (drawable != 0) {
+            if (drawable == 0) {
+                fab.hide();
+            } else {
                 fab.setImageResource(drawable);
                 if (actionFragment.isActionEnabled()) {
                     fab.show();

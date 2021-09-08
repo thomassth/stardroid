@@ -17,6 +17,9 @@
 
 package io.github.marcocipriani01.telescopetouch.activities.fragments;
 
+import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
+
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -51,9 +54,8 @@ import java.util.List;
 
 import io.github.marcocipriani01.telescopetouch.R;
 
-import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
-
-public class ControlPanelFragment extends Fragment implements INDIServerConnectionListener,
+@SuppressLint("NotifyDataSetChanged")
+public class ControlPanelFragment extends ActionFragment implements INDIServerConnectionListener,
         SearchView.OnQueryTextListener, View.OnClickListener, SearchView.OnCloseListener {
 
     private static final String KEY_VIEWPAGER_STATE = "DevicesViewPagerState";
@@ -82,6 +84,25 @@ public class ControlPanelFragment extends Fragment implements INDIServerConnecti
         viewPager = rootView.findViewById(R.id.indi_control_pager);
         viewPager.setOffscreenPageLimit(5);
         tabLayout = rootView.findViewById(R.id.indi_control_tabs);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                showActionbar();
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                showActionbar();
+                DeviceControlFragment fragment = fragmentsMap.get(viewPager.getCurrentItem());
+                if (fragment != null)
+                    fragment.getListView().smoothScrollToPosition(0);
+            }
+        });
         tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager,
                 (tab, position) -> tab.setText(devices.get(position).getName()));
         searchMenu = rootView.<Toolbar>findViewById(R.id.control_panel_toolbar).getMenu().add(R.string.search);
