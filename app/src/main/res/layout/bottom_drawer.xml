@@ -23,5 +23,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:background="@color/darkColor"
         app:menu="@menu/navigation" />
 </LinearLayout>

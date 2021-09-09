@@ -5,7 +5,9 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="searchViewStyle">@style/SearchViewStyle</item>
-        <item name="android:navigationBarColor">@color/darkColor</item>
+        <item name="android:navigationBarColor">@color/darkerColor</item>
+        <item name="android:colorBackground">@color/darkColor</item>
+        <item name="android:windowBackground">@color/darkColor</item>
     </style>
 
     <style name="DarkerAppTheme" parent="AppTheme">
@@ -19,7 +21,9 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="searchViewStyle">@style/SearchViewStyle</item>
-        <item name="android:navigationBarColor">@color/darkColor</item>
+        <item name="android:navigationBarColor">@color/darkerColor</item>
+        <item name="android:colorBackground">@color/darkColor</item>
+        <item name="android:windowBackground">@color/darkColor</item>
     </style>
 
     <style name="AppTheme.NavigationView" parent="Widget.MaterialComponents.NavigationView">

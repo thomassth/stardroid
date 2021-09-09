@@ -17,6 +17,10 @@
 
 package io.github.marcocipriani01.telescopetouch.activities.fragments;
 
+import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
+import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.nsdHelper;
+import static io.github.marcocipriani01.telescopetouch.activities.ServersActivity.getServers;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -63,10 +67,6 @@ import io.github.marcocipriani01.telescopetouch.activities.dialogs.NewServerDial
 import io.github.marcocipriani01.telescopetouch.activities.util.ImprovedSpinnerListener;
 import io.github.marcocipriani01.telescopetouch.activities.views.SameSelectionSpinner;
 import io.github.marcocipriani01.telescopetouch.indi.ConnectionManager;
-
-import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.connectionManager;
-import static io.github.marcocipriani01.telescopetouch.TelescopeTouchApp.nsdHelper;
-import static io.github.marcocipriani01.telescopetouch.activities.ServersActivity.getServers;
 
 /**
  * The main screen of the application, which manages the connection.
@@ -267,6 +267,7 @@ public class ConnectionFragment extends ActionFragment implements ConnectionMana
             logsList.scrollToPosition(logAdapter.getItemCount() - 1);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void deviceLog(final ConnectionManager.LogItem log) {
         if (logAdapter != null) logAdapter.notifyDataSetChanged();

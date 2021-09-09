@@ -38,7 +38,7 @@ import io.github.marcocipriani01.telescopetouch.TelescopeTouchApp;
 public class DarkerModeManager implements OnSharedPreferenceChangeListener {
 
     private static final String TAG = TelescopeTouchApp.getTag(DarkerModeManager.class);
-    private static final float BRIGHTNESS_DIM = 15f / 255f;
+    private static final float BRIGHTNESS_DIM = 10f / 255f;
     private final SharedPreferences preferences;
     private final NightModeListener nightModeListener;
     private final Window window;

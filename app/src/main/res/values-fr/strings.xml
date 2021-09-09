@@ -744,4 +744,6 @@
     <string name="indi_web_manager">Serveur web INDI</string>
     <string name="ccd_binning">Binning :</string>
     <string name="expose">Exposer</string>
+    <string name="receive_every_photo">Recevoir toutes les photos</string>
+    <string name="receive_every_photo_summary">Par défaut, Telescope.Touch télécharge seulement les photos prises par l\'application. Activer ce paramètre pour recevoir les images prises par un autre client INDI (ex: Kstars). Cela peut décharger plus rapidement la batterie.</string>
 </resources>
