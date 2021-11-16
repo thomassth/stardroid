@@ -11,35 +11,33 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-package android.util;
+package android.util
 
 /**
  * @author Brent Bryan
  */
-public class FloatMath {
+object FloatMath {
+    fun cos(x: Float): Float {
+        return Math.cos(x.toDouble()).toFloat()
+    }
 
-  public static float cos(float x) {
-    return (float) Math.cos(x);
-  }
+    fun sin(x: Float): Float {
+        return Math.sin(x.toDouble()).toFloat()
+    }
 
-  public static float sin(float x) {
-    return (float) Math.sin(x);
-  }
+    fun tan(x: Float): Float {
+        return Math.tan(x.toDouble()).toFloat()
+    }
 
-  public static float tan(float x) {
-    return (float) Math.tan(x);
-  }
+    fun sqrt(x: Float): Float {
+        return Math.sqrt(x.toDouble()).toFloat()
+    }
 
-  public static float sqrt(float x) {
-    return (float) Math.sqrt(x);
-  }
+    fun floor(x: Float): Float {
+        return Math.floor(x.toDouble()).toFloat()
+    }
 
-  public static float floor(float x) {
-    return (float) Math.floor(x);
-  }
-
-  public static float ceil(float x) {
-    return (float) Math.ceil(x);
-  }
+    fun ceil(x: Float): Float {
+        return Math.ceil(x.toDouble()).toFloat()
+    }
 }

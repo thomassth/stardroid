@@ -11,17 +11,15 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-package android.content.res;
+package android.graphics
 
 /**
  * A 'shadow' class for the Android SDK.
  *
  * @author John Taylor
- *
  */
-public class Resources {
-  public static Resources getSystem() {
-    return new Resources();
-  }
+object Color {
+    const val WHITE = 0xffffff
+    const val CYAN = 0x00FFFF
+    const val BLACK = 0x000000
 }

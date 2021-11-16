@@ -31,5 +31,5 @@ interface Sources {
     val lines: List<LinePrimitive>
 
     /** Returns the list of images that should be drawn in the renderer.  */
-    val images: List<ImagePrimitive?>?
+    val images: List<ImagePrimitive>
 }

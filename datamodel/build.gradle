@@ -1,9 +1,11 @@
 apply plugin: 'java-library'
 apply plugin: 'com.google.protobuf'
 apply plugin: 'idea'
-
+repositories {
+    mavenCentral()
+}
 dependencies {
-    implementation 'com.google.protobuf:protobuf-javalite:3.13.0'
+    implementation("com.google.protobuf:protobuf-javalite:3.19.1")
 }
 
 protobuf {
