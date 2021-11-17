@@ -11,169 +11,150 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package com.google.android.stardroid.search
 
-package com.google.android.stardroid.search;
-
-import android.app.SearchManager;
-import android.content.ContentProvider;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.UriMatcher;
-import android.database.Cursor;
-import android.database.MatrixCursor;
-import android.net.Uri;
-import android.text.TextUtils;
-import android.util.Log;
-
-import com.google.android.stardroid.ApplicationComponent;
-import com.google.android.stardroid.StardroidApplication;
-import com.google.android.stardroid.layers.LayerManager;
-import com.google.android.stardroid.util.MiscUtil;
-
-import java.util.Set;
-
-import javax.inject.Inject;
+import android.app.SearchManager
+import android.content.ContentProvider
+import android.content.ContentValues
+import android.content.UriMatcher
+import android.database.Cursor
+import android.database.MatrixCursor
+import android.net.Uri
+import android.text.TextUtils
+import android.util.Log
+import com.google.android.stardroid.StardroidApplication
+import com.google.android.stardroid.layers.LayerManager
+import com.google.android.stardroid.search.SearchTermsProvider
+import com.google.android.stardroid.util.MiscUtil.getTag
+import javax.inject.Inject
 
 /**
  * Provides search suggestions for a list of words and their definitions.
  */
-public class SearchTermsProvider extends ContentProvider {
-  public static class SearchTerm {
-    public String origin;
-    public String query;
+class SearchTermsProvider : ContentProvider() {
+    class SearchTerm(var query: String, var origin: String)
 
-    public SearchTerm(String query, String origin) {
-      this.query = query;
-      this.origin = origin;
+    @JvmField
+    @Inject
+    var layerManager: LayerManager? = null
+    override fun onCreate(): Boolean {
+        maybeInjectMe()
+        return true
     }
-  }
 
-  private static final String TAG = MiscUtil.getTag(SearchTermsProvider.class);
-  public static String AUTHORITY = "com.google.android.stardroid.searchterms";
-  public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY);
-  private static final int SEARCH_SUGGEST = 0;
-  private static final UriMatcher uriMatcher = buildUriMatcher();
-  @Inject LayerManager layerManager;
-
-  /**
-   * The columns we'll include in our search suggestions.
-   */
-  private static final String[] COLUMNS = {"_id", // must include this column
-                                           SearchManager.SUGGEST_COLUMN_QUERY,
-                                           SearchManager.SUGGEST_COLUMN_TEXT_1,
-                                           SearchManager.SUGGEST_COLUMN_TEXT_2};
-
-  /**
-   * Sets up a uri matcher for search suggestion and shortcut refresh queries.
-   */
-  private static UriMatcher buildUriMatcher() {
-    UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
-    matcher.addURI(AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY, SEARCH_SUGGEST);
-    matcher.addURI(AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY + "/*", SEARCH_SUGGEST);
-    return matcher;
-  }
-
-  @Override
-  public boolean onCreate() {
-    maybeInjectMe();
-    return true;
-  }
-
-  private boolean alreadyInjected;
-
-  private boolean maybeInjectMe() {
-    // Ugh.  Android's separation of content providers from their owning apps makes this
-    // almost impossible.  TODO(jontayler): revisit and see if we can make this less
-    // nasty.
-    if (alreadyInjected) {
-      return true;
+    private var alreadyInjected = false
+    private fun maybeInjectMe(): Boolean {
+        // Ugh.  Android's separation of content providers from their owning apps makes this
+        // almost impossible.  TODO(jontayler): revisit and see if we can make this less
+        // nasty.
+        if (alreadyInjected) {
+            return true
+        }
+        val appContext = context!!.applicationContext as? StardroidApplication ?: return false
+        val component = appContext.applicationComponent ?: return false
+        component.inject(this)
+        alreadyInjected = true
+        return true
     }
-    Context appContext = getContext().getApplicationContext();
-    if (!(appContext instanceof StardroidApplication)) {
-      return false;
-    }
-    ApplicationComponent component = ((StardroidApplication) appContext).getApplicationComponent();
-    if (component == null) {
-      return false;
-    }
-    component.inject(this);
-    alreadyInjected = true;
-    return true;
-  }
 
-  @Override
-  public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
-                      String sortOrder) {
-    Log.d(TAG, "Got query for " + uri);
-    if (!maybeInjectMe()) {
-      return null;
+    override fun query(
+        uri: Uri, projection: Array<String>?, selection: String?, selectionArgs: Array<String>?,
+        sortOrder: String?
+    ): Cursor? {
+        Log.d(TAG, "Got query for $uri")
+        if (!maybeInjectMe()) {
+            return null
+        }
+        require(TextUtils.isEmpty(selection)) { "selection not allowed for $uri" }
+        require(!(selectionArgs != null && selectionArgs.size != 0)) { "selectionArgs not allowed for $uri" }
+        require(TextUtils.isEmpty(sortOrder)) { "sortOrder not allowed for $uri" }
+        if (uriMatcher.match(uri) == SEARCH_SUGGEST) {
+            var query: String? = null
+            if (uri.pathSegments.size > 1) {
+                query = uri.lastPathSegment
+            }
+            Log.d(TAG, "Got suggestions query for $query")
+            return getSuggestions(query)
+        }
+        throw IllegalArgumentException("Unknown URL $uri")
     }
-    if (!TextUtils.isEmpty(selection)) {
-      throw new IllegalArgumentException("selection not allowed for " + uri);
-    }
-    if (selectionArgs != null && selectionArgs.length != 0) {
-      throw new IllegalArgumentException("selectionArgs not allowed for " + uri);
-    }
-    if (!TextUtils.isEmpty(sortOrder)) {
-      throw new IllegalArgumentException("sortOrder not allowed for " + uri);
-    }
-    if (uriMatcher.match(uri) == SEARCH_SUGGEST) {
-      String query = null;
-      if (uri.getPathSegments().size() > 1) {
-        query = uri.getLastPathSegment();
-      }
-      Log.d(TAG, "Got suggestions query for " + query);
-      return getSuggestions(query);
-    }
-    throw new IllegalArgumentException("Unknown URL " + uri);
-  }
 
-  private Cursor getSuggestions(String query) {
-    MatrixCursor cursor = new MatrixCursor(COLUMNS);
-    if (query == null) {
-      return cursor;
+    private fun getSuggestions(query: String?): Cursor {
+        val cursor = MatrixCursor(COLUMNS)
+        if (query == null) {
+            return cursor
+        }
+        val results = layerManager!!.getObjectNamesMatchingPrefix(query)
+        Log.d("SearchTermsProvider", "Got results n=" + results.size)
+        for (result in results) {
+            cursor.addRow(columnValuesOfSuggestion(result))
+        }
+        return cursor
     }
-    Set<SearchTerm> results = layerManager.getObjectNamesMatchingPrefix(query);
-    Log.d("SearchTermsProvider", "Got results n=" + results.size());
-    for (SearchTerm result : results) {
-      cursor.addRow(columnValuesOfSuggestion(result));
+
+    private fun columnValuesOfSuggestion(suggestion: SearchTerm): Array<String> {
+        return arrayOf<String>(
+            Integer.toString(s++),  // _id
+            suggestion.query,  // query
+            suggestion.query,  // text1
+            suggestion.origin
+        )
     }
-    return cursor;
-  }
 
-  private static int s = 0;
-
-  private Object[] columnValuesOfSuggestion(SearchTerm suggestion) {
-    return new String[] {Integer.toString(s++), // _id
-                         suggestion.query, // query
-                         suggestion.query, // text1
-                         suggestion.origin, // text2
-    };
-  }
-
-  /**
-   * All queries for this provider are for the search suggestion mime type.
-   */
-  @Override
-  public String getType(Uri uri) {
-    if (uriMatcher.match(uri) == SEARCH_SUGGEST) {
-      return SearchManager.SUGGEST_MIME_TYPE;
+    /**
+     * All queries for this provider are for the search suggestion mime type.
+     */
+    override fun getType(uri: Uri): String? {
+        if (uriMatcher.match(uri) == SEARCH_SUGGEST) {
+            return SearchManager.SUGGEST_MIME_TYPE
+        }
+        throw IllegalArgumentException("Unknown URL $uri")
     }
-    throw new IllegalArgumentException("Unknown URL " + uri);
-  }
 
-  @Override
-  public Uri insert(Uri uri, ContentValues values) {
-    throw new UnsupportedOperationException();
-  }
+    override fun insert(uri: Uri, values: ContentValues?): Uri? {
+        throw UnsupportedOperationException()
+    }
 
-  @Override
-  public int delete(Uri uri, String selection, String[] selectionArgs) {
-    throw new UnsupportedOperationException();
-  }
+    override fun delete(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
+        throw UnsupportedOperationException()
+    }
 
-  @Override
-  public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-    throw new UnsupportedOperationException();
-  }
+    override fun update(
+        uri: Uri,
+        values: ContentValues?,
+        selection: String?,
+        selectionArgs: Array<String>?
+    ): Int {
+        throw UnsupportedOperationException()
+    }
+
+    companion object {
+        private val TAG = getTag(SearchTermsProvider::class.java)
+        var AUTHORITY = "com.google.android.stardroid.searchterms"
+        val CONTENT_URI = Uri.parse("content://" + AUTHORITY)
+        private const val SEARCH_SUGGEST = 0
+        private val uriMatcher = buildUriMatcher()
+
+        /**
+         * The columns we'll include in our search suggestions.
+         */
+        private val COLUMNS = arrayOf(
+            "_id",  // must include this column
+            SearchManager.SUGGEST_COLUMN_QUERY,
+            SearchManager.SUGGEST_COLUMN_TEXT_1,
+            SearchManager.SUGGEST_COLUMN_TEXT_2
+        )
+
+        /**
+         * Sets up a uri matcher for search suggestion and shortcut refresh queries.
+         */
+        private fun buildUriMatcher(): UriMatcher {
+            val matcher = UriMatcher(UriMatcher.NO_MATCH)
+            matcher.addURI(AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY, SEARCH_SUGGEST)
+            matcher.addURI(AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY + "/*", SEARCH_SUGGEST)
+            return matcher
+        }
+
+        private var s = 0
+    }
 }

@@ -11,33 +11,26 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package com.google.android.stardroid.search
 
-package com.google.android.stardroid.search;
-
-import com.google.android.stardroid.math.Vector3;
+import com.google.android.stardroid.math.Vector3
 
 /**
  * A single search result.
  *
  * @author John Taylor
  */
-public class SearchResult {
-  /** The coordinates of the object.*/
-  public Vector3 coords;
-  /** The user-presentable name of the object, properly capitalized.*/
-  public String capitalizedName;
-
-  /**
-   * @param capitalizedName The user-presentable name of the object, properly capitalized.
-   * @param coords The geocentric coordinates of the object.
-   */
-  public SearchResult(String capitalizedName, Vector3 coords) {
-    this.capitalizedName = capitalizedName;
-    this.coords = coords;
-  }
-
-  @Override
-  public String toString() {
-    return capitalizedName;
-  }
+class SearchResult
+/**
+ * @param capitalizedName The user-presentable name of the object, properly capitalized.
+ * @param coords The geocentric coordinates of the object.
+ */(
+    /** The user-presentable name of the object, properly capitalized. */
+    var capitalizedName: String,
+    /** The coordinates of the object. */
+    var coords: Vector3?
+) {
+    override fun toString(): String {
+        return capitalizedName
+    }
 }

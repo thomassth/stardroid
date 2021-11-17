@@ -11,87 +11,79 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package com.google.android.stardroid.search
 
-package com.google.android.stardroid.search;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*
 
 /**
  * Given a set of strings such as search terms, this class allows you to search
  * for that string by prefix.
  * @author John Taylor
- *
  */
-public class PrefixStore {
+class PrefixStore {
+    private class TrieNode {
+        var children: MutableMap<Char, TrieNode> = HashMap()
 
-  static private class TrieNode {
-    Map<Character, TrieNode> children = new HashMap<>();
-
-    // we need to store the originals to support insensitive case searching
-    Set<String> results = new HashSet<>();
-  }
-
-  private TrieNode root = new TrieNode();
-
-  private static final Set<String> EMPTY_SET = Collections.unmodifiableSet(new HashSet<String>());
-
-  /**
-   * Search for any queries matching this prefix.  Note that the prefix is
-   * case-independent.
-   *
-   * TODO(@tcao) refactor this API. Search should return a relevance ranked list.
-   */
-  public Set<String> queryByPrefix(String prefix) {
-    prefix = prefix.toLowerCase();
-    TrieNode n = root;
-    for (int i = 0; i < prefix.length(); i++) {
-      TrieNode c = n.children.get(prefix.charAt(i));
-      if (c == null) {
-        return EMPTY_SET;
-      }
-      n = c;
+        // we need to store the originals to support insensitive case searching
+        var results: MutableSet<String> = HashSet()
     }
-    Set<String> coll = new HashSet<String>();
-    collect(n, coll);
-    return coll;
-  }
 
-  private void collect(TrieNode n, Collection<String> coll) {
-    coll.addAll(n.results);
-    for (TrieNode trieNode : n.children.values()) {
-      collect(trieNode, coll);
-    }
-  }
+    private val root = TrieNode()
 
-  /**
-   * Put a new string in the store.
-   */
-  public void add(String string) {
-    TrieNode n = root;
-    String lower = string.toLowerCase();
-    for (int i = 0; i < lower.length(); i++) {
-      TrieNode c = n.children.get(lower.charAt(i));
-      if (c == null) {
-        c = new TrieNode();
-        n.children.put(lower.charAt(i), c);
-      }
-      n = c;
+    /**
+     * Search for any queries matching this prefix.  Note that the prefix is
+     * case-independent.
+     *
+     * TODO(@tcao) refactor this API. Search should return a relevance ranked list.
+     */
+    fun queryByPrefix(prefix: String): Set<String> {
+        var prefix = prefix
+        prefix = prefix.toLowerCase()
+        var n = root
+        for (i in 0 until prefix.length) {
+            val c = n.children[prefix[i]] ?: return EMPTY_SET
+            n = c
+        }
+        val coll: MutableSet<String> = HashSet()
+        collect(n, coll)
+        return coll
     }
-    n.results.add(string);
-  }
 
-  /**
-   * Put a whole load of objects in the store at once.
-   * @param strings a collection of strings.
-   */
-  public void addAll(Collection<String> strings) {
-    for (String string : strings) {
-      add(string);
+    private fun collect(n: TrieNode, coll: MutableCollection<String>) {
+        coll.addAll(n.results)
+        for (trieNode in n.children.values) {
+            collect(trieNode, coll)
+        }
     }
-  }
+
+    /**
+     * Put a new string in the store.
+     */
+    fun add(string: String) {
+        var n = root
+        val lower = string.toLowerCase()
+        for (i in 0 until lower.length) {
+            var c = n.children[lower[i]]
+            if (c == null) {
+                c = TrieNode()
+                n.children[lower[i]] = c
+            }
+            n = c
+        }
+        n.results.add(string)
+    }
+
+    /**
+     * Put a whole load of objects in the store at once.
+     * @param strings a collection of strings.
+     */
+    fun addAll(strings: Collection<String>) {
+        for (string in strings) {
+            add(string)
+        }
+    }
+
+    companion object {
+        private val EMPTY_SET = Collections.unmodifiableSet(HashSet<String>())
+    }
 }

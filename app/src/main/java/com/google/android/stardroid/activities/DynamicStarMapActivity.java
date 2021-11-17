@@ -616,7 +616,7 @@ public class DynamicStarMapActivity extends InjectableActivity
     } else {
       Log.d(TAG, "One result returned.");
       final SearchResult result = results.get(0);
-      activateSearchTarget(result.coords, result.capitalizedName);
+      activateSearchTarget(result.getCoords(), result.getCapitalizedName());
     }
   }
 
