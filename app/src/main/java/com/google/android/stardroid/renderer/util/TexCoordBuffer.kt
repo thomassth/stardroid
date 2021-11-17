@@ -11,86 +11,82 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package com.google.android.stardroid.renderer.util
 
-package com.google.android.stardroid.renderer.util;
+import android.util.Log
+import com.google.android.stardroid.util.FixedPoint.floatToFixedPoint
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
+import java.nio.IntBuffer
+import javax.microedition.khronos.opengles.GL10
+import javax.microedition.khronos.opengles.GL11
 
-import android.util.Log;
-
-import com.google.android.stardroid.util.FixedPoint;
-
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.IntBuffer;
-
-import javax.microedition.khronos.opengles.GL10;
-import javax.microedition.khronos.opengles.GL11;
-
-public class TexCoordBuffer {
-  public TexCoordBuffer(int numVertices) {
-    reset(numVertices);
-  }
-  
-  // Creates an empty buffer.  Must call reset() before adding vertices.
-  public TexCoordBuffer() {
-    mNumVertices = 0;
-  }
-  public TexCoordBuffer(boolean useVBO) {
-    mNumVertices = 0;
-    mUseVBO = useVBO;
-  }
-  
-  public int size() {
-    return mNumVertices;
-  }
-  
-  public void reset(int numVertices) {
-    if (numVertices < 0) {
-      Log.e("TexCoordBuffer", "reset attempting to set numVertices to " + numVertices);
-      numVertices = 0;
+class TexCoordBuffer {
+    constructor(numVertices: Int) {
+        reset(numVertices)
     }
-    mNumVertices = numVertices;
-    regenerateBuffer();
-  }
 
-  // Call this when we have to re-create the surface and reloading all OpenGL resources.
-  public void reload() {
-    mGLBuffer.reload();
-  }
-  
-  public void addTexCoords(float u, float v) {
-    mTexCoordBuffer.put(FixedPoint.floatToFixedPoint(u));
-    mTexCoordBuffer.put(FixedPoint.floatToFixedPoint(v));
-  }
-  
-  public void set(GL10 gl) {
-    if (mNumVertices == 0) {
-      return;
+    // Creates an empty buffer.  Must call reset() before adding vertices.
+    constructor() {
+        mNumVertices = 0
     }
-    mTexCoordBuffer.position(0);
-    
-    if (mUseVBO && GLBuffer.canUseVBO()) {
-      GL11 gl11 = (GL11)gl;
-      mGLBuffer.bind(gl11, mTexCoordBuffer, 4 * mTexCoordBuffer.capacity());
-      gl11.glTexCoordPointer(2, GL10.GL_FIXED, 0, 0);
-    } else {
-      gl.glTexCoordPointer(2, GL10.GL_FIXED, 0, mTexCoordBuffer);
-    }
-  }
-  
-  private void regenerateBuffer() {
-    if (mNumVertices == 0) {
-      return;
-    }
-    
-    ByteBuffer bb = ByteBuffer.allocateDirect(4 * 2 * mNumVertices);
-    bb.order(ByteOrder.nativeOrder());
-    IntBuffer ib = bb.asIntBuffer();
-    ib.position(0);
-    mTexCoordBuffer = ib;
-  }
 
-  private IntBuffer mTexCoordBuffer = null;
-  private int mNumVertices = 0;
-  private GLBuffer mGLBuffer = new GLBuffer(GL11.GL_ARRAY_BUFFER);
-  private boolean mUseVBO = false;
+    constructor(useVBO: Boolean) {
+        mNumVertices = 0
+        mUseVBO = useVBO
+    }
+
+    fun size(): Int {
+        return mNumVertices
+    }
+
+    fun reset(numVertices: Int) {
+        var numVertices = numVertices
+        if (numVertices < 0) {
+            Log.e("TexCoordBuffer", "reset attempting to set numVertices to $numVertices")
+            numVertices = 0
+        }
+        mNumVertices = numVertices
+        regenerateBuffer()
+    }
+
+    // Call this when we have to re-create the surface and reloading all OpenGL resources.
+    fun reload() {
+        mGLBuffer.reload()
+    }
+
+    fun addTexCoords(u: Float, v: Float) {
+        mTexCoordBuffer!!.put(floatToFixedPoint(u))
+        mTexCoordBuffer!!.put(floatToFixedPoint(v))
+    }
+
+    fun set(gl: GL10) {
+        if (mNumVertices == 0) {
+            return
+        }
+        mTexCoordBuffer!!.position(0)
+        if (mUseVBO && GLBuffer.canUseVBO()) {
+            val gl11 = gl as GL11
+            mGLBuffer.bind(gl11, mTexCoordBuffer!!, 4 * mTexCoordBuffer!!.capacity())
+            gl11.glTexCoordPointer(2, GL10.GL_FIXED, 0, 0)
+        } else {
+            gl.glTexCoordPointer(2, GL10.GL_FIXED, 0, mTexCoordBuffer)
+        }
+    }
+
+    private fun regenerateBuffer() {
+        if (mNumVertices == 0) {
+            return
+        }
+        val bb = ByteBuffer.allocateDirect(4 * 2 * mNumVertices)
+        bb.order(ByteOrder.nativeOrder())
+        val ib = bb.asIntBuffer()
+        ib.position(0)
+        mTexCoordBuffer = ib
+    }
+
+    private var mTexCoordBuffer: IntBuffer? = null
+    private var mNumVertices = 0
+    private val mGLBuffer = GLBuffer(GL11.GL_ARRAY_BUFFER)
+    private var mUseVBO = false
 }

@@ -24,7 +24,7 @@ import com.google.android.stardroid.renderer.util.TexturedQuad
 import javax.microedition.khronos.opengles.GL10
 
 class CrosshairOverlay {
-    fun reloadTextures(gl: GL10?, res: Resources?, textureManager: TextureManager) {
+    fun reloadTextures(gl: GL10, res: Resources?, textureManager: TextureManager) {
         // Load the crosshair texture.
         mTex = textureManager.getTextureFromResource(gl, R.drawable.crosshair)
     }

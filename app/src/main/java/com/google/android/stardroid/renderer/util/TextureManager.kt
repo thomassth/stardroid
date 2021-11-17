@@ -11,145 +11,123 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package com.google.android.stardroid.renderer.util
 
-package com.google.android.stardroid.renderer.util;
-
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapFactory.Options;
-import android.opengl.GLUtils;
-import android.util.Log;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.microedition.khronos.opengles.GL10;
+import android.content.res.Resources
+import android.graphics.BitmapFactory
+import android.opengl.GLUtils
+import android.util.Log
+import java.io.PrintWriter
+import java.io.StringWriter
+import java.util.*
+import javax.microedition.khronos.opengles.GL10
 
 /**
  * Manages all textures used by the application.  Useful to make sure that we don't accidentally
  * use deleted textures and don't leak textures, and that we don't create multiple instances of the
  * same texture.
- * 
- * TODO(jpowell): We only ever need one instance of this class, but it would be cleaner if it was
- * a normal class instead of a global singleton, so I should change it when I get a chance.  
- * 
- * @author James Powell
  *
+ * TODO(jpowell): We only ever need one instance of this class, but it would be cleaner if it was
+ * a normal class instead of a global singleton, so I should change it when I get a chance.
+ *
+ * @author James Powell
  */
-public final class TextureManager {
-  private final Resources mRes;
-  private Map<Integer, TextureData> mResourceIdToTextureMap = 
-      new HashMap<Integer, TextureData>();
-  private ArrayList<TextureReferenceImpl> mAllTextures =
-      new ArrayList<TextureReferenceImpl>();
-  
-  public TextureManager(Resources res) {
-    mRes = res;
-  }
-  
-  public TextureReference createTexture(GL10 gl) {
-    return createTextureInternal(gl);
-  }
+class TextureManager(private val mRes: Resources) {
+    private val mResourceIdToTextureMap: MutableMap<Int, TextureData> = HashMap()
+    private val mAllTextures = ArrayList<TextureReferenceImpl>()
+    fun createTexture(gl: GL10): TextureReference {
+        return createTextureInternal(gl)
+    }
 
-  
-  public TextureReference getTextureFromResource(GL10 gl, int resourceID) {
-    // If the texture already exists, return it.
-    TextureData texData = mResourceIdToTextureMap.get(resourceID);
-    if (texData != null) {
-      // Increment the reference count
-      texData.refCount++;
-      return texData.ref;
-    }
-    
-    TextureReferenceImpl tex = createTextureFromResource(gl, resourceID);
-    
-    // Add it to the map.
-    TextureData data = new TextureData();
-    data.ref = tex;
-    data.refCount = 1;
-    mResourceIdToTextureMap.put(resourceID, data);
-    
-    return tex;
-  }
-  
-  public void reset() {
-    mResourceIdToTextureMap.clear();
-    for (TextureReferenceImpl ref : mAllTextures) {
-      ref.invalidate();
-    }
-    mAllTextures.clear();
-  }
+    fun getTextureFromResource(gl: GL10, resourceID: Int): TextureReference? {
+        // If the texture already exists, return it.
+        val texData = mResourceIdToTextureMap[resourceID]
+        if (texData != null) {
+            // Increment the reference count
+            texData.refCount++
+            return texData.ref
+        }
+        val tex = createTextureFromResource(gl, resourceID)
 
-  private static class TextureReferenceImpl implements TextureReference {
-    public TextureReferenceImpl(int id) {
-      mTextureID = id;
+        // Add it to the map.
+        val data = TextureData()
+        data.ref = tex
+        data.refCount = 1
+        mResourceIdToTextureMap[resourceID] = data
+        return tex
     }
-    
-    public void bind(GL10 gl) {
-      checkValid();
-      gl.glBindTexture(GL10.GL_TEXTURE_2D, mTextureID);
+
+    fun reset() {
+        mResourceIdToTextureMap.clear()
+        for (ref in mAllTextures) {
+            ref.invalidate()
+        }
+        mAllTextures.clear()
     }
-    
-    public void delete(GL10 gl) {
-      checkValid();
-      gl.glDeleteTextures(1, new int[] {mTextureID}, 0);
-      invalidate();
+
+    private class TextureReferenceImpl(val iD: Int) : TextureReference {
+        override fun bind(gl: GL10?) {
+            checkValid()
+            gl!!.glBindTexture(GL10.GL_TEXTURE_2D, iD)
+        }
+
+        override fun delete(gl: GL10?) {
+            checkValid()
+            gl!!.glDeleteTextures(1, intArrayOf(iD), 0)
+            invalidate()
+        }
+
+        fun invalidate() {
+            mValid = false
+        }
+
+        private fun checkValid() {
+            if (!mValid) {
+                Log.e("TextureManager", "Setting invalidated texture ID: " + iD)
+                val writer = StringWriter()
+                Throwable().printStackTrace(PrintWriter(writer))
+                Log.e("TextureManager", writer.toString())
+            }
+        }
+
+        private var mValid = true
     }
-    
-    public int getID() {
-      return mTextureID;
+
+    private class TextureData {
+        var ref: TextureReferenceImpl? = null
+        var refCount = 0
     }
-    
-    public void invalidate() {
-      mValid = false;
+
+    private fun createTextureFromResource(gl: GL10, resourceID: Int): TextureReferenceImpl {
+        // The texture hasn't been loaded yet, so load it.
+        val tex = createTextureInternal(gl)
+        val opts = BitmapFactory.Options()
+        opts.inScaled = false
+        val bmp = BitmapFactory.decodeResource(mRes, resourceID, opts)
+        tex.bind(gl)
+        gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR.toFloat())
+        gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR.toFloat())
+        gl.glTexParameterf(
+            GL10.GL_TEXTURE_2D,
+            GL10.GL_TEXTURE_WRAP_S,
+            GL10.GL_CLAMP_TO_EDGE.toFloat()
+        )
+        gl.glTexParameterf(
+            GL10.GL_TEXTURE_2D,
+            GL10.GL_TEXTURE_WRAP_T,
+            GL10.GL_CLAMP_TO_EDGE.toFloat()
+        )
+        GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bmp, 0)
+        bmp.recycle()
+        return tex
     }
-    
-    private void checkValid() {
-      if (!mValid) {
-        Log.e("TextureManager", "Setting invalidated texture ID: " + mTextureID);
-        StringWriter writer = new StringWriter();
-        new Throwable().printStackTrace(new PrintWriter(writer));
-        Log.e("TextureManager", writer.toString());
-      }
+
+    private fun createTextureInternal(gl: GL10): TextureReferenceImpl {
+        // The texture hasn't been loaded yet, so load it.
+        val texID = IntArray(1)
+        gl.glGenTextures(1, texID, 0)
+        val tex = TextureReferenceImpl(texID[0])
+        mAllTextures.add(tex)
+        return tex
     }
-    
-    private int mTextureID;
-    private boolean mValid = true;
-  }
-  
-  private static class TextureData {
-    public TextureReferenceImpl ref = null;
-    public int refCount = 0;
-  }
-  
-  private TextureReferenceImpl createTextureFromResource(GL10 gl, int resourceID) {
-    // The texture hasn't been loaded yet, so load it.
-    TextureReferenceImpl tex = createTextureInternal(gl);
-    Options opts = new Options();
-    opts.inScaled = false;
-    Bitmap bmp = BitmapFactory.decodeResource(mRes, resourceID, opts);
-    tex.bind(gl);
-    gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
-    gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
-    gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_CLAMP_TO_EDGE);
-    gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_CLAMP_TO_EDGE);
-    
-    GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bmp, 0);
-    
-    bmp.recycle();
-    return tex;
-  }
-  
-  private TextureReferenceImpl createTextureInternal(GL10 gl) {
-    // The texture hasn't been loaded yet, so load it.
-    int[] texID = new int[1];
-    gl.glGenTextures(1, texID, 0);
-    TextureReferenceImpl tex = new TextureReferenceImpl(texID[0]);
-    mAllTextures.add(tex);
-    return tex;
-  }
 }
