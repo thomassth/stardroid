@@ -11,87 +11,81 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package com.google.android.stardroid.renderer
 
-package com.google.android.stardroid.renderer;
-
-import android.opengl.GLSurfaceView;
-
-import java.util.LinkedList;
-import java.util.Queue;
+import android.opengl.GLSurfaceView
+import com.google.android.stardroid.renderer.RendererController.AtomicSection
+import com.google.android.stardroid.renderer.RendererControllerBase.EventQueuer
+import java.util.*
 
 /**
  * Allows the rest of the program to communicate with the SkyRenderer by queueing
  * events.
  * @author James Powell
  */
-public class RendererController extends RendererControllerBase {
-  /**
-   * Used for grouping renderer calls into atomic units.
-   */
-  public static class AtomicSection extends RendererControllerBase {
-    private Queuer mQueuer = new Queuer();
-    private static int NEXT_ID = 0;
-    private int mID;
+class RendererController(renderer: SkyRenderer?, view: GLSurfaceView) :
+    RendererControllerBase(renderer) {
+    /**
+     * Used for grouping renderer calls into atomic units.
+     */
+    class AtomicSection(renderer: SkyRenderer) :
+        RendererControllerBase(renderer) {
+        private var mQueuer = Queuer()
+        private var mID = 0
+        override fun getQueuer(): EventQueuer {
+            return mQueuer
+        }
 
-    private AtomicSection(SkyRenderer renderer) {
-      super(renderer);
-      synchronized(AtomicSection.class) {
-        mID = NEXT_ID++;
-      }
+        override fun toString(): String {
+            return "AtomicSection$mID"
+        }
+
+        fun releaseEvents(): Queue<Runnable> {
+            val queue = mQueuer.mQueue
+            mQueuer = Queuer()
+            return queue
+        }
+
+        private class Queuer : EventQueuer {
+            val mQueue: Queue<Runnable> = LinkedList()
+            override fun queueEvent(r: Runnable) {
+                mQueue.add(r)
+            }
+        }
+
+        companion object {
+            private var NEXT_ID = 0
+        }
+
+        init {
+            synchronized(AtomicSection::class.java) { mID = NEXT_ID++ }
+        }
     }
 
-    @Override
-    protected EventQueuer getQueuer() {
-      return mQueuer;
+    private val mQueuer: EventQueuer
+    override fun getQueuer(): EventQueuer {
+        return mQueuer
     }
 
-    @Override
-    public String toString() {
-      return "AtomicSection" + mID;
+    override fun toString(): String {
+        return "RendererController"
     }
 
-    private Queue<Runnable> releaseEvents() {
-      Queue<Runnable> queue = mQueuer.mQueue;
-      mQueuer = new Queuer();
-      return queue;
+    fun createAtomic(): AtomicSection {
+        return AtomicSection(mRenderer)
     }
 
-    private static class Queuer implements EventQueuer {
-      private Queue<Runnable> mQueue = new LinkedList<Runnable>();
-      public void queueEvent(Runnable r) {
-        mQueue.add(r);
-      }
+    fun queueAtomic(atomic: AtomicSection) {
+        val msg = "Applying $atomic"
+        queueRunnable(msg, CommandType.Synchronization) {
+            val events = atomic.releaseEvents()
+            for (r in events) {
+                r.run()
+            }
+        }
     }
-  }
 
-  private final EventQueuer mQueuer;
-
-  @Override
-  protected EventQueuer getQueuer() {
-    return mQueuer;
-  }
-
-  public RendererController(SkyRenderer renderer, final GLSurfaceView view) {
-    super(renderer);
-    mQueuer = view::queueEvent;
-  }
-
-  @Override
-  public String toString() {
-    return "RendererController";
-  }
-
-  public AtomicSection createAtomic() {
-    return new AtomicSection(mRenderer);
-  }
-
-  public void queueAtomic(final AtomicSection atomic) {
-    String msg = "Applying " + atomic.toString();
-    queueRunnable(msg, CommandType.Synchronization, new Runnable() { public void run() {
-      Queue<Runnable> events = atomic.releaseEvents();
-      for (Runnable r : events) {
-        r.run();
-      }
-    }});
-  }
+    init {
+        mQueuer = EventQueuer { r: Runnable? -> view.queueEvent(r) }
+    }
 }

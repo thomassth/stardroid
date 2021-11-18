@@ -11,62 +11,40 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package com.google.android.stardroid.source
 
-package com.google.android.stardroid.source;
-
-import com.google.android.stardroid.renderer.RendererObjectManager.UpdateType;
-import com.google.android.stardroid.math.Vector3;
-
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
+import com.google.android.stardroid.math.Vector3
+import com.google.android.stardroid.renderer.RendererObjectManager.UpdateType
+import java.util.*
 
 /**
- * Base implementation of the {@link AstronomicalSource} and {@link Sources}
+ * Base implementation of the [AstronomicalSource] and [Sources]
  * interfaces.
  *
  * @author Brent Bryan
  */
-public abstract class AbstractAstronomicalSource implements AstronomicalSource, Sources {
+abstract class AbstractAstronomicalSource : AstronomicalSource, Sources {
+    override fun initialize(): Sources? {
+        return this
+    }
 
-  @Override
-  public Sources initialize() {
-    return this;
-  }
+    override fun update(): EnumSet<UpdateType?>? {
+        return EnumSet.noneOf(UpdateType::class.java)
+    }
 
-  @Override
-  public EnumSet<UpdateType> update() {
-    return EnumSet.noneOf(UpdateType.class);
-  }
-
-  /** Implementors of this method must implement {@link #getSearchLocation}. */
-  @Override
-  public List<String> getNames() {
-    return Collections.emptyList();
-  }
-
-  @Override
-  public Vector3 getSearchLocation() {
-    throw new UnsupportedOperationException("Should not be called");
-  }
-
-  @Override
-  public List<ImagePrimitive> getImages() {
-    return Collections.emptyList();
-  }
-
-  @Override
-  public List<TextPrimitive> getLabels() {
-    return Collections.emptyList();
-  }
-
-  @Override
-  public List<LinePrimitive> getLines() {
-    return Collections.emptyList();
-  }
-
-  @Override
-  public List<PointPrimitive> getPoints() {
-    return Collections.emptyList();
-  }
+    /** Implementors of this method must implement [.getSearchLocation].  */
+    override val names: List<String>
+        get() = emptyList()
+    override val searchLocation: Vector3
+        get() {
+            throw UnsupportedOperationException("Should not be called")
+        }
+    override val images: List<ImagePrimitive>
+        get() = emptyList()
+    override val labels: List<TextPrimitive>
+        get() = emptyList()
+    override val lines: List<LinePrimitive>
+        get() = emptyList()
+    override val points: List<PointPrimitive>
+        get() = emptyList()
 }

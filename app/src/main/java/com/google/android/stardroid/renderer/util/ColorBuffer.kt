@@ -11,82 +11,79 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package com.google.android.stardroid.renderer.util
 
-package com.google.android.stardroid.renderer.util;
+import com.google.android.stardroid.renderer.util.GLBuffer.Companion.canUseVBO
+import javax.microedition.khronos.opengles.GL10
+import com.google.android.stardroid.renderer.util.GLBuffer
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
+import java.nio.IntBuffer
+import javax.microedition.khronos.opengles.GL11
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.IntBuffer;
-
-import javax.microedition.khronos.opengles.GL10;
-import javax.microedition.khronos.opengles.GL11;
-
-public class ColorBuffer {
-
-  public ColorBuffer(int numVertices) {
-    reset(numVertices);
-  }
-
-  public ColorBuffer() {
-    mNumVertices = 0;
-  }
-
-  public ColorBuffer(boolean useVBO) {
-    mNumVertices = 0;
-    mUseVBO = useVBO;
-  }
-
-  public int size() {
-    return mNumVertices;
-  }
-
-  public void reset(int numVertices) {
-    mNumVertices = numVertices;
-    regenerateBuffer();
-  }
-
-  // Call this when we have to re-create the surface and reloading all OpenGL resources.
-  public void reload() {
-    mGLBuffer.reload();
-  }
-
-  public void addColor(int a, int r, int g, int b) {
-    addColor(((a & 0xff) << 24) | ((b & 0xff) << 16) | ((g & 0xff) << 8) | (r & 0xff));
-  }
-
-  public void addColor(int abgr) {
-    mColorBuffer.put(abgr);
-  }
-
-  public void set(GL10 gl) {
-    if (mNumVertices == 0) {
-      return;
-    }
-    mColorBuffer.position(0);
-
-    if (mUseVBO && GLBuffer.canUseVBO()) {
-      GL11 gl11 = (GL11)gl;
-      mGLBuffer.bind(gl11, mColorBuffer, 4 * mColorBuffer.capacity());
-      gl11.glColorPointer(4, GL10.GL_UNSIGNED_BYTE, 0, 0);
-    } else {
-      gl.glColorPointer(4, GL10.GL_UNSIGNED_BYTE, 0, mColorBuffer);
-    }
-  }
-
-  private void regenerateBuffer() {
-    if (mNumVertices == 0) {
-      return;
+class ColorBuffer {
+    constructor(numVertices: Int) {
+        reset(numVertices)
     }
 
-    ByteBuffer bb = ByteBuffer.allocateDirect(4 * mNumVertices);
-    bb.order(ByteOrder.nativeOrder());
-    IntBuffer ib = bb.asIntBuffer();
-    ib.position(0);
-    mColorBuffer = ib;
-  }
+    constructor() {
+        mNumVertices = 0
+    }
 
-  private IntBuffer mColorBuffer = null;
-  private int mNumVertices;
-  private GLBuffer mGLBuffer = new GLBuffer(GL11.GL_ARRAY_BUFFER);
-  private boolean mUseVBO;
+    constructor(useVBO: Boolean) {
+        mNumVertices = 0
+        mUseVBO = useVBO
+    }
+
+    fun size(): Int {
+        return mNumVertices
+    }
+
+    fun reset(numVertices: Int) {
+        mNumVertices = numVertices
+        regenerateBuffer()
+    }
+
+    // Call this when we have to re-create the surface and reloading all OpenGL resources.
+    fun reload() {
+        mGLBuffer.reload()
+    }
+
+    fun addColor(a: Int, r: Int, g: Int, b: Int) {
+        addColor(a and 0xff shl 24 or (b and 0xff shl 16) or (g and 0xff shl 8) or (r and 0xff))
+    }
+
+    fun addColor(abgr: Int) {
+        mColorBuffer!!.put(abgr)
+    }
+
+    fun set(gl: GL10) {
+        if (mNumVertices == 0) {
+            return
+        }
+        mColorBuffer!!.position(0)
+        if (mUseVBO && canUseVBO()) {
+            val gl11 = gl as GL11
+            mGLBuffer.bind(gl11, mColorBuffer!!, 4 * mColorBuffer!!.capacity())
+            gl11.glColorPointer(4, GL10.GL_UNSIGNED_BYTE, 0, 0)
+        } else {
+            gl.glColorPointer(4, GL10.GL_UNSIGNED_BYTE, 0, mColorBuffer)
+        }
+    }
+
+    private fun regenerateBuffer() {
+        if (mNumVertices == 0) {
+            return
+        }
+        val bb = ByteBuffer.allocateDirect(4 * mNumVertices)
+        bb.order(ByteOrder.nativeOrder())
+        val ib = bb.asIntBuffer()
+        ib.position(0)
+        mColorBuffer = ib
+    }
+
+    private var mColorBuffer: IntBuffer? = null
+    private var mNumVertices = 0
+    private val mGLBuffer = GLBuffer(GL11.GL_ARRAY_BUFFER)
+    private var mUseVBO = false
 }
