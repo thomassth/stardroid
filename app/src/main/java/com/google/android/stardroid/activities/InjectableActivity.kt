@@ -10,6 +10,6 @@ import com.google.android.stardroid.StardroidApplication
  * Created by johntaylor on 4/9/16.
  */
 abstract class InjectableActivity : Activity() {
-    protected val applicationComponent: ApplicationComponent
+    protected val applicationComponent: ApplicationComponent?
         protected get() = (application as StardroidApplication).applicationComponent
 }

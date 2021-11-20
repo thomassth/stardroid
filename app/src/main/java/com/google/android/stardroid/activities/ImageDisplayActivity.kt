@@ -47,7 +47,7 @@ class ImageDisplayActivity : InjectableActivity() {
     var analytics: Analytics? = null
     override fun onCreate(icicle: Bundle?) {
         super.onCreate(icicle)
-        applicationComponent.inject(this)
+        applicationComponent!!.inject(this)
         setContentView(R.layout.imagedisplay)
         activityLightLevelManager = ActivityLightLevelManager(
             ActivityLightLevelChanger(this, null),

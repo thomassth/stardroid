@@ -1,101 +1,101 @@
-package com.google.android.stardroid.test;
+package com.google.android.stardroid.test
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.util.Log;
+import android.Manifest
+import android.util.Log
+import androidx.preference.PreferenceManager
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.rule.GrantPermissionRule
+import com.google.android.stardroid.R
+import com.google.android.stardroid.activities.CompassCalibrationActivity
+import com.google.android.stardroid.activities.DynamicStarMapActivity
+import com.google.android.stardroid.activities.util.FullscreenControlsManager
+import com.google.android.stardroid.control.LocationController
+import org.hamcrest.Matchers
+import org.junit.Before
+import org.junit.Rule
+import org.junit.rules.ExternalResource
+import org.junit.rules.RuleChain
 
-import androidx.preference.PreferenceManager;
-import androidx.test.espresso.matcher.ViewMatchers;
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
-import androidx.test.rule.GrantPermissionRule;
+class DynamicStarMapActivityTest {
+    private class SetupRule : ExternalResource() {
+        @Throws(Throwable::class)
+        override fun before() {
+            // We have to set preferences very early otherwise the app starts and doesn't pick them up.
+            val context = InstrumentationRegistry.getInstrumentation().targetContext
+            val editor = PreferenceManager.getDefaultSharedPreferences(context).edit()
+            editor.putBoolean(CompassCalibrationActivity.DONT_SHOW_CALIBRATION_DIALOG, true)
+            editor.commit()
+        }
 
-import com.google.android.stardroid.R;
-import com.google.android.stardroid.activities.CompassCalibrationActivity;
-import com.google.android.stardroid.activities.DynamicStarMapActivity;
-import com.google.android.stardroid.activities.util.FullscreenControlsManager;
-import com.google.android.stardroid.control.LocationController;
+        override fun after() {
+            // code to tear down the external resource
+        }
+    }
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExternalResource;
-import org.junit.rules.RuleChain;
+    private val firstRule = SetupRule()
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.pressBack;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.RootMatchers.isDialog;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
-import static org.hamcrest.Matchers.not;
+    @Rule
+    var testRule: ActivityScenarioRule<DynamicStarMapActivity> = ActivityScenarioRule(
+        DynamicStarMapActivity::class.java
+    )
 
-public class DynamicStarMapActivityTest {
+    @Rule
+    var chain = RuleChain.outerRule(firstRule).around(testRule)
 
-  private static class SetupRule extends ExternalResource {
-    @Override
-    protected void before() throws Throwable {
-      // We have to set preferences very early otherwise the app starts and doesn't pick them up.
-      Context context = getInstrumentation().getTargetContext();
-      SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-      editor.putBoolean(CompassCalibrationActivity.DONT_SHOW_CALIBRATION_DIALOG, true);
-      editor.commit();
-    };
+    // For other great ideas about the permissions dialogs see
+    // https://alexzh.com/ui-testing-of-android-runtime-permissions/
+    @Rule
+    var permissionRule = GrantPermissionRule.grant(
+        Manifest.permission.ACCESS_FINE_LOCATION
+    )
 
-    @Override
-    protected void after() {
-      // code to tear down the external resource
-    };
-  }
+    @Before
+    fun disableCalibrationDialog() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val editor = PreferenceManager.getDefaultSharedPreferences(context).edit()
+        editor.putBoolean(CompassCalibrationActivity.DONT_SHOW_CALIBRATION_DIALOG, true)
+        editor.putBoolean(
+            LocationController.NO_AUTO_LOCATE,
+            true
+        ) // This disables the Google Play Services check
+        editor.commit()
+    }
 
-  private SetupRule firstRule = new SetupRule();
+    //@Test
+    @Throws(Exception::class)
+    fun testSkyMapTouchControlsShowAndThenGo() {
+        // Wait for initial controls to go away. This is bad.
+        // Perhaps use idling resources?
+        Log.w(TAG, "Waiting....")
+        Thread.sleep((FullscreenControlsManager.INITIALLY_SHOW_CONTROLS_FOR_MILLIS * 2).toLong())
+        Log.w(TAG, "Click")
+        Espresso.onView(ViewMatchers.withId(R.id.skyrenderer_view))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        Espresso.onView(ViewMatchers.withId(R.id.main_sky_view_root)).perform(ViewActions.click())
+        // Espresso should make this kind of crap unnecessary - investigate what's going on...
+        // we probably have some ill behaved animation.
+        Thread.sleep(100)
+        // Not obvious why IsDisplayed not working here?
+        Espresso.onView(ViewMatchers.withId(R.id.layer_buttons_control))
+            .check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        Log.w(TAG, "Is visible? Waiting")
+        Espresso.onView(ViewMatchers.withId(R.id.main_sky_view_root)).perform(ViewActions.click())
+        Thread.sleep(100)
+        Espresso.onView(ViewMatchers.withId(R.id.layer_buttons_control)).check(
+            ViewAssertions.matches(
+                Matchers.not(
+                    ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)
+                )
+            )
+        )
+    }
 
-  @Rule
-  public ActivityScenarioRule<DynamicStarMapActivity> testRule =
-      new ActivityScenarioRule(DynamicStarMapActivity.class);
-
-  @Rule
-  public RuleChain chain = RuleChain.outerRule(firstRule).around(testRule);
-
-  // For other great ideas about the permissions dialogs see
-  // https://alexzh.com/ui-testing-of-android-runtime-permissions/
-  @Rule
-  public androidx.test.rule.GrantPermissionRule permissionRule = GrantPermissionRule.grant(
-      android.Manifest.permission.ACCESS_FINE_LOCATION
-  );
-
-  @Before
-  public void disableCalibrationDialog() {
-    Context context = getInstrumentation().getTargetContext();
-    SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-    editor.putBoolean(CompassCalibrationActivity.DONT_SHOW_CALIBRATION_DIALOG, true);
-    editor.putBoolean(LocationController.NO_AUTO_LOCATE, true);  // This disables the Google Play Services check
-    editor.commit();
-  }
-
-  private static final String TAG = "STARTEST";
-
-  //@Test
-  public void testSkyMapTouchControlsShowAndThenGo() throws Exception {
-    // Wait for initial controls to go away. This is bad.
-    // Perhaps use idling resources?
-    Log.w(TAG, "Waiting....");
-    Thread.sleep(FullscreenControlsManager.INITIALLY_SHOW_CONTROLS_FOR_MILLIS * 2);
-    Log.w(TAG, "Click");
-    onView(withId(R.id.skyrenderer_view)).check(matches(isDisplayed()));
-    onView(withId(R.id.main_sky_view_root)).perform(click());
-    // Espresso should make this kind of crap unnecessary - investigate what's going on...
-    // we probably have some ill behaved animation.
-    Thread.sleep(100);
-    // Not obvious why IsDisplayed not working here?
-    onView(withId(R.id.layer_buttons_control)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-    Log.w(TAG, "Is visible? Waiting");
-    onView(withId(R.id.main_sky_view_root)).perform(click());
-    Thread.sleep(100);
-    onView(withId(R.id.layer_buttons_control)).check(matches(not(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE))));
-  }
+    companion object {
+        private const val TAG = "STARTEST"
+    }
 }

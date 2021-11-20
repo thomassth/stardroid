@@ -11,266 +11,266 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package com.google.android.stardroid;
+package com.google.android.stardroid
 
-import android.app.Application;
-import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.os.Build;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
-
-import androidx.core.content.pm.PackageInfoCompat;
-import androidx.preference.PreferenceManager;
-
-import com.google.android.stardroid.layers.LayerManager;
-import com.google.android.stardroid.util.Analytics;
-import com.google.android.stardroid.util.AnalyticsInterface;
-import com.google.android.stardroid.util.MiscUtil;
-import com.google.android.stardroid.util.PreferenceChangeAnalyticsTracker;
-import com.google.android.stardroid.views.PreferencesButton;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.inject.Inject;
+import android.app.Application
+import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
+import android.os.Build
+import android.os.Bundle
+import android.text.TextUtils
+import android.util.Log
+import androidx.core.content.pm.PackageInfoCompat
+import androidx.preference.PreferenceManager
+import com.google.android.stardroid.StardroidApplication
+import com.google.android.stardroid.layers.LayerManager
+import com.google.android.stardroid.util.AnalyticsInterface
+import com.google.android.stardroid.util.MiscUtil.getTag
+import com.google.android.stardroid.util.PreferenceChangeAnalyticsTracker
+import com.google.android.stardroid.views.PreferencesButton.Companion.setAnalytics
+import java.util.*
+import javax.inject.Inject
 
 /**
  * The main Stardroid Application class.
  *
  * @author John Taylor
  */
-public class StardroidApplication extends Application {
-  private static final String TAG = MiscUtil.getTag(StardroidApplication.class);
-  private static final String PREVIOUS_APP_VERSION_PREF = "previous_app_version";
-  private static final String NONE = "Clean install";
-  private static final String UNKNOWN = "Unknown previous version";
+class StardroidApplication : Application() {
+    @JvmField
+    @Inject
+    var preferences: SharedPreferences? = null
 
-  @Inject SharedPreferences preferences;
-  // We keep a reference to this just to start it initializing.
-  @Inject LayerManager layerManager;
-  @Inject AnalyticsInterface analytics;
-  @Inject SensorManager sensorManager;
+    // We keep a reference to this just to start it initializing.
+    @JvmField
+    @Inject
+    var layerManager: LayerManager? = null
 
-  // We need to maintain references to this object to keep it from
-  // getting gc'd.
-  @Inject PreferenceChangeAnalyticsTracker preferenceChangeAnalyticsTracker;
-  private ApplicationComponent component;
+    @JvmField
+    @Inject
+    var analytics: AnalyticsInterface? = null
 
-  @Override
-  public void onCreate() {
-    Log.d(TAG, "StardroidApplication: onCreate");
-    super.onCreate();
+    @JvmField
+    @Inject
+    var sensorManager: SensorManager? = null
 
-    component = DaggerApplicationComponent.builder()
-        .applicationModule(new ApplicationModule(this))
-        .build();
-    component.inject(this);
+    // We need to maintain references to this object to keep it from
+    // getting gc'd.
+    @JvmField
+    @Inject
+    var preferenceChangeAnalyticsTracker: PreferenceChangeAnalyticsTracker? = null
+    var applicationComponent: ApplicationComponent? = null
+        private set
 
-    Log.i(TAG, "OS Version: " + android.os.Build.VERSION.RELEASE
-            + "(" + android.os.Build.VERSION.SDK_INT + ")");
-    String versionName = getVersionName();
-    Log.i(TAG, "Sky Map version " + versionName + " build " + getVersion());
+    override fun onCreate() {
+        Log.d(TAG, "StardroidApplication: onCreate")
+        super.onCreate()
+        applicationComponent = DaggerApplicationComponent.builder()
+            .applicationModule(ApplicationModule(this))
+            .build() as ApplicationComponent
+        applicationComponent!!.inject(this)
+        Log.i(
+            TAG, "OS Version: " + Build.VERSION.RELEASE
+                    + "(" + Build.VERSION.SDK_INT + ")"
+        )
+        val versionName = versionName
+        Log.i(TAG, "Sky Map version $versionName build $version")
 
-    // This populates the default values from the preferences XML file. See
-    // {@link DefaultValues} for more details.
-    PreferenceManager.setDefaultValues(this, R.xml.preference_screen, false);
-
-    setUpAnalytics(versionName);
-
-    performFeatureCheck();
-
-    Log.d(TAG, "StardroidApplication: -onCreate");
-  }
-
-  public ApplicationComponent getApplicationComponent() {
-    return component;
-  }
-
-  private void setUpAnalytics(String versionName) {
-    analytics.setEnabled(preferences.getBoolean(Analytics.PREF_KEY, true));
-
-    // Ugly hack since this isn't injectable
-    PreferencesButton.setAnalytics(analytics);
-
-    String previousVersion = preferences.getString(PREVIOUS_APP_VERSION_PREF, NONE);
-    boolean newUser = false;
-    if (previousVersion.equals(NONE)) {
-      // It's possible a previous version exists, it's just that it wasn't a recent enough
-      // version to have set PREVIOUS_APP_VERSION_PREF.  If so, we should see that the TOS
-      // have been accepted.
-      String oldPreviousVersionKey = "read_tos";
-      if (preferences.contains(oldPreviousVersionKey)) {
-        previousVersion = UNKNOWN;
-      } else {
-        // Best guess that this is the first every run of a new user.
-        // Could also be someone with a new device.
-        newUser = true;
-      }
-    }
-    analytics.setUserProperty(AnalyticsInterface.NEW_USER, Boolean.toString(newUser));
-
-    preferences.edit().putString(PREVIOUS_APP_VERSION_PREF, versionName).commit();
-    if (!previousVersion.equals(versionName)) {
-      // It's either an upgrade or a new installation
-      Log.d(TAG, "New installation: version " + versionName);
-      // No need to track any more - it's automatic in Firebase.
+        // This populates the default values from the preferences XML file. See
+        // {@link DefaultValues} for more details.
+        PreferenceManager.setDefaultValues(this, R.xml.preference_screen, false)
+        setUpAnalytics(versionName)
+        performFeatureCheck()
+        Log.d(TAG, "StardroidApplication: -onCreate")
     }
 
-    // It will be interesting to see *when* people use Sky Map.
-    Bundle b = new Bundle();
-    b.putInt(Analytics.START_EVENT_HOUR, Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
-    analytics.trackEvent(Analytics.START_EVENT, b);
+    private fun setUpAnalytics(versionName: String) {
+        analytics!!.setEnabled(preferences!!.getBoolean(AnalyticsInterface.PREF_KEY, true))
 
-    preferences.registerOnSharedPreferenceChangeListener(preferenceChangeAnalyticsTracker);
-  }
+        // Ugly hack since this isn't injectable
+        setAnalytics(analytics)
+        var previousVersion = preferences!!.getString(PREVIOUS_APP_VERSION_PREF, NONE)
+        var newUser = false
+        if (previousVersion == NONE) {
+            // It's possible a previous version exists, it's just that it wasn't a recent enough
+            // version to have set PREVIOUS_APP_VERSION_PREF.  If so, we should see that the TOS
+            // have been accepted.
+            val oldPreviousVersionKey = "read_tos"
+            if (preferences!!.contains(oldPreviousVersionKey)) {
+                previousVersion = UNKNOWN
+            } else {
+                // Best guess that this is the first every run of a new user.
+                // Could also be someone with a new device.
+                newUser = true
+            }
+        }
+        analytics!!.setUserProperty(
+            AnalyticsInterface.NEW_USER,
+            java.lang.Boolean.toString(newUser)
+        )
+        preferences!!.edit().putString(PREVIOUS_APP_VERSION_PREF, versionName).commit()
+        if (previousVersion != versionName) {
+            // It's either an upgrade or a new installation
+            Log.d(TAG, "New installation: version $versionName")
+            // No need to track any more - it's automatic in Firebase.
+        }
 
-  @Override
-  public void onTerminate() {
-    super.onTerminate();
-    analytics.setEnabled(false);
-  }
-
-  /**
-   * Returns the version string for Sky Map.
-   */
-  public String getVersionName() {
-    // TODO(jontayler): update to use the info created by gradle.
-    PackageManager packageManager = getPackageManager();
-    try {
-      PackageInfo info = packageManager.getPackageInfo(this.getPackageName(), 0);
-      return info.versionName;
-    } catch (NameNotFoundException e) {
-      Log.e(TAG, "Unable to obtain package info");
-      return "Unknown";
-    }
-  }
-
-  /**
-   * Returns the build number for Sky Map.
-   */
-  public long getVersion() {
-    PackageManager packageManager = getPackageManager();
-    try {
-      PackageInfo info = packageManager.getPackageInfo(this.getPackageName(), 0);
-      return PackageInfoCompat.getLongVersionCode(info);
-    } catch (NameNotFoundException e) {
-      Log.e(TAG, "Unable to obtain package info");
-      return -1;
-    }
-  }
-
-  /**
-   * Returns either the name of the sensor or a string version of the sensor type id, depending
-   * on the supported OS level along with some context.
-   */
-  public static String getSafeNameForSensor(Sensor sensor) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
-      return "Sensor type: " + sensor.getStringType() + ": " + sensor.getType();
-    } else {
-      return "Sensor type: " + sensor.getType();
-    }
-  }
-
-  /**
-   * Check what features are available to this phone and report back to analytics
-   * so we can judge when to add/drop support.
-   */
-  private void performFeatureCheck() {
-    if (sensorManager == null) {
-      Log.e(TAG, "No sensor manager");
-      analytics.setUserProperty(Analytics.DEVICE_SENSORS, Analytics.DEVICE_SENSORS_NONE);
-      return;
-    }
-    // Reported available sensors
-    List<String> reportedSensors = new ArrayList<>();
-    if (hasDefaultSensor(Sensor.TYPE_ACCELEROMETER)) {
-      reportedSensors.add(Analytics.DEVICE_SENSORS_ACCELEROMETER);
-    }
-    if (hasDefaultSensor(Sensor.TYPE_GYROSCOPE)) {
-      reportedSensors.add(Analytics.DEVICE_SENSORS_GYRO);
-    }
-    if (hasDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)) {
-      reportedSensors.add(Analytics.DEVICE_SENSORS_MAGNETIC);
-    }
-    if (hasDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)) {
-      reportedSensors.add(Analytics.DEVICE_SENSORS_ROTATION);
+        // It will be interesting to see *when* people use Sky Map.
+        val b = Bundle()
+        b.putInt(AnalyticsInterface.START_EVENT_HOUR, Calendar.getInstance()[Calendar.HOUR_OF_DAY])
+        analytics!!.trackEvent(AnalyticsInterface.START_EVENT, b)
+        preferences!!.registerOnSharedPreferenceChangeListener(preferenceChangeAnalyticsTracker)
     }
 
-    // TODO: Change to String.join once we're at API > 26
-    analytics.setUserProperty(
-            Analytics.DEVICE_SENSORS, TextUtils.join("|", reportedSensors));
+    override fun onTerminate() {
+        super.onTerminate()
+        analytics!!.setEnabled(false)
+    }// TODO(jontayler): update to use the info created by gradle.
 
-    // Check for a particularly strange combo - it would be weird to have a rotation sensor
-    // but no accelerometer or magnetic field sensor
-    boolean hasRotationSensor = false;
-    if (hasDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)) {
-      if (hasDefaultSensor(Sensor.TYPE_ACCELEROMETER) && hasDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
-              && hasDefaultSensor(Sensor.TYPE_GYROSCOPE)) {
-        hasRotationSensor = true;
-      } else if (hasDefaultSensor(Sensor.TYPE_ACCELEROMETER) && hasDefaultSensor(
-              Sensor.TYPE_MAGNETIC_FIELD)) {
-        // Even though it allegedly has the rotation vector sensor too many gyro-less phones
-        // lie about this, so put these devices on the 'classic' sensor code for now.
-        hasRotationSensor = false;
-      }
+    /**
+     * Returns the version string for Sky Map.
+     */
+    val versionName: String
+        get() {
+            // TODO(jontayler): update to use the info created by gradle.
+            val packageManager = packageManager
+            return try {
+                val info = packageManager.getPackageInfo(this.packageName, 0)
+                info.versionName
+            } catch (e: PackageManager.NameNotFoundException) {
+                Log.e(TAG, "Unable to obtain package info")
+                "Unknown"
+            }
+        }
+
+    /**
+     * Returns the build number for Sky Map.
+     */
+    val version: Long
+        get() {
+            val packageManager = packageManager
+            return try {
+                val info = packageManager.getPackageInfo(this.packageName, 0)
+                PackageInfoCompat.getLongVersionCode(info)
+            } catch (e: PackageManager.NameNotFoundException) {
+                Log.e(TAG, "Unable to obtain package info")
+                -1
+            }
+        }
+
+    /**
+     * Check what features are available to this phone and report back to analytics
+     * so we can judge when to add/drop support.
+     */
+    private fun performFeatureCheck() {
+        if (sensorManager == null) {
+            Log.e(TAG, "No sensor manager")
+            analytics!!.setUserProperty(AnalyticsInterface.DEVICE_SENSORS, AnalyticsInterface.DEVICE_SENSORS_NONE)
+            return
+        }
+        // Reported available sensors
+        val reportedSensors: MutableList<String?> = ArrayList()
+        if (hasDefaultSensor(Sensor.TYPE_ACCELEROMETER)) {
+            reportedSensors.add(AnalyticsInterface.DEVICE_SENSORS_ACCELEROMETER)
+        }
+        if (hasDefaultSensor(Sensor.TYPE_GYROSCOPE)) {
+            reportedSensors.add(AnalyticsInterface.DEVICE_SENSORS_GYRO)
+        }
+        if (hasDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)) {
+            reportedSensors.add(AnalyticsInterface.DEVICE_SENSORS_MAGNETIC)
+        }
+        if (hasDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)) {
+            reportedSensors.add(AnalyticsInterface.DEVICE_SENSORS_ROTATION)
+        }
+
+        // TODO: Change to String.join once we're at API > 26
+        analytics!!.setUserProperty(
+            AnalyticsInterface.DEVICE_SENSORS, TextUtils.join("|", reportedSensors)
+        )
+
+        // Check for a particularly strange combo - it would be weird to have a rotation sensor
+        // but no accelerometer or magnetic field sensor
+        var hasRotationSensor = false
+        if (hasDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)) {
+            if (hasDefaultSensor(Sensor.TYPE_ACCELEROMETER) && hasDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
+                && hasDefaultSensor(Sensor.TYPE_GYROSCOPE)
+            ) {
+                hasRotationSensor = true
+            } else if (hasDefaultSensor(Sensor.TYPE_ACCELEROMETER) && hasDefaultSensor(
+                    Sensor.TYPE_MAGNETIC_FIELD
+                )
+            ) {
+                // Even though it allegedly has the rotation vector sensor too many gyro-less phones
+                // lie about this, so put these devices on the 'classic' sensor code for now.
+                hasRotationSensor = false
+            }
+        }
+
+        // Enable Gyro if available and user hasn't already disabled it.
+        if (!preferences!!.contains(ApplicationConstants.SHARED_PREFERENCE_DISABLE_GYRO)) {
+            preferences!!.edit().putBoolean(
+                ApplicationConstants.SHARED_PREFERENCE_DISABLE_GYRO, !hasRotationSensor
+            ).apply()
+        }
+
+        // Lastly a dump of all the sensors.
+        Log.d(TAG, "All sensors:")
+        val allSensors = sensorManager!!.getSensorList(Sensor.TYPE_ALL)
+        val sensorTypes: MutableSet<String> = HashSet()
+        for (sensor in allSensors) {
+            Log.i(TAG, sensor.name)
+            sensorTypes.add(getSafeNameForSensor(sensor))
+        }
+        Log.d(TAG, "All sensors summary:")
+        for (sensorType in sensorTypes) {
+            Log.i(TAG, sensorType)
+        }
     }
 
-    // Enable Gyro if available and user hasn't already disabled it.
-    if (!preferences.contains(ApplicationConstants.SHARED_PREFERENCE_DISABLE_GYRO)) {
-      preferences.edit().putBoolean(
-          ApplicationConstants.SHARED_PREFERENCE_DISABLE_GYRO, !hasRotationSensor).apply();
+    private fun hasDefaultSensor(sensorType: Int): Boolean {
+        if (sensorManager == null) {
+            return false
+        }
+        val sensor = sensorManager!!.getDefaultSensor(sensorType) ?: return false
+        val dummy: SensorEventListener = object : SensorEventListener {
+            override fun onSensorChanged(event: SensorEvent) {
+                // Nothing
+            }
+
+            override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
+                // Nothing
+            }
+        }
+        val success = sensorManager!!.registerListener(
+            dummy, sensor, SensorManager.SENSOR_DELAY_UI
+        )
+        if (!success) {
+            analytics!!.setUserProperty(AnalyticsInterface.SENSOR_LIAR, "true")
+        }
+        sensorManager!!.unregisterListener(dummy)
+        return success
     }
 
-    // Lastly a dump of all the sensors.
-    Log.d(TAG, "All sensors:");
-    List<Sensor> allSensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
-    Set<String> sensorTypes = new HashSet<>();
-    for (Sensor sensor : allSensors) {
-      Log.i(TAG, sensor.getName());
-      sensorTypes.add(getSafeNameForSensor(sensor));
-    }
-    Log.d(TAG, "All sensors summary:");
-    for (String sensorType : sensorTypes) {
-      Log.i(TAG, sensorType);
-    }
-  }
+    companion object {
+        private val TAG = getTag(StardroidApplication::class.java)
+        private const val PREVIOUS_APP_VERSION_PREF = "previous_app_version"
+        private const val NONE = "Clean install"
+        private const val UNKNOWN = "Unknown previous version"
 
-  private boolean hasDefaultSensor(int sensorType) {
-    if (sensorManager == null) {
-      return false;
+        /**
+         * Returns either the name of the sensor or a string version of the sensor type id, depending
+         * on the supported OS level along with some context.
+         */
+        fun getSafeNameForSensor(sensor: Sensor): String {
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+                "Sensor type: " + sensor.stringType + ": " + sensor.type
+            } else {
+                "Sensor type: " + sensor.type
+            }
+        }
     }
-    Sensor sensor = sensorManager.getDefaultSensor(sensorType);
-    if (sensor == null) {
-      return false;
-    }
-    SensorEventListener dummy = new SensorEventListener() {
-      @Override
-      public void onSensorChanged(SensorEvent event) {
-        // Nothing
-      }
-
-      @Override
-      public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        // Nothing
-      }
-    };
-    boolean success = sensorManager.registerListener(
-        dummy, sensor, SensorManager.SENSOR_DELAY_UI);
-    if (!success) {
-      analytics.setUserProperty(Analytics.SENSOR_LIAR, "true");
-    }
-    sensorManager.unregisterListener(dummy);
-    return success;
-  }
 }

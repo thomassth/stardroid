@@ -58,7 +58,7 @@ class EditSettingsActivity : PreferenceActivity() {
     var sharedPreferences: SharedPreferences? = null
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as StardroidApplication).applicationComponent.inject(this)
+        (application as StardroidApplication).applicationComponent!!.inject(this)
         activityLightLevelManager = ActivityLightLevelManager(
             ActivityLightLevelChanger(this, null),
             PreferenceManager.getDefaultSharedPreferences(this)
