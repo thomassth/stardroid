@@ -56,7 +56,7 @@ import com.google.android.stardroid.touch.DragRotateZoomGestureDetector
 import com.google.android.stardroid.touch.GestureInterpreter
 import com.google.android.stardroid.touch.MapMover
 import com.google.android.stardroid.util.Analytics
-import com.google.android.stardroid.util.AnalyticsInterface.*
+import com.google.android.stardroid.util.AnalyticsInterface
 import com.google.android.stardroid.util.MiscUtil.getTag
 import com.google.android.stardroid.util.SensorAccuracyMonitor
 import com.google.android.stardroid.views.ButtonLayerView
@@ -363,24 +363,24 @@ class DynamicStarMapActivity : InjectableActivity(), OnSharedPreferenceChangeLis
             R.id.menu_item_search -> {
                 Log.d(TAG, "Search")
                 menuEventBundle.putString(
-                    MENU_ITEM_EVENT_VALUE,
-                    SEARCH_REQUESTED_LABEL
+                    AnalyticsInterface.MENU_ITEM_EVENT_VALUE,
+                    AnalyticsInterface.SEARCH_REQUESTED_LABEL
                 )
                 onSearchRequested()
             }
             R.id.menu_item_settings -> {
                 Log.d(TAG, "Settings")
                 menuEventBundle.putString(
-                    MENU_ITEM_EVENT_VALUE,
-                    SETTINGS_OPENED_LABEL
+                    AnalyticsInterface.MENU_ITEM_EVENT_VALUE,
+                    AnalyticsInterface.SETTINGS_OPENED_LABEL
                 )
                 startActivity(Intent(this, EditSettingsActivity::class.java))
             }
             R.id.menu_item_help -> {
                 Log.d(TAG, "Help")
                 menuEventBundle.putString(
-                    MENU_ITEM_EVENT_VALUE,
-                    HELP_OPENED_LABEL
+                    AnalyticsInterface.MENU_ITEM_EVENT_VALUE,
+                    AnalyticsInterface.HELP_OPENED_LABEL
                 )
                 helpDialogFragment!!.show(fragmentManager!!, "Help Dialog")
             }
@@ -392,15 +392,15 @@ class DynamicStarMapActivity : InjectableActivity(), OnSharedPreferenceChangeLis
                     if (nightMode) "NIGHT" else "DAY"
                 ).commit()
                 menuEventBundle.putString(
-                    MENU_ITEM_EVENT_VALUE,
-                    TOGGLED_NIGHT_MODE_LABEL
+                    AnalyticsInterface.MENU_ITEM_EVENT_VALUE,
+                    AnalyticsInterface.TOGGLED_NIGHT_MODE_LABEL
                 )
             }
             R.id.menu_item_time -> {
                 Log.d(TAG, "Starting Time Dialog from menu")
                 menuEventBundle.putString(
-                    MENU_ITEM_EVENT_VALUE,
-                    TIME_TRAVEL_OPENED_LABEL
+                    AnalyticsInterface.MENU_ITEM_EVENT_VALUE,
+                    AnalyticsInterface.TIME_TRAVEL_OPENED_LABEL
                 )
                 if (!timePlayerUI!!.isShown) {
                     Log.d(TAG, "Resetting time in time travel dialog.")
@@ -413,24 +413,24 @@ class DynamicStarMapActivity : InjectableActivity(), OnSharedPreferenceChangeLis
             R.id.menu_item_gallery -> {
                 Log.d(TAG, "Loading gallery")
                 menuEventBundle.putString(
-                    MENU_ITEM_EVENT_VALUE,
-                    GALLERY_OPENED_LABEL
+                    AnalyticsInterface.MENU_ITEM_EVENT_VALUE,
+                    AnalyticsInterface.GALLERY_OPENED_LABEL
                 )
                 startActivity(Intent(this, ImageGalleryActivity::class.java))
             }
             R.id.menu_item_tos -> {
                 Log.d(TAG, "Loading ToS")
                 menuEventBundle.putString(
-                    MENU_ITEM_EVENT_VALUE,
-                    TOS_OPENED_LABEL
+                    AnalyticsInterface.MENU_ITEM_EVENT_VALUE,
+                    AnalyticsInterface.TOS_OPENED_LABEL
                 )
                 eulaDialogFragmentNoButtons!!.show(fragmentManager!!, "Eula Dialog No Buttons")
             }
             R.id.menu_item_calibrate -> {
                 Log.d(TAG, "Loading Calibration")
                 menuEventBundle.putString(
-                    MENU_ITEM_EVENT_VALUE,
-                    CALIBRATION_OPENED_LABEL
+                    AnalyticsInterface.MENU_ITEM_EVENT_VALUE,
+                    AnalyticsInterface.CALIBRATION_OPENED_LABEL
                 )
                 val intent = Intent(this, CompassCalibrationActivity::class.java)
                 intent.putExtra(CompassCalibrationActivity.HIDE_CHECKBOX, true)
@@ -439,8 +439,8 @@ class DynamicStarMapActivity : InjectableActivity(), OnSharedPreferenceChangeLis
             R.id.menu_item_diagnostics -> {
                 Log.d(TAG, "Loading Diagnostics")
                 menuEventBundle.putString(
-                    MENU_ITEM_EVENT_VALUE,
-                    DIAGNOSTICS_OPENED_LABEL
+                    AnalyticsInterface.MENU_ITEM_EVENT_VALUE,
+                    AnalyticsInterface.DIAGNOSTICS_OPENED_LABEL
                 )
                 startActivity(Intent(this, DiagnosticActivity::class.java))
             }
@@ -449,7 +449,7 @@ class DynamicStarMapActivity : InjectableActivity(), OnSharedPreferenceChangeLis
                 return false
             }
         }
-        analytics!!.trackEvent(MENU_ITEM_EVENT, menuEventBundle)
+        analytics!!.trackEvent(AnalyticsInterface.MENU_ITEM_EVENT, menuEventBundle)
         return true
     }
 
@@ -486,8 +486,8 @@ class DynamicStarMapActivity : InjectableActivity(), OnSharedPreferenceChangeLis
         val bucket = getSessionLengthBucket(sessionLengthSeconds)
         val b = Bundle()
         // Let's see how well Analytics buckets things and log the raw number
-        b.putInt(SESSION_LENGTH_TIME_VALUE, sessionLengthSeconds)
-        analytics!!.trackEvent(SESSION_LENGTH_EVENT, b)
+        b.putInt(AnalyticsInterface.SESSION_LENGTH_TIME_VALUE, sessionLengthSeconds)
+        analytics!!.trackEvent(AnalyticsInterface.SESSION_LENGTH_EVENT, b)
     }
 
     public override fun onResume() {
@@ -659,9 +659,9 @@ class DynamicStarMapActivity : InjectableActivity(), OnSharedPreferenceChangeLis
             queryString!!
         )
         val b = Bundle()
-        b.putString(SEARCH_TERM, queryString)
-        b.putBoolean(SEARCH_SUCCESS, results.size > 0)
-        analytics!!.trackEvent(SEARCH_EVENT, b)
+        b.putString(AnalyticsInterface.SEARCH_TERM, queryString)
+        b.putBoolean(AnalyticsInterface.SEARCH_SUCCESS, results.size > 0)
+        analytics!!.trackEvent(AnalyticsInterface.SEARCH_EVENT, b)
         if (results.isEmpty()) {
             Log.d(TAG, "No results returned")
             noSearchResultsDialogFragment!!.show(fragmentManager, "No Search Results")
@@ -706,7 +706,7 @@ class DynamicStarMapActivity : InjectableActivity(), OnSharedPreferenceChangeLis
 
     private fun setAutoMode(auto: Boolean) {
         val b = Bundle()
-        b.putString(MENU_ITEM_EVENT_VALUE, TOGGLED_MANUAL_MODE_LABEL)
+        b.putString(AnalyticsInterface.MENU_ITEM_EVENT_VALUE, AnalyticsInterface.TOGGLED_MANUAL_MODE_LABEL)
         controller!!.isAutoMode = auto
         if (auto) {
             sensorAccuracyMonitor!!.start()

@@ -28,7 +28,7 @@ import com.google.android.stardroid.activities.EditSettingsActivity
 import com.google.android.stardroid.activities.util.ActivityLightLevelChanger
 import com.google.android.stardroid.activities.util.ActivityLightLevelManager
 import com.google.android.stardroid.util.Analytics
-import com.google.android.stardroid.util.AnalyticsInterface.PREF_KEY
+import com.google.android.stardroid.util.AnalyticsInterface
 import com.google.android.stardroid.util.MiscUtil.getTag
 import java.io.IOException
 import javax.inject.Inject
@@ -138,7 +138,7 @@ class EditSettingsActivity : PreferenceActivity() {
      */
     private fun updatePreferences() {
         Log.d(TAG, "Updating preferences")
-        analytics!!.setEnabled(preferenceFragment!!.findPreference(PREF_KEY).isEnabled)
+        analytics!!.setEnabled(preferenceFragment!!.findPreference(AnalyticsInterface.PREF_KEY).isEnabled)
     }
 
     protected fun setLatLongFromPlace(place: String): Boolean {

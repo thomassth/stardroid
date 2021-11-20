@@ -11,28 +11,23 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package com.google.android.stardroid.layers
 
-package com.google.android.stardroid.layers;
-
-import android.content.res.Resources;
-import android.util.Log;
-
-import com.google.android.stardroid.R;
-import com.google.android.stardroid.base.TimeConstants;
-import com.google.android.stardroid.control.AstronomerModel;
-import com.google.android.stardroid.ephemeris.Planet;
-import com.google.android.stardroid.renderer.RendererController;
-import com.google.android.stardroid.search.SearchResult;
-import com.google.android.stardroid.math.CoordinateManipulationsKt;
-import com.google.android.stardroid.math.RaDec;
-import com.google.android.stardroid.space.Universe;
-import com.google.android.stardroid.util.MiscUtil;
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.locks.ReentrantLock;
+import android.content.res.Resources
+import android.util.Log
+import com.google.android.stardroid.util.MiscUtil.getTag
+import com.google.android.stardroid.math.getGeocentricCoords
+import com.google.android.stardroid.control.AstronomerModel
+import com.google.android.stardroid.renderer.RendererController
+import com.google.android.stardroid.layers.SkyGradientLayer
+import com.google.android.stardroid.math.RaDec
+import com.google.android.stardroid.ephemeris.Planet
+import com.google.android.stardroid.R
+import com.google.android.stardroid.util.MiscUtil
+import com.google.android.stardroid.base.TimeConstants
+import com.google.android.stardroid.search.SearchResult
+import com.google.android.stardroid.space.Universe
+import java.util.concurrent.locks.ReentrantLock
 
 /**
  * If enabled, keeps the sky gradient up to date.
@@ -40,88 +35,67 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author John Taylor
  * @author Brent Bryan
  */
-public class SkyGradientLayer implements Layer {
-  private static final String TAG = MiscUtil.getTag(SkyGradientLayer.class);
-  private static final long UPDATE_FREQUENCY_MS = 5L * TimeConstants.MILLISECONDS_PER_MINUTE;
-  public static final Universe universe = new Universe();
-
-  private final ReentrantLock rendererLock = new ReentrantLock();
-  private final AstronomerModel model;
-  private final Resources resources;
-
-  private RendererController renderer;
-  private long lastUpdateTimeMs = 0L;
-
-  public SkyGradientLayer(AstronomerModel model, Resources resources) {
-    this.model = model;
-    this.resources = resources;
-  }
-
-  @Override
-  public void initialize() {}
-
-  @Override
-  public void registerWithRenderer(RendererController controller) {
-    this.renderer = controller;
-    redraw();
-  }
-
-  @Override
-  public void setVisible(boolean visible) {
-    Log.d(TAG, "Setting showSkyGradient " + visible);
-    if (visible) {
-      redraw();
-    } else {
-      rendererLock.lock();
-      try {
-        renderer.queueDisableSkyGradient();
-      } finally {
-        rendererLock.unlock();
-      }
+class SkyGradientLayer(private val model: AstronomerModel, private val resources: Resources) :
+    Layer {
+    private val rendererLock = ReentrantLock()
+    private var renderer: RendererController? = null
+    private var lastUpdateTimeMs = 0L
+    override fun initialize() {}
+    override fun registerWithRenderer(controller: RendererController?) {
+        renderer = controller
+        redraw()
     }
-  }
 
-  /** Redraws the sky shading gradient using the model's current time. */
-  protected void redraw() {
-    Date modelTime = model.getTime();
-    if (Math.abs(modelTime.getTime() - lastUpdateTimeMs) > UPDATE_FREQUENCY_MS) {
-      lastUpdateTimeMs = modelTime.getTime();
-
-      RaDec sunPosition = universe.solarSystemObjectFor(Planet.Sun).getRaDec(modelTime);
-      // Log.d(TAG, "Enabling sky gradient with sun position " + sunPosition);
-      rendererLock.lock();
-      try {
-        renderer.queueEnableSkyGradient(CoordinateManipulationsKt.getGeocentricCoords(sunPosition));
-      } finally {
-        rendererLock.unlock();
-      }
+    override fun setVisible(visible: Boolean) {
+        Log.d(TAG, "Setting showSkyGradient $visible")
+        if (visible) {
+            redraw()
+        } else {
+            rendererLock.lock()
+            try {
+                renderer!!.queueDisableSkyGradient()
+            } finally {
+                rendererLock.unlock()
+            }
+        }
     }
-  }
 
-  @Override
-  public int getLayerDepthOrder() {
-    return -10;
-  }
+    /** Redraws the sky shading gradient using the model's current time.  */
+    protected fun redraw() {
+        val modelTime = model.time
+        if (Math.abs(modelTime.time - lastUpdateTimeMs) > UPDATE_FREQUENCY_MS) {
+            lastUpdateTimeMs = modelTime.time
+            val sunPosition = universe.solarSystemObjectFor(Planet.Sun).getRaDec(modelTime)
+            // Log.d(TAG, "Enabling sky gradient with sun position " + sunPosition);
+            rendererLock.lock()
+            try {
+                renderer!!.queueEnableSkyGradient(getGeocentricCoords(sunPosition))
+            } finally {
+                rendererLock.unlock()
+            }
+        }
+    }
 
-  public String getPreferenceId() {
-    return "source_provider." + getLayerNameId();
-  }
+    override val layerDepthOrder: Int
+        get() = -10
+    override val preferenceId: String
+        get() = "source_provider.$layerNameId"
+    override val layerName: String
+        get() = resources.getString(layerNameId)
+    private val layerNameId: Int
+        private get() = R.string.show_sky_gradient
 
-  public String getLayerName() {
-    return resources.getString(getLayerNameId());
-  }
+    override fun searchByObjectName(name: String): List<SearchResult?>? {
+        return emptyList()
+    }
 
-  private int getLayerNameId() {
-    return R.string.show_sky_gradient;
-  }
+    override fun getObjectNamesMatchingPrefix(prefix: String): Set<String> {
+        return emptySet()
+    }
 
-  @Override
-  public List<SearchResult> searchByObjectName(String name) {
-    return Collections.emptyList();
-  }
-
-  @Override
-  public Set<String> getObjectNamesMatchingPrefix(String prefix) {
-    return Collections.emptySet();
-  }
+    companion object {
+        private val TAG = getTag(SkyGradientLayer::class.java)
+        private const val UPDATE_FREQUENCY_MS = 5L * TimeConstants.MILLISECONDS_PER_MINUTE
+        val universe = Universe()
+    }
 }

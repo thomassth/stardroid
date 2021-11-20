@@ -11,22 +11,20 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package com.google.android.stardroid.layers
 
-package com.google.android.stardroid.layers;
-
-import android.content.res.Resources;
-import android.graphics.Color;
-
-import com.google.android.stardroid.R;
-import com.google.android.stardroid.source.AbstractAstronomicalSource;
-import com.google.android.stardroid.source.AstronomicalSource;
-import com.google.android.stardroid.source.LinePrimitive;
-import com.google.android.stardroid.source.TextPrimitive;
-import com.google.android.stardroid.math.CoordinateManipulationsKt;
-import com.google.android.stardroid.math.Vector3;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.content.res.Resources
+import android.graphics.Color
+import com.google.android.stardroid.math.getGeocentricCoords
+import com.google.android.stardroid.layers.AbstractSourceLayer
+import com.google.android.stardroid.source.AstronomicalSource
+import com.google.android.stardroid.layers.EclipticLayer.EclipticSource
+import com.google.android.stardroid.R
+import com.google.android.stardroid.source.AbstractAstronomicalSource
+import com.google.android.stardroid.source.LinePrimitive
+import com.google.android.stardroid.source.TextPrimitive
+import com.google.android.stardroid.math.Vector3
+import java.util.ArrayList
 
 /**
  * Creates a Layer for the Ecliptic.
@@ -34,65 +32,51 @@ import java.util.List;
  * @author John Taylor
  * @author Brent Bryan
  */
-
-public class EclipticLayer extends AbstractSourceLayer {
-  public EclipticLayer(Resources resources) {
-    super(resources, false);
-  }
-
-  @Override
-  protected void initializeAstroSources(ArrayList<AstronomicalSource> sources) {
-    sources.add(new EclipticSource(getResources()));
-  }
-
-  @Override
-  public int getLayerDepthOrder() {
-    return 50;
-  }
-
-  @Override
-  protected int getLayerNameId() {
-    return R.string.show_grid_pref;
-  }
-
-  @Override
-  public String getPreferenceId() {
-    return "source_provider.4";
-  }
-
-  /** Implementation of {@link AstronomicalSource} for the ecliptic source. */
-  private static class EclipticSource extends AbstractAstronomicalSource {
-    // Earth's Angular Tilt
-    private static final float EPSILON = 23.439281f;
-    private static final int LINE_COLOR = Color.argb(20, 248, 239, 188);
-
-    private ArrayList<LinePrimitive> linePrimitives = new ArrayList<LinePrimitive>();
-    private ArrayList<TextPrimitive> textPrimitives = new ArrayList<TextPrimitive>();
-
-    public EclipticSource(Resources res) {
-      String title = res.getString(R.string.ecliptic);
-      textPrimitives.add(new TextPrimitive(90.0f, EPSILON, title, LINE_COLOR));
-      textPrimitives.add(new TextPrimitive(270f, -EPSILON, title, LINE_COLOR));
-
-      // Create line source.
-      float[] ra = {0, 90, 180, 270, 0};
-      float[] dec = {0, EPSILON, 0, -EPSILON, 0};
-
-      ArrayList<Vector3> vertices = new ArrayList<Vector3>();
-      for (int i = 0; i < ra.length; ++i) {
-        vertices.add(CoordinateManipulationsKt.getGeocentricCoords(ra[i], dec[i]));
-      }
-      linePrimitives.add(new LinePrimitive(LINE_COLOR, vertices, 1.5f));
+class EclipticLayer(resources: Resources?) : AbstractSourceLayer(
+    resources!!, false
+) {
+    override fun initializeAstroSources(sources: ArrayList<AstronomicalSource>) {
+        sources.add(EclipticSource(resources))
     }
 
-    @Override
-    public List<TextPrimitive> getLabels() {
-      return textPrimitives;
+    override val layerDepthOrder: Int
+        get() = 50
+
+    override fun getLayerNameId(): Int {
+        return R.string.show_grid_pref
     }
 
-    @Override
-    public List<LinePrimitive> getLines() {
-      return linePrimitives;
+    override val preferenceId: String
+        get() = "source_provider.4"
+
+    /** Implementation of [AstronomicalSource] for the ecliptic source.  */
+    private class EclipticSource(res: Resources) : AbstractAstronomicalSource() {
+        private val linePrimitives = ArrayList<LinePrimitive>()
+        private val textPrimitives = ArrayList<TextPrimitive>()
+        override val labels: List<TextPrimitive>
+            get() = textPrimitives
+        override val lines: List<LinePrimitive>
+            get() = linePrimitives
+
+        companion object {
+            // Earth's Angular Tilt
+            private const val EPSILON = 23.439281f
+            private val LINE_COLOR = Color.argb(20, 248, 239, 188)
+        }
+
+        init {
+            val title = res.getString(R.string.ecliptic)
+            textPrimitives.add(TextPrimitive(90.0f, EPSILON, title, LINE_COLOR))
+            textPrimitives.add(TextPrimitive(270f, -EPSILON, title, LINE_COLOR))
+
+            // Create line source.
+            val ra = floatArrayOf(0f, 90f, 180f, 270f, 0f)
+            val dec = floatArrayOf(0f, EPSILON, 0f, -EPSILON, 0f)
+            val vertices = ArrayList<Vector3?>()
+            for (i in ra.indices) {
+                vertices.add(getGeocentricCoords(ra[i], dec[i]))
+            }
+            linePrimitives.add(LinePrimitive(LINE_COLOR, vertices, 1.5f))
+        }
     }
-  }
 }

@@ -122,7 +122,7 @@ class ApplicationModule(app: StardroidApplication) {
     @Provides
     @Singleton
     fun provideLayerManager(
-        assetManager: AssetManager?, resources: Resources?, model: AstronomerModel?,
+        assetManager: AssetManager?, resources: Resources, model: AstronomerModel,
         preferences: SharedPreferences?
     ): LayerManager {
         Log.i(TAG, "Initializing LayerManager")

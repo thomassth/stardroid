@@ -11,40 +11,32 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package com.google.android.stardroid.layers
 
-package com.google.android.stardroid.layers;
-
-import android.content.res.AssetManager;
-import android.content.res.Resources;
-
-import com.google.android.stardroid.R;
+import android.content.res.AssetManager
+import android.content.res.Resources
+import com.google.android.stardroid.R
 
 /**
- * An implementation of the {@link AbstractFileBasedLayer} to display
+ * An implementation of the [AbstractFileBasedLayer] to display
  * Constellations in the renderer.
  *
  * @author John Taylor
  * @author Brent Bryan
  */
-public class NewConstellationsLayer extends AbstractFileBasedLayer {
-  public NewConstellationsLayer(AssetManager assetManager, Resources resources) {
-    super(assetManager, resources, "constellations.binary");
-  }
+class NewConstellationsLayer(assetManager: AssetManager?, resources: Resources?) :
+    AbstractFileBasedLayer(
+        assetManager!!, resources!!, "constellations.binary"
+    ) {
+    override val layerDepthOrder: Int
+        get() = 10
 
-  @Override
-  public int getLayerDepthOrder() {
-    return 10;
-  }
+    public override fun getLayerNameId(): Int {
+        // TODO(johntaylor): rename this string id.
+        return R.string.show_constellations_pref
+    }
 
-  @Override
-  public int getLayerNameId() {
-    // TODO(johntaylor): rename this string id.
-    return R.string.show_constellations_pref;
-  }
-  
-  // TODO(brent): Remove this.
-  @Override
-  public String getPreferenceId() {
-    return "source_provider.1";
-  }
+    // TODO(brent): Remove this.
+    override val preferenceId: String
+        get() = "source_provider.1"
 }

@@ -11,58 +11,47 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package com.google.android.stardroid.layers
 
-package com.google.android.stardroid.layers;
-
-import android.content.SharedPreferences;
-import android.content.res.Resources;
-
-import com.google.android.stardroid.R;
-import com.google.android.stardroid.control.AstronomerModel;
-import com.google.android.stardroid.ephemeris.Planet;
-import com.google.android.stardroid.ephemeris.PlanetSource;
-import com.google.android.stardroid.source.AstronomicalSource;
-
-import java.util.ArrayList;
+import android.content.SharedPreferences
+import android.content.res.Resources
+import com.google.android.stardroid.R
+import com.google.android.stardroid.control.AstronomerModel
+import com.google.android.stardroid.ephemeris.Planet
+import com.google.android.stardroid.ephemeris.PlanetSource
+import com.google.android.stardroid.source.AstronomicalSource
+import java.util.*
 
 /**
- * An implementation of the {@link Layer} interface for displaying planets in
+ * An implementation of the [Layer] interface for displaying planets in
  * the Renderer.
  *
  * @author John Taylor
  * @author Brent Bryan
  */
-public class PlanetsLayer extends AbstractSourceLayer {
-  private final SharedPreferences preferences;
-  private final AstronomerModel model;
-
-  public PlanetsLayer(AstronomerModel model, Resources resources, SharedPreferences preferences) {
-    super(resources, true);
-    this.preferences = preferences;
-    this.model = model;
-  }
-
-  @Override
-  protected void initializeAstroSources(ArrayList<AstronomicalSource> sources) {
-    for (Planet planet : Planet.values()) {
-      sources.add(new PlanetSource(planet, getResources(), model, preferences));
+class PlanetsLayer(
+    private val model: AstronomerModel,
+    resources: Resources?,
+    private val preferences: SharedPreferences
+) : AbstractSourceLayer(
+    resources!!, true
+) {
+    override fun initializeAstroSources(sources: ArrayList<AstronomicalSource>) {
+        for (planet in Planet.values()) {
+            sources.add(PlanetSource(planet, resources, model, preferences))
+        }
     }
-  }
 
-  // TODO(brent): Remove this.
-  @Override
-  public String getPreferenceId() {
-    return "source_provider.3";
-  }
+    // TODO(brent): Remove this.
+    override val preferenceId: String
+        get() = "source_provider.3"
 
-  @Override
-  public int getLayerDepthOrder() {
     // TODO(brent): refactor these to a common location.
-    return 60;
-  }
+    override val layerDepthOrder: Int
+        get() =// TODO(brent): refactor these to a common location.
+            60
 
-  @Override
-  protected int getLayerNameId() {
-    return R.string.show_planets_pref;  // TODO(johntaylor): rename the string id.
-  }
+    override fun getLayerNameId(): Int {
+        return R.string.show_planets_pref // TODO(johntaylor): rename the string id.
+    }
 }

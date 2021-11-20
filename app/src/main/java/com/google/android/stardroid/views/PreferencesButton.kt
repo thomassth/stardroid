@@ -25,8 +25,6 @@ import androidx.preference.PreferenceManager
 import com.google.android.stardroid.R
 import com.google.android.stardroid.util.Analytics
 import com.google.android.stardroid.util.AnalyticsInterface
-import com.google.android.stardroid.util.AnalyticsInterface.PREFERENCE_BUTTON_TOGGLE_EVENT
-import com.google.android.stardroid.util.AnalyticsInterface.PREFERENCE_BUTTON_TOGGLE_VALUE
 import com.google.android.stardroid.util.MiscUtil.getTag
 import com.google.android.stardroid.views.PreferencesButton
 
@@ -94,8 +92,8 @@ class PreferencesButton : androidx.appcompat.widget.AppCompatImageButton, View.O
         isOn = !isOn
         if (analytics != null) {
             val b = Bundle()
-            b.putString(PREFERENCE_BUTTON_TOGGLE_VALUE, "$prefKey:$isOn")
-            analytics!!.trackEvent(PREFERENCE_BUTTON_TOGGLE_EVENT, b)
+            b.putString(AnalyticsInterface.PREFERENCE_BUTTON_TOGGLE_VALUE, "$prefKey:$isOn")
+            analytics!!.trackEvent(AnalyticsInterface.PREFERENCE_BUTTON_TOGGLE_EVENT, b)
         }
         setVisuallyOnOrOff()
         setPreference()
