@@ -14,10 +14,8 @@
 package com.google.android.stardroid.control
 
 import android.util.Log
-import com.google.android.stardroid.util.MiscUtil.getTag
-import com.google.android.stardroid.control.TimeTravelClock
 import com.google.android.stardroid.control.TransitioningCompositeClock
-import com.google.android.stardroid.util.MiscUtil
+import com.google.android.stardroid.util.MiscUtil.getTag
 import java.util.*
 
 /**

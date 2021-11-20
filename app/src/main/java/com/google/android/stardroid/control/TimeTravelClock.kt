@@ -11,23 +11,20 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package com.google.android.stardroid.control
 
-package com.google.android.stardroid.control;
-
-import android.util.Log;
-
-import com.google.android.stardroid.R;
-import com.google.android.stardroid.util.MiscUtil;
-
-import java.util.Date;
-
-import static com.google.android.stardroid.base.TimeConstants.MILLISECONDS_PER_DAY;
-import static com.google.android.stardroid.base.TimeConstants.SECONDS_PER_10MINUTE;
-import static com.google.android.stardroid.base.TimeConstants.SECONDS_PER_DAY;
-import static com.google.android.stardroid.base.TimeConstants.SECONDS_PER_HOUR;
-import static com.google.android.stardroid.base.TimeConstants.SECONDS_PER_MINUTE;
-import static com.google.android.stardroid.base.TimeConstants.SECONDS_PER_SECOND;
-import static com.google.android.stardroid.base.TimeConstants.SECONDS_PER_WEEK;
+import android.util.Log
+import com.google.android.stardroid.R
+import com.google.android.stardroid.base.TimeConstants.MILLISECONDS_PER_DAY
+import com.google.android.stardroid.base.TimeConstants.SECONDS_PER_10MINUTE
+import com.google.android.stardroid.base.TimeConstants.SECONDS_PER_DAY
+import com.google.android.stardroid.base.TimeConstants.SECONDS_PER_MINUTE
+import com.google.android.stardroid.base.TimeConstants.SECONDS_PER_SECOND
+import com.google.android.stardroid.base.TimeConstants.SECONDS_PER_WEEK
+import com.google.android.stardroid.control.TimeTravelClock
+import com.google.android.stardroid.math.SECONDS_PER_HOUR
+import com.google.android.stardroid.util.MiscUtil.getTag
+import java.util.*
 
 /**
  * Controls time as selected / created by the user in Time Travel mode.
@@ -37,127 +34,132 @@ import static com.google.android.stardroid.base.TimeConstants.SECONDS_PER_WEEK;
  * @author Dominic Widdows
  * @author John Taylor
  */
-public class TimeTravelClock implements Clock {
-  /**
-   * A data holder for the time stepping speeds.
-   */
-  private static class Speed {
-    /** The speed in seconds per second. */
-    public double rate;
-    /** The id of the Speed's string label. */
-    public int labelTag;
+class TimeTravelClock : Clock {
+    /**
+     * A data holder for the time stepping speeds.
+     */
+    private class Speed
+    /**
+     * @return The current speed tag, a string describing the speed of time
+     * travel.
+     */(
+        /** The speed in seconds per second.  */
+        var rate: Double,
+        /** The id of the Speed's string label.  */
+        var currentSpeedTag: Int
+    )
 
-    public Speed(double rate, int labelTag) {
-      this.rate = rate;
-      this.labelTag = labelTag;
+    private var speedIndex = STOPPED_INDEX
+    private var timeLastSet: Long = 0
+    private var simulatedTime: Long = 0
+
+    /**
+     * Sets the internal time.
+     * @param date Date to which the timeTravelDate will be set.
+     */
+    @Synchronized
+    fun setTimeTravelDate(date: Date) {
+        pauseTime()
+        timeLastSet = System.currentTimeMillis()
+        simulatedTime = date.time
     }
-  }
-  public static final long STOPPED = 0;
-
-  private static final Speed[] SPEEDS = {
-    new Speed(-SECONDS_PER_WEEK, R.string.time_travel_week_speed_back),
-    new Speed(-SECONDS_PER_DAY, R.string.time_travel_day_speed_back),
-    new Speed(-SECONDS_PER_HOUR, R.string.time_travel_hour_speed_back),
-    new Speed(-SECONDS_PER_10MINUTE, R.string.time_travel_10minute_speed_back),
-    new Speed(-SECONDS_PER_MINUTE, R.string.time_travel_minute_speed_back),
-    new Speed(-SECONDS_PER_SECOND, R.string.time_travel_second_speed_back),
-    new Speed(STOPPED, R.string.time_travel_stopped),
-    new Speed(SECONDS_PER_SECOND, R.string.time_travel_second_speed),
-    new Speed(SECONDS_PER_MINUTE, R.string.time_travel_minute_speed),
-    new Speed(SECONDS_PER_10MINUTE, R.string.time_travel_10minute_speed),
-    new Speed(SECONDS_PER_HOUR, R.string.time_travel_hour_speed),
-    new Speed(SECONDS_PER_DAY, R.string.time_travel_day_speed),
-    new Speed(SECONDS_PER_WEEK, R.string.time_travel_week_speed),
-  };
-
-  private static final int STOPPED_INDEX = SPEEDS.length / 2;
-
-  private int speedIndex = STOPPED_INDEX;
-
-  private static final String TAG = MiscUtil.getTag(TimeTravelClock.class);
-  private long timeLastSet;
-  private long simulatedTime;
-
-  /**
-   * Sets the internal time.
-   * @param date Date to which the timeTravelDate will be set.
-   */
-  public synchronized void setTimeTravelDate(Date date) {
-    pauseTime();
-    timeLastSet = System.currentTimeMillis();
-    simulatedTime = date.getTime();
-  }
-
-  /*
+    /*
    * Controller logic for playing through time at different directions and
    * speeds.
    */
-
-  /**
-   * Increases the rate of time travel into the future
-   * (or decreases the rate of time travel into the past.)
-   */
-  public synchronized void accelerateTimeTravel() {
-    if (speedIndex < SPEEDS.length - 1) {
-      Log.d(TAG, "Accelerating speed to: " + SPEEDS[speedIndex]);
-      ++speedIndex;
-    } else {
-      Log.d(TAG, "Already at max forward speed");
+    /**
+     * Increases the rate of time travel into the future
+     * (or decreases the rate of time travel into the past.)
+     */
+    @Synchronized
+    fun accelerateTimeTravel() {
+        if (speedIndex < SPEEDS.size - 1) {
+            Log.d(TAG, "Accelerating speed to: " + SPEEDS[speedIndex])
+            ++speedIndex
+        } else {
+            Log.d(TAG, "Already at max forward speed")
+        }
     }
-  }
 
-  /**
-   * Decreases the rate of time travel into the future
-   * (or increases the rate of time travel into the past.)
-   */
-  public synchronized void decelerateTimeTravel() {
-    if (speedIndex > 0) {
-      Log.d(TAG, "Decelerating speed to: " + SPEEDS[speedIndex]);
-      --speedIndex;
-    } else {
-      Log.d(TAG, "Already at maximum backwards speed");
+
+    fun getCurrentSpeedTag(): Int {
+        return SPEEDS[speedIndex].currentSpeedTag;
     }
-  }
 
-  /**
-   * Pauses time.
-   */
-  public synchronized void pauseTime() {
-    Log.d(TAG, "Pausing time");
-    assert SPEEDS[STOPPED_INDEX].rate == 0.0;
-    speedIndex = STOPPED_INDEX;
-  }
-
-  /**
-   * @return The current speed tag, a string describing the speed of time
-   * travel.
-   */
-  public int getCurrentSpeedTag() {
-    return SPEEDS[speedIndex].labelTag;
-  }
-
-  @Override
-  public long getTimeInMillisSinceEpoch() {
-    long now = System.currentTimeMillis();
-    long elapsedTimeMillis = now - timeLastSet;
-    double rate = SPEEDS[speedIndex].rate;
-    long timeDelta = (long) (rate * elapsedTimeMillis);
-    if (Math.abs(rate) >= SECONDS_PER_DAY) {
-      // For speeds greater than or equal to 1 day/sec we want to move in
-      // increments of 1 day so that the map isn't dizzyingly fast.
-      // This shows the slow annual procession of the stars.
-      long days = (long) (timeDelta / MILLISECONDS_PER_DAY);
-      if (days == 0) {
-        return simulatedTime;
-      }
-      // Note that this assumes that time requests will occur right on the
-      // day boundary.  If they occur later then the next time jump
-      // might be a bit shorter than it should be.  Nevertheless the refresh
-      // rate of the renderer is high enough that this should be unnoticeable.
-      timeDelta = (long) (days * MILLISECONDS_PER_DAY);
+    /**
+     * Decreases the rate of time travel into the future
+     * (or increases the rate of time travel into the past.)
+     */
+    @Synchronized
+    fun decelerateTimeTravel() {
+        if (speedIndex > 0) {
+            Log.d(TAG, "Decelerating speed to: " + SPEEDS[speedIndex])
+            --speedIndex
+        } else {
+            Log.d(TAG, "Already at maximum backwards speed")
+        }
     }
-    timeLastSet = now;
-    simulatedTime += timeDelta;
-    return simulatedTime;
-  }
+
+    /**
+     * Pauses time.
+     */
+    @Synchronized
+    fun pauseTime() {
+        Log.d(TAG, "Pausing time")
+        assert(SPEEDS[STOPPED_INDEX].rate == 0.0)
+        speedIndex = STOPPED_INDEX
+    }
+
+    // For speeds greater than or equal to 1 day/sec we want to move in
+    // increments of 1 day so that the map isn't dizzyingly fast.
+    // This shows the slow annual procession of the stars.
+    override val timeInMillisSinceEpoch: Long
+        // Note that this assumes that time requests will occur right on the
+        // day boundary.  If they occur later then the next time jump
+        // might be a bit shorter than it should be.  Nevertheless the refresh
+        // rate of the renderer is high enough that this should be unnoticeable.
+        get() {
+            val now = System.currentTimeMillis()
+            val elapsedTimeMillis = now - timeLastSet
+            val rate = SPEEDS[speedIndex].rate
+            var timeDelta = (rate * elapsedTimeMillis).toLong()
+            if (Math.abs(rate) >= SECONDS_PER_DAY) {
+                // For speeds greater than or equal to 1 day/sec we want to move in
+                // increments of 1 day so that the map isn't dizzyingly fast.
+                // This shows the slow annual procession of the stars.
+                val days = (timeDelta / MILLISECONDS_PER_DAY) as Long
+                if (days == 0L) {
+                    return simulatedTime
+                }
+                // Note that this assumes that time requests will occur right on the
+                // day boundary.  If they occur later then the next time jump
+                // might be a bit shorter than it should be.  Nevertheless the refresh
+                // rate of the renderer is high enough that this should be unnoticeable.
+                timeDelta = (days * MILLISECONDS_PER_DAY) as Long
+            }
+            timeLastSet = now
+            simulatedTime += timeDelta
+            return simulatedTime
+        }
+
+    companion object {
+        const val STOPPED: Long = 0
+        private val SPEEDS = arrayOf(
+            Speed((-SECONDS_PER_WEEK).toDouble(), R.string.time_travel_week_speed_back),
+            Speed((-SECONDS_PER_DAY).toDouble(), R.string.time_travel_day_speed_back),
+            Speed(-SECONDS_PER_HOUR, R.string.time_travel_hour_speed_back),
+            Speed((-SECONDS_PER_10MINUTE).toDouble(), R.string.time_travel_10minute_speed_back),
+            Speed((-SECONDS_PER_MINUTE).toDouble(), R.string.time_travel_minute_speed_back),
+            Speed((-SECONDS_PER_SECOND).toDouble(), R.string.time_travel_second_speed_back),
+            Speed(STOPPED.toDouble(), R.string.time_travel_stopped),
+            Speed(SECONDS_PER_SECOND.toDouble(), R.string.time_travel_second_speed),
+            Speed(SECONDS_PER_MINUTE.toDouble(), R.string.time_travel_minute_speed),
+            Speed(SECONDS_PER_10MINUTE.toDouble(), R.string.time_travel_10minute_speed),
+            Speed(SECONDS_PER_HOUR, R.string.time_travel_hour_speed),
+            Speed(SECONDS_PER_DAY.toDouble(), R.string.time_travel_day_speed),
+            Speed(SECONDS_PER_WEEK.toDouble(), R.string.time_travel_week_speed)
+        )
+        private val STOPPED_INDEX = SPEEDS.size / 2
+        private val TAG = getTag(TimeTravelClock::class.java)
+    }
 }

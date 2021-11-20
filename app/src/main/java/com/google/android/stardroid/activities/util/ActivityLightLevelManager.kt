@@ -11,70 +11,70 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package com.google.android.stardroid.activities.util
 
-package com.google.android.stardroid.activities.util;
-
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import com.google.android.stardroid.activities.util.ActivityLightLevelChanger
+import android.content.SharedPreferences
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener
+import com.google.android.stardroid.activities.util.ActivityLightLevelManager.LightMode
+import com.google.android.stardroid.activities.util.ActivityLightLevelManager
+import java.lang.UnsupportedOperationException
 
 /**
  * Controls an activity's illumination levels.
  *
  * @author John Taylor
- *
  */
-public class ActivityLightLevelManager implements OnSharedPreferenceChangeListener {
-  private ActivityLightLevelChanger lightLevelChanger;
-  private SharedPreferences sharedPreferences;
-  private enum LightMode {DAY, NIGHT, AUTO}
-  public static final String LIGHT_MODE_KEY = "lightmode";
-  public ActivityLightLevelManager(ActivityLightLevelChanger lightLevelChanger,
-                                   SharedPreferences sharedPreferences) {
-    this.lightLevelChanger = lightLevelChanger;
-    this.sharedPreferences = sharedPreferences;
-  }
-
-  public void onResume() {
-    registerWithPreferences();
-    LightMode currentMode = getLightModePreference();
-    setActivityMode(currentMode);
-  }
-
-  private void setActivityMode(LightMode currentMode) {
-    switch(currentMode) {
-      case DAY:
-        lightLevelChanger.setNightMode(false);
-        break;
-      case NIGHT:
-        lightLevelChanger.setNightMode(true);
-        break;
-      case AUTO:
-        throw new UnsupportedOperationException("not implemented yet");
+class ActivityLightLevelManager(
+    private val lightLevelChanger: ActivityLightLevelChanger,
+    private val sharedPreferences: SharedPreferences
+) : OnSharedPreferenceChangeListener {
+    private enum class LightMode {
+        DAY, NIGHT, AUTO
     }
-  }
 
-  private LightMode getLightModePreference() {
-    String preference = sharedPreferences.getString(LIGHT_MODE_KEY, LightMode.DAY.name());
-    return LightMode.valueOf(preference);
-  }
-
-  private void registerWithPreferences() {
-    sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-  }
-
-  public void onPause() {
-    unregisterWithPreferences();
-  }
-
-  private void unregisterWithPreferences() {
-    sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-  }
-
-  @Override
-  public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-    if (!LIGHT_MODE_KEY.equals(key)) {
-      return;
+    fun onResume() {
+        registerWithPreferences()
+        val currentMode = lightModePreference
+        setActivityMode(currentMode)
     }
-    setActivityMode(getLightModePreference());
-  }
+
+    private fun setActivityMode(currentMode: LightMode) {
+        when (currentMode) {
+            LightMode.DAY -> lightLevelChanger.setNightMode(false)
+            LightMode.NIGHT -> lightLevelChanger.setNightMode(true)
+            LightMode.AUTO -> throw UnsupportedOperationException("not implemented yet")
+        }
+    }
+
+    private val lightModePreference: LightMode
+        private get() {
+            val preference = sharedPreferences.getString(LIGHT_MODE_KEY, LightMode.DAY.name)
+            return LightMode.valueOf(
+                preference!!
+            )
+        }
+
+    private fun registerWithPreferences() {
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+    }
+
+    fun onPause() {
+        unregisterWithPreferences()
+    }
+
+    private fun unregisterWithPreferences() {
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
+        if (LIGHT_MODE_KEY != key) {
+            return
+        }
+        setActivityMode(lightModePreference)
+    }
+
+    companion object {
+        const val LIGHT_MODE_KEY = "lightmode"
+    }
 }

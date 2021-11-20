@@ -29,6 +29,6 @@ public class TimeTravelDialogFragment extends android.app.DialogFragment {
     ((HasComponent<ActivityComponent>) getActivity()).getComponent().inject(this);
 
     return new TimeTravelDialog(parentActivity,
-        parentActivity.getModel());
+        parentActivity.model);
   }
 }

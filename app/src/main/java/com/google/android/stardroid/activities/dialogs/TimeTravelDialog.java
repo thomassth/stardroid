@@ -213,7 +213,7 @@ public class TimeTravelDialog extends Dialog {
       setDate(riseset.getTime());
     }
   }
-  
+
   /**
    * Associates time settings with the options in the popular dates menu.
    * It HAS to be kept in sync with res/values/arrays.xml.
