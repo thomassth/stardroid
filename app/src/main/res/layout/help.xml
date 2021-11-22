@@ -6,15 +6,17 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin">
+
   <LinearLayout
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-    <TextView
-      android:id="@+id/help_box_text"
       android:layout_width="fill_parent"
-      android:layout_height="fill_parent"
-      android:autoLink="web"
-      style="@style/text"/>
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/help_box_text"
+        style="@style/text"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:autoLink="web" />
   </LinearLayout>
 </ScrollView>

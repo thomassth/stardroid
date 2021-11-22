@@ -11,11 +11,13 @@
     android:text="@string/missing_sensor_dialog_text"/>
 
   <CheckBox
+      android:id="@+id/no_show_dialog_again"
+      style="@style/Widget.AppCompat.CompoundButton.CheckBox"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
-      android:text="@string/do_not_show_again"
-      android:id="@+id/no_show_dialog_again"/>
+      android:minHeight="48dp"
+      android:text="@string/do_not_show_again" />
 
 </LinearLayout>
 

@@ -480,4 +480,8 @@
     <string name="disable_gyro_preference_summary">Not all devices have a gyro - if yours does then you\'ll get better results with it enabled and this box unchecked.  On the other hand if your device does not have a gyro then Sky Map will probably not work if you uncheck this box.</string>
     <string name="rotate_horizon_preference_title">Rotate horizon</string>
     <string name="rotate_horizon_preference_summary">Rotate by 90 degree horizon (for screens with forced landscape, such as smartglasses)</string>
+    <string name="time_travel_fill_in_label">Time travel: Fill in label ...</string>
+    <string name="fill_in_today_s_date">Fill in today\'s date ...</string>
+    <string name="traveling_1_day_sec">Traveling @ 1 day/sec</string>
+    <string name="freeze">Freeze</string>
 </resources>
